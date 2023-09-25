@@ -50,12 +50,6 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
     header("Location: index.php");
 }
 
-if (isset($_SESSION['TRABAJADOR_ID'])) {
-    $id = $_SESSION['TRABAJADOR_ID'];
-    $trabajador = $c->buscartrabajador($id);
-} else {
-    header("Location: trabajadores.php");
-}
 
 ?>
 

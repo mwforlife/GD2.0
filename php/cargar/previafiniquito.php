@@ -201,7 +201,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['contrato']) && isset($_POST['ti
         $fecha = date('Ymdhis');
         //Generar nombre documento
         //Cambiar formato Fechainicio
-    $fechainicio = date("Y-m-d", strtotime($fechainicio));
+$fechainicio = date("Ymdhis");
         
         $nombre_documento = 'Finiquito' . $fechainicio . '.pdf';
         //Carpeta para guardar

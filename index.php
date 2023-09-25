@@ -88,6 +88,11 @@ foreach ($permiso as $p) {
 
 	<!-- Sidemenu css-->
 	<link href="assets/css/sidemenu/sidemenu.css" rel="stylesheet">
+	<style>
+		.select2-selection{
+			width: 100% !important;
+		}
+	</style>
 
 
 </head>

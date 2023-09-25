@@ -107,7 +107,7 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['tipocontratoid']) && isset($_P
         $comuna = $empresa->getComuna();
         $region = $empresa->getRegion();
 
-        $repre = $c->BuscarRepresentanteLegal($empresa->getId());
+        $repre = $c->BuscarRepresentanteLegalempresa($empresa->getId());
 
         $detfin = $c->listardetallefiniquito($finiquito->getId());
         $detalle = "";
@@ -225,4 +225,6 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['tipocontratoid']) && isset($_P
     $mpdf->Output($carpeta . $nombre_documento, 'F');
     echo 1;
     echo "php/previa/" . $nombre_documento;
+}else{
+    echo "No se pudo generar el documento";
 }

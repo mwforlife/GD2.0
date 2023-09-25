@@ -215,7 +215,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['finiquito']) && isset($_POST['t
     $fecha = date('Ymdhis');
     //Generar nombre documento
     //Cambiar formato Fechainicio
-    $fechanotificacion = date("Y-m-d", strtotime($fechanotificacion));
+    $fechanotificacion = date("Ymdhis");
 
     $nombre_documento = 'Notificacion_' . $fechanotificacion . '.pdf';
     //Carpeta para guardar

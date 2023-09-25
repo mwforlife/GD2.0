@@ -64,7 +64,6 @@ function Actualizar(id){
 }
 
 function Eliminar(id){
-    $("#global-loader").show();
     swal.fire({
         title: "¿Estas seguro?",
         text: "Una vez eliminado no se podra recuperar",

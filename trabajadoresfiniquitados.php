@@ -462,7 +462,7 @@ foreach ($permiso as $p) {
 														echo "</a>";
 														echo "</td>";
 														echo "<td class='text-center'>";
-														echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='mas1(" . $object->getId() . ")' data-toggle='tooltip' data-original-title='Generar Notificacion'>";
+														echo "<a class='btn btn-outline-info btn-sm rounded-11' href='notificacionindividual.php?code=".$object->getId()."' data-toggle='tooltip' data-original-title='Generar Notificacion'>";
 														echo "<i class='fa fa-plus'>";
 														echo "</i>";
 														echo "</a>";
