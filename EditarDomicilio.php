@@ -698,17 +698,11 @@ foreach ($permiso as $p) {
 	<script src="JsFunctions/Comunas.js"></script>
 	<script src="JsFunctions/precargado.js"></script>
 
-	<?php
-	if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-		$id = $_SESSION['CURRENT_ENTERPRISE'];
-		echo "<script>";
-		echo "window.onload = function(){
-		mostrarEmpresa(" . $id . ");
-	}";
-		echo "</script>";
-	}
-
-	?>
+	<script>
+		$(document).ready(function(){
+			mostrarEmpresa();
+		});
+	</script>
 
 	<script src="JsFunctions/Trabajadores.js"></script>
 

@@ -27,7 +27,7 @@ $(function () {
       buttons: ['copy', 'excel', 'pdf']
    });
 
-   $("#tabla-domicilio").DataTable({
+   $('#example2').DataTable({
       language: {
          searchPlaceholder: 'Buscar..',
          sSearch: '',
@@ -53,7 +53,9 @@ $(function () {
       buttons: ['copy', 'excel', 'pdf']
    });
 
-   $("#tabla-contacto").DataTable({
+   
+
+   $('#example3').DataTable({
       language: {
          searchPlaceholder: 'Buscar..',
          sSearch: '',
@@ -79,7 +81,7 @@ $(function () {
       buttons: ['copy', 'excel', 'pdf']
    });
 
-   $("#tabla-prevision").DataTable({
+   $('#example4').DataTable({
       language: {
          searchPlaceholder: 'Buscar..',
          sSearch: '',
@@ -105,7 +107,8 @@ $(function () {
       buttons: ['copy', 'excel', 'pdf']
    });
 
-   $("#tabla-bancaria").DataTable({
+   
+   $('#example5').DataTable({
       language: {
          searchPlaceholder: 'Buscar..',
          sSearch: '',
@@ -131,7 +134,35 @@ $(function () {
       buttons: ['copy', 'excel', 'pdf']
    });
 
-   $("#tabla-carga").DataTable({
+   
+   $('#example6').DataTable({
+      language: {
+         searchPlaceholder: 'Buscar..',
+         sSearch: '',
+         lengthMenu: '_MENU_ datos/página',
+         zeroRecords: 'No se encontraron resultados',
+         info: 'Mostrando página _PAGE_ de _PAGES_',
+         infoEmpty: 'No hay datos disponibles',
+         infoFiltered: '(filtrado de _MAX_ datos totales)',
+         paginate: {
+            first: 'Primero',
+            previous: 'Anterior',
+            next: 'Siguiente',
+            last: 'Último'
+         },
+      },
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true,
+      "responsive": true,
+      buttons: ['copy', 'excel', 'pdf']
+   });
+
+   
+   $('#example7').DataTable({
       language: {
          searchPlaceholder: 'Buscar..',
          sSearch: '',
@@ -159,114 +190,7 @@ $(function () {
 
 
    
-   $("#tabla-finiquito").DataTable({
-      language: {
-         searchPlaceholder: 'Buscar..',
-         sSearch: '',
-         lengthMenu: '_MENU_ datos/página',
-         zeroRecords: 'No se encontraron resultados',
-         info: 'Mostrando página _PAGE_ de _PAGES_',
-         infoEmpty: 'No hay datos disponibles',
-         infoFiltered: '(filtrado de _MAX_ datos totales)',
-         paginate: {
-            first: 'Primero',
-            previous: 'Anterior',
-            next: 'Siguiente',
-            last: 'Último'
-         },
-      },
-      "paging": true,
-      "lengthChange": true,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": true,
-      "responsive": true,
-      buttons: ['copy', 'excel', 'pdf']
-   });
-
-   $("#tabla-notificaciones").DataTable({
-      language: {
-         searchPlaceholder: 'Buscar..',
-         sSearch: '',
-         lengthMenu: '_MENU_ datos/página',
-         zeroRecords: 'No se encontraron resultados',
-         info: 'Mostrando página _PAGE_ de _PAGES_',
-         infoEmpty: 'No hay datos disponibles',
-         infoFiltered: '(filtrado de _MAX_ datos totales)',
-         paginate: {
-            first: 'Primero',
-            previous: 'Anterior',
-            next: 'Siguiente',
-            last: 'Último'
-         },
-      },
-      "paging": true,
-      "lengthChange": true,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": true,
-      "responsive": true,
-      buttons: ['copy', 'excel', 'pdf']
-   });
-
-   $("#tabla-vacaciones").DataTable({
-      language: {
-         searchPlaceholder: 'Buscar..',
-         sSearch: '',
-         lengthMenu: '_MENU_ datos/página',
-         zeroRecords: 'No se encontraron resultados',
-         info: 'Mostrando página _PAGE_ de _PAGES_',
-         infoEmpty: 'No hay datos disponibles',
-         infoFiltered: '(filtrado de _MAX_ datos totales)',
-         paginate: {
-            first: 'Primero',
-            previous: 'Anterior',
-            next: 'Siguiente',
-            last: 'Último'
-         },
-      },
-      "paging": true,
-      "lengthChange": true,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": true,
-      "responsive": true,
-      buttons: ['copy', 'excel', 'pdf']
-   });
-
-
-   
-   $("#tabla-licencia").DataTable({
-      language: {
-         searchPlaceholder: 'Buscar..',
-         sSearch: '',
-         lengthMenu: '_MENU_ datos/página',
-         zeroRecords: 'No se encontraron resultados',
-         info: 'Mostrando página _PAGE_ de _PAGES_',
-         infoEmpty: 'No hay datos disponibles',
-         infoFiltered: '(filtrado de _MAX_ datos totales)',
-         paginate: {
-            first: 'Primero',
-            previous: 'Anterior',
-            next: 'Siguiente',
-            last: 'Último'
-         },
-      },
-      "paging": true,
-      "lengthChange": true,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": true,
-      "responsive": true,
-      buttons: ['copy', 'excel', 'pdf']
-   });
-
-   
-   $("#tabla-anotaciones").DataTable({
+   $('#example8').DataTable({
       language: {
          searchPlaceholder: 'Buscar..',
          sSearch: '',
@@ -292,7 +216,7 @@ $(function () {
       buttons: ['copy', 'excel', 'pdf']
    });
    
-   $(".table-lote").DataTable({
+   $('#example9').DataTable({
       language: {
          searchPlaceholder: 'Buscar..',
          sSearch: '',
@@ -318,7 +242,33 @@ $(function () {
       buttons: ['copy', 'excel', 'pdf']
    });
 
-   $("#tabla-contratos").DataTable({
+
+   $('#example10').DataTable({
+      language: {
+         searchPlaceholder: 'Buscar..',
+         sSearch: '',
+         lengthMenu: '_MENU_ datos/página',
+         zeroRecords: 'No se encontraron resultados',
+         info: 'Mostrando página _PAGE_ de _PAGES_',
+         infoEmpty: 'No hay datos disponibles',
+         infoFiltered: '(filtrado de _MAX_ datos totales)',
+         paginate: {
+            first: 'Primero',
+            previous: 'Anterior',
+            next: 'Siguiente',
+            last: 'Último'
+         },
+      },
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true,
+      "responsive": true,
+      buttons: ['copy', 'excel', 'pdf']
+   });
+   $('#example11').DataTable({
       language: {
          searchPlaceholder: 'Buscar..',
          sSearch: '',
@@ -344,7 +294,8 @@ $(function () {
       buttons: ['copy', 'excel', 'pdf']
    });
 
-   $("#tabla-documento").DataTable({
+
+   $('#example12').DataTable({
       language: {
          searchPlaceholder: 'Buscar..',
          sSearch: '',
@@ -369,6 +320,34 @@ $(function () {
       "responsive": true,
       buttons: ['copy', 'excel', 'pdf']
    });
+
+   $('#example13').DataTable({
+      language: {
+         searchPlaceholder: 'Buscar..',
+         sSearch: '',
+         lengthMenu: '_MENU_ datos/página',
+         zeroRecords: 'No se encontraron resultados',
+         info: 'Mostrando página _PAGE_ de _PAGES_',
+         infoEmpty: 'No hay datos disponibles',
+         infoFiltered: '(filtrado de _MAX_ datos totales)',
+         paginate: {
+            first: 'Primero',
+            previous: 'Anterior',
+            next: 'Siguiente',
+            last: 'Último'
+         },
+      },
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true,
+      "responsive": true,
+      buttons: ['copy', 'excel', 'pdf']
+   });
+
+  
 
 
 
@@ -380,17 +359,7 @@ $(function () {
    table.buttons().container()
       .appendTo('#exportexample_wrapper .col-md-6:eq(0)');
 
-
-   $('#example2').DataTable({
-      responsive: true,
-      language: {
-         searchPlaceholder: 'Search...',
-         sSearch: '',
-         lengthMenu: '_MENU_ items/page',
-      }
-   });
-
-   $('#example3').DataTable({
+   $('#example50').DataTable({
       responsive: {
          details: {
             display: $.fn.dataTable.Responsive.display.modal({

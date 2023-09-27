@@ -9,7 +9,7 @@ function seleccionarEmpresa(id){
         data: {id: id},
         success: function(data){
             ToastifySuccess("Empresa seleccionada Con exito");
-            mostrarEmpresa(id);
+            mostrarEmpresa();
             setTimeout(function(){
                 location.reload();
             }, 1000);
@@ -18,11 +18,10 @@ function seleccionarEmpresa(id){
 
 }
 
-function mostrarEmpresa(id){
+function mostrarEmpresa(){
     $.ajax({
         url: "php/cargar/empresaname.php",
         type: "POST",
-        data: {id: id},
         success: function(data){
             $(".empresaname").html(data);
         }

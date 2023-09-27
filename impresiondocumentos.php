@@ -432,7 +432,7 @@ foreach ($permiso as $p) {
 														<!-- Row -->
 														<div class="row">
 															<div class="col-md-12 table-responsive">
-																<table class="table w-100 " id="tabla1">
+																<table class="table w-100 table-hover " id="example1">
 																	<thead>
 																		<tr>
 																			<td>Rut</td>
@@ -441,6 +441,7 @@ foreach ($permiso as $p) {
 																			<td>Fecha Termino</td>
 																			<td>Tipo Contrato</td>
 																			<td class='text-center'>Imprimir</td>
+																			<td class='text-center'>Eliminar</td>
 																		</tr>
 																	</thead>
 																	<tbody>
@@ -449,19 +450,24 @@ foreach ($permiso as $p) {
 																		if (count($contratos) > 0) {
 																			foreach ($contratos as $contrato) {
 																				echo "<tr>";
-																					echo "<td>" . $contrato->getFecharegistro() . "</td>";
-																					echo "<td>" . $contrato->getTrabajador() . "</td>";
-																						echo "<td>" . date("d-m-Y", strtotime($contrato->getFechaInicio())) . "</td>";
-																					if (strlen($contrato->getFechaTermino()) == 0) {
-																						echo "<td>Sin Fecha de termino </td>";
-																					} else {
-																						echo "<td>" . date("d-m-Y", strtotime($contrato->getFechaTermino())) . "</td>";
-																					}
-																					echo "<td>" . $contrato->getTipoContrato() . "</td>";
-																					echo "<td  class='text-center'> 
+																				echo "<td>" . $contrato->getFecharegistro() . "</td>";
+																				echo "<td>" . $contrato->getTrabajador() . "</td>";
+																				echo "<td>" . date("d-m-Y", strtotime($contrato->getFechaInicio())) . "</td>";
+																				if (strlen($contrato->getFechaTermino()) == 0 || $contrato->getFechaTermino() == "31-12-1969") {
+																					echo "<td>Sin Fecha de termino </td>";
+																				} else {
+																					echo "<td>" . date("d-m-Y", strtotime($contrato->getFechaTermino())) . "</td>";
+																				}
+																				echo "<td>" . $contrato->getTipoContrato() . "</td>";
+																				echo "<td  class='text-center'> 
 																						<a class='btn btn-outline-success btn-sm rounded-11' target='_blank' href='uploads/Contratos/" . $contrato->getDocumento() . "'><i class='fa fa-print'></i></a>
 																					</td>";
-																				echo "<tr/>";
+																				if ($contrato->getEstado() == 1) {
+																					echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarcontrato(" . $contrato->getId() . ")'><i class='fa fa-trash'></i></button></td>";
+																				} else {
+																					echo "<td class='text-center'>-</td>";
+																				}
+																				echo "</tr>";
 																			}
 																		}
 																		?>
@@ -474,128 +480,128 @@ foreach ($permiso as $p) {
 													<div class="tab-pane" id="tabCont2">
 														<!-- Row -->
 														<div class="row">
-														<div class="col-md-12 table-responsive">
-															<table class="table w-100 " id="tabla-finiquito">
-																<thead>
-																	<tr>
-																		<td>RUT</td>
-																		<td>Trabajador</td>
-																		<td>Fecha Inicio</td>
-																		<td>Fecha Termino</td>
-																		<td>Fecha Finiquito</td>
-																		<td>Causal Termino de Contrato</td>
-																		<td class='text-center'>Imprimir</td>
-																	</tr>
-																</thead>
-																<tbody class="tablecontratos">
-																	<?php
-																	$finiquitos = $c->listarfiniquitosempresa($_SESSION['CURRENT_ENTERPRISE']);
-																	if (count($finiquitos) > 0) {
-																		foreach ($finiquitos as $finiquito) {
-																			echo "<tr>";
-																			//Convertir fecha en formato dd-mm-YYYY
-																			$fecha_inicio = date("d-m-Y", strtotime($finiquito->getFechaInicio()));
-																			$fecha_termino = date("d-m-Y", strtotime($finiquito->getFechaTermino()));
-																			$fecha_finiquito = date("d-m-Y", strtotime($finiquito->getFechafiniquito()));
-																			echo "<td>" . $finiquito->getEmpresa() . "</td>";
-																			echo "<td>" . $finiquito->getTrabajador() . "</td>";
-																			echo "<td>" . $fecha_termino . "</td>";
-																			echo "<td>" . $fecha_termino . "</td>";
-																			echo "<td>" . $fecha_finiquito . "</td>";
-																			echo "<td>" . $finiquito->getCausal() . "</td>";
-																			echo "<td class='text-center'><a href='php/pdf/finiquito.php?id=" . $finiquito->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
-																			echo "<tr/>";
+															<div class="col-md-12 table-responsive">
+																<table class="table w-100 table-hover " id="example2">
+																	<thead>
+																		<tr>
+																			<td>RUT</td>
+																			<td>Trabajador</td>
+																			<td>Fecha Inicio</td>
+																			<td>Fecha Termino</td>
+																			<td>Fecha Finiquito</td>
+																			<td>Causal Termino de Contrato</td>
+																			<td class='text-center'>Imprimir</td>
+																			<td class='text-center'>Eliminar</td>
+																		</tr>
+																	</thead>
+																	<tbody class="tablecontratos">
+																		<?php
+																		$finiquitos = $c->listarfiniquitosempresa($_SESSION['CURRENT_ENTERPRISE']);
+																		if (count($finiquitos) > 0) {
+																			foreach ($finiquitos as $finiquito) {
+																				echo "<tr>";
+																				//Convertir fecha en formato dd-mm-YYYY
+																				$fecha_inicio = date("d-m-Y", strtotime($finiquito->getFechaInicio()));
+																				$fecha_termino = date("d-m-Y", strtotime($finiquito->getFechaTermino()));
+																				$fecha_finiquito = date("d-m-Y", strtotime($finiquito->getFechafiniquito()));
+																				echo "<td>" . $finiquito->getEmpresa() . "</td>";
+																				echo "<td>" . $finiquito->getTrabajador() . "</td>";
+																				echo "<td>" . $fecha_termino . "</td>";
+																				echo "<td>" . $fecha_termino . "</td>";
+																				echo "<td>" . $fecha_finiquito . "</td>";
+																				echo "<td>" . $finiquito->getCausal() . "</td>";
+																				echo "<td class='text-center'><a href='php/pdf/finiquito.php?id=" . $finiquito->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
+																				echo "<td class='text-center'><button class='text-center btn btn-outline-danger btn-sm rounded-11' onclick='eliminarfiniquito(" . $finiquito->getId() . ")'><i class='fa fa-trash'></i></button></td>";
+																				echo "</tr>";
+																			}
 																		}
-																	}
-																	?>
+																		?>
 
-																</tbody>
+																	</tbody>
 
-															</table>
+																</table>
 
-														</div>
+															</div>
 														</div>
 														<!-- End Row -->
 													</div>
 													<div class="tab-pane" id="tabCont3">
 														<!-- Row -->
 														<div class="row">
-														<div class="col-md-12 table-responsive">
-															<table class="table w-100 " id="tabla-notificaciones">
-																<thead>
-																	<tr>
-																		<td>RUT</td>
-																		<td>Trabajador</td>
-																		<td>Fecha Notificación</td>
-																		<td>Causal de Hechos</td>
-																		<td>Comunicacion</td>
-																		<td>PDF</td>
-																		<td>CSV</td>
-																	</tr>
-																</thead>
-																<tbody class="tablenotificacion">
-																	<?php
-																	$notifi = $c->listarnotificacionesempresa($_SESSION['CURRENT_ENTERPRISE']);
-																	if ($notifi != null) {
-																		foreach ($notifi as $notificacion) {
-																			echo "<tr>";
-																			echo "<td>" . $notificacion->getAcrediacion() . "</td>";
-																			echo "<td>" . $notificacion->getComunicacion() . "</td>";
-																			echo "<td>" . $notificacion->getFechanotificacion() . "</td>";
-																			echo "<td>" . $notificacion->getCausal() . "</td>";
-																			echo "<td>" . $notificacion->getComunicacion() . "</td>";
-																			echo "<td><a href='php/pdf/notificacion.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
-																			echo "<td><a href='php/pdf/notificacioncsv.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-file-excel-o'></i></a></td>";
-																			echo "<tr/>";
+															<div class="col-md-12 table-responsive">
+																<table class="table w-100 table-hover " id="example3">
+																	<thead>
+																		<tr>
+																			<td>RUT</td>
+																			<td>Trabajador</td>
+																			<td>Fecha Notificación</td>
+																			<td>Causal de Hechos</td>
+																			<td>Comunicacion</td>
+																			<td>PDF</td>
+																			<td>CSV</td>
+																			<td class='text-center'>Eliminar</td>
+																		</tr>
+																	</thead>
+																	<tbody class="tablenotificacion">
+																		<?php
+																		$notifi = $c->listarnotificacionesempresa($_SESSION['CURRENT_ENTERPRISE']);
+																		if ($notifi != null) {
+																			foreach ($notifi as $notificacion) {
+																				echo "<tr>";
+																				echo "<td>" . $notificacion->getAcrediacion() . "</td>";
+																				echo "<td>" . $notificacion->getComunicacion() . "</td>";
+																				echo "<td>" . $notificacion->getFechanotificacion() . "</td>";
+																				echo "<td>" . $notificacion->getCausal() . "</td>";
+																				echo "<td>" . $notificacion->getComunicacion() . "</td>";
+																				echo "<td><a href='php/pdf/notificacion.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
+																				echo "<td><a href='php/pdf/notificacioncsv.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-file-excel-o'></i></a></td>";
+																				echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarnotificacion(" . $notificacion->getId() . ")'><i class='fa fa-trash'></i></button></td>";
+																				echo "</tr>";
+																			}
 																		}
-																	}
-																	?>
-																</tbody>
+																		?>
+																	</tbody>
 
-															</table>
+																</table>
 
-														</div>
+															</div>
 														</div>
 														<!-- End Row -->
 													</div>
 													<div class="tab-pane" id="tabCont4">
 														<div class="row">
-														<div class="col-md-12 table-responsive">
-															<table class="table w-100 " id="tabla-documento">
-																<thead>
-																	<tr>
-																		<td>RUT</td>
-																		<td>Trabajador</td>
-																		<td>Fecha de Generación</td>
-																		<td>Tipo de Documento</td>
-																		<td>Documento</td>
-																	</tr>
-																</thead>
-																<tbody>
-																	<?php
-																	$notifi = $c->listardocumentostextempresa($_SESSION['CURRENT_ENTERPRISE']);
-																	if ($notifi != null) {
-																		foreach ($notifi as $notificacion) {
-																			echo "<tr>";
-																			echo "<td>" . $notificacion->getEmpresa() . "</td>";
-																			echo "<td>" . $notificacion->getTrabajador() . "</td>";
-																			echo "<td>" . $notificacion->getFechageneracion() . "</td>";
-																			echo "<td>" . $notificacion->getTipodocumento() . "</td>";
-																			echo "<td><a href='uploads/documentos/" . $notificacion->getDocumento() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
-																			echo "<tr/>";
+															<div class="col-md-12 table-responsive">
+																<table class="table w-100 table-hover " id="example4">
+																	<thead>
+																		<tr>
+																			<td>RUT</td>
+																			<td>Trabajador</td>
+																			<td>Fecha de Generación</td>
+																			<td>Tipo de Documento</td>
+																			<td>Documento</td>
+																			<td class='text-center'>Eliminar</td>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		<?php
+																		$notifi = $c->listardocumentostextempresa($_SESSION['CURRENT_ENTERPRISE']);
+																		if ($notifi != null) {
+																			foreach ($notifi as $notificacion) {
+																				echo "<tr>";
+																				echo "<td>" . $notificacion->getEmpresa() . "</td>";
+																				echo "<td>" . $notificacion->getTrabajador() . "</td>";
+																				echo "<td>" . $notificacion->getFechageneracion() . "</td>";
+																				echo "<td>" . $notificacion->getTipodocumento() . "</td>";
+																				echo "<td><a href='uploads/documentos/" . $notificacion->getDocumento() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
+																				echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminardocumento(" . $notificacion->getId() . ")'><i class='fa fa-trash'></i></button></td>";
+																				echo "</tr>";
+																			}
 																		}
-																	}
-																	?>
-																</tbody>
-															</table>
+																		?>
+																	</tbody>
+																</table>
 
-														</div>
-														</div>
-													</div>
-													<div class="tab-pane" id="tabCont5">
-														<!--Row-->
-														<div class="row">
-
+															</div>
 														</div>
 													</div>
 												</div>
@@ -631,8 +637,6 @@ foreach ($permiso as $p) {
 
 	<!-- Back-to-top -->
 	<a href="#top" id="back-to-top"><i class="fe fe-arrow-up"></i></a>
-
-	<!-- Jquery js-->
 	<script src="assets/plugins/jquery/jquery.min.js"></script>
 
 	<!-- Bootstrap js-->
@@ -681,18 +685,14 @@ foreach ($permiso as $p) {
 	<script src="JsFunctions/Alert/sweetalert2.all.min.js"></script>
 	<script src="JsFunctions/Alert/alert.js"></script>
 	<script src="JsFunctions/main.js"></script>
+	<script src="JsFunctions/Trabajadores.js"></script>
 
-	<?php
-	if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-		$id = $_SESSION['CURRENT_ENTERPRISE'];
-		echo "<script>";
-		echo "window.onload = function(){
-		mostrarEmpresa(" . $id . ");
-	}";
-		echo "</script>";
-	}
+	<script>
+		$(document).ready(function(){
+			mostrarEmpresa();
+		});
+	</script>
 
-	?>
 	<script>
 		function mas(id) {
 			$.ajax({
@@ -707,33 +707,6 @@ foreach ($permiso as $p) {
 			});
 		}
 	</script>
-
-
-<script>
-		$(document).ready(function() {
-			$('#tabla1').DataTable({
-				"order": [
-					[0, "desc"]
-				],
-				"language": {
-					"lengthMenu": "Mostrar _MENU_ registros por pagina",
-					"zeroRecords": "No se encontraron resultados en su busqueda",
-					"searchPlaceholder": "Buscar registros",
-					"info": "Mostrando registros de _START_ al _END_ de un total de  _TOTAL_ registros",
-					"infoEmpty": "No existen registros",
-					"infoFiltered": "(filtrado de un total de _MAX_ registros)",
-					"search": "Buscar:",
-					"paginate": {
-						"first": "Primero",
-						"last": "Último",
-						"next": "Siguiente",
-						"previous": "Anterior"
-					},
-				}
-			});
-		});
-	</script>
-
 </body>
 
 </html>

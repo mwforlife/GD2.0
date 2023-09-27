@@ -451,7 +451,7 @@ foreach ($permiso as $p) {
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row justify-content-center">
-                                        <div class="col-sm-12 col-md-12 text-center">
+                                        <div class="col-sm-12 col-md-12">
                                             <h5>Contratos a Finiquitar</h5>
                                             <div class="table-responsive">
                                                 <table class="table text-nowrap">
@@ -482,6 +482,8 @@ foreach ($permiso as $p) {
                                                     </tbody>
                                                 </table>
                                             </div>
+                                        </div>
+                                        <div class="col-md-12 text-right">
                                             <a class="btn btn-danger" href="generarlotefiniquito.php"><i class="fa fa-arrow-left"></i> Volver</a>
                                         </div>
 
@@ -497,7 +499,7 @@ foreach ($permiso as $p) {
                                             <div class="col-lg-12 text-center">
                                                 <h2>Información de Finiquito</h2>
                                             </div>
-                                            <div class="col-lg-6 mt-3">
+                                            <div class="col-lg-4 mt-3">
                                                 <div class="form-group select2-lg">
                                                     <label for="">Tipo de Documento:</label>
                                                     <button class="btn btn-primary btn-sm fs-10" type="button" data-toggle="modal" data-target="#tipocontratomodal">Seleccionar</button>
@@ -507,11 +509,11 @@ foreach ($permiso as $p) {
                                                     <input type="hidden" class="form-control text-dark" id="empresa" name="empresa" required="" readonly value="<?php echo $_SESSION['CURRENT_ENTERPRISE']; ?>">
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6 mt-1">
+                                            <div class="col-lg-4 mt-1">
                                                 <label for="">Fecha Termino:</label>
                                                 <input type="date" class="form-control text-dark" id="fechatermino" name="fechatermino" required="">
                                             </div>
-                                            <div class="col-lg-6 mt-1">
+                                            <div class="col-lg-4 mt-1">
                                                 <label for="">Fecha Finiquito:</label>
                                                 <input type="date" class="form-control text-dark" id="fechafiniquito" name="fechafiniquito" required="">
                                             </div>
@@ -521,7 +523,7 @@ foreach ($permiso as $p) {
                                                         <div class="row">
                                                             <div class="col-sm-12 col-md-12">
                                                                 <label for="">Causal Término de Contrato:</label>
-                                                                <select class="form-control" name="causal">
+                                                                <select class="form-control select2" name="causal">
                                                                     <?php
                                                                     $causal = $c->listarcausalterminacioncontrato();
                                                                     if (count($causal) > 0) {
@@ -545,7 +547,7 @@ foreach ($permiso as $p) {
                                                 <div class="row">
                                                     <div class="col-lg-3">
                                                         <label for="">Tipo</label>
-                                                        <select class="form-control" id="tipo" name="tipo">
+                                                        <select class="form-control select2" id="tipo" name="tipo">
                                                             <?php
                                                             $causal = $c->listarindemnizacion();
                                                             if (count($causal) > 0) {

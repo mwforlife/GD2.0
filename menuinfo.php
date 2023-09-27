@@ -615,7 +615,7 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 															<p class="text-mutted card-sub-title"></p>
 														</div>
 														<div class="col-lg-12 table-responsive">
-															<table class="table w-100 " id="tabla-domicilio">
+															<table class="table w-100 table-hover table-bordered">
 																<thead>
 																	<tr>
 																		<th class="wd-15p">Fecha de Registro</th>
@@ -680,7 +680,7 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 															<p class="text-mutted card-sub-title"></p>
 														</div>
 														<div class="col-lg-12 table-responsive">
-															<table class="table w-100 " id="tabla-contacto">
+															<table class="table w-100 table-hover table-bordered" >
 																<thead>
 																	<tr>
 																		<td>Fecha de Registro</td>
@@ -733,7 +733,7 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 													<div class="row m-3">
 														<div class="col-md-12 table-responsive">
 															<h4>Información Previsional</h4>
-															<table class="table w-100 " id="example2">
+															<table class="table w-100 table-hover table-bordered" id="example1">
 																<thead>
 																	<tr>
 																		<td>Periodo</td>
@@ -833,7 +833,7 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 													</div>
 													<div class="row">
 														<div class="col-md-12 table-responsive">
-															<table class="table w-100 " id="tabla-bancaria">
+															<table class="table w-100 table-hover table-bordered" id="example2">
 																<thead>
 																	<tr>
 																		<td>Banco</td>
@@ -890,7 +890,7 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 													<div class="row m-3">
 														<div class="col-md-12 table-responsive">
 															<h4>Información Carga Familiar</h4>
-															<table class="table w-100 " id="tabla-carga">
+															<table class="table w-100 table-hover table-bordered" id="example3">
 																<thead>
 																	<tr>
 																		<td>Rut</td>
@@ -944,7 +944,7 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 																				<a class='btn btn-outline-warning btn-sm rounded-11' href='actualizarcarga.php?code=" . $carga->getId() . "'><i class='fa fa-pen'></i></a>
 																				<a class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarcarga(" . $carga->getId() . ")'><i class='fa fa-trash'></i></a>
 																				</td>";
-																			echo "<tr/>";
+																			echo "</tr>";
 																		}
 																	}
 																	?>
@@ -974,7 +974,7 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 													</div>
 													<div class="row">
 														<div class="col-md-12 table-responsive">
-															<table class="table w-100 " id="example2">
+															<table class="table w-100 table-hover table-bordered" id="example4">
 																<thead>
 																	<tr>
 																		<td>F. Inicio</td>
@@ -1011,7 +1011,7 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 																			} else {
 																				echo "<td class='text-center'>-</td>";
 																			}
-																			echo "<tr/>";
+																			echo "</tr>";
 																		}
 																	}
 																	?>
@@ -1038,7 +1038,7 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 													</div>
 													<div class="row">
 														<div class="col-md-12 table-responsive">
-															<table class="table w-100 " id="tabla-finiquito">
+															<table class="table w-100 table-hover table-bordered" id="example5">
 																<thead>
 																	<tr>
 																		<td>Fecha Inicio</td>
@@ -1067,7 +1067,7 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 																			echo "<td><button class='btn btn-outline-warning btn-sm rounded-11' data-toggle='modal' data-target='#modal-detalle-finiquito' onclick='detallefiniquito(" . $finiquito->getId() . ")'><i class='fa fa-eye'></i></button></td>";
 																			echo "<td><a href='php/pdf/finiquito.php?id=" . $finiquito->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-file-pdf-o'></i></a></td>";
 																			echo "<td><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarfiniquito(" . $finiquito->getId() . ")'><i class='fa fa-trash'></i></button></td>";
-																			echo "<tr/>";
+																			echo "</tr>";
 																		}
 																	}
 																	?>
@@ -1094,7 +1094,7 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 													</div>
 													<div class="row">
 														<div class="col-md-12 table-responsive">
-															<table class="table w-100 " id="tabla-notificaciones">
+															<table class="table w-100 table-hover table-bordered" id="example6">
 																<thead>
 																	<tr>
 																		<td>Fecha Notificación</td>
@@ -1117,7 +1117,7 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 																			echo "<td><a href='php/pdf/notificacion.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-file-pdf-o'></i></a></td>";
 																			echo "<td><a href='php/pdf/notificacioncsv.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-file-excel-o'></i></a></td>";
 																			echo "<td><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarnotificacion(" . $notificacion->getId() . ")'><i class='fa fa-trash'></i></button></td>";
-																			echo "<tr/>";
+																			echo "</tr>";
 																		}
 																	}
 																	?>
@@ -1199,7 +1199,7 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 															</div>
 
 															<div class="col-md-12 table-responsive">
-																<table class="table w-100 " id="tabla-vacaciones">
+																<table class="table w-100 table-hover table-bordered" id="example7">
 																	<thead>
 																		<tr>
 																			<td>Periodo</td>
@@ -1279,7 +1279,7 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 														</div>
 
 														<div class="col-md-12 table-responsive">
-															<table class="table w-100 " id="tabla-licencia">
+															<table class="table w-100 table-hover table-bordered" id="example8">
 																<thead>
 																	<tr>
 																		<td>Folio</td>
@@ -1368,7 +1368,7 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 													</div>
 													<div class="row">
 														<div class="col-md-12 table-responsive">
-															<table class="table w-100 " id="tabla-documento">
+															<table class="table w-100 table-hover table-bordered" id="example9">
 																<thead>
 																	<tr>
 																		<td>Fecha de Generación</td>
@@ -1387,7 +1387,7 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 																			echo "<td>" . $notificacion->getTipodocumento() . "</td>";
 																			echo "<td><a href='uploads/documentos/" . $notificacion->getDocumento() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-file-pdf-o'></i></a></td>";
 																			echo "<td><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminardocumento(" . $notificacion->getId() . ")'><i class='fa fa-trash'></i></button></td>";
-																			echo "<tr/>";
+																			echo "</tr>";
 																		}
 																	}
 																	?>
@@ -1422,7 +1422,7 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 													</div>
 													<div class="row">
 														<div class="col-md-12 table-responsive">
-															<table class="table w-100 " id="tabla-anotaciones">
+															<table class="table w-100 table-hover table-bordered" id="example10">
 																<thead>
 																	<tr>
 																		<td>Tipo Anotacion</td>
@@ -1467,7 +1467,7 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 												</div>
 												<div class="row">
 													<div class="col-md-12 table-responsive">
-														<table class="table w-100 " id="example1">
+														<table class="table w-100 table-hover table-bordered" id="example11">
 															<thead>
 																<tr>
 																	<td>Titulo</td>
@@ -1706,19 +1706,11 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 
 	<script src="JsFunctions/Trabajadores.js"></script>
 
-
-	<?php
-	if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-		$id = $_SESSION['CURRENT_ENTERPRISE'];
-		echo "<script>";
-		echo "window.onload = function(){
-			mostrarEmpresa(" . $id . ");
-			agregarDatatable();
-			}";
-		echo "</script>";
-	}
-
-	?>
+	<script>
+		$(document).ready(function(){
+			mostrarEmpresa();
+		});
+	</script>
 </body>
 
 </html>
