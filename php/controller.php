@@ -52,13 +52,13 @@ require 'Class/DocumentoSubido.php';
 class Controller
 {
     private $host = "localhost";
-    /*Variables*/
+    /*Variables
     private $user = "root";
     private $pass = "";
     private $bd = "gestordocumentos";
 
 
-    /*Variables BD Remota
+    /*Variables BD Remota*/
     private $user = 'kaiserte_admin';
     private $pass = 'Kaiser2022$';
     private $bd = 'kaiserte_gd';
@@ -96,7 +96,7 @@ class Controller
     {
         $this->conexion();
         $this->v = new CifrasEnLetras();
-        $text = $this->v->convertirEurosEnLetras($numero);
+        $text = $this->v->convertirCifrasEnLetras($numero);
         $this->desconectar();
         return $text;
     }
@@ -1922,7 +1922,6 @@ class Controller
         return $lista;
     }
 
-
     //Listar Isapre
     public function listarisapre1()
     {
@@ -1942,8 +1941,6 @@ class Controller
         $this->desconectar();
         return $lista;
     }
-
-
 
     //Listar Jornada
     public function listarjornada()
@@ -2020,7 +2017,6 @@ class Controller
         $this->desconectar();
         return $lista;
     }
-
 
     //Listar Mutuales
     public function listarmutuales()
@@ -2591,6 +2587,13 @@ class Controller
     public function eliminarprovincia($id)
     {
         $this->conexion();
+        //Verificar si existe en la tabla de trabajadores
+        $sql = "select * from trabajadordomicilio where region = $id";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $this->desconectar();
+            return false;
+        }
         $sql = "delete from provincias where id = $id";
         $result = $this->mi->query($sql);
         $this->desconectar();
@@ -2601,6 +2604,28 @@ class Controller
     public function eliminarcomuna($id)
     {
         $this->conexion();
+        //Verificar si existe en la tabla de trabajadores
+        $sql = "select * from trabajadordomicilio where comuna = $id";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $this->desconectar();
+            return false;
+        }
+        //Verificar si existe en la tabla de empresas
+        $sql = "select * from empresa where comuna = $id";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $this->desconectar();
+            return false;
+        }
+        //Verificar si existe en la tabla de usuarios
+        $sql = "select * from users where comuna = $id";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $this->desconectar();
+            return false;
+        }
+
         $sql = "delete from comunas where id = $id";
         $result = $this->mi->query($sql);
         $this->desconectar();
@@ -2612,6 +2637,13 @@ class Controller
     {
         $this->conexion();
         $sql = "delete from ciudades where id = $id";
+        //Verificar si existe en la tabla de trabajadores
+        $sql = "select * from trabajadordomicilio where ciudad = $id";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $this->desconectar();
+            return false;
+        }
         $result = $this->mi->query($sql);
         $this->desconectar();
         return json_encode($result);
@@ -2623,6 +2655,13 @@ class Controller
     {
         $this->conexion();
         $sql = "delete from nacionalidad where id = $id";
+        //Verificar si existe en la tabla de trabajadores
+        $sql = "select * from trabajadores where nacionalidad = $id";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $this->desconectar();
+            return false;
+        }
         $result = $this->mi->query($sql);
         $this->desconectar();
         return json_encode($result);
@@ -2642,6 +2681,13 @@ class Controller
     public function eliminarafp($id)
     {
         $this->conexion();
+        //Validar si existe en la tabla de previsiontrabajador
+        $sql = "select * from previsiontrabajador where afp = $id";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $this->desconectar();
+            return false;
+        }
         $sql = "delete from afp where id = $id";
         $result = $this->mi->query($sql);
         $this->desconectar();
@@ -2652,6 +2698,14 @@ class Controller
     public function eliminarisapre($id)
     {
         $this->conexion();
+        //Validar si existe en la tabla de previsiontrabajador
+        $sql = "select * from previsiontrabajador where isapre = $id";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $this->desconectar();
+            return false;
+        }
+
         $sql = "delete from isapre where id = $id";
         $result = $this->mi->query($sql);
         $this->desconectar();
@@ -2683,6 +2737,7 @@ class Controller
     {
         $this->conexion();
         $sql = "delete from cargos where id = $id";
+
         $result = $this->mi->query($sql);
         $this->desconectar();
         return json_encode($result);
@@ -2730,13 +2785,29 @@ class Controller
 
     //Eliminar Causal Termino Contrato
     public function eliminarcausalterminocontrato($id)
-    {
+    {   
+        //Verificar si existe en la tabla de finiquitos o notificaciones
         $this->conexion();
+        $sql = "select * from finiquito where causalterminocontrato = $id";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $this->desconectar();
+            return false;
+        }
+        $sql = "select * from notificaciones where causalterminocontrato = $id";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $this->desconectar();
+            return false;
+        }
+
         $sql = "delete from causalterminocontrato where id = $id";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return json_encode($result);
     }
+
+    
 
     //Eliminar Tipo Documento
     public function eliminartipodocumento($id)

@@ -100,7 +100,7 @@ if (isset($_GET['id'])) {
         $detalle .= "<table style='width:100%;  border-collapse: collapse;'>";
         $detalle = $detalle . "<tr>";
         $saldoletras = $c->convertirNumeroLetras($saldo);
-        $detalle = $detalle . "<td style='border-collapse: collapse;width:100%; font-size:19px;'>Son " . $saldoletras . "</td>";
+        $detalle = $detalle . "<td style='border-collapse: collapse;width:100%; font-size:19px;'>Son " . $saldoletras . " Pesos</td>";
         $detalle = $detalle . "</tr>";
         $detalle = $detalle . "</table>";
 

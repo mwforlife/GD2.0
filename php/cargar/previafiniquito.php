@@ -118,6 +118,14 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['contrato']) && isset($_POST['ti
         $saldo = $haber - $descuento;
         $saldo1 = number_format($saldo, 0, ',', '.');
         $detalle = $detalle . "<td style='border: 1px solid black; border-collapse: collapse;width:25%;'>$ " . $saldo1 . "</td>";
+        $detalle = $detalle . "</tr>";
+        $detalle = $detalle . "</table>";
+        $detalle = $detalle . "<br/>";
+        $detalle .= "<table style='width:100%;  border-collapse: collapse;'>";
+        $detalle = $detalle . "<tr>";
+        $saldoletras = $c->convertirNumeroLetras($saldo);
+        $detalle = $detalle . "<td style='border-collapse: collapse;width:100%; font-size:19px;'>Son " . $saldoletras . " Pesos</td>";
+        $detalle = $detalle . "</tr>";
         $detalle = $detalle . "</table>";
 
 

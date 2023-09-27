@@ -256,29 +256,34 @@ foreach ($permiso as $p) {
 						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
 						<ul class="nav-sub">
 							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="contratoindividual.php">Generacion de Contrato Individual</a>
+								<a class="nav-sub-link" href="contratoindividual.php">Contrato Individual</a>
 							</li>
 							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="generarlote.php">Generacion de Contratos Masivos</a>
+								<a class="nav-sub-link" href="generarlote.php">Contratos Masivos</a>
 							</li>
 							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="finiquitoindividual.php">Generacion de Finiquito Individual</a>
+								<a class="nav-sub-link" href="finiquitoindividual.php">Finiquito Individual</a>
 							</li>
 							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="generarlotefiniquito.php">Generacion de Finiquitos Masivos</a>
+								<a class="nav-sub-link" href="generarlotefiniquito.php">Finiquitos Masivos</a>
 							</li>
 							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="notificacionindividual.php">Generacion de Notificacion Individual</a>
+								<a class="nav-sub-link" href="notificacionindividual.php">Notificacion Individual</a>
 							</li>
 							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="generarlotenotificacion.php">Generacion de Notificación Masiva</a>
+								<a class="nav-sub-link" href="generarlotenotificacion.php">Notificación Masiva</a>
 							</li>
 							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="documentospersonalizados.php">Generacion de Documentos Individual</a>
+								<a class="nav-sub-link" href="documentospersonalizados.php">Documentos Individual</a>
 							</li>
 							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="generarlotepersonalizado.php">Generacion de Documentos Masivos</a>
+								<a class="nav-sub-link" href="generarlotepersonalizado.php">Documentos Masivos</a>
 							</li>
+						</ul>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
+						<ul class="nav-sub">
 							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="impresiondocumentos.php">Impresión Documentos</a>
 							</li>

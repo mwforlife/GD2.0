@@ -266,7 +266,7 @@ foreach ($permiso as $p) {
 								<a class="nav-sub-link" href="documentospersonalizados.php">Generacion de Documentos Personalizados</a>
 							</li>
 							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="contratoindividual.php">Generacion de Contrato Individual</a>
+								<a class="nav-sub-link" href="contratoindividual.php">Contrato Individual</a>
 							</li>
 							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="finiquitoindividual.php">Generacion de Finiquitos Individual</a>
