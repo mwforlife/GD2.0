@@ -1,11 +1,13 @@
-
 <?php
+$previous_page = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
 require 'php/controller.php';
 $c = new Controller();
 ?>
 <?php
 session_start();
 unset($_SESSION['TRABJADOR_CONTRATO']);
+$_SESSION['TRABAJADOR_ID'] = 0;
+unset($_SESSION['TRABAJADOR_ID']);
 if (!isset($_SESSION['USER_ID'])) {
 	header("Location: signin.php");
 } else {
@@ -13,6 +15,11 @@ if (!isset($_SESSION['USER_ID'])) {
 	if ($valid == false) {
 		header("Location: lockscreen.php");
 	}
+}
+if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
+	$empresa = $_SESSION['CURRENT_ENTERPRISE'];
+} else {
+	header("Location: index.php");
 }
 $permiso = $c->listarPermisosUsuario1($_SESSION['USER_ID']);
 $gestion = false;
@@ -306,15 +313,9 @@ foreach ($permiso as $p) {
 						<a href="index.php"><img src="assets/img/brand/logo.png" class="mobile-logo-dark" alt="logo"></a>
 					</div>
 					<div class="input-group">
-						<div class="mt-0">
-							<form class="form-inline">
-								<div class="search-element">
-									<input type="search" class="form-control header-search" placeholder="Search…" aria-label="Search" tabindex="1">
-									<button class="btn" type="submit">
-										<i class="fa fa-search"></i>
-									</button>
-								</div>
-							</form>
+						<div class="d-flex justify-content-center align-items-center">
+							<h5 class="empresaname m-0">
+								<h5>
 						</div>
 					</div>
 				</div>
@@ -378,7 +379,7 @@ foreach ($permiso as $p) {
 								<div class="header-navheading">
 									<h6 class="main-notification-title"><?php echo $_SESSION['USER_NAME']; ?></h6>
 								</div>
-								
+
 								<a class="dropdown-item" href="close.php">
 									<i class="fe fe-power"></i> Cerrar Sesión
 								</a>
@@ -396,95 +397,72 @@ foreach ($permiso as $p) {
 			<div class="container-fluid">
 				<div class="inner-body">
 
-
 					<!-- Page Header -->
 					<div class="page-header">
 						<div class="page-header-1">
-							<h1 class="main-content-title tx-30">AFP</h1>
+							<h1 class="main-content-title tx-30">Documentos Individual</h1>
 							<ol class="breadcrumb">
 								<li class="breadcrumb-item"><a href="index.php">Inicio</a></li>
 							</ol>
 						</div>
 					</div>
-					<!-- End Page Header -->
+
 					<div class="row">
-						<div class="col-lg-12">
-							<div class="card orverflow-hidden">
-								<div class="card-body">
-									<div>
-										<h6 class="main-content-label mb-1">Registro de AFP</h6>
-										<p class="text-mutted card-sub-title"></p>
-									</div>
-									<form id="RegisForm" name="RegisForm" class="needs-validation was-validated">
-										<div class="row">
-											<div class="col-lg-6">
-												<div class="form-group has-success mg-b-0">
-													<label>Codigo (DT)</label>
-													<input class="form-control" id="Codigo" name="Codigo" placeholder="Codigo" required="" type="text" value="">
-												</div>
-											</div>
-											<div class="col-lg-6">
-												<div class="form-group has-success mg-b-0">
-													<label>Codigo (PREVIRED)</label>
-													<input class="form-control" id="CodigoPrevired" name="CodigoPrevired" placeholder="Codigo (PREVIRED)" required="" type="text" value="">
-												</div>
-											</div>
-											<div class="col-lg-6">
-												<div class="form-group has-success mg-b-0">
-													<label>Nombre</label>
-													<input class="form-control" id="Nombre" name="Nombre" placeholder="Nombre AFP" required="" type="text" value="">
-												</div>
-											</div>
-											<div class="col-md-12 mt-3 text-right">
-												<button type="reset" href="#" class="btn btn-warning btn-md"> <i class="fa fa-refresh"></i> Restablecer</button>
-												<button type="submit" href="#" class="btn btn-primary btn-md"> <i class="fa fa-save"></i> Registrar</button>
-											</div>
-										</div>
-									</form>
-								</div>
-							</div>
+						<div class="col-md-6 text-left mb-2">
+							<a href="generarlotepersonalizado.php" class="btn btn-md btn-warning">Documentos Masivos <i class="fa fa-file"></i> </a>
 						</div>
 					</div>
-					<!-- ROW-4 opened -->
+					<!-- ROW- opened -->
 					<div class="row">
 						<div class="col-xl-12 col-lg-12 col-md-12">
 							<div class="card transcation-crypto1" id="transcation-crypto1">
 								<div class="card-header bd-b-0">
-									<h4 class="card-title font-weight-semibold mb-0">Listado AFP</h4>
+									<h4 class="card-title font-weight-semibold mb-0">Listado de Trabajadores Activos</h4>
 								</div>
-								<div class="card-body">
+								<div class="card-body p-4">
 									<div class="">
 										<div class="table-responsive">
-											<table class="table w-100text-nowrap" id="example1">
-												<thead class="border-top text-center">
+											<table class="table text-nowrap w-100" id="example1">
+												<thead class="border-top">
 													<tr>
-														<th class="bg-transparent">Codigo (DT)</th>
-														<th class="bg-transparent">Codigo (PREVIRED)</th>
-														<th class="bg-transparent">Institución</th>
-														<th class="bg-transparent">Tasa</th>
-														<th class="bg-transparent text-center">Accion</th>
+														<th class="bg-transparent">RUT</th>
+														<th class="bg-transparent">Nombre</th>
+														<th class="bg-transparent">Fecha de Nacimiento</th>
+														<th class="bg-transparent">Ficha</th>
+														<th class="bg-transparent text-center">Documento</th>
 													</tr>
 												</thead>
-												<tbody class="text-center">
+												<tbody>
 													<?php
-													$lista = $c->listarafp();
-													if (count($lista) > 0) {
-														foreach ($lista as $object) {
-															echo "<tr>
-																		<td>" . $object->getCodigo() . "</td>
-																		<td>" . $object->getCodigoPrevired() . "</td>
-																		<td>" . $object->getNombre() . "</td>
-																		<td class='text-center'>
-																			<a href='tasaafp.php?code=" . $object->getId() . "' class='btn btn-sm btn-primary' ><i class='fa fa-edit'></i></a>
-																		</td>
-																		<td class='text-center'>
-																			<a href='javascript:void(0)' class='btn btn-sm btn-primary' data-toggle='modal' data-target='#modaledit' onclick='Editar(" . $object->getId() . ")'><i class='fa fa-edit'></i></a>
-																			<a href='javascript:void(0)' class='btn btn-sm btn-danger' onclick='Eliminar(" . $object->getId() . ")'><i class='fa fa-trash'></i></a>
-																		</td>
-																	</tr>";
-														}
-													}
+													$lista = $c->listartrabajadoresactivos($_SESSION['CURRENT_ENTERPRISE']);
 
+													$lista1 = $c->listartrabajadores($_SESSION['CURRENT_ENTERPRISE']);
+													foreach ($lista as $object) {
+														echo "<tr class='border-bottom-0'>";
+														echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
+														echo $object->getRut();
+														echo "</td>";
+														echo "<td class='text-muted fs-15 font-weight-semibold'>";
+														echo $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2();
+														echo "</td>";
+														echo "<td class='text-muted fs-15 font-weight-semibold'>";
+														echo date("d-m-Y", strtotime($object->getNacimiento()));
+														echo "</td>";
+														echo "<td class='text-muted fs-15 font-weight-semibold'>";
+
+														echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='mas(" . $object->getId() . ")' data-toggle='tooltip' data-original-title='Ver Ficha'>";
+														echo "<i class='fa fa-file'>";
+														echo "</i>";
+														echo "</a>";
+														echo "</td>";
+														echo "<td class='text-center'>";
+														echo "<a class='btn btn-outline-info btn-sm rounded-11' href='documentospersonalizados.php?code=".$object->getId()."' data-toggle='tooltip' data-original-title='Generar Finiquito'>";
+														echo "<i class='fa fa-plus'>";
+														echo "</i>";
+														echo "</a>";
+														echo "</td>";
+														echo "</tr>";
+													}
 													?>
 												</tbody>
 											</table>
@@ -495,7 +473,6 @@ foreach ($permiso as $p) {
 						</div>
 					</div>
 					<!-- ROW-4 END -->
-
 
 				</div>
 			</div>
@@ -513,26 +490,6 @@ foreach ($permiso as $p) {
 			</div>
 		</div>
 		<!--End Footer-->
-
-
-		<!-- Edit Modal -->
-		<div class="modal fade" id="modaledit" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="staticBackdropLabel">Edición</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<div class="content">
-
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 
 
 	</div>
@@ -579,19 +536,51 @@ foreach ($permiso as $p) {
 	<!-- Sidebar js -->
 	<script src="assets/plugins/sidebar/sidebar.js"></script>
 
+	<!-- INTERNAL INDEX js -->
+	<script src="assets/js/index.js"></script>
 
 	<!-- Sticky js -->
 	<script src="assets/js/sticky.js"></script>
 
 	<!-- Custom js -->
-	<!-- Custom js -->
 	<script src="assets/js/custom.js"></script>
+	<script src="JsFunctions/validation.js"></script>
 	<script src="JsFunctions/Alert/toastify.js"></script>
 	<script src="JsFunctions/Alert/sweetalert2.all.min.js"></script>
 	<script src="JsFunctions/Alert/alert.js"></script>
-	<script src="JsFunctions/afp.js"></script>
+	<script src="JsFunctions/main.js"></script>
 
-
+	<script>
+		$(document).ready(function(){
+			mostrarEmpresa();
+		});
+	</script>
+	<script>
+		function mas(id) {
+			$.ajax({
+				type: "POST",
+				url: "php/cargar/mas.php",
+				data: {
+					id: id
+				},
+				success: function(data) {
+					window.location.href = "menuinfo.php";
+				}
+			});
+		}
+		function mas1(id) {
+			$.ajax({
+				type: "POST",
+				url: "php/cargar/mas.php",
+				data: {
+					id: id
+				},
+				success: function(data) {
+					window.location.href = "finiquitoindividual.php";
+				}
+			});
+		}
+	</script>
 
 </body>
 

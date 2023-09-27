@@ -5507,8 +5507,13 @@ class Controller
         while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $contrato = $rs['tipocontrato'];
+            if($contrato=="Contrato a Plazo Fijo"){
+                $contrato = "Plazo Fijo";
+            }else if($contrato=="Contrato Indefinido"){
+                $contrato = "Indefinido";
+            }
             $lote = $rs['nombre'];
-            $nombre = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'] . " " . $contrato;
+            $nombre = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'] ;
             $fechainicio = $rs['fechainicio'];
             $fechatermino = $rs['fechatermino'];
             $l = new Lotes_contrato($id, $contrato, $nombre, $lote, $fechainicio, $fechatermino);

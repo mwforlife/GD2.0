@@ -8,7 +8,7 @@ unset($_SESSION['TRABJADOR_CONTRATO']);
 if (!isset($_SESSION['USER_ID'])) {
 	header("Location: signin.php");
 } else {
-	$valid  = $c->validarsesion($_SESSION['USER_ID'], $_SESSION['USER_TOKEN']);
+	$valid = $c->validarsesion($_SESSION['USER_ID'], $_SESSION['USER_TOKEN']);
 	if ($valid == false) {
 		header("Location: lockscreen.php");
 	}
@@ -125,12 +125,14 @@ foreach ($permiso as $p) {
 				<a class="main-logo" href="index.php">
 					<img src="assets/img/brand/logo.png" class="header-brand-img desktop-logo" alt="logo">
 					<img src="assets/img/brand/icon.png" class="header-brand-img icon-logo" alt="logo">
-					<img src="assets/img/brand/dark-logo.png" class="header-brand-img desktop-logo theme-logo" alt="logo">
+					<img src="assets/img/brand/dark-logo.png" class="header-brand-img desktop-logo theme-logo"
+						alt="logo">
 					<img src="assets/img/brand/icon.png" class="header-brand-img icon-logo theme-logo" alt="logo">
 				</a>
 			</div>
 			<div class="main-sidebar-body">
-				<ul class="nav">
+				
+			<ul class="nav">
 					<li class="nav-header"><span class="nav-label">Dashboard</span></li>
 
 					<?php
@@ -138,9 +140,10 @@ foreach ($permiso as $p) {
 					if (isset($_SESSION['GESTION_PERMISO']) || isset($_SESSION['LECTURA_PERMISO']) || isset($_SESSION['ESCRITURA_PERMISO']) || isset($_SESSION['ACTUALIZACION_PERMISO']) || isset($_SESSION['ELIMINACION_PERMISO'])) {
 						if ($_SESSION['GESTION_PERMISO'] == true) {
 
-					?>
+							?>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span class="sidemenu-label">Definicion de Datos</span><i class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span
+										class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="isapres.php">Institución de Salud</a>
@@ -186,72 +189,77 @@ foreach ($permiso as $p) {
 									</li>
 								</ul>
 							</li>
-							<li class="nav-header"><span class="nav-label">FUNCIONES</span></li>
-							<li class="nav-item">
-								<a class="nav-link" href="tipodocumento.php"><i class="fe fe-grid sidemenu-icon"></i><span class="sidemenu-label">TIPO DE DOCUMENTOS</span></a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="redactardocumento.php"><i class="fe fe-grid sidemenu-icon"></i><span class="sidemenu-label">REDACTAR DOCUMENTOS</span></a>
-							</li>
-						<?php
+							<?php
 						}
-
-						if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
 						?>
-							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span class="sidemenu-label">Empresas</span><i class="angle fe fe-chevron-right"></i></a>
-								<ul class="nav-sub">
+						<li class="nav-header"><span class="nav-label">FUNCIONES</span></li>
+
+
+						<li class="nav-item">
+							<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span
+									class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
+							<ul class="nav-sub">
+								<?php
+								if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
+									?>
 									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="empresas.php">Listado de Empresas</a>
+										<a class="nav-sub-link" href="empresas.php">Empresas</a>
 									</li>
+									<?php
+								}
+								?>
+								<li class="nav-sub-item">
+									<a class="nav-sub-link" href="trabajadores.php">Trabajadores</a>
+								</li>
+
+								<?php
+								if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
+									?>
 									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="centrocosto.php">Registro de Centro de Costo</a>
+										<a class="nav-sub-link" href="tipodocumento.php">Escritos</a>
 									</li>
-								</ul>
-							</li>
+									<?php
+								}
+								?>
+
+								<?php
+								if (isset($_SESSION['GESTION_PERMISO'])) {
+									if ($_SESSION['GESTION_PERMISO'] == true) {
+
+										?>
+										<li class="nav-sub-item">
+											<a class="nav-sub-link" href="usuarios.php">Usuarios</a>
+										</li>
+										<?php
+									}
+								}
+								?>
+							</ul>
+						</li>
 						<?php
-						}
+					}
 
-						if ($_SESSION['GESTION_PERMISO'] == true) {
+					if ($_SESSION['GESTION_PERMISO'] == true) {
 						?>
-							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
-								<ul class="nav-sub">
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="auditoriatrabajadores.php">Auditoria de trabajadores</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="auditoriaeventos.php">Auditoria de eventos</a>
-									</li>
+						<li class="nav-item">
+							<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span
+									class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
+							<ul class="nav-sub">
+								<li class="nav-sub-item">
+									<a class="nav-sub-link" href="auditoriatrabajadores.php">Auditoria de trabajadores</a>
+								</li>
+								<li class="nav-sub-item">
+									<a class="nav-sub-link" href="auditoriaeventos.php">Auditoria de eventos</a>
+								</li>
 
-								</ul>
-							</li>
-					<?php
-						}
+							</ul>
+						</li>
+						<?php
 					}
 					?>
 					<li class="nav-item">
-						<a class="nav-link with-sub" href="#"><i class="fe fe-map-pin sidemenu-icon"></i><span class="sidemenu-label">Trabajadores</span><i class="angle fe fe-chevron-right"></i></a>
-						<ul class="nav-sub">
-							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="trabajadores.php">Listado de trabajadores</a>
-							</li>
-							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="registrartrabajador.php">Registro de trabajadores</a>
-							</li>
-							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="historialtrabajador.php">Ficha de trabajadores</a>
-							</li>
-							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="documentoficha.php">Registro de documento a Ficha trabajador</a>
-							</li>
-							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="anotaciones.php">Registro de Anotaciones</a>
-							</li>
-						</ul>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
+						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
+								class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
 						<ul class="nav-sub">
 							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="contratoindividual.php">Contrato Individual</a>
@@ -280,32 +288,14 @@ foreach ($permiso as $p) {
 						</ul>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
+						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
+								class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
 						<ul class="nav-sub">
 							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="impresiondocumentos.php">Impresión Documentos</a>
 							</li>
 						</ul>
 					</li>
-					<?php
-
-					if (isset($_SESSION['GESTION_PERMISO'])) {
-						if ($_SESSION['GESTION_PERMISO'] == true) {
-
-					?>
-							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-box sidemenu-icon"></i><span class="sidemenu-label">Gestion de Usuarios</span><i class="angle fe fe-chevron-right"></i></a>
-								<ul class="nav-sub">
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="usuarios.php">Registrar Usuarios</a>
-									</li>
-
-								</ul>
-							</li>
-					<?php
-						}
-					}
-					?>
 				</ul>
 			</div>
 		</div>
@@ -318,8 +308,10 @@ foreach ($permiso as $p) {
 				</div>
 				<div class="main-header-center">
 					<div class="responsive-logo">
-						<a href="index.php"><img src="assets/img/brand/dark-logo.png" class="mobile-logo" alt="logo"></a>
-						<a href="index.php"><img src="assets/img/brand/logo.png" class="mobile-logo-dark" alt="logo"></a>
+						<a href="index.php"><img src="assets/img/brand/dark-logo.png" class="mobile-logo"
+								alt="logo"></a>
+						<a href="index.php"><img src="assets/img/brand/logo.png" class="mobile-logo-dark"
+								alt="logo"></a>
 					</div>
 					<div class="input-group">
 						<div class="d-flex justify-content-center align-items-center">
@@ -331,13 +323,17 @@ foreach ($permiso as $p) {
 				<div class="main-header-right">
 					<div class="dropdown d-md-flex">
 						<a class="nav-link icon full-screen-link fullscreen-button" href="">
-							<i class="fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+							<i class="fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+									viewBox="0 0 24 24" width="24">
 									<path d="M0 0h24v24H0V0z" fill="none" />
-									<path d="M5 15H3v4c0 1.1.9 2 2 2h4v-2H5v-4zM5 5h4V3H5c-1.1 0-2 .9-2 2v4h2V5zm14-2h-4v2h4v4h2V5c0-1.1-.9-2-2-2zm0 16h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4zM12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+									<path
+										d="M5 15H3v4c0 1.1.9 2 2 2h4v-2H5v-4zM5 5h4V3H5c-1.1 0-2 .9-2 2v4h2V5zm14-2h-4v2h4v4h2V5c0-1.1-.9-2-2-2zm0 16h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4zM12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
 								</svg></i>
-							<i class="exit-fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+							<i class="exit-fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+									viewBox="0 0 24 24" width="24">
 									<path d="M0 0h24v24H0V0z" fill="none" />
-									<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
+									<path
+										d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
 								</svg></i>
 						</a>
 					</div>
@@ -349,14 +345,17 @@ foreach ($permiso as $p) {
 							<div class="header-navheading">
 								<h6 class="main-notification-title">
 									<?php echo $_SESSION['USER_NAME'];
-									?></h6>
+									?>
+								</h6>
 							</div>
 							<a class="dropdown-item" href="close.php">
 								<i class="fe fe-power"></i> Cerrar Sesíon
 							</a>
 						</div>
 					</div>
-					<button class="navbar-toggler navresponsive-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4" aria-expanded="false" aria-label="Toggle navigation">
+					<button class="navbar-toggler navresponsive-toggler" type="button" data-toggle="collapse"
+						data-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4"
+						aria-expanded="false" aria-label="Toggle navigation">
 						<i class="fe fe-more-vertical header-icons navbar-toggler-icon"></i>
 					</button><!-- Navresponsive closed -->
 				</div>
@@ -370,13 +369,18 @@ foreach ($permiso as $p) {
 				<div class="collapse navbar-collapse" id="navbarSupportedContent-4">
 					<div class="d-flex order-lg-2 ml-auto">
 						<div class="dropdown">
-							<a class="nav-link icon full-screen-link fullscreen-button" href=""><i class="fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+							<a class="nav-link icon full-screen-link fullscreen-button" href=""><i
+									class="fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+										viewBox="0 0 24 24" width="24">
 										<path d="M0 0h24v24H0V0z" fill="none" />
-										<path d="M5 15H3v4c0 1.1.9 2 2 2h4v-2H5v-4zM5 5h4V3H5c-1.1 0-2 .9-2 2v4h2V5zm14-2h-4v2h4v4h2V5c0-1.1-.9-2-2-2zm0 16h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4zM12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+										<path
+											d="M5 15H3v4c0 1.1.9 2 2 2h4v-2H5v-4zM5 5h4V3H5c-1.1 0-2 .9-2 2v4h2V5zm14-2h-4v2h4v4h2V5c0-1.1-.9-2-2-2zm0 16h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4zM12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
 									</svg></i>
-								<i class="exit-fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+								<i class="exit-fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+										viewBox="0 0 24 24" width="24">
 										<path d="M0 0h24v24H0V0z" fill="none" />
-										<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
+										<path
+											d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
 									</svg></i>
 							</a>
 						</div>
@@ -386,7 +390,9 @@ foreach ($permiso as $p) {
 							</a>
 							<div class="dropdown-menu">
 								<div class="header-navheading">
-									<h6 class="main-notification-title"><?php echo $_SESSION['USER_NAME']; ?></h6>
+									<h6 class="main-notification-title">
+										<?php echo $_SESSION['USER_NAME']; ?>
+									</h6>
 								</div>
 
 								<a class="dropdown-item" href="close.php">
@@ -426,13 +432,15 @@ foreach ($permiso as $p) {
 									</div>
 									<div class="row justify-content-center d-none">
 										<div class="col-md-6">
-											<input type="text" id="rut" name="rut" class="form-control" onkeyup="formatRut(this)" placeholder="Ingrese el Rut" maxlength="12">
+											<input type="text" id="rut" name="rut" class="form-control"
+												onkeyup="formatRut(this)" placeholder="Ingrese el Rut" maxlength="12">
 										</div>
 									</div>
 								</div>
 								<div class="row justify-content-center d-none">
 									<div class="col-md-6 text-center">
-										<button onclick="buscartrabajador()" class="btn btn-primary">Buscar <i class="fa fa-search"></i></button>
+										<button onclick="buscartrabajador()" class="btn btn-primary">Buscar <i
+												class="fa fa-search"></i></button>
 									</div>
 								</div>
 							</div>
@@ -445,7 +453,8 @@ foreach ($permiso as $p) {
 						<div class="col-xl-12 col-lg-12 col-md-12">
 							<div class="card transcation-crypto1" id="transcation-crypto1">
 								<div class="card-header bd-b-0">
-									<h4 class="card-title font-weight-semibold mb-0">Listado de Trabajadores Activos</h4>
+									<h4 class="card-title font-weight-semibold mb-0">Listado de Trabajadores Activos
+									</h4>
 								</div>
 								<div class="card-body p-4">
 									<div class="">
@@ -456,7 +465,7 @@ foreach ($permiso as $p) {
 														<th class="bg-transparent">RUT</th>
 														<th class="bg-transparent">Nombre</th>
 														<th class="bg-transparent">Fecha de Contrato</th>
-														<th class="bg-transparent">Sexo</th>
+														<th class="bg-transparent">Ficha</th>
 														<th class="bg-transparent text-center">Generar Contrato</th>
 													</tr>
 												</thead>
@@ -476,13 +485,13 @@ foreach ($permiso as $p) {
 														echo "<td class='text-muted fs-15 font-weight-semibold'>";
 														//Imprimir Fecha en formato dd-mm-yyyy
 														echo date("d-m-Y", strtotime($object->getNacimiento()));
-														echo "</td>";
+														
 														echo "<td class='text-muted fs-15 font-weight-semibold'>";
-														if ($object->getSexo() == 1) {
-															echo "Masculino";
-														} else {
-															echo "Femenino";
-														}
+
+														echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='mas(" . $object->getId() . ")' data-toggle='tooltip' data-original-title='Ver Ficha'>";
+														echo "<i class='fa fa-file'>";
+														echo "</i>";
+														echo "</a>";
 														echo "</td>";
 														echo "<td class='text-center'>";
 														echo "<a class='btn btn-outline-info btn-sm rounded-11' href='contratoindividual.php?code=" . $object->getId() . "' data-toggle='tooltip' data-original-title='Ver Más'>";
@@ -507,7 +516,8 @@ foreach ($permiso as $p) {
 						<div class="col-xl-12 col-lg-12 col-md-12">
 							<div class="card transcation-crypto1" id="transcation-crypto1">
 								<div class="card-header bd-b-0">
-									<h4 class="card-title font-weight-semibold mb-0">Listado de Trabajadores Inactivos</h4>
+									<h4 class="card-title font-weight-semibold mb-0">Listado de Trabajadores Inactivos
+									</h4>
 								</div>
 								<div class="card-body p-4">
 									<div class="">
@@ -518,7 +528,7 @@ foreach ($permiso as $p) {
 														<th class="bg-transparent">RUT</th>
 														<th class="bg-transparent">Nombre</th>
 														<th class="bg-transparent">Fecha de Nacimiento</th>
-														<th class="bg-transparent">Sexo</th>
+														<th class="bg-transparent">Ficha</th>
 														<th class="bg-transparent text-center">Generar Contrato</th>
 													</tr>
 												</thead>
@@ -543,13 +553,13 @@ foreach ($permiso as $p) {
 															echo "<td class='text-muted fs-15 font-weight-semibold'>";
 															//Imprimir fecha en formato dd-mm-aaaa
 															echo date("d-m-Y", strtotime($object->getNacimiento()));
-															echo "</td>";
+
 															echo "<td class='text-muted fs-15 font-weight-semibold'>";
-															if ($object->getSexo() == 1) {
-																echo "Masculino";
-															} else {
-																echo "Femenino";
-															}
+
+															echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='mas(" . $object->getId() . ")' data-toggle='tooltip' data-original-title='Ver Ficha'>";
+															echo "<i class='fa fa-file'>";
+															echo "</i>";
+															echo "</a>";
 															echo "</td>";
 															echo "<td class='text-center'>";
 															echo "<a class='btn btn-outline-info btn-sm rounded-11' href='contratoindividual.php?code=" . $object->getId() . "' data-toggle='tooltip' data-original-title='Generar Contrato'>";
@@ -591,64 +601,81 @@ foreach ($permiso as $p) {
 		<!-- Sidebar -->
 		<div class="sidebar sidebar-right sidebar-animate">
 			<div class="sidebar-icon">
-				<a href="#" class="text-right float-right text-dark fs-20" data-toggle="sidebar-right" data-target=".sidebar-right"><i class="fe fe-x"></i></a>
+				<a href="#" class="text-right float-right text-dark fs-20" data-toggle="sidebar-right"
+					data-target=".sidebar-right"><i class="fe fe-x"></i></a>
 			</div>
 			<div class="sidebar-body">
 				<h5>Todo</h5>
 				<div class="d-flex p-3">
 					<label class="ckbox"><input checked type="checkbox"><span>Hangout With friends</span></label>
 					<span class="ml-auto">
-						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
-						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top"
+							data-original-title="Edit"></i>
+						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top"
+							data-original-title="Delete"></i>
 					</span>
 				</div>
 				<div class="d-flex p-3 border-top">
 					<label class="ckbox"><input type="checkbox"><span>Prepare for presentation</span></label>
 					<span class="ml-auto">
-						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
-						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top"
+							data-original-title="Edit"></i>
+						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top"
+							data-original-title="Delete"></i>
 					</span>
 				</div>
 				<div class="d-flex p-3 border-top">
 					<label class="ckbox"><input type="checkbox"><span>Prepare for presentation</span></label>
 					<span class="ml-auto">
-						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
-						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top"
+							data-original-title="Edit"></i>
+						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top"
+							data-original-title="Delete"></i>
 					</span>
 				</div>
 				<div class="d-flex p-3 border-top">
 					<label class="ckbox"><input checked type="checkbox"><span>System Updated</span></label>
 					<span class="ml-auto">
-						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
-						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top"
+							data-original-title="Edit"></i>
+						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top"
+							data-original-title="Delete"></i>
 					</span>
 				</div>
 				<div class="d-flex p-3 border-top">
 					<label class="ckbox"><input type="checkbox"><span>Do something more</span></label>
 					<span class="ml-auto">
-						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
-						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top"
+							data-original-title="Edit"></i>
+						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top"
+							data-original-title="Delete"></i>
 					</span>
 				</div>
 				<div class="d-flex p-3 border-top">
 					<label class="ckbox"><input type="checkbox"><span>System Updated</span></label>
 					<span class="ml-auto">
-						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
-						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top"
+							data-original-title="Edit"></i>
+						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top"
+							data-original-title="Delete"></i>
 					</span>
 				</div>
 				<div class="d-flex p-3 border-top">
 					<label class="ckbox"><input type="checkbox"><span>Find an Idea</span></label>
 					<span class="ml-auto">
-						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
-						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top"
+							data-original-title="Edit"></i>
+						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top"
+							data-original-title="Delete"></i>
 					</span>
 				</div>
 				<div class="d-flex p-3 border-top mb-0">
 					<label class="ckbox"><input type="checkbox"><span>Project review</span></label>
 					<span class="ml-auto">
-						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
-						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top"
+							data-original-title="Edit"></i>
+						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top"
+							data-original-title="Delete"></i>
 					</span>
 				</div>
 				<h5>Overview</h5>
@@ -658,7 +685,8 @@ foreach ($permiso as $p) {
 							<span>Founder &amp; CEO</span> <span>24</span>
 						</div>
 						<div class="progress">
-							<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="20" class="progress-bar progress-bar-xs wd-20p" role="progressbar"></div>
+							<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="20"
+								class="progress-bar progress-bar-xs wd-20p" role="progressbar"></div>
 						</div><!-- progress -->
 					</div>
 					<div class="main-traffic-detail-item">
@@ -666,7 +694,8 @@ foreach ($permiso as $p) {
 							<span>UX Designer</span> <span>1</span>
 						</div>
 						<div class="progress">
-							<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="15" class="progress-bar progress-bar-xs bg-secondary wd-15p" role="progressbar"></div>
+							<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="15"
+								class="progress-bar progress-bar-xs bg-secondary wd-15p" role="progressbar"></div>
 						</div><!-- progress -->
 					</div>
 					<div class="main-traffic-detail-item">
@@ -674,7 +703,8 @@ foreach ($permiso as $p) {
 							<span>Recruitment</span> <span>87</span>
 						</div>
 						<div class="progress">
-							<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="45" class="progress-bar progress-bar-xs bg-success wd-45p" role="progressbar"></div>
+							<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="45"
+								class="progress-bar progress-bar-xs bg-success wd-45p" role="progressbar"></div>
 						</div><!-- progress -->
 					</div>
 					<div class="main-traffic-detail-item">
@@ -682,7 +712,8 @@ foreach ($permiso as $p) {
 							<span>Software Engineer</span> <span>32</span>
 						</div>
 						<div class="progress">
-							<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" class="progress-bar progress-bar-xs bg-info wd-25p" role="progressbar"></div>
+							<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25"
+								class="progress-bar progress-bar-xs bg-info wd-25p" role="progressbar"></div>
 						</div><!-- progress -->
 					</div>
 					<div class="main-traffic-detail-item">
@@ -690,7 +721,8 @@ foreach ($permiso as $p) {
 							<span>Project Manager</span> <span>32</span>
 						</div>
 						<div class="progress">
-							<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" class="progress-bar progress-bar-xs bg-danger wd-25p" role="progressbar"></div>
+							<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25"
+								class="progress-bar progress-bar-xs bg-danger wd-25p" role="progressbar"></div>
 						</div><!-- progress -->
 					</div>
 				</div>
@@ -698,7 +730,8 @@ foreach ($permiso as $p) {
 		</div>
 		<!-- End Sidebar -->
 
-		<div class="modal fade" id="representantelegalmodal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal fade" id="representantelegalmodal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true">
 			<div class="modal-dialog modal-xl modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -717,24 +750,29 @@ foreach ($permiso as $p) {
 								</div>
 								<div class="col-lg-6">
 									<div class="form-group has-success ">
-										<input class="form-control" placeholder="Nombre" required="" type="text" value="">
+										<input class="form-control" placeholder="Nombre" required="" type="text"
+											value="">
 									</div>
 								</div>
 								<div class="col-lg-6">
 									<div class="form-group has-success ">
-										<input class="form-control" placeholder="Primer Apellido" required="" type="text" value="">
+										<input class="form-control" placeholder="Primer Apellido" required=""
+											type="text" value="">
 									</div>
 								</div>
 								<div class="col-lg-6">
 									<div class="form-group has-success ">
-										<input class="form-control" placeholder="Segundo Apellido" required="" type="text" value="">
+										<input class="form-control" placeholder="Segundo Apellido" required=""
+											type="text" value="">
 									</div>
 								</div>
 
 
 								<div class="col-md-12 mt-3 text-right">
-									<button type="reset" class="btn btn-warning btn-md"> <i class="fa fa-arrow-left"></i> Restablecer</button>
-									<button type="submit" class="btn btn-primary btn-md"> <i class="fa fa-save"></i> Registrar</button>
+									<button type="reset" class="btn btn-warning btn-md"> <i
+											class="fa fa-arrow-left"></i> Restablecer</button>
+									<button type="submit" class="btn btn-primary btn-md"> <i class="fa fa-save"></i>
+										Registrar</button>
 								</div>
 							</div>
 						</form>
@@ -743,7 +781,8 @@ foreach ($permiso as $p) {
 			</div>
 		</div>
 
-		<div class="modal fade" id="codigoactividadmodal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal fade" id="codigoactividadmodal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true">
 			<div class="modal-dialog modal-xl modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -772,7 +811,9 @@ foreach ($permiso as $p) {
 													<td class="text-muted fs-15 font-weight-semibold">08.</td>
 													<td class="text-dark fs-15 font-weight-semibold">Emily Lewis</td>
 													<td class="">
-														<a class="btn btn-outline-info btn-sm rounded-11 mr-2" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-plus"></i></a>
+														<a class="btn btn-outline-info btn-sm rounded-11 mr-2"
+															data-toggle="tooltip" data-original-title="Edit"><i
+																class="fa fa-plus"></i></a>
 													</td>
 												</tr>
 											</tbody>
@@ -861,6 +902,20 @@ foreach ($permiso as $p) {
 	?>
 
 	<script src="JsFunctions/Trabajadores.js"></script>
+	<script>
+		function mas(id) {
+			$.ajax({
+				type: "POST",
+				url: "php/cargar/mas.php",
+				data: {
+					id: id
+				},
+				success: function(data) {
+					window.location.href = "menuinfo.php";
+				}
+			});
+		}
+	</script>
 
 
 </body>

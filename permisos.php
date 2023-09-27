@@ -140,7 +140,8 @@ if (isset($_GET['code'])) {
 				</a>
 			</div>
 			<div class="main-sidebar-body">
-				<ul class="nav">
+				
+			<ul class="nav">
 					<li class="nav-header"><span class="nav-label">Dashboard</span></li>
 
 					<?php
@@ -148,9 +149,10 @@ if (isset($_GET['code'])) {
 					if (isset($_SESSION['GESTION_PERMISO']) || isset($_SESSION['LECTURA_PERMISO']) || isset($_SESSION['ESCRITURA_PERMISO']) || isset($_SESSION['ACTUALIZACION_PERMISO']) || isset($_SESSION['ELIMINACION_PERMISO'])) {
 						if ($_SESSION['GESTION_PERMISO'] == true) {
 
-					?>
+							?>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span class="sidemenu-label">Definicion de Datos</span><i class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span
+										class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="isapres.php">Institución de Salud</a>
@@ -196,72 +198,77 @@ if (isset($_GET['code'])) {
 									</li>
 								</ul>
 							</li>
-							<li class="nav-header"><span class="nav-label">FUNCIONES</span></li>
-							<li class="nav-item">
-								<a class="nav-link" href="tipodocumento.php"><i class="fe fe-grid sidemenu-icon"></i><span class="sidemenu-label">TIPO DE DOCUMENTOS</span></a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="redactardocumento.php"><i class="fe fe-grid sidemenu-icon"></i><span class="sidemenu-label">REDACTAR DOCUMENTOS</span></a>
-							</li>
-						<?php
+							<?php
 						}
-
-						if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
 						?>
-							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span class="sidemenu-label">Empresas</span><i class="angle fe fe-chevron-right"></i></a>
-								<ul class="nav-sub">
+						<li class="nav-header"><span class="nav-label">FUNCIONES</span></li>
+
+
+						<li class="nav-item">
+							<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span
+									class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
+							<ul class="nav-sub">
+								<?php
+								if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
+									?>
 									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="empresas.php">Listado de Empresas</a>
+										<a class="nav-sub-link" href="empresas.php">Empresas</a>
 									</li>
+									<?php
+								}
+								?>
+								<li class="nav-sub-item">
+									<a class="nav-sub-link" href="trabajadores.php">Trabajadores</a>
+								</li>
+
+								<?php
+								if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
+									?>
 									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="centrocosto.php">Registro de Centro de Costo</a>
+										<a class="nav-sub-link" href="tipodocumento.php">Escritos</a>
 									</li>
-								</ul>
-							</li>
+									<?php
+								}
+								?>
+
+								<?php
+								if (isset($_SESSION['GESTION_PERMISO'])) {
+									if ($_SESSION['GESTION_PERMISO'] == true) {
+
+										?>
+										<li class="nav-sub-item">
+											<a class="nav-sub-link" href="usuarios.php">Usuarios</a>
+										</li>
+										<?php
+									}
+								}
+								?>
+							</ul>
+						</li>
 						<?php
-						}
+					}
 
-						if ($_SESSION['GESTION_PERMISO'] == true) {
+					if ($_SESSION['GESTION_PERMISO'] == true) {
 						?>
-							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
-								<ul class="nav-sub">
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="auditoriatrabajadores.php">Auditoria de trabajadores</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="auditoriaeventos.php">Auditoria de eventos</a>
-									</li>
+						<li class="nav-item">
+							<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span
+									class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
+							<ul class="nav-sub">
+								<li class="nav-sub-item">
+									<a class="nav-sub-link" href="auditoriatrabajadores.php">Auditoria de trabajadores</a>
+								</li>
+								<li class="nav-sub-item">
+									<a class="nav-sub-link" href="auditoriaeventos.php">Auditoria de eventos</a>
+								</li>
 
-								</ul>
-							</li>
-					<?php
-						}
+							</ul>
+						</li>
+						<?php
 					}
 					?>
 					<li class="nav-item">
-						<a class="nav-link with-sub" href="#"><i class="fe fe-map-pin sidemenu-icon"></i><span class="sidemenu-label">Trabajadores</span><i class="angle fe fe-chevron-right"></i></a>
-						<ul class="nav-sub">
-							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="trabajadores.php">Listado de trabajadores</a>
-							</li>
-							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="registrartrabajador.php">Registro de trabajadores</a>
-							</li>
-							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="historialtrabajador.php">Ficha de trabajadores</a>
-							</li>
-							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="documentoficha.php">Registro de documento a Ficha trabajador</a>
-							</li>
-							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="anotaciones.php">Registro de Anotaciones</a>
-							</li>
-						</ul>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
+						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
+								class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
 						<ul class="nav-sub">
 							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="contratoindividual.php">Contrato Individual</a>
@@ -290,32 +297,14 @@ if (isset($_GET['code'])) {
 						</ul>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
+						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
+								class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
 						<ul class="nav-sub">
 							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="impresiondocumentos.php">Impresión Documentos</a>
 							</li>
 						</ul>
 					</li>
-					<?php
-
-					if (isset($_SESSION['GESTION_PERMISO'])) {
-						if ($_SESSION['GESTION_PERMISO'] == true) {
-
-					?>
-							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-box sidemenu-icon"></i><span class="sidemenu-label">Gestion de Usuarios</span><i class="angle fe fe-chevron-right"></i></a>
-								<ul class="nav-sub">
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="usuarios.php">Registrar Usuarios</a>
-									</li>
-
-								</ul>
-							</li>
-					<?php
-						}
-					}
-					?>
 				</ul>
 			</div>
 		</div>
