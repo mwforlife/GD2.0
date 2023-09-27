@@ -586,6 +586,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
 
     $typecontract = $_POST['typecontract'];
     $fecha_termino = $_POST['fecha_termino'];
+    $fechatermino1 = $_POST['fecha_termino'];
     //Convertir fecha en formato largo
     if ($typecontract == 1) {
         $typecontract = "Contrato Indefinido";
@@ -1880,7 +1881,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
     }
     
     //Guardar en la base de datos
-    $result = $c->query("insert into contratos values(null, $trabajador, $empresa, '$typecontract','$Charge',$sueldo, '$fechainicioregistro', '$fecha_termino', '$nombre_documento',1,now())");
+    $result = $c->query("insert into contratos values(null, $trabajador, $empresa, '$typecontract','$Charge',$sueldo, '$fechainicioregistro', '$fechatermino1', '$nombre_documento',1,now())");
     if ($result == true) {
         echo 1;
         $usuario = $_SESSION['USER_ID'];
