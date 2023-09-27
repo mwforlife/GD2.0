@@ -234,7 +234,7 @@ foreach ($permiso as $p) {
 								</li>
 
 								<?php
-								if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
+								if ($_SESSION['GESTION_PERMISO'] == true) {
 									?>
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="tipodocumento.php">Escritos</a>
