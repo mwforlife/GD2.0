@@ -976,6 +976,7 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 																		<td>T. Contrato</td>
 																		<td>Estado</td>
 																		<td>Doc</td>
+																		<td>Anexos</td>
 																		<td>Eliminar</td>
 																	</tr>
 																</thead>
@@ -997,9 +998,10 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 																			} else {
 																				echo "<td>Finiquitado</td>";
 																			}
-																			echo "<td class='d-flex'> 
-																				<a class='btn btn-outline-warning btn-sm rounded-11' target='_blank' href='uploads/Contratos/" . $contrato->getDocumento() . "'><i class='fa fa-file'></i></a>
-																				</td>";
+																			echo "<td class='d-flex'><a class='btn btn-outline-warning btn-sm rounded-11' target='_blank' href='uploads/Contratos/" . $contrato->getDocumento() . "'><i class='fa fa-file'></i></a></td>";
+																			
+																			echo "<td class='d-flex'><a onclick='mostraranexos(".$contrato->getId().")' class='btn btn-outline-info btn-sm rounded-11'><i class='fa fa-file'></i></a></td>";
+																			
 																			if ($contrato->getEstado() == 1) {
 																				echo "<td><button class='btn btn-danger btn-sm rounded-11' onclick='eliminarcontrato(" . $contrato->getId() . ")'><i class='fa fa-trash'></i></button></td>";
 																			} else {

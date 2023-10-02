@@ -8,7 +8,7 @@ unset($_SESSION['TRABJADOR_CONTRATO']);
 if (!isset($_SESSION['USER_ID'])) {
     header("Location: signin.php");
 } else {
-    $valid  = $c->validarsesion($_SESSION['USER_ID'], $_SESSION['USER_TOKEN']);
+    $valid = $c->validarsesion($_SESSION['USER_ID'], $_SESSION['USER_TOKEN']);
     if ($valid == false) {
         header("Location: lockscreen.php");
     }
@@ -66,7 +66,7 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
     <link rel="icon" href="assets/img/brand/favicon.ico" type="image/x-icon" />
 
     <!-- Title -->
-    <title>Gestor de Documentos | Empresas</title>
+    <title>Gestor de Documentos | Anexos</title>
 
     <!-- Bootstrap css-->
     <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
@@ -138,177 +138,178 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                 <a class="main-logo" href="index.php">
                     <img src="assets/img/brand/logo.png" class="header-brand-img desktop-logo" alt="logo">
                     <img src="assets/img/brand/icon.png" class="header-brand-img icon-logo" alt="logo">
-                    <img src="assets/img/brand/dark-logo.png" class="header-brand-img desktop-logo theme-logo" alt="logo">
+                    <img src="assets/img/brand/dark-logo.png" class="header-brand-img desktop-logo theme-logo"
+                        alt="logo">
                     <img src="assets/img/brand/icon.png" class="header-brand-img icon-logo theme-logo" alt="logo">
                 </a>
             </div>
             <div class="main-sidebar-body">
-                
-				<ul class="nav">
-					<li class="nav-header"><span class="nav-label">Dashboard</span></li>
 
-					<?php
+                <ul class="nav">
+                    <li class="nav-header"><span class="nav-label">Dashboard</span></li>
 
-					if (isset($_SESSION['GESTION_PERMISO']) || isset($_SESSION['LECTURA_PERMISO']) || isset($_SESSION['ESCRITURA_PERMISO']) || isset($_SESSION['ACTUALIZACION_PERMISO']) || isset($_SESSION['ELIMINACION_PERMISO'])) {
-						if ($_SESSION['GESTION_PERMISO'] == true) {
+                    <?php
 
-							?>
-							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span
-										class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
-								<ul class="nav-sub">
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="isapres.php">Institución de Salud</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="afp.php">AFP</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="pagadoressubsidio.php">PAGADORES SUBSIDIO</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="regiones.php">REGIONES</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="comunas.php">COMUNAS</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="nacionalidad.php">NACIONALIDADES</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="jornadas.php">JORNADAS</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="tiposueldo.php">TIPO SUELDO BASE</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="cajacompensacion.php">CAJAS DE COMPENSACIÓN</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="mutuales.php">MUTUALES DE SEGURIDAD</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="asignacionfamiliar.php">TRAMOS ASIGNACION FAMILIAR</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="tipocontrato.php">TIPO CONTRATO LABORAL</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="causaltermino.php">CAUSAL TERMINO CONTRATO</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="diasferiados.php">DIAS FERIADOS</a>
-									</li>
-								</ul>
-							</li>
-							<?php
-						}
-						?>
-						<li class="nav-header"><span class="nav-label">FUNCIONES</span></li>
+                    if (isset($_SESSION['GESTION_PERMISO']) || isset($_SESSION['LECTURA_PERMISO']) || isset($_SESSION['ESCRITURA_PERMISO']) || isset($_SESSION['ACTUALIZACION_PERMISO']) || isset($_SESSION['ELIMINACION_PERMISO'])) {
+                        if ($_SESSION['GESTION_PERMISO'] == true) {
+
+                            ?>
+                            <li class="nav-item">
+                                <a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span
+                                        class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
+                                <ul class="nav-sub">
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="isapres.php">Institución de Salud</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="afp.php">AFP</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="pagadoressubsidio.php">PAGADORES SUBSIDIO</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="regiones.php">REGIONES</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="comunas.php">COMUNAS</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="nacionalidad.php">NACIONALIDADES</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="jornadas.php">JORNADAS</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="tiposueldo.php">TIPO SUELDO BASE</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="cajacompensacion.php">CAJAS DE COMPENSACIÓN</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="mutuales.php">MUTUALES DE SEGURIDAD</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="asignacionfamiliar.php">TRAMOS ASIGNACION FAMILIAR</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="tipocontrato.php">TIPO CONTRATO LABORAL</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="causaltermino.php">CAUSAL TERMINO CONTRATO</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="diasferiados.php">DIAS FERIADOS</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <?php
+                        }
+                        ?>
+                        <li class="nav-header"><span class="nav-label">FUNCIONES</span></li>
 
 
-						<li class="nav-item">
-							<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span
-									class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
-							<ul class="nav-sub">
-								<?php
-								if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
-									?>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="empresas.php">Empresas</a>
-									</li>
-									<?php
-								}
-								?>
-								<li class="nav-sub-item">
-									<a class="nav-sub-link" href="trabajadores.php">Trabajadores</a>
-								</li>
+                        <li class="nav-item">
+                            <a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span
+                                    class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
+                            <ul class="nav-sub">
+                                <?php
+                                if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
+                                    ?>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="empresas.php">Empresas</a>
+                                    </li>
+                                    <?php
+                                }
+                                ?>
+                                <li class="nav-sub-item">
+                                    <a class="nav-sub-link" href="trabajadores.php">Trabajadores</a>
+                                </li>
 
-								<?php
-								if ($_SESSION['GESTION_PERMISO'] == true) {
-									?>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="tipodocumento.php">Escritos</a>
-									</li>
-									<?php
-								}
-								?>
+                                <?php
+                                if ($_SESSION['GESTION_PERMISO'] == true) {
+                                    ?>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="tipodocumento.php">Escritos</a>
+                                    </li>
+                                    <?php
+                                }
+                                ?>
 
-								<?php
-								if (isset($_SESSION['GESTION_PERMISO'])) {
-									if ($_SESSION['GESTION_PERMISO'] == true) {
+                                <?php
+                                if (isset($_SESSION['GESTION_PERMISO'])) {
+                                    if ($_SESSION['GESTION_PERMISO'] == true) {
 
-										?>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="usuarios.php">Usuarios</a>
-										</li>
-										<?php
-									}
-								}
-								?>
-							</ul>
-						</li>
-						<?php
-					}
+                                        ?>
+                                        <li class="nav-sub-item">
+                                            <a class="nav-sub-link" href="usuarios.php">Usuarios</a>
+                                        </li>
+                                        <?php
+                                    }
+                                }
+                                ?>
+                            </ul>
+                        </li>
+                        <?php
+                    }
 
-					if ($_SESSION['GESTION_PERMISO'] == true) {
-						?>
-						<li class="nav-item">
-							<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span
-									class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
-							<ul class="nav-sub">
-								<li class="nav-sub-item">
-									<a class="nav-sub-link" href="auditoriatrabajadores.php">Auditoria de trabajadores</a>
-								</li>
-								<li class="nav-sub-item">
-									<a class="nav-sub-link" href="auditoriaeventos.php">Auditoria de eventos</a>
-								</li>
+                    if ($_SESSION['GESTION_PERMISO'] == true) {
+                        ?>
+                        <li class="nav-item">
+                            <a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span
+                                    class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
+                            <ul class="nav-sub">
+                                <li class="nav-sub-item">
+                                    <a class="nav-sub-link" href="auditoriatrabajadores.php">Auditoria de trabajadores</a>
+                                </li>
+                                <li class="nav-sub-item">
+                                    <a class="nav-sub-link" href="auditoriaeventos.php">Auditoria de eventos</a>
+                                </li>
 
-							</ul>
-						</li>
-						<?php
-					}
-					?>
-					<li class="nav-item">
-						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
-								class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
-						<ul class="nav-sub">
-							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="contratoindividual.php">Contrato Individual</a>
-							</li>
-							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="generarlote.php">Contratos Masivos</a>
-							</li>
-							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="finiquitoindividual.php">Finiquito Individual</a>
-							</li>
-							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="generarlotefiniquito.php">Finiquitos Masivos</a>
-							</li>
-							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="notificacionindividual.php">Notificacion Individual</a>
-							</li>
-							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="generarlotenotificacion.php">Notificación Masiva</a>
-							</li>
-							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="documentospersonalizados.php">Documentos Individual</a>
-							</li>
-							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="generarlotepersonalizado.php">Documentos Masivos</a>
-							</li>
-						</ul>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
-								class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
-						<ul class="nav-sub">
-							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="impresiondocumentos.php">Impresión Documentos</a>
-							</li>
-						</ul>
-					</li>
-				</ul>
+                            </ul>
+                        </li>
+                        <?php
+                    }
+                    ?>
+                    <li class="nav-item">
+                        <a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
+                                class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
+                        <ul class="nav-sub">
+                            <li class="nav-sub-item">
+                                <a class="nav-sub-link" href="contratoindividual.php">Contrato Individual</a>
+                            </li>
+                            <li class="nav-sub-item">
+                                <a class="nav-sub-link" href="generarlote.php">Contratos Masivos</a>
+                            </li>
+                            <li class="nav-sub-item">
+                                <a class="nav-sub-link" href="finiquitoindividual.php">Finiquito Individual</a>
+                            </li>
+                            <li class="nav-sub-item">
+                                <a class="nav-sub-link" href="generarlotefiniquito.php">Finiquitos Masivos</a>
+                            </li>
+                            <li class="nav-sub-item">
+                                <a class="nav-sub-link" href="notificacionindividual.php">Notificacion Individual</a>
+                            </li>
+                            <li class="nav-sub-item">
+                                <a class="nav-sub-link" href="generarlotenotificacion.php">Notificación Masiva</a>
+                            </li>
+                            <li class="nav-sub-item">
+                                <a class="nav-sub-link" href="documentospersonalizados.php">Documentos Individual</a>
+                            </li>
+                            <li class="nav-sub-item">
+                                <a class="nav-sub-link" href="generarlotepersonalizado.php">Documentos Masivos</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
+                                class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
+                        <ul class="nav-sub">
+                            <li class="nav-sub-item">
+                                <a class="nav-sub-link" href="impresiondocumentos.php">Impresión Documentos</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
         <!-- End Sidemenu -->
@@ -320,8 +321,10 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                 </div>
                 <div class="main-header-center">
                     <div class="responsive-logo">
-                        <a href="index.php"><img src="assets/img/brand/dark-logo.png" class="mobile-logo" alt="logo"></a>
-                        <a href="index.php"><img src="assets/img/brand/logo.png" class="mobile-logo-dark" alt="logo"></a>
+                        <a href="index.php"><img src="assets/img/brand/dark-logo.png" class="mobile-logo"
+                                alt="logo"></a>
+                        <a href="index.php"><img src="assets/img/brand/logo.png" class="mobile-logo-dark"
+                                alt="logo"></a>
                     </div>
                     <div class="input-group">
                         <div class="d-flex justify-content-center align-items-center">
@@ -333,13 +336,17 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                 <div class="main-header-right">
                     <div class="dropdown d-md-flex">
                         <a class="nav-link icon full-screen-link fullscreen-button" href="">
-                            <i class="fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                            <i class="fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+                                    viewBox="0 0 24 24" width="24">
                                     <path d="M0 0h24v24H0V0z" fill="none" />
-                                    <path d="M5 15H3v4c0 1.1.9 2 2 2h4v-2H5v-4zM5 5h4V3H5c-1.1 0-2 .9-2 2v4h2V5zm14-2h-4v2h4v4h2V5c0-1.1-.9-2-2-2zm0 16h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4zM12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+                                    <path
+                                        d="M5 15H3v4c0 1.1.9 2 2 2h4v-2H5v-4zM5 5h4V3H5c-1.1 0-2 .9-2 2v4h2V5zm14-2h-4v2h4v4h2V5c0-1.1-.9-2-2-2zm0 16h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4zM12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
                                 </svg></i>
-                            <i class="exit-fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                            <i class="exit-fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+                                    viewBox="0 0 24 24" width="24">
                                     <path d="M0 0h24v24H0V0z" fill="none" />
-                                    <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
+                                    <path
+                                        d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
                                 </svg></i>
                         </a>
                     </div>
@@ -351,14 +358,17 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                             <div class="header-navheading">
                                 <h6 class="main-notification-title">
                                     <?php echo $_SESSION['USER_NAME'];
-                                    ?></h6>
+                                    ?>
+                                </h6>
                             </div>
                             <a class="dropdown-item" href="close.php">
                                 <i class="fe fe-power"></i> Cerrar Sesíon
                             </a>
                         </div>
                     </div>
-                    <button class="navbar-toggler navresponsive-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4" aria-expanded="false" aria-label="Toggle navigation">
+                    <button class="navbar-toggler navresponsive-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4"
+                        aria-expanded="false" aria-label="Toggle navigation">
                         <i class="fe fe-more-vertical header-icons navbar-toggler-icon"></i>
                     </button><!-- Navresponsive closed -->
                 </div>
@@ -372,13 +382,18 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                 <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
                     <div class="d-flex order-lg-2 ml-auto">
                         <div class="dropdown">
-                            <a class="nav-link icon full-screen-link fullscreen-button" href=""><i class="fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                            <a class="nav-link icon full-screen-link fullscreen-button" href=""><i
+                                    class="fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+                                        viewBox="0 0 24 24" width="24">
                                         <path d="M0 0h24v24H0V0z" fill="none" />
-                                        <path d="M5 15H3v4c0 1.1.9 2 2 2h4v-2H5v-4zM5 5h4V3H5c-1.1 0-2 .9-2 2v4h2V5zm14-2h-4v2h4v4h2V5c0-1.1-.9-2-2-2zm0 16h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4zM12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+                                        <path
+                                            d="M5 15H3v4c0 1.1.9 2 2 2h4v-2H5v-4zM5 5h4V3H5c-1.1 0-2 .9-2 2v4h2V5zm14-2h-4v2h4v4h2V5c0-1.1-.9-2-2-2zm0 16h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4zM12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
                                     </svg></i>
-                                <i class="exit-fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                                <i class="exit-fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+                                        viewBox="0 0 24 24" width="24">
                                         <path d="M0 0h24v24H0V0z" fill="none" />
-                                        <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
+                                        <path
+                                            d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
                                     </svg></i>
                             </a>
                         </div>
@@ -388,7 +403,9 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                             </a>
                             <div class="dropdown-menu">
                                 <div class="header-navheading">
-                                    <h6 class="main-notification-title"><?php echo $_SESSION['USER_NAME']; ?></h6>
+                                    <h6 class="main-notification-title">
+                                        <?php echo $_SESSION['USER_NAME']; ?>
+                                    </h6>
                                 </div>
 
                                 <a class="dropdown-item" href="close.php">
@@ -412,7 +429,7 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                     <!-- Page Header -->
                     <div class="page-header">
                         <div class="page-header-1">
-                            <h1 class="main-content-title tx-30">Generación de documentos Masivos</h1>
+                            <h1 class="main-content-title tx-30">Anexos Masivos</h1>
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="index.php">Inicio</a></li>
                             </ol>
@@ -456,7 +473,7 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                                                 </thead>
                                                 <tbody id="lotes">
                                                     <?php
-                                                    $lista = $c->buscarlotefiniquito($_SESSION['USER_ID']);
+                                                    $lista = $c->buscarloteanexo($_SESSION['USER_ID']);
                                                     foreach ($lista as $object1) {
                                                         echo "<tr class='border-bottom-0'>";
                                                         echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
@@ -474,7 +491,11 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                                                     ?>
                                                 </tbody>
                                             </table>
-                                            <a class="btn btn-danger" href="generarlotepersonalizado.php"><i class="fa fa-arrow-left"></i> Volver</a>
+                                        </div>
+                                        <div class="col-md-12 text-right">
+
+                                            <a class="btn btn-danger" href="generarlotepersonalizado.php"><i
+                                                    class="fa fa-arrow-left"></i> Volver</a>
                                         </div>
                                     </div>
                                 </div>
@@ -486,34 +507,71 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <form id="formdocumentomasivo" name="formdocumentomasivo">
-                                        <div class="row">
-                                            <div class="col-lg-12 text-center">
-                                                <h2>Información de Documento</h2>
-                                            </div>
+                                    <form id="formanexomasivo" name="formanexomasivo">
+                                    <div class="row">
+                                        <div class="col-lg-12 text-center">
+                                            <h2>Información de Documento</h2>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-lg-6 mt-1">
+                                                    <label for="">Fecha Generacion:</label>
+                                                    <input type="date" class="form-control text-dark"
+                                                        id="fechageneracion" name="fechageneracion" required="">
 
-                                            <div class="col-lg-6 mt-3">
-                                                <div class="form-group select2-lg">
-                                                    <label for="">Tipo de Plantilla:</label>
-                                                    <button class="btn btn-primary btn-sm fs-10" type="button" data-toggle="modal" data-target="#tipocontratomodal">Seleccionar</button>
-                                                    <label class="form-control" id="tipocontratotext"></label>
-                                                    <input type="hidden" class="form-control text-dark" id="tipocontratoid" name="tipocontratoid" required="" readonly>
-                                                    <input type="hidden" class="form-control text-dark" id="empresa" name="empresa" required="" readonly value="<?php echo $_SESSION['CURRENT_ENTERPRISE']; ?>">
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6 mt-1">
-                                                <label for="">Fecha Generacion:</label>
-                                                <input type="date" class="form-control text-dark" id="fechageneracion" name="fechageneracion" required="">
-
-                                            </div>
-
-
-
+                                            <hr>
                                         </div>
+
+                                        <div class="col-md-3">
+                                            <label for="">Clausula a Modificar</label>
+                                            <input type="text" class="form-control" id="clausula">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group select2-lg">
+                                                <label for="">Tipo de Plantilla:</label>
+                                                <button class="btn btn-primary btn-sm fs-10" type="button"
+                                                    data-toggle="modal"
+                                                    data-target="#tipocontratomodal">Seleccionar</button>
+                                                <label class="form-control" id="tipocontratotext">.</label>
+                                                <input type="hidden" class="form-control text-dark" id="tipocontratoid"
+                                                    name="tipocontratoid" required="" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 d-flex align-items-end mt-0">
+                                            <button class="btn btn-outline-primary mb-3" type="button"
+                                                onclick="agregarClausula()"><i class="fa fa-plus"></i> Agregar
+                                                Clausula</button>
+                                        </div>
+                                        <div class="col-lg-12 text-center">
+                                            <h2>Información de Clausulas</h2>
+                                            <table class="table text-wrap table-bordered text-center">
+                                                <thead class="border-top">
+                                                    <tr>
+                                                        <th class="bg-transparent">Clausula</th>
+                                                        <th class="bg-transparent">Tipo de Documento</th>
+                                                        <th class="bg-transparent">Eliminar</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="clausulas">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+
+
+                                    </div>
+                                        <input type="hidden" class="form-control text-dark" id="empresa" name="empresa"
+                                            required="" readonly value="<?php echo $_SESSION['CURRENT_ENTERPRISE']; ?>">
                                         <div class="col-md-12 mt-3 text-right">
-                                            <a href="menuinfo.php" class="btn btn-danger"> <i class="fa fa-arrow-left"></i> Volver</a>
-                                            <button type="button" id="previadocumentomasivo" class="btn btn-warning"> <i class="fa fa-eye"></i> Vista Previa</button>
-                                            <button type="submit" class="btn btn-success"> <i class="fa fa-save"></i> Registrar</button>
+                                            <a href="menuinfo.php" class="btn btn-danger"> <i
+                                                    class="fa fa-arrow-left"></i> Volver</a>
+                                            <button type="button" id="previadocumentomasivo" class="btn btn-warning"> <i
+                                                    class="fa fa-eye"></i> Vista Previa</button>
+                                            <button type="submit" class="btn btn-success"> <i class="fa fa-save"></i>
+                                                Registrar</button>
                                         </div>
                                     </form>
                                 </div>
@@ -526,7 +584,8 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
             </div>
             <!-- End Main Content-->
             <!-- Modal TipoContrato-->
-            <div class="modal fade" id="tipocontratomodal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" id="tipocontratomodal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -582,7 +641,8 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
 
 
             <!-- Modal TipoContrato-->
-            <div class="modal fade" id="previadocument" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" id="previadocument" data-backdrop="static" data-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -603,7 +663,8 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
             </div>
 
             <!-- Modal Representante Legal-->
-            <div class="modal fade" id="modalvistaprevia" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" id="modalvistaprevia" data-backdrop="static" data-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -644,7 +705,8 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
             <!-- Sidebar -->
             <div class="sidebar sidebar-right sidebar-animate">
                 <div class="sidebar-icon">
-                    <a href="#" class="text-right float-right text-dark fs-20" data-toggle="sidebar-right" data-target=".sidebar-right"><i class="fe fe-x"></i></a>
+                    <a href="#" class="text-right float-right text-dark fs-20" data-toggle="sidebar-right"
+                        data-target=".sidebar-right"><i class="fe fe-x"></i></a>
                 </div>
             </div>
             <!-- End Sidebar -->
@@ -729,15 +791,10 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
         <?php
         if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
             $id = $_SESSION['CURRENT_ENTERPRISE'];
-            echo "<script>";
-            echo "window.onload = function(){
-                    listarresumen();
-		mostrarEmpresa(" . $id . ");
-		calcular();
-	}";
-            echo "</script>";
+            echo "<script>
+                mostrarEmpresa();
+            </script>";
         }
-
         ?>
 
         <script src="JsFunctions/Trabajadores.js"></script>

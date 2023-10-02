@@ -52,13 +52,13 @@ require 'Class/DocumentoSubido.php';
 class Controller
 {
     private $host = "localhost";
-    /*Variables*/
+    /*Variables
     private $user = "root";
     private $pass = "";
     private $bd = "gestordocumentos";
 
 
-    /*Variables BD Remota
+    /*Variables BD Remota*/
     private $user = 'kaiserte_admin';
     private $pass = 'Kaiser2022$';
     private $bd = 'kaiserte_gd';
@@ -5600,12 +5600,35 @@ class Controller
         $this->desconectar();
         return json_encode($result);
     }
+    //Registrar lote Anexo
+    function registrarloteanexo($contrato, $usuario)
+    {
+        $this->conexion();
+        $sql = "insert into lote4 values(null,$contrato,$usuario,now())";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return json_encode($result);
+    }
 
     //Validar lote finiquito
     function validarlotefiniquito($contrato, $usuario)
     {
         $this->conexion();
         $sql = "select * from lote2 where contrato=$contrato and usuario=$usuario";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $this->desconectar();
+            return true;
+        }
+        $this->desconectar();
+        return false;
+    }
+
+    //Validar lote Anexo
+    function validarloteanexo($contrato, $usuario)
+    {
+        $this->conexion();
+        $sql = "select * from lote4 where contrato=$contrato and usuario=$usuario";
         $result = $this->mi->query($sql);
         if ($rs = mysqli_fetch_array($result)) {
             $this->desconectar();
@@ -5641,11 +5664,45 @@ class Controller
         return $lista;
     }
 
+    //Buscar Lote Anexo
+    function buscarloteanexo($usuario){
+        $this->conexion();
+        $sql = "select lote4.id as id, lote4.contrato as contrato, tipocontrato, cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as registro,trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2 from lote4, contratos, trabajadores where lote4.contrato = contratos.id and contratos.trabajador = trabajadores.id and usuario=$usuario";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)){
+            $id = $rs['contrato'];
+            $trabajador = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
+            $lote = $rs['id'];
+            $tipocontrato = $rs['tipocontrato'];
+            $cargo = $rs['cargo'];
+            $sueldo = $rs['sueldo'];
+            $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $documento = $rs['documento'];
+            $estado = $rs['estado'];
+            $registro = $rs['registro'];
+            $l = new Contrato($id, $trabajador, $lote, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $registro);
+            $lista[] = $l;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
     //Eliminar en lote de finiquito
     function eliminarlotefiniquito($id)
     {
         $this->conexion();
         $sql = "delete from lote2 where id=$id";
+        $result = $this->mi->query($sql);
+        return json_encode($result);
+    }
+
+    //Eliminar en lote de Anexo
+    function eliminarloteanexo($id)
+    {
+        $this->conexion();
+        $sql = "delete from lote4 where id=$id";
         $result = $this->mi->query($sql);
         return json_encode($result);
     }
@@ -5658,7 +5715,28 @@ class Controller
         $result = $this->mi->query($sql);
         return json_encode($result);
     }
-    //Registrar lote finiquito
+
+    //Eliminar todo el lote Anexo
+    function eliminartodoloteanexo($usuario)
+    {
+        $this->conexion();
+        $sql = "delete from lote4 where usuario=$usuario";
+        $result = $this->mi->query($sql);
+        return json_encode($result);
+    }
+
+    //Registrar Axexo
+    function registraraenxo($contrato, $tipocontratoid, $fechaanexo, $trabajadorid, $empresa){
+        $this->conexion();
+        $sql = "insert into anexos values(null, $contrato, $tipocontratoid, '$fechaanexo', $trabajadorid, $empresa,now());";
+        $result = $this->mi->query($sql);
+        $id_insert = mysqli_insert_id($this->mi);
+        $this->desconectar();
+        return $id_insert;
+    }
+
+
+    //Registrar lote Notificaciones
     function registrarlotenotificacion($finiquito, $usuario)
     {
         $this->conexion();
@@ -5668,7 +5746,7 @@ class Controller
         return json_encode($result);
     }
 
-    //Validar lote finiquito
+    //Validar lote Notificaciones
     function validarlotenotificacion($finiquito, $usuario)
     {
         $this->conexion();
@@ -5682,7 +5760,7 @@ class Controller
         return false;
     }
 
-    //buscarlotefiniquito
+    //buscarlote Notificaciones
     function buscarlotenotifacion($usuario)
     {
         $this->conexion();
@@ -5707,7 +5785,7 @@ class Controller
         return $lista;
     }
 
-    //Eliminar en lote de finiquito
+    //Eliminar en lote de Notificaciones
     function eliminarlotenotificacion($id)
     {
         $this->conexion();

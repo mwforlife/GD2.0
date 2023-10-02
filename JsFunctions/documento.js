@@ -102,3 +102,78 @@ $(document).ready(function () {
         });
     });
 });
+    // Crear un array para almacenar las cláusulas
+    var clausulasArray = [];
+
+    // Función para agregar una cláusula
+    function agregarClausula() {
+        var clausulaInput = $("#clausula");
+        var tipoContratoIdInput = $("#tipocontratoid");
+        var tipoContratoTextoInput = $("#tipocontratotext");
+
+        // Obtener los valores de los campos
+        var clausula = clausulaInput.val();
+        var tipoDocumentoId = tipoContratoIdInput.val();
+        var tipoDocumentoTexto = tipoContratoTextoInput.text();
+
+        // Validar campos no vacíos
+        if (!clausula || !tipoDocumentoId || !tipoDocumentoTexto) {
+            ToastifyError("Por favor, completa todos los campos antes de agregar la cláusula.");
+            return;
+        }
+
+        // Crear un objeto de cláusula
+        var nuevaClausula = {
+            clausula: clausula,
+            tipodocumentoid: tipoDocumentoId,
+            tipodocumentotexto: tipoDocumentoTexto
+        };
+
+        // Agregar la cláusula al array
+        clausulasArray.push(nuevaClausula);
+
+        // Limpiar los campos
+        clausulaInput.val("");
+
+        // Actualizar la tabla de información de cláusulas
+        actualizarTablaClausulas();
+
+        // Mostrar mensaje de éxito
+        ToastifySuccess("Clausula agregada con éxito");
+    }
+
+    // Función para eliminar una cláusula
+    function eliminarClausula(index) {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: 'Esta acción eliminará la cláusula seleccionada.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                clausulasArray.splice(index, 1);
+                actualizarTablaClausulas();
+                ToastifySuccess("Clausula eliminada con éxito");
+            }
+        });
+    }
+
+    // Función para actualizar la tabla de información de cláusulas
+    function actualizarTablaClausulas() {
+        var tabla = $("#clausulas");
+        tabla.empty();
+
+        for (var i = 0; i < clausulasArray.length; i++) {
+            var clausula = clausulasArray[i];
+
+            var fila = $("<tr></tr>").html(`
+                <td>${clausula.clausula}</td>
+                <td>${clausula.tipodocumentotexto}</td>
+                <td><button class="btn btn-outline-danger" onclick="eliminarClausula(${i})"><i class="fas fa-trash-alt"></i></button></td>
+            `);
+
+            tabla.append(fila);
+        }
+    }

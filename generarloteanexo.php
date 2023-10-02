@@ -13,6 +13,12 @@ if (!isset($_SESSION['USER_ID'])) {
         header("Location: lockscreen.php");
     }
 }
+unset($_SESSION['TRABJADOR_CONTRATO']);
+if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
+    $empresa = $_SESSION['CURRENT_ENTERPRISE'];
+} else {
+    header("Location: index.php");
+}
 $permiso = $c->listarPermisosUsuario1($_SESSION['USER_ID']);
 $gestion = false;
 $_SESSION['GESTION_PERMISO'] = false;
@@ -42,15 +48,7 @@ foreach ($permiso as $p) {
         $_SESSION['ELIMINACION_PERMISO'] = true;
     }
 }
-if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-    $empresa = $_SESSION['CURRENT_ENTERPRISE'];
-    $emp = $c->buscarempresa($empresa);
-} else {
-    header("Location: index.php");
-}
-
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -66,7 +64,7 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
     <link rel="icon" href="assets/img/brand/favicon.ico" type="image/x-icon" />
 
     <!-- Title -->
-    <title>Gestor de Documentos | Empresas</title>
+    <title>Gestor de Documentos | Generar lote</title>
 
     <!-- Bootstrap css-->
     <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
@@ -87,17 +85,6 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
 
     <!-- Select2 css -->
     <link href="assets/plugins/select2/css/select2.min.css" rel="stylesheet">
-    <!-- Internal Daterangepicker css-->
-    <link href="assets/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
-
-    <!-- InternalFileupload css-->
-    <link href="assets/plugins/fileuploads/css/fileupload.css" rel="stylesheet" type="text/css" />
-
-    <!-- InternalFancy uploader css-->
-    <link href="assets/plugins/fancyuploder/fancy_fileupload.css" rel="stylesheet" />
-
-    <!-- Internal TelephoneInput css-->
-    <link rel="stylesheet" href="assets/plugins/telephoneinput/telephoneinput.css">
 
     <!-- Internal DataTables css-->
     <link href="assets/plugins/datatable/dataTables.bootstrap4.min.css" rel="stylesheet" />
@@ -280,10 +267,10 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
 								<a class="nav-sub-link" href="generarlote.php">Contratos Masivos</a>
 							</li>
 							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="finiquitoindividual.php">Finiquito Individual</a>
+								<a class="nav-sub-link" href="anexoindividual.php">anexo Individual</a>
 							</li>
 							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="generarlotefiniquito.php">Finiquitos Masivos</a>
+								<a class="nav-sub-link" href="generarloteanexo.php">anexos Masivos</a>
 							</li>
 							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="notificacionindividual.php">Notificacion Individual</a>
@@ -402,7 +389,6 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
         </div>
         <!-- Mobile-header closed -->
 
-
         <!-- Main Content-->
         <div class="main-content side-content pt-0">
 
@@ -412,51 +398,111 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                     <!-- Page Header -->
                     <div class="page-header">
                         <div class="page-header-1">
-                            <h1 class="main-content-title tx-30">Generación de documentos Masivos</h1>
+                            <h1 class="main-content-title tx-30">Anexos Masivos</h1>
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="index.php">Inicio</a></li>
                             </ol>
                         </div>
                     </div>
                     <!-- End Page Header -->
-
-
-                    <!-- Row -->
-                    <div class="row ">
-                        <div class="col-lg-12 col-md-12 mt-4">
-                            <div class="card">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card orverflow-hidden">
                                 <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-12 text-center">
-                                            <h5>Información de la Empresa</h5>
-                                            <p>
-                                                <?php
-                                                echo "RUT: " . $emp->getRut() . "<br>";
-                                                echo "Nombre: " . $emp->getRazonSocial() . "<br>";
-                                                ?>
-                                            </p>
-                                        </div>
+                                    <div>
+                                        <h6 class="main-content-label mb-1">Seleccione los Contratos a Anexar</h6>
+                                        <p class="text-mutted card-sub-title"></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+
+
+
+
+                    <!-- ROW- opened -->
                     <div class="row">
-                        <div class="col-lg-12 col-md-12 mt-1">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-12 text-center">
-                                            <table class="table text-nowrap text-center">
+                        <?php
+                        $lista = $c->listarlotescontrato($_SESSION['CURRENT_ENTERPRISE']);
+                        foreach ($lista as $object) {
+                            $lista1 = $c->listarlotestext($object->getId());
+                            if (count($lista1) > 0) {
+                        ?>
+                                <div class="col-xl-6 col-lg-6 col-md-12">
+                                    <div class="card transcation-crypto1" id="transcation-crypto1">
+                                        <div class="card-header bd-b-0 d-flex justify-content-between">
+                                            <h4 class="card-title font-weight-semibold mb-0">Lote: <?php echo $object->getNombre_lote(); ?></h4>
+                                            <button onclick="agregartodoanexo(<?php echo $object->getId(); ?>)" class="btn btn-info"><i class="fa fa-plus"></i> Todo</button>
+                                        </div>
+                                        <div class="card-body p-4">
+                                            <div class="">
+                                                <div class="table-responsive">
+                                                    <table class="table w-100 text-nowrap table-lote">
+                                                        <thead class="border-top">
+                                                            <tr>
+                                                                <th class="bg-transparent">Contrato</th>
+                                                                <th class="bg-transparent">Trabajador</th>
+                                                                <th class="bg-transparent text-center">Agregar Al Lote</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php
+                                                            foreach ($lista1 as $object1) {
+                                                                echo "<tr class='border-bottom-0'>";
+                                                                echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
+                                                                $fecha = $object1->getFecha_inicio();
+                                                                //Convertir fecha en formato dd-mm-YYYY
+                                                                $fecha = date("d-m-Y", strtotime($fecha));
+
+                                                                echo $object1->getContrato() . " - " . $fecha;
+                                                                echo "</td>";
+                                                                echo "<td class='text-muted fs-15 font-weight-semibold'>";
+                                                                echo $object1->getTrabajador();
+                                                                echo "</td>";
+                                                                echo "<td class='text-center'>";
+                                                                echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='agregarloteanexo(" . $object1->getId() . ")' data-toggle='tooltip' data-original-title='Agregar al Lote'>";
+                                                                echo "<i class='fa fa-plus'>";
+                                                                echo "</i>";
+                                                                echo "</a>";
+                                                                echo "</td>";
+                                                                echo "</tr>";
+                                                            }
+                                                            ?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                        <?php
+                            }
+                        }
+                        ?>
+
+                        <div class="col-xl-6 col-lg-6 col-md-12">
+                            <div class="card transcation-crypto1" id="transcation-crypto1">
+                                <div class="card-header bd-b-0 d-flex justify-content-between">
+                                    <h4 class="card-title font-weight-semibold mb-0">Lote</h4>
+                                    <button onclick="Eliminarloteanexo()" class="btn btn-danger"><i class="fa fa-trash"></i> Todo</button>
+                                </div>
+                                <div class="card-body p-4">
+                                    <div class="">
+                                        <div class="table-responsive">
+                                            <table class="table w-100 text-nowrap ">
                                                 <thead class="border-top">
                                                     <tr>
                                                         <th class="bg-transparent">Contrato</th>
                                                         <th class="bg-transparent">Trabajador</th>
+                                                        <th class="bg-transparent text-center">Eliminar del lote</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="lotes">
                                                     <?php
-                                                    $lista = $c->buscarlotefiniquito($_SESSION['USER_ID']);
+                                                    $lista = $c->buscarloteanexo($_SESSION['USER_ID']);
                                                     foreach ($lista as $object1) {
                                                         echo "<tr class='border-bottom-0'>";
                                                         echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
@@ -469,103 +515,12 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                                                         echo "<td class='text-muted fs-15 font-weight-semibold'>";
                                                         echo $object1->getTrabajador();
                                                         echo "</td>";
-                                                        echo "</tr>";
-                                                    }
-                                                    ?>
-                                                </tbody>
-                                            </table>
-                                            <a class="btn btn-danger" href="generarlotepersonalizado.php"><i class="fa fa-arrow-left"></i> Volver</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row ">
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <form id="formdocumentomasivo" name="formdocumentomasivo">
-                                        <div class="row">
-                                            <div class="col-lg-12 text-center">
-                                                <h2>Información de Documento</h2>
-                                            </div>
-
-                                            <div class="col-lg-6 mt-3">
-                                                <div class="form-group select2-lg">
-                                                    <label for="">Tipo de Plantilla:</label>
-                                                    <button class="btn btn-primary btn-sm fs-10" type="button" data-toggle="modal" data-target="#tipocontratomodal">Seleccionar</button>
-                                                    <label class="form-control" id="tipocontratotext"></label>
-                                                    <input type="hidden" class="form-control text-dark" id="tipocontratoid" name="tipocontratoid" required="" readonly>
-                                                    <input type="hidden" class="form-control text-dark" id="empresa" name="empresa" required="" readonly value="<?php echo $_SESSION['CURRENT_ENTERPRISE']; ?>">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6 mt-1">
-                                                <label for="">Fecha Generacion:</label>
-                                                <input type="date" class="form-control text-dark" id="fechageneracion" name="fechageneracion" required="">
-
-                                            </div>
-
-
-
-                                        </div>
-                                        <div class="col-md-12 mt-3 text-right">
-                                            <a href="menuinfo.php" class="btn btn-danger"> <i class="fa fa-arrow-left"></i> Volver</a>
-                                            <button type="button" id="previadocumentomasivo" class="btn btn-warning"> <i class="fa fa-eye"></i> Vista Previa</button>
-                                            <button type="submit" class="btn btn-success"> <i class="fa fa-save"></i> Registrar</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
-            <!-- End Main Content-->
-            <!-- Modal TipoContrato-->
-            <div class="modal fade" id="tipocontratomodal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog modal-xl modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Seleccionar Tipo de Contrato</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="card" id="transcation-crypto-1">
-                                <div class="card-body p-4 pt-1">
-                                    <div class="p-4">
-                                        <div class="table-responsive">
-                                            <table class="table text-nowrap" id="example1">
-                                                <thead class="border-top">
-                                                    <tr>
-                                                        <th class="bg-transparent">Codigo DT</th>
-                                                        <th class="bg-transparent">Codigo (Previred)</th>
-                                                        <th class="bg-transparent">Nombre</th>
-                                                        <th class="bg-transparent">Seleccionar</th>
-                                                        <th class="bg-transparent">Vista Previa</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                    $lista = $c->listartipodocumento();
-                                                    if (count($lista) > 0) {
-                                                        foreach ($lista as $codigo) {
-                                                            echo "<tr>";
-                                                            echo "<td>" . $codigo->getCodigo() . "</td>";
-                                                            echo "<td>" . $codigo->getCodigoprevired() . "</td>";
-                                                            echo "<td>" . $codigo->getNombre() . "</td>";
-                                                            echo "<td><a href='#' type='button' data-dismiss='modal' class='btn btn-outline-success btn-sm rounded-11 mr-2' data-toggle='tooltip'  data-original-title='Seleccionar' onclick='seleccionartipodocumento(" . $codigo->getId() . "," . $codigo->getCodigo() . ",\"" . $codigo->getNombre() . "\")'><i class='fa fa-check'></i> </a></td>";
-                                                            echo "<td><a href='#' type='button' class='btn btn-outline-success btn-sm rounded-11 mr-2' data-toggle='modal'  data-target='#previadocument' onclick='previadocument(" . $codigo->getId() . ")'><i class='fa fa-eye'></i> </a></td>";
-                                                            echo "</tr>";
-                                                        }
-                                                    } else {
-                                                        echo "<tr>";
-                                                        echo "<td colspan='3' class='text-center'>No hay Tipo de Documento Registrado</td>";
+                                                        echo "<td class='text-center'>";
+                                                        echo "<a class='btn btn-outline-danger btn-sm rounded-11' onclick='Eliminardelloteanexo(" . $object1->getEmpresa() . ")' data-toggle='tooltip' data-original-title='Eliminar Del Lote'>";
+                                                        echo "<i class='fa fa-trash'>";
+                                                        echo "</i>";
+                                                        echo "</a>";
+                                                        echo "</td>";
                                                         echo "</tr>";
                                                     }
                                                     ?>
@@ -577,172 +532,114 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-
-            <!-- Modal TipoContrato-->
-            <div class="modal fade" id="previadocument" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog modal-xl modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Vista Previa</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="card" id="transcation-crypto-1">
-                                <div class="card-body p-4 previadocument">
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal Representante Legal-->
-            <div class="modal fade" id="modalvistaprevia" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog modal-xl modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Vista Previa Documento</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="card" id="transcation-crypto-1">
-                                <div class="card-body p-4 pt-1">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <iframe id="vistaprevia" width="100%" height="800">
-
-                                            </iframe>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Main Footer-->
-            <div class="main-footer text-center">
-                <div class="container">
                     <div class="row">
-                        <div class="col-md-12">
-                            <span>Copyright © 2022 - KaiserTech Todos los derechos reservados.</span>
+                        <div class="col-lg-12">
+                            <div class="card orverflow-hidden">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-center">
+                                        <a href="anexosmasivos.php" class="btn btn-success">Generar Anexos <i class="fa fa-file"></i></a>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <!-- End Main Content-->
+
+        <!-- Main Footer-->
+        <div class="main-footer text-center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <span>Copyright © 2022 - KaiserTech Todos los derechos reservados.</span>
                     </div>
                 </div>
             </div>
-            <!--End Footer-->
-
-            <!-- Sidebar -->
-            <div class="sidebar sidebar-right sidebar-animate">
-                <div class="sidebar-icon">
-                    <a href="#" class="text-right float-right text-dark fs-20" data-toggle="sidebar-right" data-target=".sidebar-right"><i class="fe fe-x"></i></a>
-                </div>
-            </div>
-            <!-- End Sidebar -->
-
         </div>
-        <!-- End Page -->
-
-        <!-- Back-to-top -->
-        <a href="#top" id="back-to-top"><i class="fe fe-arrow-up"></i></a>
-
-        <!-- Jquery js-->
-        <script src="assets/plugins/jquery/jquery.min.js"></script>
-
-        <!-- Bootstrap js-->
-        <script src="assets/plugins/bootstrap/js/popper.min.js"></script>
-        <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-
-        <!-- Internal Chart.Bundle js-->
-        <script src="assets/plugins/chart.js/Chart.bundle.min.js"></script>
-
-        <!-- Peity js-->
-        <script src="assets/plugins/peity/jquery.peity.min.js"></script>
-
-        <!--Internal Apexchart js-->
-        <script src="assets/js/apexcharts.js"></script>
-
-        <!-- Internal Fileuploads js-->
-        <script src="assets/plugins/fileuploads/js/fileupload.js"></script>
-        <script src="assets/plugins/fileuploads/js/file-upload.js"></script>
-
-        <!-- InternalFancy uploader js-->
-        <script src="assets/plugins/fancyuploder/jquery.ui.widget.js"></script>
-        <script src="assets/plugins/fancyuploder/jquery.fileupload.js"></script>
-        <script src="assets/plugins/fancyuploder/jquery.iframe-transport.js"></script>
-        <script src="assets/plugins/fancyuploder/jquery.fancy-fileupload.js"></script>
-        <script src="assets/plugins/fancyuploder/fancy-uploader.js"></script>
-
-        <!-- Internal Form-elements js-->
-        <script src="assets/js/advanced-form-elements.js"></script>
-        <script src="assets/js/select2.js"></script>
-
-        <!-- Internal TelephoneInput js-->
-        <script src="assets/plugins/telephoneinput/telephoneinput.js"></script>
-        <script src="assets/plugins/telephoneinput/inttelephoneinput.js"></script>
-
-        <!-- Internal Data Table js -->
-        <script src="assets/plugins/datatable/jquery.dataTables.min.js"></script>
-        <script src="assets/plugins/datatable/dataTables.bootstrap4.min.js"></script>
-        <script src="assets/js/table-data.js"></script>
-        <script src="assets/plugins/datatable/dataTables.responsive.min.js"></script>
-        <script src="assets/plugins/datatable/fileexport/dataTables.buttons.min.js"></script>
-        <script src="assets/plugins/datatable/fileexport/buttons.bootstrap4.min.js"></script>
+        <!--End Footer-->
 
 
-        <!-- Perfect-scrollbar js -->
-        <script src="assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-
-        <!-- Select2 js-->
-        <script src="assets/plugins/select2/js/select2.min.js"></script>
-        <script src="assets/js/select2.js"></script>
-
-        <!-- Sidemenu js -->
-        <script src="assets/plugins/sidemenu/sidemenu.js"></script>
-
-        <!-- Sidebar js -->
-        <script src="assets/plugins/sidebar/sidebar.js"></script>
 
 
-        <!-- Sticky js -->
-        <script src="assets/js/sticky.js"></script>
 
-        <!-- Custom js -->
-        <script src="assets/js/custom.js"></script>
-        <script src="JsFunctions/validation.js"></script>
-        <script src="JsFunctions/Alert/toastify.js"></script>
-        <script src="JsFunctions/Alert/sweetalert2.all.min.js"></script>
-        <script src="JsFunctions/Alert/alert.js"></script>
-        <script src="JsFunctions/main.js"></script>
-        <script src="JsFunctions/Comunas.js"></script>
-        <script src="JsFunctions/precargado.js"></script>
+    </div>
+    <!-- End Page -->
 
-        <?php
-        if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-            $id = $_SESSION['CURRENT_ENTERPRISE'];
-            echo "<script>";
-            echo "window.onload = function(){
-                    listarresumen();
+    <!-- Back-to-top -->
+    <a href="#top" id="back-to-top"><i class="fe fe-arrow-up"></i></a>
+
+    <!-- Jquery js-->
+    <script src="assets/plugins/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap js-->
+    <script src="assets/plugins/bootstrap/js/popper.min.js"></script>
+    <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Internal Chart.Bundle js-->
+    <script src="assets/plugins/chart.js/Chart.bundle.min.js"></script>
+
+    <!-- Peity js-->
+    <script src="assets/plugins/peity/jquery.peity.min.js"></script>
+
+    <!--Internal Apexchart js-->
+    <script src="assets/js/apexcharts.js"></script>
+
+    <!-- Internal Data Table js -->
+    <script src="assets/plugins/datatable/jquery.dataTables.min.js"></script>
+    <script src="assets/plugins/datatable/dataTables.bootstrap4.min.js"></script>
+    <script src="assets/js/table-data.js"></script>
+    <script src="assets/plugins/datatable/dataTables.responsive.min.js"></script>
+    <script src="assets/plugins/datatable/fileexport/dataTables.buttons.min.js"></script>
+    <script src="assets/plugins/datatable/fileexport/buttons.bootstrap4.min.js"></script>
+
+
+    <!-- Perfect-scrollbar js -->
+    <script src="assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+
+    <!-- Select2 js-->
+    <script src="assets/plugins/select2/js/select2.min.js"></script>
+    <script src="assets/js/select2.js"></script>
+
+    <!-- Sidemenu js -->
+    <script src="assets/plugins/sidemenu/sidemenu.js"></script>
+
+    <!-- Sidebar js -->
+    <script src="assets/plugins/sidebar/sidebar.js"></script>
+
+    <!-- INTERNAL INDEX js -->
+    <script src="assets/js/index.js"></script>
+
+    <!-- Sticky js -->
+    <script src="assets/js/sticky.js"></script>
+
+    <!-- Custom js -->
+    <script src="assets/js/custom.js"></script>
+    <script src="JsFunctions/validation.js"></script>
+    <script src="JsFunctions/Alert/toastify.js"></script>
+    <script src="JsFunctions/Alert/sweetalert2.all.min.js"></script>
+    <script src="JsFunctions/Alert/alert.js"></script>
+    <script src="JsFunctions/main.js"></script>
+    <script src="JsFunctions/lotesanexo.js"></script>
+    <script src="JsFunctions/precargado.js"></script>
+
+    <?php
+    if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
+        $id = $_SESSION['CURRENT_ENTERPRISE'];
+        echo "<script>";
+        echo "window.onload = function(){
 		mostrarEmpresa(" . $id . ");
-		calcular();
-	}";
-            echo "</script>";
-        }
+        datatable();
+		}";
+        echo "</script>";
+    }
 
-        ?>
-
-        <script src="JsFunctions/Trabajadores.js"></script>
-        <script src="JsFunctions/documento.js"></script>
-
+    ?>
 
 
 </body>

@@ -768,6 +768,13 @@ create table lote2(
     register_at timestamp not null default current_timestamp
 );
 
+create table lote4(
+    id int not null auto_increment primary key,
+    contrato int not null references contratos(id),
+    usuario int not null references usuarios(id),
+    register_at timestamp not null default current_timestamp
+);
+
 create table lote3(
     id int not null auto_increment primary key,
     finiquito int not null references finiquito(id),
