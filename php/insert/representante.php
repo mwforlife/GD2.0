@@ -34,7 +34,7 @@ if (isset($_POST['RepresentanteRut']) && isset($_POST['RepresentanteNombre']) &&
     } else {
         echo 2;
     }
-}else if (isset($_POST['RepresentanteRut']) && isset($_POST['RepresentanteNombre']) && isset($_POST['RepresentanteApellido1']) && isset($_POST['RepresentanteApellido2']) && isset($_SESSION['EMPRESA_EDIT'])) {
+}else if (isset($_POST['RepresentanteRut']) && isset($_POST['RepresentanteNombre']) && isset($_POST['RepresentanteApellido1']) && isset($_POST['RepresentanteApellido2']) && isset($_POST['EMPRESAID'])) {
     $rut = $_POST['RepresentanteRut'];
     $nombre = $_POST['RepresentanteNombre'];
     $nombre = strtoupper($nombre);
@@ -45,7 +45,7 @@ if (isset($_POST['RepresentanteRut']) && isset($_POST['RepresentanteNombre']) &&
     if(strlen($apellido2)==0){
         $apellido2 = "No posee";
     }
-    $empresa = $_SESSION['EMPRESA_EDIT'];
+    $empresa = $_POST['EMPRESAID'];
     $valid = $c->validarRepresentanteLegal($rut, $empresa);
     if ($valid == false) {
         $result = $c->RegistrarRepresentanteLegal($rut, $nombre, $apellido1, $apellido2, $empresa);

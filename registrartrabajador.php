@@ -417,7 +417,7 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
 											<div class="col-lg-6">
 												<div class="form-group has-success ">
 													<label for="">RUT:</label>
-													<input class="form-control" placeholder="RUT" maxlength="12" onkeyup="formatRut(this)" id="TrabajadorRut" name="TrabajadorRut" required="" type="text" value="">
+													<input class="form-control" placeholder="RUT" maxlength="12" onkeyup="formatRut(this), buscartrabajador(this)" id="TrabajadorRut" name="TrabajadorRut" required="" type="text" value="">
 												</div>
 											</div>
 											<div class="col-lg-6">

@@ -77,31 +77,3 @@ function Eliminarloteanexo() {
         }
     });
 }
-
-$(document).ready(function () {
-    $("#formanexomasivo".on('submit', function (e) {
-        e.preventDefault();
-        //Validar si el array esta vacio
-        if (arraycontratos.length == 0) {
-            ToastifyError("No hay contratos seleccionados");
-            return false;
-        }
-
-        var formData = new FormData(this);
-        formData.append('clausulas', arraycontratos);
-
-        $.ajax({
-            url: 'php/insert/anexomasivo.php',
-            type: 'POST',
-            data: formData,
-            success: function (data) {
-                if (data == 1) {
-                    ToastifySuccess("Contratos agregados correctamente");
-                    listarlotesanexo();
-                } else {
-                    ToastifyError(data);
-                }
-            },
-        });
-    }));
-});

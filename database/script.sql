@@ -764,14 +764,14 @@ create table detallelotes(
 create table lote2(
     id int not null auto_increment primary key,
     contrato int not null references contratos(id),
-    usuario int not null references usuarios(id),
+    usuario int not null references users(id_usu),
     register_at timestamp not null default current_timestamp
 );
 
 create table lote4(
     id int not null auto_increment primary key,
     contrato int not null references contratos(id),
-    usuario int not null references usuarios(id),
+    usuario int not null references users(id_usu),
     register_at timestamp not null default current_timestamp
 );
 
@@ -833,4 +833,11 @@ create table documentosubido(
     empresa int not null references empresa(id),
     documento varchar(200) not null,
     register_at timestamp not null default current_timestamp
+);
+
+create table anexoscontrato(
+    id int not null auto_increment primary key,
+    fechageneracion date not null,
+    contrato int not null references contratos(id),
+    
 );

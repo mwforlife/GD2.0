@@ -1234,8 +1234,58 @@ function generarcomprobante(){
         }
     });
 }
-/*
-$("#vacacionesform").on("submit", function (e) {
-    e.preventDefault();
-   
-});*/
+
+function buscartrabajador(element){
+    var rut = $(element).val();
+    if(rut.trim().length < 8){
+        return;
+    }
+
+    if(validarRut(rut)==false){
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "php/cargar/buscartrabajador.php",
+        data: { rut: rut },
+        success: function (data) {
+            try {
+                var object = JSON.parse(data);
+                $("#TrabajadorDNI").val(object.dni);
+                $("#TrabajadorNombre").val(object.nombre);
+                $("#TrabajadorApellido1").val(object.apellido1);
+                $("#TrabajadorApellido2").val(object.apellido2);
+                $("#TrabajadorNacimiento").val(object.nacimiento);
+                //Seleccionar la option del select sexo
+                $("#TrabajadorSexo option[value="+object.sexo+"]").attr("selected",true);
+                //Seleccionar la option del select estado civil
+                $("#TrabajadorCivil option[value="+object.civil+"]").attr("selected",true);
+                //Seleccionar la option del select nacionalidad
+                $("#TrabajadorNacionalidad option[value="+object.nacionalidad+"]").attr("selected",true);
+                //Seleccionar la option del select discapacidad
+                $("#TrabajadorDiscapacidad option[value="+object.discapacidad+"]").attr("selected",true);
+                //Seleccionar la option del select pension
+                $("#TrabajadorPension option[value="+object.pension+"]").attr("selected",true);
+                $("#TrabajadorCalle").val(object.calle);
+                $("#TrabajadorVilla").val(object.villa);
+                $("#TrabajadorNumero").val(object.numero);
+                $("#TrabajadorDepartamento").val(object.departamento);
+                //Seleccionar la option del select region
+                $("#TrabajadorRegion option[value="+object.region+"]").attr("selected",true);
+                listarcomunas(); 
+                listarciudades();
+                //Seleccionar la option del select comuna
+                $("#TrabajadorComuna option[value="+object.comuna+"]").attr("selected",true);
+                //Seleccionar la option del select ciudad
+                $("#TrabajadorCiudad option[value="+object.ciudad+"]").attr("selected",true);
+                $("#TrabajadorTelefono").val(object.telefono);
+                $("#TrabajadorCorreo").val(object.correo);
+            } catch (error) {
+                console.log(error);
+            }
+
+        }
+    });
+
+}

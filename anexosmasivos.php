@@ -535,8 +535,7 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                                                     data-toggle="modal"
                                                     data-target="#tipocontratomodal">Seleccionar</button>
                                                 <label class="form-control" id="tipocontratotext">.</label>
-                                                <input type="hidden" class="form-control text-dark" id="tipocontratoid"
-                                                    name="tipocontratoid" required="" readonly>
+                                                <input type="hidden" class="form-control text-dark" id="tipocontratoid" required="" readonly>
                                             </div>
                                         </div>
                                         <div class="col-md-6 d-flex align-items-end mt-0">
@@ -568,7 +567,7 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                                         <div class="col-md-12 mt-3 text-right">
                                             <a href="menuinfo.php" class="btn btn-danger"> <i
                                                     class="fa fa-arrow-left"></i> Volver</a>
-                                            <button type="button" id="previadocumentomasivo" class="btn btn-warning"> <i
+                                            <button type="button" id="previaanexomasivo" class="btn btn-warning"> <i
                                                     class="fa fa-eye"></i> Vista Previa</button>
                                             <button type="submit" class="btn btn-success"> <i class="fa fa-save"></i>
                                                 Registrar</button>
@@ -745,7 +744,6 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
         <script src="assets/plugins/fancyuploder/fancy-uploader.js"></script>
 
         <!-- Internal Form-elements js-->
-        <script src="assets/js/advanced-form-elements.js"></script>
         <script src="assets/js/select2.js"></script>
 
         <!-- Internal TelephoneInput js-->
@@ -799,6 +797,7 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
 
         <script src="JsFunctions/Trabajadores.js"></script>
         <script src="JsFunctions/documento.js"></script>
+        <script src="JsFunctions/lotesanexo.js"></script>
 
 
 

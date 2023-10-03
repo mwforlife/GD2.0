@@ -236,6 +236,31 @@ function CodigoActividad(id){
     });
 }
 
+function CodigoActividad1(id, $empresa){
+    $.ajax({
+        type: "POST",
+        url: "php/insert/codigoactividad.php",
+        data: {id:id, EMPRESAID:$empresa},
+        success: function (data) {
+            $("#global-loader").fadeIn("slow");
+            if (data == 1 || data == "1") {
+                $("#global-loader").fadeOut("slow");
+                ToastifySuccess("Codigo de actividad agregado correctamente");
+                ListarCodigoActividad();
+            }else if(data == 2 || data == "2"){
+                $("#global-loader").fadeOut("slow");
+                ToastifyError("El codigo de actividad ya se encuentra registrado");
+            }else if(data == 0 || data == "0"){
+                $("#global-loader").fadeOut("slow");
+                ToastifyError("Error al agregar el codigo de actividad");
+            }else{
+                $("#global-loader").fadeOut("slow");
+                ToastifyError(data);
+            }
+        }
+    });
+}
+
 function ListarCodigoActividad(){
     $.ajax({
         type: "POST",

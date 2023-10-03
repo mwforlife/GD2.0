@@ -52,13 +52,13 @@ require 'Class/DocumentoSubido.php';
 class Controller
 {
     private $host = "localhost";
-    /*Variables
+    /*Variables*/
     private $user = "root";
     private $pass = "";
     private $bd = "gestordocumentos";
 
 
-    /*Variables BD Remota*/
+    /*Variables BD Remota
     private $user = 'kaiserte_admin';
     private $pass = 'Kaiser2022$';
     private $bd = 'kaiserte_gd';
@@ -1126,13 +1126,44 @@ class Controller
             $discapacidad = $rs['discapacidad'];
             $pension = $rs['pension'];
             $empresa = $rs['empresa'];
-            $registrar = "";
+            $registrar = "register_at";
             $T = new Trabajadores($id, $rut, $dni, $nombre, $apellido1, $apellido2, $nacimiento, $sexo, $estadocivil, $nacionalidad, $discapacidad, $pension, $empresa, $registrar);
             $lista[] = $T;
         }
         $this->desconectar();
         return $lista;
     }
+
+    //Buscar Trabajador por Rut
+    public function buscartrabajadorbyRut($rut)
+    {
+        $this->conexion();
+        $sql = "select * from trabajadores where rut = '$rut'";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $rut = $rs['rut'];
+            $dni = $rs['dni'];
+            $nombre = $rs['nombre'];
+            $apellido1 = $rs['primerapellido'];
+            $apellido2 = $rs['segundoapellido'];
+            $nacimiento = $rs['fechanacimiento'];
+            $sexo = $rs['sexo'];
+            $estadocivil = $rs['estadocivil'];
+            $nacionalidad = $rs['nacionalidad'];
+            $discapacidad = $rs['discapacidad'];
+            $pension = $rs['pension'];
+            $empresa = $rs['empresa'];
+            $registrar = "register_at";
+            $T = new Trabajadores($id, $rut, $dni, $nombre, $apellido1, $apellido2, $nacimiento, $sexo, $estadocivil, $nacionalidad, $discapacidad, $pension, $empresa, $registrar);
+            $this->desconectar();
+            return $T;
+        } else {
+            $this->desconectar();
+            return false;
+        }
+    }
+
 
     //Listar Trabajadores Activos
     public function listartrabajadoresactivos($empresa)
@@ -1377,7 +1408,7 @@ class Controller
     public function buscarcontacto($id)
     {
         $this->conexion();
-        $sql = "select * from trabajadorcontacto where id = $id";
+        $sql = "select * from trabajadorcontacto where id = $id order by id desc limit 1";
         $result = $this->mi->query($sql);
         if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];

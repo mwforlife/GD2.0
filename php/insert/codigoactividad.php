@@ -25,9 +25,9 @@ if(isset($_POST['id']) && isset($_SESSION['EMPRESA_ID'])){
             echo 0;
         }
     }
-}else if(isset($_POST['id']) && isset($_SESSION['EMPRESA_EDIT'])){
+}else if(isset($_POST['id']) && isset($_POST['EMPRESAID'])){
     $codigo = $_POST['id'];
-    $id = $_SESSION['EMPRESA_EDIT'];
+    $id = $_POST['EMPRESAID'];
     $valid = $c->ValidarCodigoActividadEmpresa($id, $codigo);
     if($valid == true){
         echo 2;

@@ -4,7 +4,6 @@ $c = new Controller();
 require_once '../plugins/vendor/autoload.php';
 session_start();
 
-
 if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['clausulas']) && isset($_POST['fechageneracion'])){
     $usuario = $_SESSION['USER_ID'];
     $lista = $c->buscarloteanexo($usuario);
@@ -12,23 +11,26 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
         echo "Debe seleccionar al menos un contrato";
         return;
     }
-    $fechaanexo = $_POST['fechageneracion'];
-    $tipocontratoid = $_POST['tipocontratoid'];
-    if ($tipocontratoid == 0) {
-        echo "Debe seleccionar un tipo de Documento";
-        return;
-    }
-
+    $fechageneracion = $_POST['fechageneracion'];
     $empresa = $_POST['empresa'];
+    
     if ($empresa == 0) {
         echo "Debe seleccionar una empresa";
         return;
     }
+
+    $clausulas = $_POST['clausulas'];
+    if (count($clausulas) == 0) {
+        echo "Debe seleccionar al menos una clausula";
+        return;
+    }
+
+
     $empresa = $c->buscarempresa($empresa);
     $comuna = $empresa->getComuna();
     $region = $empresa->getRegion();
-
     $repre = $c->BuscarRepresentanteLegalempresa($empresa->getId());
+
     $mpdf = new \Mpdf\Mpdf();
     foreach ($lista as $object) {
         $contrato = $object->getId();
@@ -36,6 +38,12 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
         $fechainicio = $contrato->getFechainicio();
         //Cambiar formato de fecha a dd/mm/yyyy
         $fechainicio = date("d/m/Y", strtotime($fechainicio));
+        $fechatermino = $contrato->getFechatermino();
+        if($fechatermino != null && $fechatermino != "" && $fechatermino != "0000-00-00"){
+            $fechatermino = date("d/m/Y", strtotime($fechatermino));
+        }else{
+            $fechatermino = "Indefinido";
+        }
         $trabajadorid = $contrato->getFecharegistro();
         $trabajador = $c->buscartrabajador($trabajadorid);
         $dom = $c->ultimodomicilio($trabajadorid);
@@ -66,11 +74,17 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
             $banco = "BancoEstado";
         }
 
+        $sueldo = $contrato->getSueldo();
+        $sueldo = number_format($sueldo, 0, ",", ".");
+        $sueldo = "$" . $sueldo;
+        $sueldo1 = $contrato->getSueldo();
+        $sueldo1 = str_replace(".", "", $sueldo1);
+        $sueldo1 = $c->convertirNumeroLetras($sueldo1);
 
 
 
         $swap_var = array(
-            "{FECHA_anexo}" => $fechaanexo,
+            "{FECHA_GENERACION}" => date("d-m-Y", strtotime($fechageneracion)),
             "{NOMBRE_EMPRESA}" => $empresa->getRazonSocial(),
             "{RUT_EMPRESA}" => $empresa->getRut(),
             "{REPRESENTANTE_LEGAL}" => $repre->getNombre() . " " . $repre->getApellido1() . " " . $repre->getApellido2(),
@@ -100,21 +114,24 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
             "{CARGO}" => $contrato->getCargo(),
             "{INICIO_CONTRATO}" => $fechainicio,
             "{TERMINO_CONTRATO}" => $fechatermino,
-            "{CAUSAL_anexo}" => $causal,
-            "{DETALLE_anexo}" => $detalle,
             "{FORMA_PAGO}" => "Transferencia Electrónica",
             "{TIPO_CUENTA}" => $tipocuenta,
             "{NUMERO_CUENTA}" => $numerocuenta,
-            "{BANCO}" => $banco
+            "{BANCO}" => $banco,
+            "{SUELDO_MONTO}" => $sueldo,
+            "{SUELDO_MONTO_LETRAS}" => $sueldo1,
         );
 
-        $contenido = $c->buscarplantilla($tipocontratoid);
+        $contenido = "";
 
-        foreach (array_keys($swap_var) as $key) {
-            $contenido = str_replace($key, $swap_var[$key], $contenido);
+        foreach($clausulas as $clausula){
+            $contenido .= $c->buscarplantilla($clausula['tipodocumentoid']);
+            foreach (array_keys($swap_var) as $key) {
+                $contenido = str_replace($key, $swap_var[$key], $contenido);
+            }
         }
 
-        $mpdf->title = 'anexo del Trabajador';
+        $mpdf->title = 'Anexo del Trabajador';
         $mpdf->author = 'KaiserTech - Gestor de Documentos';
         $mpdf->creator = 'WilkensTech';
         $mpdf->subject = 'anexo del Trabajador';
@@ -135,5 +152,5 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
     echo 1;
     echo "php/previa/" . $nombre_documento;
 } else {
-    echo "No LLegaron todos los datos";
+    echo "UPPS, No LLegaron todos los datos";
 }

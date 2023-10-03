@@ -84,7 +84,7 @@ if (isset($_GET['code'])) {
 		$cotad = $empresa->getCotizacionAdicional();
 		$plan = $c->buscarplanempresa($id);
 
-		$_SESSION['EMPRESA_EDIT'] = $id;
+		$EMPRESA_ID = $id;
 	} else {
 		header('Location: empresas.php');
 	}
@@ -484,6 +484,7 @@ if (isset($_GET['code'])) {
 										<p class="text-mutted card-sub-title"></p>
 									</div>
 									<form name="EnterpriseEditForm" id="EnterpriseEditForm" class="">
+										<input name="EMPRESAID" required=""type="hidden" value="<?php echo $id; ?>">
 										<div class="row">
 											<div class="col-md-12">
 												<label for="">Seleccionar Plan</label>
@@ -812,6 +813,7 @@ if (isset($_GET['code'])) {
 					<div class="modal-body">
 						<form id="RepresentanteForm" name="RepresentanteForm" class="needs-validation was-validated">
 							<div class="row">
+								<input name="EMPRESAID" required=""type="hidden" value="<?php echo $id; ?>">
 								<div class="col-lg-6">
 									<div class="form-group has-success ">
 										<input class="form-control" id="RepresentanteRut" maxlength="12" onkeyup="formatRut(this)" name="RepresentanteRut" placeholder="RUT" required="" type="text" value="">
@@ -876,7 +878,7 @@ if (isset($_GET['code'])) {
 													echo "<td class='text-muted fs-15 font-weight-semibold'>" . $key->getCodigoSii() . "</td>";
 													echo "<td class='text-dark fs-15 font-weight-semibold'>" . $key->getNombre() . "</td>";
 													echo "<td class=''>";
-													echo "<a class='btn btn-outline-success btn-sm rounded-11 mr-2' data-toggle='tooltip' onclick='CodigoActividad(" . $key->getId() . ")' data-original-title='Agregar'><i class='fa fa-plus'></i></a>";
+													echo "<a class='btn btn-outline-success btn-sm rounded-11 mr-2' data-toggle='tooltip' onclick='CodigoActividad1(" . $key->getId() . ", ".$id.")' data-original-title='Agregar'><i class='fa fa-plus'></i></a>";
 													echo "</td>";
 													echo "</tr>";
 												}

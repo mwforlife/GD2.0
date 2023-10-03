@@ -47,47 +47,6 @@ if (isset($_POST['TrabajadorRut'])  && isset($_POST['TrabajadorNombre']) && isse
     }
     $telefono = $_POST['TrabajadorTelefono'];
     $correo = $_POST['TrabajadorCorreo'];
-    /*$centrocosto = $_POST['centrocosto'];
-    if($centrocosto <=0){
-        echo "error";
-        return;
-    }
-    $cargo = $_POST['Charge'];
-    if($cargo <=0){
-        echo "error";
-        return;
-    }
-    $cargodescripcion = $_POST['ChargeDescripcion'];
-    $cargodescripcion = strtoupper($cargodescripcion);
-    $tipocontrato = $_POST['tipocontrato'];
-    if($tipocontrato <=0){
-        echo "error";
-        return;
-    }
-    $desde = $_POST['desde'];
-    $hasta = $_POST['hasta'];
-    $jornada = $_POST['Jornada'];
-    if($jornada <=0){
-        echo "error";
-        return;
-    }
-    $horaspactadas = $_POST['Horaspactadas'];
-    $tiposueldo = $_POST['tiposueldo'];
-    if($tiposueldo <=0){
-        echo "error";
-        return;
-    }
-    $sueldo = $_POST['sueldo'];
-    $asignacion = $_POST['asignacion'];
-    //validar si la asignacion es un valor numerico o decimnal
-    if (!is_numeric($asignacion)) {
-        echo "error";
-        return;
-    }*/
-
-
-
-
     $correo = $c->escapeString($correo);
     $correo = strtoupper($correo);
     $nombre = strtoupper($nombre);
@@ -105,8 +64,6 @@ if (isset($_POST['TrabajadorRut'])  && isset($_POST['TrabajadorNombre']) && isse
             $_SESSION['TRABAJADOR_ID'] = $id;
             $c->registrardomicilio($calle,$villa, $numero, $departamento, $region, $comuna, $ciudad, $id);
             $c->registrarcontacto($telefono, $correo, $id);
-            //$c->registrartrabajadorcargo($id, $centrocosto, $cargo, $cargodescripcion, $tipocontrato, $desde, $hasta, $jornada, $horaspactadas);
-            //$c->registrartrabajadorremuneracion($id, $tiposueldo, $sueldo, $asignacion);
             echo 1;
             $usuario = $_SESSION['USER_ID'];
             $eventos = "Se Registro el Trabajador : " . $nombre . " con el Rut: " . $rut;

@@ -110,8 +110,8 @@ if (isset($_POST['EnterpriseRut']) && isset($_POST['EnterpriseNombre']) && isset
     }
 
 
-    if (isset($_SESSION['EMPRESA_EDIT'])) {
-        $EnterpriseId = $_SESSION['EMPRESA_EDIT'];
+    if (isset($_POST['EMPRESAID'])) {
+        $EnterpriseId = $_POST['EMPRESAID'];
         $result = $c->actualizarEmpresa($EnterpriseId, $EnterpriseRut, $EnterpriseNombre, $Enterprisecalle, $Enterprisevilla, $Enterprisenumero, $Enterprisedept, $EnterpriseRegion, $EnterpriseComuna, $EnterpriseCiudad, $EnterpriseTelefono, $EnterpriseCorreo, $EnterpriseGire, $EnterpriseCaja, $EnterpriseMutual, $EnterpriseCotizacionB, $EnterpriseCotizacionL, $EnterpriseCotizacionC);
         if ($result == true) {
             echo 1;
