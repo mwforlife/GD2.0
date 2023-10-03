@@ -3,15 +3,15 @@ require '../controller.php';
 $c = new Controller();
 session_start();
 if (!isset($_SESSION['USER_ID'])) {
-    header("Location: signin.php");
+    echo 0;
 } else {
     $valid  = $c->validarsesion($_SESSION['USER_ID'], $_SESSION['USER_TOKEN']);
     if ($valid == false) {
-        header("Location: lockscreen.php");
+        echo 0;
     }
 }
-if(isset($_SESSION['EMPRESA_ID'])){
-    $id = $_SESSION['EMPRESA_ID'];
+if(isset($_POST['EMPRESAID'])){
+    $id = $_POST['EMPRESAID'];
     $lista = $c->ListarCodigoActividadEmpresa($id);
     if (count($lista) > 0) {
         foreach ($lista as $codigo) {
@@ -26,8 +26,8 @@ if(isset($_SESSION['EMPRESA_ID'])){
         echo "<td colspan='3' class='text-center'>No hay códigos de actividad</td>";
         echo "</tr>";
     }
-}else if(isset($_SESSION['EMPRESA_EDIT'])){
-    $id = $_SESSION['EMPRESA_EDIT'];
+}else if(isset($_SESSION['EMPRESA_ID'])){
+    $id = $_SESSION['EMPRESA_ID'];
     $lista = $c->ListarCodigoActividadEmpresa($id);
     if (count($lista) > 0) {
         foreach ($lista as $codigo) {

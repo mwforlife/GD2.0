@@ -194,12 +194,24 @@ $(document).ready(function () {
         $("#global-loader").fadeIn("slow");
         var empresa = $("#empresa").val();
         var fechageneracion = $("#fechageneracion").val();
+        var base = $("#base").val();
+        var sueldo = $("#sueldo").val();
+        
+        if($("#base").is(":checked")){
+            base = 1;
+            if(sueldo.trim().length == 0){
+                $("#global-loader").fadeOut("slow");
+                ToastifyError("Por favor, Agregue un Sueldo Base");
+                $("#sueldo").focus();
+                return false;
+            }
+        }
 
 
         //Validar si el array esta vacio
         if (clausulasArray.length == 0) {
             $("#global-loader").fadeOut("slow");
-            ToastifyError("No hay contratos seleccionados");
+            ToastifyError("No hay Clausulas Agregadas.");
             return false;
         }
 
@@ -208,7 +220,9 @@ $(document).ready(function () {
         var datos = {
             empresa: empresa,
             fechageneracion: fechageneracion,
-            clausulas: clausulas
+            clausulas: clausulas,
+            base: base,
+            sueldo: sueldo,
         };
 
         // Realizar la solicitud Ajax

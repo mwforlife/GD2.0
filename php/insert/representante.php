@@ -43,7 +43,7 @@ if (isset($_POST['RepresentanteRut']) && isset($_POST['RepresentanteNombre']) &&
     $apellido2 = $_POST['RepresentanteApellido2'];
     $apellido2 = strtoupper($apellido2);
     if(strlen($apellido2)==0){
-        $apellido2 = "No posee";
+        $apellido2 = " ";
     }
     $empresa = $_POST['EMPRESAID'];
     $valid = $c->validarRepresentanteLegal($rut, $empresa);

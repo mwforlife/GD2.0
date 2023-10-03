@@ -4,7 +4,8 @@ $c = new Controller();
 require_once '../plugins/vendor/autoload.php';
 session_start();
 
-if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['clausulas']) && isset($_POST['fechageneracion'])){
+if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['clausulas']) && isset($_POST['fechageneracion']) && isset($_POST['base']) && isset($_POST['sueldo']) && isset($_POST['fechainicio']) && isset($_POST['fechatermino']) && isset($_POST['cargo']) && isset($_POST['tipocuenta']) && isset($_POST['numerocuenta']) && isset($_POST['banco'])) {
+
     $usuario = $_SESSION['USER_ID'];
     $lista = $c->buscarloteanexo($usuario);
     if (count($lista) == 0) {
@@ -24,6 +25,19 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
         echo "Debe seleccionar al menos una clausula";
         return;
     }
+
+    $base = $_POST['base'];
+    $sueldo = $_POST['sueldo'];
+
+    if($base == 1){
+        if($sueldo == 0){
+            echo "Debe ingresar un sueldo";
+            return;
+        }
+    }else{
+        $sueldo = "";
+    }
+
 
 
     $empresa = $c->buscarempresa($empresa);
@@ -76,7 +90,6 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
 
         $sueldo = $contrato->getSueldo();
         $sueldo = number_format($sueldo, 0, ",", ".");
-        $sueldo = "$" . $sueldo;
         $sueldo1 = $contrato->getSueldo();
         $sueldo1 = str_replace(".", "", $sueldo1);
         $sueldo1 = $c->convertirNumeroLetras($sueldo1);
@@ -118,7 +131,7 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
             "{TIPO_CUENTA}" => $tipocuenta,
             "{NUMERO_CUENTA}" => $numerocuenta,
             "{BANCO}" => $banco,
-            "{SUELDO_MONTO}" => $sueldo,
+            "{SUELDO_MONTO}" => $contrato->getSueldo(),
             "{SUELDO_MONTO_LETRAS}" => $sueldo1,
         );
 

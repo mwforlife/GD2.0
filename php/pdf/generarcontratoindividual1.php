@@ -669,7 +669,8 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
 
     if ($horarioturno == 1) {
         $rotativo = "";
-        $distribucion = "<h2>Horario Fijo Sin Turnos</h2>";
+        $distribucion .= "<p>Duración de colación: " . $colacion . " minutos</p>";
+        $distribucion .= "<h2>Horario Fijo Sin Turnos</h2>";
         //Jornada Normal
         $lunes = $_POST['lunes'];
         $lunesinicio = $_POST['lunesinicio'];
@@ -694,7 +695,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
         $domingofin = $_POST['domingofin'];
 
         //Agregar cabezale de table jornada general
-        $distribucion .= "<table border='1' style = 'width:100%;'>";
+        $distribucion .= "<table border='1' width='100%'>";
         $distribucion .= "<thead><tr><th>Días</th>";
         if ($lunes == 1) {
             $distribucion .= "<th>Lunes</th>";
@@ -774,7 +775,8 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
     }
 
     if ($horarioturno == 3) {
-        $distribucion = "<h2>Horario Jornada Matutina</h2>";
+        $distribucion .= "<p>Duración de colación: " . $colacion . " minutos</p>";
+        $distribucion .= "<h2>Horario Jornada Matutina</h2>";
 
         //Jornada Matutina
         $lunesm = $_POST['lunesm'];
@@ -800,7 +802,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
         $domingofinm = $_POST['domingomfin'];
 
         //Agregar cabezale de table jornada matutina
-        $distribucion .= "<table border='1' style = 'width:100%;'>";
+        $distribucion .= "<table border='1' width='100%'>";
         $distribucion .= "<thead><tr><th>Días</th>";
 
         if ($lunesm == 1) {
@@ -898,7 +900,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
         $domingofint = $_POST['domingotfin'];
 
         //Agregar cabezale de table jornada Tarde
-        $distribucion = $distribucion . "<table border='1' style = 'width:100%;'>";
+        $distribucion = $distribucion . "<table border='1' width='100%'>";
         $distribucion = $distribucion . "<thead><tr><th>Días</th>";         
         if ($lunest == 1) {
             $distribucion = $distribucion . "<th>Lunes</th>";
@@ -972,6 +974,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
 
     if ($horarioturno == 4) {
         //Jornada Tarde
+        $distribucion .= "<p>Duración de colación: " . $colacion . " minutos</p>";
         $distribucion .= "<h2>Horario Jornada Tarde</h2>";
         $lunest = $_POST['lunest'];
         $lunesiniciot = $_POST['lunestinicio'];
@@ -996,7 +999,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
         $domingofint = $_POST['domingotfin'];
 
         //Agregar cabezale de table jornada Tarde
-        $distribucion = $distribucion . "<table border='1' style = 'width:100%;'>";
+        $distribucion = $distribucion . "<table border='1' width='100%'>";
         $distribucion = $distribucion . "<thead><tr><th>Días</th>";         
         if ($lunest == 1) {
             $distribucion = $distribucion . "<th>Lunes</th>";
@@ -1093,7 +1096,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
         $domingofinn = $_POST['domingonfin'];
 
         //Agregar cabezale de table jornada Nocturna
-        $distribucion .= "<table border='1' style = 'width:100%;'>";
+        $distribucion .= "<table border='1' width='100%'>";
         $distribucion .= "<thead><tr><th>Días</th>";
         if ($lunesn == 1) {
             $distribucion .= "<th>Lunes</th>";
@@ -1168,7 +1171,8 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
 
     if ($horarioturno == 5) {
         //Jornada Matutina
-        $distribucion = "<h2>Horario Jornada Matutina</h2>";
+        $distribucion .= "<p>Duración de colación: " . $colacion . " minutos</p>";
+        $distribucion .= "<h2>Horario Jornada Matutina</h2>";
 
         $lunesm = $_POST['lunesm'];
         $lunesiniciom = $_POST['lunesminicio'];
@@ -1193,7 +1197,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
         $domingofinm = $_POST['domingomfin'];
 
         //Agregar cabezale de table jornada matutina
-        $distribucion .= "<table border='1' style = 'width:100%;'>";
+        $distribucion .= "<table border='1' width='100%'>";
         $distribucion .= "<thead><tr><th>Días</th>";
         if ($lunesm == 1) {
             $distribucion .= "<th>Lunes</th>";
@@ -1291,7 +1295,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
         $domingofinn = $_POST['domingonfin'];
 
         //Agregar cabezale de table jornada Nocturna
-        $distribucion .= "<table border='1' style = 'width:100%;'>";
+        $distribucion .= "<table border='1' width='100%'>";
         $distribucion .= "<thead><tr><th>Días</th>";
         if ($lunesn == 1) {
             $distribucion .= "<th>Lunes</th>";
@@ -1365,7 +1369,8 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
 
     if ($horarioturno == 6) {
         //Jornada Matutina
-        $distribucion = "<h2>Horario Jornada Matutina</h2>";
+        $distribucion .= "<p>Duración de colación: " . $colacion . " minutos</p>";
+        $distribucion .= "<h2>Horario Jornada Matutina</h2>";
 
         $lunesm = $_POST['lunesm'];
         $lunesiniciom = $_POST['lunesminicio'];
@@ -1390,7 +1395,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
         $domingofinm = $_POST['domingomfin'];
 
         //Agregar cabezale de table jornada matutina
-        $distribucion .= "<table border='1' style = 'width:100%;'>";
+        $distribucion .= "<table border='1' width='100%'>";
         $distribucion .= "<thead><tr><th>Días</th>";
         if ($lunesm == 1) {
             $distribucion .= "<th>Lunes</th>";
@@ -1486,7 +1491,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
         $domingofint = $_POST['domingotfin'];
 
         //Agregar cabezale de table jornada Tarde
-        $distribucion = $distribucion . "<table border='1' style = 'width:100%;'>";
+        $distribucion = $distribucion . "<table border='1' width='100%'>";
         $distribucion = $distribucion . "<thead><tr><th>Días</th>";         
         if ($lunest == 1) {
             $distribucion = $distribucion . "<th>Lunes</th>";
@@ -1585,7 +1590,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
         $domingofinn = $_POST['domingonfin'];
 
         //Agregar cabezale de table jornada Nocturna
-        $distribucion .= "<table border='1' style = 'width:100%;'>";
+        $distribucion .= "<table border='1' width='100%'>";
         $distribucion .= "<thead><tr><th>Días</th>";
         if ($lunesn == 1) {
             $distribucion .= "<th>Lunes</th>";

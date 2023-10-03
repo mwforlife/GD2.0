@@ -47,6 +47,8 @@ require 'Class/Tramos.php';
 require 'Class/Users.php';
 require 'Class/Vacaciones.php';
 require 'Class/DocumentoSubido.php';
+require 'Class/Anexo.php';
+require 'Class/Clausulaanexo.php';
 
 //Class definition
 class Controller
@@ -6777,6 +6779,8 @@ class Controller
             'totales' => $totales
         ];
     }
+
+    
     
     function obtenerFechas($fechaInicio, $fechaFin) {
         $fechas = array();

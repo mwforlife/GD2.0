@@ -813,7 +813,7 @@ if (isset($_GET['code'])) {
 					<div class="modal-body">
 						<form id="RepresentanteForm" name="RepresentanteForm" class="needs-validation was-validated">
 							<div class="row">
-								<input name="EMPRESAID" required=""type="hidden" value="<?php echo $id; ?>">
+								<input name="EMPRESAID" id="EMPRESAID1" required=""type="hidden" value="<?php echo $id; ?>">
 								<div class="col-lg-6">
 									<div class="form-group has-success ">
 										<input class="form-control" id="RepresentanteRut" maxlength="12" onkeyup="formatRut(this)" name="RepresentanteRut" placeholder="RUT" required="" type="text" value="">

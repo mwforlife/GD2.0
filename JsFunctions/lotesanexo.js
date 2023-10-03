@@ -77,3 +77,21 @@ function Eliminarloteanexo() {
         }
     });
 }
+
+$(document).ready(function () {
+    $("#base").click(function () {
+        //Validar si esta checkeado o no
+        if ($("#base").is(":checked")) {
+            $("#sueldo").prop("disabled", false);
+            $("#sueldo").prop("required", true);
+            $(".custom-switch-description").html("Si.");
+            $("#sueldo").focus();
+        } else {
+            $("#sueldo").prop("disabled", true);
+            $("#sueldo").prop("required", false);
+            $(".custom-switch-description").html("No.");
+
+        }
+    }
+    );
+});

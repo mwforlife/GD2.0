@@ -28,8 +28,8 @@ if (count($lista) > 0) {
     echo "<td colspan='4' class='text-center'>No hay Representante Legal Registrados</td>";
     echo "</tr>";
 }
-}else if(isset($_SESSION['EMPRESA_EDIT'])){
-$id = $_SESSION['EMPRESA_EDIT'];
+}else if(isset($_POST['EMPRESAID'])){
+$id = $_POST['EMPRESAID'];
 $lista = $c->listarRepresentantelegal($id);
 if (count($lista) > 0) {
     foreach ($lista as $codigo) {

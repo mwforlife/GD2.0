@@ -837,7 +837,18 @@ create table documentosubido(
 
 create table anexoscontrato(
     id int not null auto_increment primary key,
-    fechageneracion date not null,
     contrato int not null references contratos(id),
-    
+    fechageneracion date not null,
+    base int not null,
+    sueldo_base decimal(10,2) not null,
+    estado int not null references estadocontrato(id),
+    register_at timestamp not null default current_timestamp    
+);
+
+create table clausulasanexos(
+    id int not null auto_increment primary key,
+    anexo int not null references anexoscontrato(id),
+    clausula text not null,
+    tipodocumento int not null references tipodocumento(id),
+    register_at timestamp not null default current_timestamp
 );

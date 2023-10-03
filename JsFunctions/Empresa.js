@@ -123,9 +123,11 @@ $(document).ready(function () {
 });
 
 function ListarRepresentantes(){
+    var EMPRESAID = $("#EMPRESAID1").val();
     $.ajax({
         type: "POST",
         url: "php/listar/representantes.php",
+        data: {EMPRESAID:EMPRESAID},
         success: function (data) {
             $("#tablerepre").html(data);
         }
@@ -236,11 +238,11 @@ function CodigoActividad(id){
     });
 }
 
-function CodigoActividad1(id, $empresa){
+function CodigoActividad1(id, empresa){
     $.ajax({
         type: "POST",
         url: "php/insert/codigoactividad.php",
-        data: {id:id, EMPRESAID:$empresa},
+        data: {id:id, EMPRESAID:empresa},
         success: function (data) {
             $("#global-loader").fadeIn("slow");
             if (data == 1 || data == "1") {
@@ -262,9 +264,11 @@ function CodigoActividad1(id, $empresa){
 }
 
 function ListarCodigoActividad(){
+    var EMPRESAID = $("#EMPRESAID1").val();
     $.ajax({
         type: "POST",
         url: "php/listar/codigoactividad.php",
+        data: {EMPRESAID:EMPRESAID},
         success: function (data) {
             $("#tabledata").html(data);
         }
