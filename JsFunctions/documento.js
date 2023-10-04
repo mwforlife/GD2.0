@@ -262,11 +262,9 @@ $(document).ready(function () {
         }
         else if (accion === "registro") {
             $.ajax({
-                type: "POST", // Puedes ajustar el método HTTP según tus necesidades
-                url: "php/insert/insertaranexomasivo.php", // Reemplaza 'tu_script.php' con la URL de tu servidor donde procesarás los datos
-                data: JSON.stringify(datos), // Convertir el objeto de datos a JSON
-                contentType: "application/json; charset=utf-8",
-                dataType: "json", // Esperamos una respuesta JSON del servidor
+                type: "POST",
+                url: "php/insert/anexomasivo.php", //
+                data: datos,
                 success: function (response) {
                     // Manejar la respuesta del servidor aquí, por ejemplo, mostrar una vista previa o mensaje de éxito
                     $("#global-loader").fadeOut("slow");

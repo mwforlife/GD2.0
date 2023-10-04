@@ -473,7 +473,7 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                                                 </thead>
                                                 <tbody id="lotes">
                                                     <?php
-                                                    $lista = $c->buscarloteanexo($_SESSION['USER_ID']);
+                                                    $lista = $c->buscarloteanexo($_SESSION['USER_ID'], $empresa);
                                                     foreach ($lista as $object1) {
                                                         echo "<tr class='border-bottom-0'>";
                                                         echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
@@ -575,7 +575,7 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                                         <input type="hidden" class="form-control text-dark" id="empresa" name="empresa"
                                             required="" readonly value="<?php echo $_SESSION['CURRENT_ENTERPRISE']; ?>">
                                         <div class="col-md-12 mt-3 text-right">
-                                            <a href="menuinfo.php" class="btn btn-danger"> <i
+                                            <a href="generarloteanexo.php" class="btn btn-danger"> <i
                                                     class="fa fa-arrow-left"></i> Volver</a>
                                             <button type="button" id="previaanexomasivo" class="btn btn-warning"> <i
                                                     class="fa fa-eye"></i> Vista Previa</button>
@@ -620,14 +620,14 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                    $lista = $c->listartipodocumento();
+                                                    $lista = $c->listartipodocumento($_SESSION['CURRENT_ENTERPRISE']);
                                                     if (count($lista) > 0) {
                                                         foreach ($lista as $codigo) {
                                                             echo "<tr>";
                                                             echo "<td>" . $codigo->getCodigo() . "</td>";
                                                             echo "<td>" . $codigo->getCodigoprevired() . "</td>";
                                                             echo "<td>" . $codigo->getNombre() . "</td>";
-                                                            echo "<td><a href='#' type='button' data-dismiss='modal' class='btn btn-outline-success btn-sm rounded-11 mr-2' data-toggle='tooltip'  data-original-title='Seleccionar' onclick='seleccionartipodocumento(" . $codigo->getId() . "," . $codigo->getCodigo() . ",\"" . $codigo->getNombre() . "\")'><i class='fa fa-check'></i> </a></td>";
+                                                            echo "<td><a href='#' type='button' data-dismiss='modal' class='btn btn-outline-success btn-sm rounded-11 mr-2' data-toggle='tooltip'  data-original-title='Seleccionar' onclick='seleccionartipodocumento(" . $codigo->getId() . ",\"" . $codigo->getCodigo() . "\",\"" . $codigo->getNombre() . "\")'><i class='fa fa-check'></i> </a></td>";
                                                             echo "<td><a href='#' type='button' class='btn btn-outline-success btn-sm rounded-11 mr-2' data-toggle='modal'  data-target='#previadocument' onclick='previadocument(" . $codigo->getId() . ")'><i class='fa fa-eye'></i> </a></td>";
                                                             echo "</tr>";
                                                         }
@@ -796,20 +796,17 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
         <script src="JsFunctions/Comunas.js"></script>
         <script src="JsFunctions/precargado.js"></script>
 
-        <?php
-        if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-            $id = $_SESSION['CURRENT_ENTERPRISE'];
-            echo "<script>
-                mostrarEmpresa();
-            </script>";
-        }
-        ?>
-
         <script src="JsFunctions/Trabajadores.js"></script>
         <script src="JsFunctions/documento.js"></script>
         <script src="JsFunctions/lotesanexo.js"></script>
 
+        <script src="JsFunctions/tipodocumento.js"></script>
 
+        <script>
+		$(document).ready(function(){
+			mostrarEmpresa();
+		});
+	</script>
 
 </body>
 

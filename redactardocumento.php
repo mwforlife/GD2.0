@@ -270,6 +270,9 @@ foreach ($permiso as $p) {
 								<a class="nav-sub-link" href="generarlote.php">Contratos Masivos</a>
 							</li>
 							<li class="nav-sub-item">
+								<a class="nav-sub-link" href="generarloteanexo.php">Anexos Masivos</a>
+							</li>
+							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="finiquitoindividual.php">Finiquito Individual</a>
 							</li>
 							<li class="nav-sub-item">
@@ -663,6 +666,7 @@ foreach ($permiso as $p) {
 						<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mt-3 mb-3"><button class="btn btn-success btn-block" data-dismiss="modal" onclick="agregarcampo('CORREO_EMPRESA')">CORREO EMPRESA</button></div>
 						<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mt-3 mb-3"><button class="btn btn-success btn-block" data-dismiss="modal" onclick="agregarcampo('TELEFONO_EMPRESA')">TELEFONO EMPRESA</button></div>
 						<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mt-3 mb-3"><button class="btn btn-success btn-block" data-dismiss="modal" onclick="agregarcampo('CALLE_EMPRESA')">CALLE EMPRESA</button></div>
+						<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mt-3 mb-3"><button class="btn btn-success btn-block" data-dismiss="modal" onclick="agregarcampo('VILLA_EMPRESA')">VILLA EMPRESA</button></div>
 						<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mt-3 mb-3"><button class="btn btn-success btn-block" data-dismiss="modal" onclick="agregarcampo('NUMERO_EMPRESA')">NUMERO EMPRESA</button></div>
 						<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mt-3 mb-3"><button class="btn btn-success btn-block" data-dismiss="modal" onclick="agregarcampo('REGION_EMPRESA')">REGION EMPRESA</button></div>
 						<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mt-3 mb-3"><button class="btn btn-success btn-block" data-dismiss="modal" onclick="agregarcampo('COMUNA_EMPRESA')">COMUNA EMPRESA</button></div>
@@ -686,6 +690,7 @@ foreach ($permiso as $p) {
 						<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mt-3 mb-3"><button class="btn btn-success btn-block" data-dismiss="modal" onclick="agregarcampo('REGION_TRABAJADOR')">REGION TRABAJADOR</button></div>
 						<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mt-3 mb-3"><button class="btn btn-success btn-block" data-dismiss="modal" onclick="agregarcampo('COMUNA_TRABAJADOR')">COMUNA TRABAJADOR</button></div>
 						<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mt-3 mb-3"><button class="btn btn-success btn-block" data-dismiss="modal" onclick="agregarcampo('CALLE_TRABAJADOR')">CALLE TRABAJADOR</button></div>
+						<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mt-3 mb-3"><button class="btn btn-success btn-block" data-dismiss="modal" onclick="agregarcampo('VILLA_TRABAJADOR')">VILLA TRABAJADOR</button></div>
 						<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mt-3 mb-3"><button class="btn btn-success btn-block" data-dismiss="modal" onclick="agregarcampo('NUMERO_CASA_TRABAJADOR')">NUMERO CASA TRABAJADOR</button></div>
 						<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mt-3 mb-3"><button class="btn btn-success btn-block" data-dismiss="modal" onclick="agregarcampo('DEPARTAMENTO_TRABAJADOR')">DEPARTAMENTO TRABAJADOR</button></div>
 						<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mt-3 mb-3"><button class="btn btn-success btn-block" data-dismiss="modal" onclick="agregarcampo('DISCAPACIDAD')">DISCAPACIDAD</button></div>
@@ -874,7 +879,7 @@ foreach ($permiso as $p) {
 							<h6 class="main-content-label mb-1 text-center">OTROS DOCUMENTOS</h6>
 						</div>
 						<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mt-3 mb-3"><button class="btn btn-success btn-block" data-dismiss="modal" onclick="agregarcampo('FECHA_GENERACION')">FECHA GENERACIÓN</button></div>
-
+						<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mt-3 mb-3"><button class="btn btn-success btn-block" data-dismiss="modal" onclick="agregarcampo('CLAUSULA_A_MODIFICAR')">CLAUSULA A MODIFICAR</button></div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>

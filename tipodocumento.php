@@ -14,6 +14,12 @@ if (!isset($_SESSION['USER_ID'])) {
 		header("Location: lockscreen.php");
 	}
 }
+$empresa =0;
+if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
+	$empresa = $_SESSION['CURRENT_ENTERPRISE'];
+} else {
+	header("Location: index.php");
+}
 $permiso = $c->listarPermisosUsuario1($_SESSION['USER_ID']);
 $gestion = false;
 $_SESSION['GESTION_PERMISO'] = false;
@@ -262,6 +268,9 @@ foreach ($permiso as $p) {
 								<a class="nav-sub-link" href="generarlote.php">Contratos Masivos</a>
 							</li>
 							<li class="nav-sub-item">
+								<a class="nav-sub-link" href="generarloteanexo.php">Anexos Masivos</a>
+							</li>
+							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="finiquitoindividual.php">Finiquito Individual</a>
 							</li>
 							<li class="nav-sub-item">
@@ -306,15 +315,9 @@ foreach ($permiso as $p) {
 						<a href="index.php"><img src="assets/img/brand/logo.png" class="mobile-logo-dark" alt="logo"></a>
 					</div>
 					<div class="input-group">
-						<div class="mt-0">
-							<form class="form-inline">
-								<div class="search-element">
-									<input type="search" class="form-control header-search" placeholder="Search…" aria-label="Search" tabindex="1">
-									<button class="btn" type="submit">
-										<i class="fa fa-search"></i>
-									</button>
-								</div>
-							</form>
+						<div class="d-flex justify-content-center align-items-center">
+							<h5 class="empresaname m-0">
+								<h5>
 						</div>
 					</div>
 				</div>
@@ -467,7 +470,8 @@ foreach ($permiso as $p) {
 												</thead>
 												<tbody class="text-center">
 													<?php
-													$lista = $c->listartipodocumento();
+													$empresa = $_SESSION['CURRENT_ENTERPRISE'] == null ? '0' : $_SESSION['CURRENT_ENTERPRISE'];
+													$lista = $c->listartipodocumento($empresa);
 													if (count($lista) > 0) {
 														foreach ($lista as $object) {
 															echo "<tr>
@@ -588,6 +592,12 @@ foreach ($permiso as $p) {
 	<script src="JsFunctions/Alert/sweetalert2.all.min.js"></script>
 	<script src="JsFunctions/Alert/alert.js"></script>
 	<script src="JsFunctions/tipodocumento.js"></script>
+	<script src="JsFunctions/main.js"></script>
+	<script>
+		$(document).ready(function(){
+			mostrarEmpresa();
+		});
+	</script>
 
 
 

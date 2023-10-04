@@ -109,6 +109,12 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 
 	<link rel="stylesheet" href="JsFunctions/Alert/loader.css">
 	<script src="JsFunctions/Alert/loader.js"></script>
+	<style>
+		.swal2-container .swal2-center .swal2-backdrop-show{
+			z-index: 999999999999;
+			position: absolute;
+		}
+	</style>
 
 </head>
 
@@ -278,6 +284,9 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 							</li>
 							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="generarlote.php">Contratos Masivos</a>
+							</li>
+							<li class="nav-sub-item">
+								<a class="nav-sub-link" href="generarloteanexo.php">Anexos Masivos</a>
 							</li>
 							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="finiquitoindividual.php">Finiquito Individual</a>
@@ -998,9 +1007,9 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 																			} else {
 																				echo "<td>Finiquitado</td>";
 																			}
-																			echo "<td class='d-flex'><a class='btn btn-outline-warning btn-sm rounded-11' target='_blank' href='uploads/Contratos/" . $contrato->getDocumento() . "'><i class='fa fa-file'></i></a></td>";
+																			echo "<td><a class='btn btn-outline-warning btn-sm rounded-11' target='_blank' href='uploads/Contratos/" . $contrato->getDocumento() . "'><i class='fa fa-file'></i></a></td>";
 																			
-																			echo "<td class='d-flex'><a onclick='mostraranexos(".$contrato->getId().")' class='btn btn-outline-info btn-sm rounded-11'><i class='fa fa-file'></i></a></td>";
+																			echo "<td><a onclick='buscaranexo(".$contrato->getId().")' class='btn btn-outline-info btn-sm rounded-11'><i class='fa fa-file'></i></a></td>";
 																			
 																			if ($contrato->getEstado() == 1) {
 																				echo "<td><button class='btn btn-danger btn-sm rounded-11' onclick='eliminarcontrato(" . $contrato->getId() . ")'><i class='fa fa-trash'></i></button></td>";
@@ -1620,6 +1629,43 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 							<div class="row">
 								<div class="col-md-12" id="anot">
 
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal Anotacion-->
+	<div class="modal fade" id="modalanexos" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="staticBackdropLabel">Anexos de Contrato</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="card" id="transcation-crypto-1">
+						<div class="card-body p-0 pt-1">
+							<div class="row">
+								<div class="col-md-12">
+									<table class="table table-hover w-100">
+										<thead>
+											<tr>
+												<td>Fecha Generacion</td>
+												<td>Sueldo Base</td>
+												<td>Estado</td>
+												<td>Documento</td>
+												<td>Eliminar</td>
+											</tr>
+										</thead>
+										<tbody id="anexos">
+										</tbody>
+									</table>
 								</div>
 							</div>
 						</div>

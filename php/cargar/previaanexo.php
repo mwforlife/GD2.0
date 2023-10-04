@@ -3,11 +3,11 @@ require '../controller.php';
 $c = new Controller();
 require_once '../plugins/vendor/autoload.php';
 session_start();
-
-if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['clausulas']) && isset($_POST['fechageneracion']) && isset($_POST['base']) && isset($_POST['sueldo']) && isset($_POST['fechainicio']) && isset($_POST['fechatermino']) && isset($_POST['cargo']) && isset($_POST['tipocuenta']) && isset($_POST['numerocuenta']) && isset($_POST['banco'])) {
+$empresa = $_SESSION['CURRENT_ENTERPRISE'];
+if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['clausulas']) && isset($_POST['fechageneracion']) && isset($_POST['base']) && isset($_POST['sueldo'])) {
 
     $usuario = $_SESSION['USER_ID'];
-    $lista = $c->buscarloteanexo($usuario);
+    $lista = $c->buscarloteanexo($usuario, $empresa);
     if (count($lista) == 0) {
         echo "Debe seleccionar al menos un contrato";
         return;
@@ -35,8 +35,14 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
             return;
         }
     }else{
-        $sueldo = "";
+        $sueldo = 0;
     }
+
+    
+    $sueldo1 = $sueldo;
+    $sueldo = number_format($sueldo, 0, ",", ".");
+    $sueldo1 = str_replace(".", "", $sueldo1);
+    $sueldo1 = $c->convertirNumeroLetras($sueldo1);
 
 
 
@@ -88,12 +94,6 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
             $banco = "BancoEstado";
         }
 
-        $sueldo = $contrato->getSueldo();
-        $sueldo = number_format($sueldo, 0, ",", ".");
-        $sueldo1 = $contrato->getSueldo();
-        $sueldo1 = str_replace(".", "", $sueldo1);
-        $sueldo1 = $c->convertirNumeroLetras($sueldo1);
-
 
 
         $swap_var = array(
@@ -103,6 +103,7 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
             "{REPRESENTANTE_LEGAL}" => $repre->getNombre() . " " . $repre->getApellido1() . " " . $repre->getApellido2(),
             "{RUT_REPRESENTANTE_LEGAL}" => $repre->getRut(),
             "{CALLE_EMPRESA}" => $empresa->getCalle(),
+            "{VILLA_EMPRESA}" => $empresa->getVilla(),
             "{TELEFONO_EMPRESA}" => $empresa->getTelefono(),
             "{CORREO_EMPRESA}" => $empresa->getEmail(),
             "{NUMERO_EMPRESA}" => $empresa->getNumero(),
@@ -118,6 +119,7 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
             "{TELEFONO_TRABAJADOR}" => $contact->getTelefono(),
             "{RUT_TRABAJADOR}" => $trabajador->getRut(),
             "{CALLE_TRABAJADOR}" => $dom->getCalle(),
+            "{VILLA_TRABAJADOR}" => $dom->getVilla(),
             "{NUMERO_CASA_TRABAJADOR}" => $dom->getNumero(),
             "{DEPARTAMENTO_TRABAJADOR}" => $dom->getDepartamento(),
             "{COMUNA_TRABAJADOR}" => $comunatra,
@@ -131,8 +133,8 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
             "{TIPO_CUENTA}" => $tipocuenta,
             "{NUMERO_CUENTA}" => $numerocuenta,
             "{BANCO}" => $banco,
-            "{SUELDO_MONTO}" => $contrato->getSueldo(),
-            "{SUELDO_MONTO_LETRAS}" => $sueldo1,
+            "{SUELDO_MONTO}" => $sueldo,
+            "{SUELDO_MONTO_LETRAS}" => $sueldo1
         );
 
         $contenido = "";
@@ -141,6 +143,7 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
             $contenido .= $c->buscarplantilla($clausula['tipodocumentoid']);
             foreach (array_keys($swap_var) as $key) {
                 $contenido = str_replace($key, $swap_var[$key], $contenido);
+                $contenido = str_replace("{CLAUSULA_A_MODIFICAR}", $clausula['clausula'], $contenido);
             }
         }
 

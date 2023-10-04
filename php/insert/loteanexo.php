@@ -21,9 +21,9 @@ if (isset($_POST['contrato'])) {
     if($id == false){
         echo 0;
     }else{
-        $valid = $c->validarloteanexo($id, $usuario);
+        $valid = $c->validarloteanexo($id, $usuario,$empresa);
         if($valid == false){
-            $result = $c->registrarloteanexo($id, $usuario);
+            $result = $c->registrarloteanexo($id, $usuario,$empresa);
             if($result == true){
                 echo 1;
             }else{
@@ -40,15 +40,16 @@ if (isset($_POST['contrato'])) {
     $token = $_SESSION['USER_TOKEN'];
     $empresa = $_SESSION['CURRENT_ENTERPRISE'];
     $lote = $_POST['lote'];
+    $empresa = $_SESSION['CURRENT_ENTERPRISE'];
     $lista = $c->listarlotesids($lote);
     if(count($lista) == 0){
         echo 0;
     }else{
         foreach($lista as $l){
                 $contrato = $l->getContrato();
-                $valid = $c->validarloteanexo($contrato, $usuario);
+                $valid = $c->validarloteanexo($contrato, $usuario,$empresa);
                 if($valid == false){
-                    $result = $c->registrarloteanexo($contrato, $usuario);
+                    $result = $c->registrarloteanexo($contrato, $usuario,$empresa);
                 }
             
         }

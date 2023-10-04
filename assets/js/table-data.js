@@ -347,6 +347,34 @@ $(function () {
       buttons: ['copy', 'excel', 'pdf']
    });
 
+   $('#example14').DataTable({
+      language: {
+         searchPlaceholder: 'Buscar..',
+         sSearch: '',
+         lengthMenu: '_MENU_ datos/página',
+         zeroRecords: 'No se encontraron resultados',
+         info: 'Mostrando página _PAGE_ de _PAGES_',
+         infoEmpty: 'No hay datos disponibles',
+         infoFiltered: '(filtrado de _MAX_ datos totales)',
+         paginate: {
+            first: 'Primero',
+            previous: 'Anterior',
+            next: 'Siguiente',
+            last: 'Último'
+         },
+      },
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true,
+      "responsive": true,
+      buttons: ['copy', 'excel', 'pdf']
+   });
+
+
+
   
 
 

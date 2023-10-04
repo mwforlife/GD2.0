@@ -55,6 +55,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid']) && isset($_PO
         "{REPRESENTANTE_LEGAL}" => $repre->getNombre() . " " . $repre->getApellido1() . " " . $repre->getApellido2(),
         "{RUT_REPRESENTANTE_LEGAL}" => $repre->getRut(),
         "{CALLE_EMPRESA}" => $empresa->getCalle(),
+        "{VILLA_EMPRESA}" => $empresa->getVilla(),
         "{NUMERO_EMPRESA}" => $empresa->getNumero(),
         "{DEPT_EMPRESA}" => $empresa->getDepartamento(),
         "{COMUNA_EMPRESA}" => $empresa->getComuna(),
@@ -68,6 +69,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid']) && isset($_PO
         //Fecha de nacimiento en formato dd/mm/aaaa
         "{FECHA_NACIMIENTO}" => date("d/m/Y", strtotime($trabajador->getNacimiento())),
         "{CALLE_TRABAJADOR}" => $dom->getCalle(),
+        "{VILLA_TRABAJADOR}" => $dom->getVilla(),
         "{NUMERO_CASA_TRABAJADOR}" => $dom->getNumero(),
         "{DEPARTAMENTO_TRABAJADOR}" => $dom->getDepartamento(),
         "{COMUNA_TRABAJADOR}" => $comunatra,

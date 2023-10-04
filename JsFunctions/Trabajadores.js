@@ -1289,3 +1289,43 @@ function buscartrabajador(element){
     });
 
 }
+
+function buscaranexo(contrato){
+    $.ajax({
+        type: "POST",
+        url: "php/cargar/buscaranexo.php",
+        data: { contrato: contrato },
+        success: function (data) {
+            $("#anexos").html(data);
+            $("#modalanexos").modal("show");
+
+        }
+    });
+}
+
+function eliminaranexo(id,contrato){
+    //Confirmar Eliminarcion
+    swal.fire({
+        title: "¿Estas seguro?",
+        text: "¿Deseas ver los anexos de este contrato?",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Si, Eliminar",
+        cancelButtonText: "No, Cancelar",
+    }).then((result) => {
+        if(result.value){
+            $.ajax({
+                type: "POST",
+                url: "php/eliminar/anexo.php",
+                data: { id: id },
+                success: function (data) {
+                    if(data == 1 || data == "1"){
+                        buscaranexo(contrato);
+                    }else{
+                        ToastifyError("Error al Eliminar");
+                    }
+                }
+            });
+        }
+    });
+}

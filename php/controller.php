@@ -145,7 +145,7 @@ class Controller
     public function login($user, $pass)
     {
         $this->conexion();
-        $sql = "select * from users where rut = '$user' or email = '$user' and password = sha1('$pass')";
+        $sql = "select * from users where (rut = '$user' or email = '$user') and password = sha1('$pass')";
         $result = $this->mi->query($sql);
         if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id_usu'];
@@ -2147,10 +2147,10 @@ class Controller
     }
 
     //Listar Tipo Documento
-    public function listartipodocumento()
+    public function listartipodocumento($empresa)
     {
         $this->conexion();
-        $sql = "select * from tipodocumento";
+        $sql = "select * from tipodocumento where empresa = $empresa";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -5634,10 +5634,10 @@ class Controller
         return json_encode($result);
     }
     //Registrar lote Anexo
-    function registrarloteanexo($contrato, $usuario)
+    function registrarloteanexo($contrato, $usuario,$empresa)
     {
         $this->conexion();
-        $sql = "insert into lote4 values(null,$contrato,$usuario,now())";
+        $sql = "insert into lote4 values(null,$contrato,$usuario,$empresa,now())";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return json_encode($result);
@@ -5658,10 +5658,10 @@ class Controller
     }
 
     //Validar lote Anexo
-    function validarloteanexo($contrato, $usuario)
+    function validarloteanexo($contrato, $usuario,$empresa)
     {
         $this->conexion();
-        $sql = "select * from lote4 where contrato=$contrato and usuario=$usuario";
+        $sql = "select * from lote4 where contrato=$contrato and usuario=$usuario and empresa=$empresa";
         $result = $this->mi->query($sql);
         if ($rs = mysqli_fetch_array($result)) {
             $this->desconectar();
@@ -5698,9 +5698,9 @@ class Controller
     }
 
     //Buscar Lote Anexo
-    function buscarloteanexo($usuario){
+    function buscarloteanexo($usuario,$empresa){
         $this->conexion();
-        $sql = "select lote4.id as id, lote4.contrato as contrato, tipocontrato, cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as registro,trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2 from lote4, contratos, trabajadores where lote4.contrato = contratos.id and contratos.trabajador = trabajadores.id and usuario=$usuario";
+        $sql = "select lote4.id as id, lote4.contrato as contrato, tipocontrato, cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as registro,trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2 from lote4, contratos, trabajadores where lote4.contrato = contratos.id and contratos.trabajador = trabajadores.id and usuario=$usuario and lote4.empresa=$empresa";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)){
@@ -5750,22 +5750,100 @@ class Controller
     }
 
     //Eliminar todo el lote Anexo
-    function eliminartodoloteanexo($usuario)
+    function eliminartodoloteanexo($usuario,$empresa)
     {
         $this->conexion();
-        $sql = "delete from lote4 where usuario=$usuario";
+        $sql = "delete from lote4 where usuario=$usuario and empresa=$empresa";
         $result = $this->mi->query($sql);
         return json_encode($result);
     }
 
     //Registrar Axexo
-    function registraraenxo($contrato, $tipocontratoid, $fechaanexo, $trabajadorid, $empresa){
+    function registraraenxo($contrato, $fechageneracion, $base, $sueldo_base, $estado){
         $this->conexion();
-        $sql = "insert into anexos values(null, $contrato, $tipocontratoid, '$fechaanexo', $trabajadorid, $empresa,now());";
+        $sql = "insert into anexoscontrato values(null, $contrato, '$fechageneracion', $base, $sueldo_base, $estado, now())";
         $result = $this->mi->query($sql);
         $id_insert = mysqli_insert_id($this->mi);
         $this->desconectar();
         return $id_insert;
+    }
+
+    //Listar Anexo
+    function listaranexo($contrato){
+        $this->conexion();
+        $sql = "select * from anexoscontrato where contrato=$contrato";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $contrato = $rs['contrato'];
+            $fechageneracion = $rs['fechageneracion'];
+            $base = $rs['base'];
+            $sueldo_base = $rs['sueldo_base'];
+            $estado = $rs['estado'];
+            $registro = $rs['register_at'];
+            $a = new Anexo($id, $contrato, $fechageneracion, $base, $sueldo_base, $estado, $registro);
+            $lista[] = $a;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Buscar Anexo
+    function buscaranexo($id){
+        $this->conexion();
+        $sql = "select * from anexoscontrato where id=$id";
+        $result = $this->mi->query($sql);
+        if($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $contrato = $rs['contrato'];
+            $fechageneracion = $rs['fechageneracion'];
+            $base = $rs['base'];
+            $sueldo_base = $rs['sueldo_base'];
+            $estado = $rs['estado'];
+            $registro = $rs['register_at'];
+            $a = new Anexo($id, $contrato, $fechageneracion, $base, $sueldo_base, $estado, $registro);
+            $this->desconectar();
+            return $a;
+        }
+        $this->desconectar();
+        return null;
+    }
+
+    //Eliminar anexo
+    function eliminaranexo($id){
+        $this->conexion();
+        $sql = "delete from anexoscontrato where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return json_encode($result);
+    }
+
+    //Buscar Clausula Anexo
+    function buscarclausulaanexo($anexo){
+        $this->conexion();
+        $sql = "select * from clausulasanexos where anexo=$anexo";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        if($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $anexo = $rs['anexo'];
+            $clausula = $rs['clausula'];
+            $tipodocumento = $rs['tipodocumento'];
+            $registro = $rs['register_at'];
+            $a = new ClausulaAnexo($id, $anexo, $clausula,$tipodocumento, $registro);
+            $lista[] = $a;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Eliminar Clausula Anexo
+    function eliminarclausulaanexo($id){
+        $this->conexion();
+        $sql = "delete from clausulasanexos where anexo=$id";
+        $result = $this->mi->query($sql);
+        return json_encode($result);
     }
 
 

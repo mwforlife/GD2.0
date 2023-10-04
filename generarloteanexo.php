@@ -502,7 +502,7 @@ foreach ($permiso as $p) {
                                                 </thead>
                                                 <tbody id="lotes">
                                                     <?php
-                                                    $lista = $c->buscarloteanexo($_SESSION['USER_ID']);
+                                                    $lista = $c->buscarloteanexo($_SESSION['USER_ID'], $_SESSION['CURRENT_ENTERPRISE']);
                                                     foreach ($lista as $object1) {
                                                         echo "<tr class='border-bottom-0'>";
                                                         echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";

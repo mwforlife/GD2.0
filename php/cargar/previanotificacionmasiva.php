@@ -173,6 +173,7 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['tipocontratoid']) && isset($_P
             "{REPRESENTANTE_LEGAL}" => $repre->getNombre() . " " . $repre->getApellido1() . " " . $repre->getApellido2(),
             "{RUT_REPRESENTANTE_LEGAL}" => $repre->getRut(),
             "{CALLE_EMPRESA}" => $empresa->getCalle(),
+            "{VILLA_EMPRESA}" => $empresa->getVilla(),
             "{NUMERO_EMPRESA}" => $empresa->getNumero(),
             "{DEPT_EMPRESA}" => $empresa->getDepartamento(),
             "{COMUNA_EMPRESA}" => $empresa->getComuna(),

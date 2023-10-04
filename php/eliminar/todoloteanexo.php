@@ -10,9 +10,9 @@ if (!isset($_SESSION['USER_ID'])) {
         header("Location: ../../lockscreen.php");
     }
 }
+$empresa = $_SESSION['CURRENT_ENTERPRISE'];
 
-
-$result = $c->eliminartodoloteanexo($_SESSION['USER_ID']);
+$result = $c->eliminartodoloteanexo($_SESSION['USER_ID'], $empresa);
 if ($result == true) {
     echo 1;
 } else {

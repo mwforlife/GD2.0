@@ -92,13 +92,6 @@ create table tiposueldo(
     nombre varchar(50) not null
 );
 
-create table tipodocumento(
-    id int not null auto_increment primary key,
-    codigo varchar(20) not null,
-    codigoprevired varchar(20) not null,
-    nombre varchar(50) not null
-);
-
 create table tipoisapre(
     id int not null auto_increment primary key,
     nombre varchar(50) not null
@@ -179,6 +172,23 @@ create table empresa(
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp on update current_timestamp
 );
+
+create table tipodocumento(
+    id int not null auto_increment primary key,
+    codigo varchar(20) not null,
+    codigoprevired varchar(20) not null,
+    nombre varchar(50) not null,
+    empresa int not null references empresa(id)
+);
+
+
+create table plantillas(
+    id int not null auto_increment primary key,
+    tipodocumento int not null references tipodocumento(id),
+    contenido text not null,
+    register_at timestamp not null default current_timestamp
+);
+
 
 create table plan(
     id int not null auto_increment primary key,
@@ -519,13 +529,6 @@ create table trabajadorremuneracion(
     register_at timestamp not null default current_timestamp
 );
 
-create table plantillas(
-    id int not null auto_increment primary key,
-    tipodocumento int not null references tipodocumento(id),
-    contenido text not null,
-    register_at timestamp not null default current_timestamp
-);
-
 create table lote(
     id int not null auto_increment primary key,
     trabajador int not null references trabajadores(id),
@@ -772,6 +775,7 @@ create table lote4(
     id int not null auto_increment primary key,
     contrato int not null references contratos(id),
     usuario int not null references users(id_usu),
+    empresa int not null references empresa(id),
     register_at timestamp not null default current_timestamp
 );
 

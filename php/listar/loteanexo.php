@@ -11,7 +11,9 @@ if (!isset($_SESSION['USER_ID'])) {
     }
 }
 
-$lista = $c->buscarloteanexo($_SESSION['USER_ID']);
+$empresa = $_SESSION['CURRENT_ENTERPRISE'];
+
+$lista = $c->buscarloteanexo($_SESSION['USER_ID'], $empresa);
 foreach ($lista as $object1) {
     echo "<tr class='border-bottom-0'>";
     echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";

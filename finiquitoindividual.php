@@ -291,6 +291,9 @@ foreach ($permiso as $p) {
 								<a class="nav-sub-link" href="generarlote.php">Contratos Masivos</a>
 							</li>
 							<li class="nav-sub-item">
+								<a class="nav-sub-link" href="generarloteanexo.php">Anexos Masivos</a>
+							</li>
+							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="finiquitoindividual.php">Finiquito Individual</a>
 							</li>
 							<li class="nav-sub-item">
@@ -675,7 +678,7 @@ foreach ($permiso as $p) {
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                    $lista = $c->listartipodocumento();
+                                                    $lista = $c->listartipodocumento($_SESSION['CURRENT_ENTERPRISE']);
                                                     if (count($lista) > 0) {
                                                         foreach ($lista as $codigo) {
                                                             echo "<tr>";
