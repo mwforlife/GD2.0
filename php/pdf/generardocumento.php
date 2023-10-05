@@ -32,13 +32,3 @@ $mpdf->WriteHTML($contenido);
 $fecha = date('Ymdhis');
 $mpdf->Output('documentos/Contrato_'.$id.'_'.$fecha.'.pdf', 'F');
 
-/*$mpdf->AddPage();
-$mpdf->title = 'Contrato de Trabajo';
-$mpdf->author = 'KaiserTech';
-$mpdf->creator = 'KaiserTech';
-$mpdf->subject = 'Contrato de Trabajo';
-$mpdf->keywords = 'Contrato, Trabajo, Empleo';
-$mpdf->SetDisplayMode('fullpage');
-$mpdf->WriteHTML($contenido);
-$mpdf->Output('contrato.pdf' , 'F' );
-echo 1;*/

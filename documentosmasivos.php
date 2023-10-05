@@ -1999,7 +1999,7 @@ foreach ($permiso as $p) {
 						<div class="card-body p-4 pt-1">
 							<div class="p-4">
 								<div class="table-responsive">
-									<table class="table text-nowrap" id="example1">
+									<table class="table text-wrap w-100" id="example1">
 										<thead class="border-top">
 											<tr>
 												<th class="bg-transparent">Codigo DT</th>
@@ -2012,7 +2012,7 @@ foreach ($permiso as $p) {
 										<tbody>
 											<?php
 
-											$lista = $c->listartipodocumento($_SESSION['CURRENT_ENTERPRISE']);
+											$lista = $c->listartipodocumento1($_SESSION['CURRENT_ENTERPRISE']);
 											if (count($lista) > 0) {
 												foreach ($lista as $codigo) {
 													echo "<tr>";

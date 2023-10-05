@@ -64,7 +64,6 @@ function Actualizar(id){
 }
 
 function Eliminar(id){
-    $("#global-loader").fadeIn("slow");
     swal.fire({
         title: "¿Estas seguro?",
         text: "Una vez eliminado no se podra recuperar",
@@ -76,6 +75,7 @@ function Eliminar(id){
         cancelButtonText: "Cancelar"
     }).then((result) => {
         if (result.value) {
+            $("#global-loader").fadeIn("slow");
             $.ajax({
                 type: "POST",
                 url: "php/eliminar/tipodocumento.php",
@@ -99,4 +99,69 @@ function Eliminar(id){
         }
     });
 
+}
+
+
+function listartipodocumento(){
+    var empresa = $("#empresa").val();
+    if(empresa.trim().length == 0 || empresa <=0){
+        return;
+    }
+    $.ajax({
+        type: "POST",
+        url: "php/listar/escrito.php",
+        data: {empresa: empresa},
+        success: function(data){
+            $("#escritos").html(data);
+        }
+    });
+}
+
+$(document).ready(function(){
+    $("#empresa").on("change", function(){
+        listartipodocumento();
+    }
+    );
+});
+
+function asignar(id){
+    var empresa = $("#empresa").val();
+    if(empresa.trim().length == 0 || empresa <=0){
+        ToastifyError("Debe seleccionar una empresa");
+        return;
+    }
+    $.ajax({
+        type: "POST",
+        url: "php/insert/escrito.php",
+        data: {empresa: empresa, id: id},
+        success: function(data){
+            if(data == 1 || data == "1"){
+                ToastifySuccess("Escrito asignado correctamente");
+                listartipodocumento();
+            }else{
+                ToastifyError("Error al asignar")
+            }
+        }
+    });
+}
+
+function revocar(id){
+    var empresa = $("#empresa").val();
+    if(empresa.trim().length == 0 || empresa <=0){
+        ToastifyError("Debe seleccionar una empresa");
+        return;
+    }
+    $.ajax({
+        type: "POST",
+        url: "php/eliminar/escrito.php",
+        data: {empresa: empresa, id: id},
+        success: function(data){
+            if(data == 1 || data == "1"){
+                ToastifySuccess("Escrito eliminado correctamente");
+                listartipodocumento();
+            }else{
+                ToastifyError("Error al eliminar")
+            }
+        }
+    });
 }

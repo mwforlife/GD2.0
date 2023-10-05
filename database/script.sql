@@ -177,8 +177,14 @@ create table tipodocumento(
     id int not null auto_increment primary key,
     codigo varchar(20) not null,
     codigoprevired varchar(20) not null,
-    nombre varchar(50) not null,
-    empresa int not null references empresa(id)
+    nombre varchar(50) not null
+);
+
+create table escritoempresa(
+    id int not null auto_increment primary key,
+    tipodocumento int not null references tipodocumento(id),
+    empresa int not null references empresa(id),
+    register_at timestamp not null default current_timestamp
 );
 
 

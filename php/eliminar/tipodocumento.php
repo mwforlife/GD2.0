@@ -14,6 +14,7 @@ $id = $_POST['id'];
 
 $objeto = $c->buscartipodocumento($id);
 $result = $c->eliminartipodocumento($id);
+$c->eliminarplantilla($id);
 
 $usuario = $_SESSION['USER_ID'];
 $nombre = $object->getNombre();

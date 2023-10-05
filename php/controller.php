@@ -513,6 +513,16 @@ class Controller
         }
     }
 
+    //Eliminar plantilla
+    function eliminarplantilla($tipo)
+    {
+        $this->conexion();
+        $sql = "delete from plantillas where tipodocumento = $tipo";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return json_encode($result);
+    }
+
     function actualizarplantilla($tipo, $contenido)
     {
         $this->conexion();
@@ -2147,10 +2157,10 @@ class Controller
     }
 
     //Listar Tipo Documento
-    public function listartipodocumento($empresa)
+    public function listartipodocumento()
     {
         $this->conexion();
-        $sql = "select * from tipodocumento where empresa = $empresa";
+        $sql = "select * from tipodocumento;";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -2163,6 +2173,60 @@ class Controller
         }
         $this->desconectar();
         return $lista;
+    }
+
+    
+    //Listar Tipo Documento
+    public function listartipodocumento1($empresa)
+    {
+        $this->conexion();
+        $sql = "select tipodocumento.id as id, tipodocumento.codigo as codigo, tipodocumento.codigoprevired as codigoprevired, tipodocumento.nombre as nombre from tipodocumento, escritoempresa where tipodocumento.id = escritoempresa.tipodocumento and escritoempresa.empresa = $empresa;";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $codigoPrevired = $rs['codigoprevired'];
+            $nombre = $rs['nombre'];
+            $tipodocumento = new TipoDocumento($id, $codigo, $codigoPrevired, $nombre);
+            $lista[] = $tipodocumento;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Asignar Documento a Empresa
+    public function asignardocumento($empresa, $documento)
+    {
+        $this->conexion();
+        $sql = "insert into escritoempresa (tipodocumento, empresa) values ($documento, $empresa);";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //REtirar Documento a Empresa
+    public function retirardocumento($empresa, $documento)
+    {
+        $this->conexion();
+        $sql = "delete from escritoempresa where tipodocumento = $documento and empresa = $empresa;";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Validar Documento Empresa
+    public function validardocumento($empresa, $documento)
+    {
+        $this->conexion();
+        $sql = "select * from escritoempresa where tipodocumento = $documento and empresa = $empresa;";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $this->desconectar();
+            return true;
+        }
+        $this->desconectar();
+        return false;
     }
 
     //Listar Usuarios

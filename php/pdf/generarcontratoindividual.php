@@ -569,29 +569,43 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
     if ($horarioturno == 1) {
         $rotativo = "";
         $distribucion .= "<p>Duración de colación: " . $colacion . " minutos</p>";
-        $distribucion .= "<h4>Horario Fijo Sin Turnos</h2>";
         //Jornada Normal
+        //Formato Hora HH:MM
         $lunes = $_POST['lunes'];
         $lunesinicio = $_POST['lunesinicio'];
+        $lunesinicio = date("H:i", strtotime($lunesinicio));
         $lunesfin = $_POST['lunesfin'];
+        $lunesfin = date("H:i", strtotime($lunesfin));
         $martes = $_POST['martes'];
         $martesinicio = $_POST['martesinicio'];
+        $martesinicio = date("H:i", strtotime($martesinicio));
         $martesfin = $_POST['martesfin'];
+        $martesfin = date("H:i", strtotime($martesfin));
         $miercoles = $_POST['miercoles'];
         $miercolesinicio = $_POST['miercolesinicio'];
+        $miercolesinicio = date("H:i", strtotime($miercolesinicio));
         $miercolesfin = $_POST['miercolesfin'];
+        $miercolesfin = date("H:i", strtotime($miercolesfin));
         $jueves = $_POST['jueves'];
         $juevesinicio = $_POST['juevesinicio'];
+        $juevesinicio = date("H:i", strtotime($juevesinicio));
         $juevesfin = $_POST['juevesfin'];
+        $juevesfin = date("H:i", strtotime($juevesfin));
         $viernes = $_POST['viernes'];
         $viernesinicio = $_POST['viernesinicio'];
+        $viernesinicio = date("H:i", strtotime($viernesinicio));
         $viernesfin = $_POST['viernesfin'];
+        $viernesfin = date("H:i", strtotime($viernesfin));
         $sabado = $_POST['sabado'];
         $sabadoinicio = $_POST['sabadoinicio'];
+        $sabadoinicio = date("H:i", strtotime($sabadoinicio));
         $sabadofin = $_POST['sabadofin'];
+        $sabadofin = date("H:i", strtotime($sabadofin));
         $domingo = $_POST['domingo'];
         $domingoinicio = $_POST['domingoinicio'];
+        $domingoinicio = date("H:i", strtotime($domingoinicio));
         $domingofin = $_POST['domingofin'];
+        $domingofin = date("H:i", strtotime($domingofin));
 
         //Agregar cabezale de table jornada general
         $distribucion .= "<table border='1' width='100%' >";
@@ -675,30 +689,45 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
 
     if ($horarioturno == 3) {
         $distribucion .= "<p>Duración de colación: " . $colacion . " minutos</p>";
-        $distribucion = "<h4>Horario Jornada Matutina</h2>";
+        $distribucion = "";
 
         //Jornada Matutina
+        //Formato Hora HH:MM
         $lunesm = $_POST['lunesm'];
         $lunesiniciom = $_POST['lunesminicio'];
+        $lunesiniciom = date("H:i", strtotime($lunesiniciom));
         $lunesfinm = $_POST['lunesmfin'];
+        $lunesfinm = date("H:i", strtotime($lunesfinm));
         $martesm = $_POST['martesm'];
         $martesiniciom = $_POST['martesminicio'];
+        $martesiniciom = date("H:i", strtotime($martesiniciom));
         $martesfinm = $_POST['martesmfin'];
+        $martesfinm = date("H:i", strtotime($martesfinm));
         $miercolesm = $_POST['miercolesm'];
         $miercolesiniciom = $_POST['miercolesminicio'];
+        $miercolesiniciom = date("H:i", strtotime($miercolesiniciom));
         $miercolesfinm = $_POST['miercolesmfin'];
+        $miercolesfinm = date("H:i", strtotime($miercolesfinm));
         $juevesm = $_POST['juevesm'];
         $juevesiniciom = $_POST['juevesminicio'];
+        $juevesiniciom = date("H:i", strtotime($juevesiniciom));
         $juevesfinm = $_POST['juevesmfin'];
+        $juevesfinm = date("H:i", strtotime($juevesfinm));
         $viernesm = $_POST['viernesm'];
         $viernesiniciom = $_POST['viernesminicio'];
+        $viernesiniciom = date("H:i", strtotime($viernesiniciom));
         $viernesfinm = $_POST['viernesmfin'];
+        $viernesfinm = date("H:i", strtotime($viernesfinm));
         $sabadom = $_POST['sabadom'];
         $sabadoiniciom = $_POST['sabadominicio'];
+        $sabadoiniciom = date("H:i", strtotime($sabadoiniciom));
         $sabadofinm = $_POST['sabadomfin'];
+        $sabadofinm = date("H:i", strtotime($sabadofinm));
         $domingom = $_POST['domingom'];
         $domingoiniciom = $_POST['domingominicio'];
+        $domingoiniciom = date("H:i", strtotime($domingoiniciom));
         $domingofinm = $_POST['domingomfin'];
+        $domingofinm = date("H:i", strtotime($domingofinm));
 
         //Agregar cabezale de table jornada matutina
         $distribucion .= "<table border='1' width='100%'>";
@@ -775,28 +804,43 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
 
 
         //Jornada Tarde
-        $distribucion .= "<h4>Horario Jornada Tarde</h2>";
+        $distribucion .= "";
         $lunest = $_POST['lunest'];
         $lunesiniciot = $_POST['lunestinicio'];
+        //Formato de hora HH:MM
+        $lunesiniciot = date("H:i", strtotime($lunesiniciot));
         $lunesfint = $_POST['lunestfin'];
+        $lunesfint = date("H:i", strtotime($lunesfint));
         $martest = $_POST['martest'];
         $martesiniciot = $_POST['martestinicio'];
+        $martesiniciot = date("H:i", strtotime($martesiniciot));
         $martesfint = $_POST['martestfin'];
+        $martesfint = date("H:i", strtotime($martesfint));
         $miercolest = $_POST['miercolest'];
         $miercolesiniciot = $_POST['miercolestinicio'];
+        $miercolesiniciot = date("H:i", strtotime($miercolesiniciot));
         $miercolesfint = $_POST['miercolestfin'];
+        $miercolesfint = date("H:i", strtotime($miercolesfint));
         $juevest = $_POST['juevest'];
         $juevesiniciot = $_POST['juevestinicio'];
+        $juevesiniciot = date("H:i", strtotime($juevesiniciot));
         $juevesfint = $_POST['juevestfin'];
+        $juevesfint = date("H:i", strtotime($juevesfint));
         $viernest = $_POST['viernest'];
         $viernesiniciot = $_POST['viernestinicio'];
+        $viernesiniciot = date("H:i", strtotime($viernesiniciot));
         $viernesfint = $_POST['viernestfin'];
+        $viernesfint = date("H:i", strtotime($viernesfint));
         $sabadot = $_POST['sabadot'];
         $sabadoiniciot = $_POST['sabadotinicio'];
+        $sabadoiniciot = date("H:i", strtotime($sabadoiniciot));
         $sabadofint = $_POST['sabadotfin'];
+        $sabadofint = date("H:i", strtotime($sabadofint));
         $domingot = $_POST['domingot'];
         $domingoiniciot = $_POST['domingotinicio'];
+        $domingoiniciot = date("H:i", strtotime($domingoiniciot));
         $domingofint = $_POST['domingotfin'];
+        $domingofint = date("H:i", strtotime($domingofint));
 
         //Agregar cabezale de table jornada Tarde
         $distribucion = $distribucion . "<table border='1' width='100%'>";
@@ -874,28 +918,43 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
     if ($horarioturno == 4) {
         //Jornada Tarde
         $distribucion .= "<p>Duración de colación: " . $colacion . " minutos</p>";
-        $distribucion .= "<h4>Horario Jornada Tarde</h2>";
+        $distribucion .= "";
+        //Formato Hora HH:MM
         $lunest = $_POST['lunest'];
         $lunesiniciot = $_POST['lunestinicio'];
+        $lunesiniciot = date("H:i", strtotime($lunesiniciot));
         $lunesfint = $_POST['lunestfin'];
+        $lunesfint = date("H:i", strtotime($lunesfint));
         $martest = $_POST['martest'];
         $martesiniciot = $_POST['martestinicio'];
+        $martesiniciot = date("H:i", strtotime($martesiniciot));
         $martesfint = $_POST['martestfin'];
+        $martesfint = date("H:i", strtotime($martesfint));
         $miercolest = $_POST['miercolest'];
         $miercolesiniciot = $_POST['miercolestinicio'];
+        $miercolesiniciot = date("H:i", strtotime($miercolesiniciot));
         $miercolesfint = $_POST['miercolestfin'];
+        $miercolesfint = date("H:i", strtotime($miercolesfint));
         $juevest = $_POST['juevest'];
         $juevesiniciot = $_POST['juevestinicio'];
+        $juevesiniciot = date("H:i", strtotime($juevesiniciot));
         $juevesfint = $_POST['juevestfin'];
+        $juevesfint = date("H:i", strtotime($juevesfint));
         $viernest = $_POST['viernest'];
         $viernesiniciot = $_POST['viernestinicio'];
+        $viernesiniciot = date("H:i", strtotime($viernesiniciot));
         $viernesfint = $_POST['viernestfin'];
+        $viernesfint = date("H:i", strtotime($viernesfint));
         $sabadot = $_POST['sabadot'];
         $sabadoiniciot = $_POST['sabadotinicio'];
+        $sabadoiniciot = date("H:i", strtotime($sabadoiniciot));
         $sabadofint = $_POST['sabadotfin'];
+        $sabadofint = date("H:i", strtotime($sabadofint));
         $domingot = $_POST['domingot'];
         $domingoiniciot = $_POST['domingotinicio'];
+        $domingoiniciot = date("H:i", strtotime($domingoiniciot));
         $domingofint = $_POST['domingotfin'];
+        $domingofint = date("H:i", strtotime($domingofint));
 
         //Agregar cabezale de table jornada Tarde
         $distribucion = $distribucion . "<table border='1' width='100%'>";
@@ -970,29 +1029,44 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
         $distribucion = $distribucion . "</tr></tbody></table>" . "<br>";
 
         //Jornada Nocturna
-        $distribucion .= "<h4>Horario Jornada Nocturna</h2>";
+        $distribucion .= "<h4></h2>";
 
+        //Formato Hora HH:MM
         $lunesn = $_POST['lunesn'];
         $lunesinicion = $_POST['lunesninicio'];
+        $lunesiniciom = date("H:i", strtotime($lunesinicion));
         $lunesfinn = $_POST['lunesnfin'];
+        $lunesfinn = date("H:i", strtotime($lunesfinn));
         $martesn = $_POST['martesn'];
         $martesinicion = $_POST['martesninicio'];
+        $martesinicion = date("H:i", strtotime($martesinicion));
         $martesfinn = $_POST['martesnfin'];
+        $martesfinn = date("H:i", strtotime($martesfinn));
         $miercolesn = $_POST['miercolesn'];
-        $miercolesinicion = $_POST['miercolesninicio'];
+        $miercolesinicion = $_POST['miercolesninicio']; 
+        $miercolesinicion = date("H:i", strtotime($miercolesinicion));
         $miercolesfinn = $_POST['miercolesnfin'];
+        $miercolesfinn = date("H:i", strtotime($miercolesfinn));
         $juevesn = $_POST['juevesn'];
         $juevesinicion = $_POST['juevesninicio'];
+        $juevesinicion = date("H:i", strtotime($juevesinicion));
         $juevesfinn = $_POST['juevesnfin'];
+        $juevesfinn = date("H:i", strtotime($juevesfinn));
         $viernesn = $_POST['viernesn'];
         $viernesinicion = $_POST['viernesninicio'];
+        $viernesinicion = date("H:i", strtotime($viernesinicion));
         $viernesfinn = $_POST['viernesnfin'];
+        $viernesfinn = date("H:i", strtotime($viernesfinn));
         $sabadon = $_POST['sabadon'];
         $sabadoinicion = $_POST['sabadoninicio'];
+        $sabadoinicion = date("H:i", strtotime($sabadoinicion));
         $sabadofinn = $_POST['sabadonfin'];
+        $sabadofinn = date("H:i", strtotime($sabadofinn));
         $domingon = $_POST['domingon'];
         $domingoinicion = $_POST['domingoninicio'];
+        $domingoinicion = date("H:i", strtotime($domingoinicion));
         $domingofinn = $_POST['domingonfin'];
+        $domingofinn = date("H:i", strtotime($domingofinn));
 
         //Agregar cabezale de table jornada Nocturna
         $distribucion .= "<table border='1' width='100%'>";
@@ -1067,33 +1141,47 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
         $distribucion .= "</tr></tbody></table>" . "<br>";
     }
 
-
     if ($horarioturno == 5) {
         //Jornada Matutina
         $distribucion .= "<p>Duración de colación: " . $colacion . " minutos</p>";
-        $distribucion .= "<h4>Horario Jornada Matutina</h2>";
+        $distribucion .= "";
 
+        //Formato Hora HH:MM
         $lunesm = $_POST['lunesm'];
         $lunesiniciom = $_POST['lunesminicio'];
+        $lunesiniciom = date("H:i", strtotime($lunesiniciom));
         $lunesfinm = $_POST['lunesmfin'];
+        $lunesfinm = date("H:i", strtotime($lunesfinm));
         $martesm = $_POST['martesm'];
         $martesiniciom = $_POST['martesminicio'];
+        $martesiniciom = date("H:i", strtotime($martesiniciom));
         $martesfinm = $_POST['martesmfin'];
+        $martesfinm = date("H:i", strtotime($martesfinm));
         $miercolesm = $_POST['miercolesm'];
         $miercolesiniciom = $_POST['miercolesminicio'];
+        $miercolesiniciom = date("H:i", strtotime($miercolesiniciom));
         $miercolesfinm = $_POST['miercolesmfin'];
+        $miercolesfinm = date("H:i", strtotime($miercolesfinm));
         $juevesm = $_POST['juevesm'];
         $juevesiniciom = $_POST['juevesminicio'];
+        $juevesiniciom = date("H:i", strtotime($juevesiniciom));
         $juevesfinm = $_POST['juevesmfin'];
+        $juevesfinm = date("H:i", strtotime($juevesfinm));
         $viernesm = $_POST['viernesm'];
         $viernesiniciom = $_POST['viernesminicio'];
+        $viernesiniciom = date("H:i", strtotime($viernesiniciom));
         $viernesfinm = $_POST['viernesmfin'];
+        $viernesfinm = date("H:i", strtotime($viernesfinm));
         $sabadom = $_POST['sabadom'];
         $sabadoiniciom = $_POST['sabadominicio'];
+        $sabadoiniciom = date("H:i", strtotime($sabadoiniciom));
         $sabadofinm = $_POST['sabadomfin'];
+        $sabadofinm = date("H:i", strtotime($sabadofinm));
         $domingom = $_POST['domingom'];
         $domingoiniciom = $_POST['domingominicio'];
+        $domingoiniciom = date("H:i", strtotime($domingoiniciom));
         $domingofinm = $_POST['domingomfin'];
+        $domingofinm = date("H:i", strtotime($domingofinm));
 
         //Agregar cabezale de table jornada matutina
         $distribucion .= "<table border='1' width='100%'>";
@@ -1169,29 +1257,44 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
 
 
         //Jornada Nocturna
-        $distribucion .= "<h4>Horario Jornada Nocturna</h2>";
+        $distribucion .= "<h4></h2>";
 
+        //Formato Hora HH:MM
         $lunesn = $_POST['lunesn'];
         $lunesinicion = $_POST['lunesninicio'];
+        $lunesiniciom = date("H:i", strtotime($lunesinicion));
         $lunesfinn = $_POST['lunesnfin'];
+        $lunesfinn = date("H:i", strtotime($lunesfinn));
         $martesn = $_POST['martesn'];
         $martesinicion = $_POST['martesninicio'];
+        $martesinicion = date("H:i", strtotime($martesinicion));
         $martesfinn = $_POST['martesnfin'];
+        $martesfinn = date("H:i", strtotime($martesfinn));
         $miercolesn = $_POST['miercolesn'];
-        $miercolesinicion = $_POST['miercolesninicio'];
+        $miercolesinicion = $_POST['miercolesninicio']; 
+        $miercolesinicion = date("H:i", strtotime($miercolesinicion));
         $miercolesfinn = $_POST['miercolesnfin'];
+        $miercolesfinn = date("H:i", strtotime($miercolesfinn));
         $juevesn = $_POST['juevesn'];
         $juevesinicion = $_POST['juevesninicio'];
+        $juevesinicion = date("H:i", strtotime($juevesinicion));
         $juevesfinn = $_POST['juevesnfin'];
+        $juevesfinn = date("H:i", strtotime($juevesfinn));
         $viernesn = $_POST['viernesn'];
         $viernesinicion = $_POST['viernesninicio'];
+        $viernesinicion = date("H:i", strtotime($viernesinicion));
         $viernesfinn = $_POST['viernesnfin'];
+        $viernesfinn = date("H:i", strtotime($viernesfinn));
         $sabadon = $_POST['sabadon'];
         $sabadoinicion = $_POST['sabadoninicio'];
+        $sabadoinicion = date("H:i", strtotime($sabadoinicion));
         $sabadofinn = $_POST['sabadonfin'];
+        $sabadofinn = date("H:i", strtotime($sabadofinn));
         $domingon = $_POST['domingon'];
         $domingoinicion = $_POST['domingoninicio'];
+        $domingoinicion = date("H:i", strtotime($domingoinicion));
         $domingofinn = $_POST['domingonfin'];
+        $domingofinn = date("H:i", strtotime($domingofinn));
 
         //Agregar cabezale de table jornada Nocturna
         $distribucion .= "<table border='1' width='100%'>";
@@ -1269,29 +1372,43 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
     if ($horarioturno == 6) {
         //Jornada Matutina
         $distribucion .= "<p>Duración de colación: " . $colacion . " minutos</p>";
-        $distribucion .= "<h4>Horario Jornada Matutina</h2>";
-
+        $distribucion .= "";
+        //Formato Hora HH:MM
         $lunesm = $_POST['lunesm'];
         $lunesiniciom = $_POST['lunesminicio'];
+        $lunesiniciom = date("H:i", strtotime($lunesiniciom));
         $lunesfinm = $_POST['lunesmfin'];
+        $lunesfinm = date("H:i", strtotime($lunesfinm));
         $martesm = $_POST['martesm'];
         $martesiniciom = $_POST['martesminicio'];
+        $martesiniciom = date("H:i", strtotime($martesiniciom));
         $martesfinm = $_POST['martesmfin'];
+        $martesfinm = date("H:i", strtotime($martesfinm));
         $miercolesm = $_POST['miercolesm'];
         $miercolesiniciom = $_POST['miercolesminicio'];
+        $miercolesiniciom = date("H:i", strtotime($miercolesiniciom));
         $miercolesfinm = $_POST['miercolesmfin'];
+        $miercolesfinm = date("H:i", strtotime($miercolesfinm));
         $juevesm = $_POST['juevesm'];
         $juevesiniciom = $_POST['juevesminicio'];
+        $juevesiniciom = date("H:i", strtotime($juevesiniciom));
         $juevesfinm = $_POST['juevesmfin'];
+        $juevesfinm = date("H:i", strtotime($juevesfinm));
         $viernesm = $_POST['viernesm'];
         $viernesiniciom = $_POST['viernesminicio'];
+        $viernesiniciom = date("H:i", strtotime($viernesiniciom));
         $viernesfinm = $_POST['viernesmfin'];
+        $viernesfinm = date("H:i", strtotime($viernesfinm));
         $sabadom = $_POST['sabadom'];
         $sabadoiniciom = $_POST['sabadominicio'];
+        $sabadoiniciom = date("H:i", strtotime($sabadoiniciom));
         $sabadofinm = $_POST['sabadomfin'];
+        $sabadofinm = date("H:i", strtotime($sabadofinm));
         $domingom = $_POST['domingom'];
         $domingoiniciom = $_POST['domingominicio'];
+        $domingoiniciom = date("H:i", strtotime($domingoiniciom));
         $domingofinm = $_POST['domingomfin'];
+        $domingofinm = date("H:i", strtotime($domingofinm));
 
         //Agregar cabezale de table jornada matutina
         $distribucion .= "<table border='1' width='100%'>";
@@ -1366,28 +1483,43 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
         $distribucion .= "</tr></tbody></table>" . "<br>";
 
         //Jornada Tarde
-        $distribucion .= "<h4>Horario Jornada Tarde</h2>";
+        $distribucion .= "";
+        //Formato Hora HH:MM
         $lunest = $_POST['lunest'];
         $lunesiniciot = $_POST['lunestinicio'];
+        $lunesiniciot = date("H:i", strtotime($lunesiniciot));
         $lunesfint = $_POST['lunestfin'];
+        $lunesfint = date("H:i", strtotime($lunesfint));
         $martest = $_POST['martest'];
         $martesiniciot = $_POST['martestinicio'];
+        $martesiniciot = date("H:i", strtotime($martesiniciot));
         $martesfint = $_POST['martestfin'];
+        $martesfint = date("H:i", strtotime($martesfint));
         $miercolest = $_POST['miercolest'];
         $miercolesiniciot = $_POST['miercolestinicio'];
+        $miercolesiniciot = date("H:i", strtotime($miercolesiniciot));
         $miercolesfint = $_POST['miercolestfin'];
+        $miercolesfint = date("H:i", strtotime($miercolesfint));
         $juevest = $_POST['juevest'];
         $juevesiniciot = $_POST['juevestinicio'];
+        $juevesiniciot = date("H:i", strtotime($juevesiniciot));
         $juevesfint = $_POST['juevestfin'];
+        $juevesfint = date("H:i", strtotime($juevesfint));
         $viernest = $_POST['viernest'];
         $viernesiniciot = $_POST['viernestinicio'];
+        $viernesiniciot = date("H:i", strtotime($viernesiniciot));
         $viernesfint = $_POST['viernestfin'];
+        $viernesfint = date("H:i", strtotime($viernesfint));
         $sabadot = $_POST['sabadot'];
         $sabadoiniciot = $_POST['sabadotinicio'];
+        $sabadoiniciot = date("H:i", strtotime($sabadoiniciot));
         $sabadofint = $_POST['sabadotfin'];
+        $sabadofint = date("H:i", strtotime($sabadofint));
         $domingot = $_POST['domingot'];
         $domingoiniciot = $_POST['domingotinicio'];
+        $domingoiniciot = date("H:i", strtotime($domingoiniciot));
         $domingofint = $_POST['domingotfin'];
+        $domingofint = date("H:i", strtotime($domingofint));
 
         //Agregar cabezale de table jornada Tarde
         $distribucion = $distribucion . "<table border='1' width='100%'>";
@@ -1464,29 +1596,44 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
 
        
         //Jornada Nocturna
-        $distribucion .= "<h4>Horario Jornada Nocturna</h2>";
+        $distribucion .= "<h4></h2>";
 
+        //Formato Hora HH:MM
         $lunesn = $_POST['lunesn'];
         $lunesinicion = $_POST['lunesninicio'];
+        $lunesiniciom = date("H:i", strtotime($lunesinicion));
         $lunesfinn = $_POST['lunesnfin'];
+        $lunesfinn = date("H:i", strtotime($lunesfinn));
         $martesn = $_POST['martesn'];
         $martesinicion = $_POST['martesninicio'];
+        $martesinicion = date("H:i", strtotime($martesinicion));
         $martesfinn = $_POST['martesnfin'];
+        $martesfinn = date("H:i", strtotime($martesfinn));
         $miercolesn = $_POST['miercolesn'];
-        $miercolesinicion = $_POST['miercolesninicio'];
+        $miercolesinicion = $_POST['miercolesninicio']; 
+        $miercolesinicion = date("H:i", strtotime($miercolesinicion));
         $miercolesfinn = $_POST['miercolesnfin'];
+        $miercolesfinn = date("H:i", strtotime($miercolesfinn));
         $juevesn = $_POST['juevesn'];
         $juevesinicion = $_POST['juevesninicio'];
+        $juevesinicion = date("H:i", strtotime($juevesinicion));
         $juevesfinn = $_POST['juevesnfin'];
+        $juevesfinn = date("H:i", strtotime($juevesfinn));
         $viernesn = $_POST['viernesn'];
         $viernesinicion = $_POST['viernesninicio'];
+        $viernesinicion = date("H:i", strtotime($viernesinicion));
         $viernesfinn = $_POST['viernesnfin'];
+        $viernesfinn = date("H:i", strtotime($viernesfinn));
         $sabadon = $_POST['sabadon'];
         $sabadoinicion = $_POST['sabadoninicio'];
+        $sabadoinicion = date("H:i", strtotime($sabadoinicion));
         $sabadofinn = $_POST['sabadonfin'];
+        $sabadofinn = date("H:i", strtotime($sabadofinn));
         $domingon = $_POST['domingon'];
         $domingoinicion = $_POST['domingoninicio'];
+        $domingoinicion = date("H:i", strtotime($domingoinicion));
         $domingofinn = $_POST['domingonfin'];
+        $domingofinn = date("H:i", strtotime($domingofinn));
 
         //Agregar cabezale de table jornada Nocturna
         $distribucion .= "<table border='1' width='100%'>";
@@ -1778,7 +1925,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
     //Generar nombre documento
     $nombre_documento = 'Contrato_' . $fecha . '.pdf';
     //Generar y guardar documento en la caperta uploads/Contratos
-    $mpdf->Output('../../uploads/Contratos/' . $nombre_documento, 'F');
+    $mpdf->Output('../../uploads/previa/' . $nombre_documento, 'F');
     //Imprimir ruta de documento
-    echo "1uploads/Contratos/" . $nombre_documento;
+    echo "1uploads/previa/" . $nombre_documento;
 }

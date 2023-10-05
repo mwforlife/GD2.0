@@ -401,7 +401,7 @@ foreach ($permiso as $p) {
 					<!-- Page Header -->
 					<div class="page-header">
 						<div class="page-header-1">
-							<h1 class="main-content-title tx-30">Escritos</h1>
+							<h1 class="main-content-title tx-30">ASIGNACION DE ESCRITOS</h1>
 							<ol class="breadcrumb">
 								<li class="breadcrumb-item"><a href="index.php">Inicio</a></li>
 							</ol>
@@ -413,35 +413,30 @@ foreach ($permiso as $p) {
 							<div class="card orverflow-hidden">
 								<div class="card-body">
 									<div>
-										<h6 class="main-content-label mb-1">Registro de De Escritos</h6>
+										<h6 class="main-content-label mb-1">Registro de Tipo Documento</h6>
 										<p class="text-mutted card-sub-title"></p>
 									</div>
-									<form id="RegisForm" name="RegisForm" class="needs-validation was-validated">
 										<div class="row">
 											<div class="col-lg-6">
 												<div class="form-group has-success mg-b-0">
-													<label>Codigo (DT)</label>
-													<input class="form-control" id="Codigo" name="Codigo" placeholder="Codigo" required="" type="text" value="">
+													<label>Seleccione una empresa</label>
+                                                    <select name="empresa" id="empresa" class="form-control select2">
+                                                        <?php
+                                                        $lista = $c->listarEmpresas();
+                                                        if (count($lista) > 0) {
+                                                            foreach ($lista as $l) {
+                                                                echo "<option value='" . $l->getId() . "'>" . $l->getRazonSocial() . "</option>";
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </select>
 												</div>
 											</div>
-											<div class="col-lg-6">
-												<div class="form-group has-success mg-b-0">
-													<label>Codigo (PREVIRED)</label>
-													<input class="form-control" id="CodigoPrevired" name="CodigoPrevired" placeholder="Codigo (PREVIRED)" required="" type="text" value="">
-												</div>
-											</div>
-											<div class="col-lg-6">
-												<div class="form-group has-success mg-b-0">
-													<label>Nombre</label>
-													<input class="form-control" id="Nombre" name="Nombre" placeholder="Nombre De Escritos" required="" type="text" value="">
-												</div>
-											</div>
-											<div class="col-md-12 mt-3 text-right">
-												<button type="reset" href="#" class="btn btn-warning btn-md"> <i class="fa fa-refresh"></i> Restablecer</button>
-												<button type="submit" href="#" class="btn btn-primary btn-md"> <i class="fa fa-save"></i> Registrar</button>
+											<div class="col-md-12 text-right">
+												<a href="tipodocumento.php" class="btn btn-danger waves-effect waves-light"><i class="fe fe-arrow-left"></i> Volver</a>
+
 											</div>
 										</div>
-									</form>
 								</div>
 							</div>
 						</div>
@@ -452,61 +447,21 @@ foreach ($permiso as $p) {
 						<div class="col-xl-12 col-lg-12 col-md-12">
 							<div class="card transcation-crypto1" id="transcation-crypto1">
 								<div class="card-header bd-b-0 d-flex justify-content-between">
-									<h4 class="card-title font-weight-semibold mb-0">Listado De Escritos</h4>
-									<div class="card-options">
-										<?php
-										if(isset($_SESSION['GESTION_PERMISO'])){
-											if($_SESSION['GESTION_PERMISO']==true){
-												echo '<a href="asignaciondocumentos.php" class="btn btn-success mr-1"><i class="fa fa-plus"></i> Asignar Escritos</a>';
-										
-											}
-										}
-										?>
-									</div>
+									<h4 class="card-title font-weight-semibold mb-0">Listado de Escritos</h4>
 								</div>
 								<div class="card-body">
 									<div class="">
 										<div class="table-responsive">
-											<table class="table text-nowrap w-100" id="example1">
+											<table class="table text-wrap w-100">
 												<thead class="border-top text-center">
 													<tr>
 														<th class="bg-transparent">Codigo (DT)</th>
 														<th class="bg-transparent">Codigo (PREVIRED)</th>
 														<th class="bg-transparent">Nombre</th>
-														<th class="bg-transparent">Redactar</th>
-														<th class="bg-transparent text-center">Accion</th>
+														<th class="bg-transparent text-center">Asigar/Retirar</th>
 													</tr>
 												</thead>
-												<tbody class="text-center">
-													<?php
-													$list = array();
-													if(isset($_SESSION['GESTION_PERMISO'])){
-														if($_SESSION['GESTION_PERMISO']==true){
-															$lista = $c->listartipodocumento();
-														}else{
-															$lista = $c->listartipodocumento1($empresa);
-														}
-													}else{
-														$lista = $c->listartipodocumento1($empresa);
-													}
-													if (count($lista) > 0) {
-														foreach ($lista as $object) {
-															echo "<tr>
-																		<td>" . $object->getCodigo() . "</td>
-																		<td>" . $object->getCodigoPrevired() . "</td>
-																		<td>" . $object->getNombre() . "</td>
-																		<td class='text-center'>
-																			<a href='redactardocumento.php?code=" . $object->getId() . "' class='btn btn-sm btn-outline-success'><i class='fa fa-pen'></i></a>
-																		</td>
-																		<td class='text-center'>
-																			<a href='javascript:void(0)' class='btn btn-sm btn-outline-primary m-1' data-toggle='modal' data-target='#modaledit' onclick='Editar(" . $object->getId() . ")'><i class='fa fa-edit'></i></a>";
-																			
-																			echo "<a href='javascript:void(0)' class='btn btn-sm btn-outline-danger m-1' onclick='Eliminar(" . $object->getId() . ")'><i class='fa fa-trash'></i></a>
-																		</td>
-																	</tr>";
-														}
-													}
-													?>
+												<tbody class="text-center" id="escritos">
 												</tbody>
 											</table>
 										</div>
@@ -614,6 +569,7 @@ foreach ($permiso as $p) {
 	<script>
 		$(document).ready(function(){
 			mostrarEmpresa();
+            listartipodocumento();
 		});
 	</script>
 

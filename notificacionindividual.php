@@ -699,7 +699,7 @@ if (isset($_GET['code'])) {
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                    $lista = $c->listartipodocumento($_SESSION['CURRENT_ENTERPRISE']);
+                                                    $lista = $c->listartipodocumento1($_SESSION['CURRENT_ENTERPRISE']);
                                                     if (count($lista) > 0) {
                                                         foreach ($lista as $codigo) {
                                                             echo "<tr>";
