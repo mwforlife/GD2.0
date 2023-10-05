@@ -5620,6 +5620,32 @@ class Controller
         return $lista;
     }
 
+     //Listar Lotes con contratos Inactivos
+     function listarlotestext1($empresa)
+     {
+         $this->conexion();
+         $sql = "select distinct detallelotes.contrato, detallelotes.id as id, lotes.nombre as nombre, contratos.tipocontrato as tipocontrato, fechainicio, fechatermino, trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2 from detallelotes, lotes, contratos, trabajadores where detallelotes.lotes = lotes.id and detallelotes.contrato = contratos.id and contratos.trabajador = trabajadores.id and contratos.estado = 2 and lotes=$empresa order by lotes.nombre asc";
+         $result = $this->mi->query($sql);
+         $lista = array();
+         while ($rs = mysqli_fetch_array($result)) {
+             $id = $rs['id'];
+             $contrato = $rs['tipocontrato'];
+             if($contrato=="Contrato a Plazo Fijo"){
+                 $contrato = "Plazo Fijo";
+             }else if($contrato=="Contrato Indefinido"){
+                 $contrato = "Indefinido";
+             }
+             $lote = $rs['nombre'];
+             $nombre = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'] ;
+             $fechainicio = $rs['fechainicio'];
+             $fechatermino = $rs['fechatermino'];
+             $l = new Lotes_contrato($id, $contrato, $nombre, $lote, $fechainicio, $fechatermino);
+             $lista[] = $l;
+         }
+         $this->desconectar();
+         return $lista;
+     }
+
     function validarloteids($id, $contrato){
         $this->conexion();
         $sql = "select * from detallelotes where contrato = $contrato and lotes = $id";
@@ -5656,6 +5682,42 @@ class Controller
 
     //Listar lotes contrato
     function listarlotescontrato($empresa)
+    {
+        $this->conexion();
+        $sql = "select * from lotes where empresa=$empresa";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $nombre = $rs['nombre'];
+            $registro = $rs['register_at'];
+            $l = new Lotes_contrato($id, "", "", $nombre, "", $registro);
+            $lista[] = $l;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Listar lotes contrato
+    function listarlotescontratoactivos($empresa)
+    {
+        $this->conexion();
+        $sql = "select * from lotes where empresa=$empresa";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $nombre = $rs['nombre'];
+            $registro = $rs['register_at'];
+            $l = new Lotes_contrato($id, "", "", $nombre, "", $registro);
+            $lista[] = $l;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Listar lotes contrato
+    function listarlotescontratoinactivos($empresa)
     {
         $this->conexion();
         $sql = "select * from lotes where empresa=$empresa";

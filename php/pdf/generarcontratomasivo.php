@@ -1951,5 +1951,5 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
     //Generar y guardar documento en la caperta uploads/Contratos
     $mpdf->Output('../../uploads/previa/' . $nombre_documento, 'F');
     //Imprimir ruta de documento
-    echo "1previa/Contratos/" . $nombre_documento;
+    echo "1uploads/previa/" . $nombre_documento;
 }

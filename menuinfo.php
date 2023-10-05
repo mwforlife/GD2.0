@@ -66,7 +66,7 @@ if (isset($_SESSION['TRABAJADOR_ID'])) {
 	<link rel="icon" href="assets/img/brand/favicon.ico" type="image/x-icon" />
 
 	<!-- Title -->
-	<title>Gestor de Documentos | Empresas</title>
+	<title>Gestor de Documentos | Ficha Trabajador</title>
 
 	<!-- Bootstrap css-->
 	<link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />

@@ -111,7 +111,6 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
     }
     $sueldo = $_POST['sueldo'];
     //Cambiar sueldo numerico a letras
-    $sueldo = $sueldo;
     //Eliminar puntos   
     $sueldo1 = str_replace(".", "", $sueldo);
     $sueldoletras = $c->convertirNumeroLetras($sueldo1);

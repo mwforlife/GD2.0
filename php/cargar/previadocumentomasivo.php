@@ -49,6 +49,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid'])  && isset($_P
         //Cambiar formato de fecha a dd/mm/yyyy
         $fechainicio = date("d/m/Y", strtotime($fechainicio));
         $trabajadorid = $contrato->getFecharegistro();
+        echo $trabajadorid;
         $trabajador = $c->buscartrabajadortext($trabajadorid);
         $dom = $c->ultimodomicilio($trabajadorid);
         $con = $c->ultimocontacto($trabajadorid);
