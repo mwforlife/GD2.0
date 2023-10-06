@@ -3760,6 +3760,36 @@ class Controller
         return $lista;
     }
 
+    public function buscarprevisiones($trabajador){
+        $this->conexion();
+        $sql = "select * from previsiontrabajador where trabajador = $trabajador";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        if($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $trabajador = $rs['trabajador'];
+            $periodo = $rs['periodo'];
+            $afp = $rs['afp'];
+            $jubilado = $rs['jubilado'];
+            $cesantia = $rs['cesantia'];
+            $seguro = $rs['accidente'];
+            $periodocesantia = $rs['fechacesantiainicio'];
+            $isapre = $rs['isapre'];
+            $planpactado = $rs['planpactado'];
+            $valorplanpactado = $rs['valorplanpactado'];
+            $ges = $rs['ges'];
+            $valorges = $rs['valorges'];
+            $comentario = $rs['comentario'];
+            $documentoafp = $rs['documentoafp'];
+            $documentosalud = $rs['documentosalud'];
+            $documentojubilacion = $rs['documentojubilacion'];
+            $prevision = new Prevision($id, $trabajador, $periodo, $afp, $jubilado, $cesantia, $seguro, $periodocesantia, $isapre, $planpactado, $valorplanpactado, $ges, $valorges, $comentario, $documentoafp, $documentosalud, $documentojubilacion);
+            $lista[] = $prevision;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
     //Ultima prevision del trabajador
     public function ultimaprevision($trabajador)
     {
@@ -5598,7 +5628,7 @@ class Controller
     function listarlotestext($empresa)
     {
         $this->conexion();
-        $sql = "select distinct detallelotes.contrato, detallelotes.id as id, lotes.nombre as nombre, contratos.tipocontrato as tipocontrato, fechainicio, fechatermino, trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, contratos.documentos as documento, trabajadores.segundoapellido as apellido2 from detallelotes, lotes, contratos, trabajadores where detallelotes.lotes = lotes.id and detallelotes.contrato = contratos.id and contratos.trabajador = trabajadores.id and contratos.estado = 1 and lotes=$empresa order by lotes.nombre asc";
+        $sql = "select distinct detallelotes.contrato, detallelotes.id as id, lotes.nombre as nombre, contratos.tipocontrato as tipocontrato, fechainicio, fechatermino, trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, contratos.documento as documento, trabajadores.segundoapellido as apellido2 from detallelotes, lotes, contratos, trabajadores where detallelotes.lotes = lotes.id and detallelotes.contrato = contratos.id and contratos.trabajador = trabajadores.id and contratos.estado = 1 and lotes=$empresa order by lotes.nombre asc";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {

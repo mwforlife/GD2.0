@@ -412,7 +412,7 @@ foreach ($permiso as $p) {
 
 					<div class="row">
 						<div class="col-md-6 text-left mb-2">
-							<a href="generarlotefinquito.php" class="btn btn-md btn-warning">Finiquitos Masivos <i class="fa fa-file"></i> </a>
+							<a href="generarlotefiniquito.php" class="btn btn-md btn-warning">Finiquitos Masivos <i class="fa fa-file"></i> </a>
 						</div>
 					</div>
 					<!-- ROW- opened -->

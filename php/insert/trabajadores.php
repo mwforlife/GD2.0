@@ -13,6 +13,11 @@ if (!isset($_SESSION['USER_ID'])) {
 
 if (isset($_POST['TrabajadorRut'])  && isset($_POST['TrabajadorNombre']) && isset($_POST['TrabajadorApellido1'])  && isset($_POST['TrabajadorNacimiento']) && isset($_POST['TrabajadorSexo']) && isset($_POST['TrabajadorCivil']) && isset($_POST['TrabajadorNacionalidad']) && isset($_POST['TrabajadorDiscapacidad']) && isset($_POST['TrabajadorPension']) && isset($_POST['TrabajadorCalle']) && isset($_POST['Trabajadorvilla']) && isset($_POST['TrabajadorNumero']) && isset($_POST['TrabajadorRegion']) && isset($_POST['TrabajadorComuna']) && isset($_POST['TrabajadorCiudad']) && isset($_POST['TrabajadorTelefono']) && isset($_POST['TrabajadorCorreo']) && $_SESSION['CURRENT_ENTERPRISE'] /*&& $_POST['centrocosto'] && $_POST['Charge'] && $_POST['ChargeDescripcion'] && $_POST['tipocontrato'] && $_POST['desde'] && $_POST['Jornada'] && $_POST['Horaspactadas'] && $_POST['tiposueldo'] && $_POST['sueldo'] && $_POST['asignacion']*/) {
     $rut = $_POST['TrabajadorRut'];
+    $trabajador = $c->buscartrabajadorbyRut($rut);
+    $empeladoid = 0;
+    if($trabajador!=false){
+        $empeladoid = $trabajador->getId();
+    }
     $dni = $_POST['TrabajadorDNI'];
     $nombre = $_POST['TrabajadorNombre'];
     $apellido1 = $_POST['TrabajadorApellido1'];
@@ -64,6 +69,20 @@ if (isset($_POST['TrabajadorRut'])  && isset($_POST['TrabajadorNombre']) && isse
             $_SESSION['TRABAJADOR_ID'] = $id;
             $c->registrardomicilio($calle,$villa, $numero, $departamento, $region, $comuna, $ciudad, $id);
             $c->registrarcontacto($telefono, $correo, $id);
+            if($empeladoid>0){
+                $previsiones = $c->buscarprevisiones($empeladoid);
+                $cuentas = $c->listarcuentasbancarias($empeladoid);
+                if(count($previsiones)>0){
+                    foreach($previsiones as $prevision){
+                        $c->insertarprevision($prevision->getPeriodo(), $prevision->getAfp(), $prevision->getJubilado(), $prevision->getCesantia(), $prevision->getSeguro(), $prevision->getPeriodocesantia(), $prevision->getIsapre(), $prevision->getMonedapacto(), $prevision->getMonto(), $prevision->getTipoges(), $prevision->getGes(), $id, $prevision->getComentario(), $prevision->getDocumentoafp(), $prevision->getDocumentosalud(), $prevision->getDocumentojubilacion());
+                    }
+                }
+                if(count($cuentas)>0){
+                    foreach($cuentas as $cuenta){
+                        $c->registrarcuentabancaria($cuenta->getBanco(), $cuenta->getTipo(), $cuenta->getNumero(), $id);
+                    }
+                }
+            }
             echo 1;
             $usuario = $_SESSION['USER_ID'];
             $eventos = "Se Registro el Trabajador : " . $nombre . " con el Rut: " . $rut;

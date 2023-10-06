@@ -506,16 +506,25 @@ foreach ($permiso as $p) {
 																			foreach ($lista as $object) {
 																				$lista1 = $c->listarlotestext2($object->getId());
 																				if (count($lista1) > 0) {
+																					$lotenobre = $object->getNombre_lote();
+																					//Borrar el resto del texto despues del _
+																					$pos = strpos($lotenobre, "_");
+																					if ($pos === false) {
+																						$lotenobre = $lotenobre;
+																					} else {
+																						$lotenobre = substr($lotenobre, 0, $pos);
+																					}
+
 																					?>
 																					<div class="card accordion-item">
 																						<div class="card-header accordion-header" id="headingOne-1" role="tab">
-																							<a aria-controls="collapseOne" aria-expanded="true" data-toggle="collapse" href="#collapse-<?php echo $object->getId()?>" class="accordion-toggle bg-primary text-white collapsed" data-parent="#accordion"><i class="fe fe-arrow-right mr-2"></i><?php echo $object->getNombre_lote(); ?></a>
+																							<a aria-controls="collapseOne" aria-expanded="true" data-toggle="collapse" href="#collapse-<?php echo $object->getId()?>" class="accordion-toggle bg-primary text-white collapsed" data-parent="#accordion"><i class="fe fe-arrow-right mr-2"></i><?php echo $lotenobre; ?></a>
 																						</div>
 																						<div aria-labelledby="headingOne-1" class="collapse" data-parent="#accordion" id="collapse-<?php echo $object->getId()?>" role="tabpanel">
 																							<div class="card-body">
-																								<div class="row">
-																									<div class="col-md-12 text-right mb-2">
-																										<a target="_blank" href="php/report/impresioncontratos.php?id=<?php echo $object->getId(); ?>" class="btn btn-outline-success"><i class="fa fa-print"></i>Imprimir Todo</a>
+																								<div class="row mb-4">
+																									<div class="col-md-12 text-right mt-2">
+																										<a target="_blank" href="php/report/impresioncontratos.php?id=<?php echo $object->getId(); ?>" class="btn btn-success"><i class="fa fa-print"></i> Imprimir Todo</a>
 																										<!--<button onclick="agregartodocontrato(<?php // echo $object->getId(); ?>)" class="btn btn-outline-info"><i class="fa fa-plus"></i> Agregar Todo</button>-->
 																									</div>
 																								</div>
@@ -553,7 +562,7 @@ foreach ($permiso as $p) {
 																												echo "</a>";
 																												echo "</td>";
 																												echo "<td class='text-center'>";
-																												echo "<a class='btn btn-outline-info btn-sm rounded-11' href='uploads/Contratos/" . $object1->getFecha_inicio() . "' target='_blank' data-toggle='tooltip' data-original-title='Imprimir'>";
+																												echo "<a class='btn btn-outline-success btn-sm rounded-11' href='uploads/Contratos/" . $object1->getFecha_inicio() . "' target='_blank' data-toggle='tooltip' data-original-title='Imprimir'>";
 																												echo "<i class='fa fa-print'>";
 																												echo "</i>";
 																												echo "</a>";
@@ -592,10 +601,18 @@ foreach ($permiso as $p) {
 																			foreach ($lista as $object) {
 																				$lista1 = $c->listarlotestext1($object->getId());
 																				if (count($lista1) > 0) {
+																					$lotenobre = $object->getNombre_lote();
+																					//Borrar el resto del texto despues del _
+																					$pos = strpos($lotenobre, "_");
+																					if ($pos === false) {
+																						$lotenobre = $lotenobre;
+																					} else {
+																						$lotenobre = substr($lotenobre, 0, $pos);
+																					}
 																					?>
 																					<div class="card accordion-item">
 																						<div class="card-header accordion-header" id="headingOne-1" role="tab">
-																							<a aria-controls="collapseOne" aria-expanded="true" data-toggle="collapse" href="#collapse-<?php echo ($object->getId()+1)?>" class="accordion-toggle bg-primary text-white collapsed" data-parent="#accordion"><i class="fe fe-arrow-right mr-2"></i><?php echo $object->getNombre_lote(); ?></a>
+																							<a aria-controls="collapseOne" aria-expanded="true" data-toggle="collapse" href="#collapse-<?php echo ($object->getId()+1)?>" class="accordion-toggle bg-primary text-white collapsed" data-parent="#accordion"><i class="fe fe-arrow-right mr-2"></i><?php echo $lotenobre; ?></a>
 																						</div>
 																						<div aria-labelledby="headingOne-1" class="collapse" data-parent="#accordion" id="collapse-<?php echo ($object->getId()+1)?>" role="tabpanel">
 																							<div class="card-body">
@@ -642,7 +659,7 @@ foreach ($permiso as $p) {
 																												echo "</td>";
 																												echo "<td class='text-center'>";
 																												echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='print(" . $object1->getId() . ",2)' data-toggle='tooltip' data-original-title='Agregar al Lote'>";
-																												echo "<i class='fa fa-print'>";
+																												echo "<i class='fa fa-success'>";
 																												echo "</i>";
 																												echo "</a>";
 																												echo "</td>";
@@ -656,8 +673,6 @@ foreach ($permiso as $p) {
 																						</div>
 																					</div>
 																					<?php
-																				}else{
-																					echo "<div class='alert alert-danger'>No hay finiquitos en el lote ".$object->getNombre_lote()." para imprimir</div>";
 																				}
 																			}
 																			?>
