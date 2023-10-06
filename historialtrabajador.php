@@ -266,6 +266,9 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
 							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="impresiondocumentos.php">Impresión Documentos</a>
 							</li>
+							<li class="nav-sub-item">
+								<a class="nav-sub-link" href="impresionmasiva.php">Impresión Masiva</a>
+							</li>
 						</ul>
 					</li>
 				</ul>

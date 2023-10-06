@@ -298,6 +298,9 @@ foreach ($permiso as $p) {
 							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="impresiondocumentos.php">Impresión Documentos</a>
 							</li>
+							<li class="nav-sub-item">
+								<a class="nav-sub-link" href="impresionmasiva.php">Impresión Masiva</a>
+							</li>
 						</ul>
 					</li>
 				</ul>
@@ -510,7 +513,6 @@ foreach ($permiso as $p) {
 																					//Borrar el resto del texto despues del _
 																					$pos = strpos($lotenobre, "_");
 																					if ($pos === false) {
-																						$lotenobre = $lotenobre;
 																					} else {
 																						$lotenobre = substr($lotenobre, 0, $pos);
 																					}
@@ -525,7 +527,7 @@ foreach ($permiso as $p) {
 																								<div class="row mb-4">
 																									<div class="col-md-12 text-right mt-2">
 																										<a target="_blank" href="php/report/impresioncontratos.php?id=<?php echo $object->getId(); ?>" class="btn btn-success"><i class="fa fa-print"></i> Imprimir Todo</a>
-																										<!--<button onclick="agregartodocontrato(<?php // echo $object->getId(); ?>)" class="btn btn-outline-info"><i class="fa fa-plus"></i> Agregar Todo</button>-->
+																										<button onclick="eliminartodoccontrato(<?php echo $object->getId(); ?>)" class="btn btn-danger"><i class="fa fa-trash-alt"></i> Eliminar Lote</button>
 																									</div>
 																								</div>
 																								<div class="table-responsive">
@@ -605,7 +607,6 @@ foreach ($permiso as $p) {
 																					//Borrar el resto del texto despues del _
 																					$pos = strpos($lotenobre, "_");
 																					if ($pos === false) {
-																						$lotenobre = $lotenobre;
 																					} else {
 																						$lotenobre = substr($lotenobre, 0, $pos);
 																					}
@@ -618,7 +619,8 @@ foreach ($permiso as $p) {
 																							<div class="card-body">
 																								<div class="row">
 																									<div class="col-md-12 text-right mb-2">
-																										<button onclick="agregartodofiniquito(<?php echo $object->getId(); ?>)" class="btn btn-outline-info"><i class="fa fa-print"></i> Todo</button>
+																									<a target="_blank" href="php/report/impresionfiniquitos.php?id=<?php echo $object->getId(); ?>" class="btn btn-success"><i class="fa fa-print"></i> Imprimir Todo</a>
+																										<button onclick="eliminartodofiniquito(<?php echo $object->getId(); ?>)" class="btn btn-danger"><i class="fa fa-trash-alt"></i> Eliminar Lote</button>
 																									</div>
 																								</div>
 																								<div class="table-responsive">
@@ -632,6 +634,9 @@ foreach ($permiso as $p) {
 																													Fecha Termino</th>
 																												<th class="bg-transparent">
 																													Trabajador</th>
+																												<th
+																													class="bg-transparent text-center">
+																													<i class="fa fa-print"></i> Agregar</th>
 																												<th
 																													class="bg-transparent text-center">
 																													<i class="fa fa-print"></i> Imprimir</th>
@@ -658,8 +663,14 @@ foreach ($permiso as $p) {
 																												echo $object1->getTrabajador();
 																												echo "</td>";
 																												echo "<td class='text-center'>";
-																												echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='print(" . $object1->getId() . ",2)' data-toggle='tooltip' data-original-title='Agregar al Lote'>";
-																												echo "<i class='fa fa-success'>";
+																												echo "<a class='btn btn-outline-success btn-sm rounded-11' onclick='addcart1(2," . $object1->getNombre_lote() . ",\"" . $object1->getContrato() . "\",\"" . $object1->getFecha_fin() . "\",\"" . $object1->getTrabajador() . "\",\"" . $object1->getFecha_inicio() . "\")' data-toggle='tooltip' data-original-title='Agregar'>";
+																												echo "<i class='fa fa-print'>";
+																												echo "</i>";
+																												echo "</a>";
+																												echo "</td>";
+																												echo "<td class='text-center'>";
+																												echo "<a class='btn btn-outline-success btn-sm rounded-11' href='php/pdf/finiquito.php?id=" . $object1->getNombre_lote() . "' target='_blank' data-toggle='tooltip' data-original-title='Imprimir'>";
+																												echo "<i class='fa fa-print'>";
 																												echo "</i>";
 																												echo "</a>";
 																												echo "</td>";
@@ -773,7 +784,12 @@ foreach ($permiso as $p) {
 					</div>
 					<!-- ROW-4 END -->
 
-					<div class="row objetos">
+					<div class="row objetos mt-2">
+
+					</div>
+					
+
+					<div class="row objetos1 mt-2">
 
 					</div>
 
