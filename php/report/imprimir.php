@@ -14,7 +14,8 @@ if(isset($_GET['cart'])){
     }
     
     $pdf = new Fpdi();
-
+    $pdf->SetPrintHeader(false);
+    $pdf->setPrintFooter(false);
     $pdf->AddPage();
 
     foreach ($pdffiles as $pdfFile) {

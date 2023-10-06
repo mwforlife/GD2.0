@@ -13,7 +13,8 @@ if(isset($_GET['id'])){
     }
 
     $pdf = new Fpdi();
-
+    $pdf->SetPrintHeader(false);
+    $pdf->setPrintFooter(false);
     $pdf->AddPage();
 
     foreach ($pdffiles as $pdfFile) {
