@@ -504,7 +504,7 @@ foreach ($permiso as $p) {
 																			<?php
 																			$lista = $c->listarlotescontrato($_SESSION['CURRENT_ENTERPRISE']);
 																			foreach ($lista as $object) {
-																				$lista1 = $c->listarlotestext($object->getId());
+																				$lista1 = $c->listarlotestext2($object->getId());
 																				if (count($lista1) > 0) {
 																					?>
 																					<div class="card accordion-item">
@@ -515,7 +515,8 @@ foreach ($permiso as $p) {
 																							<div class="card-body">
 																								<div class="row">
 																									<div class="col-md-12 text-right mb-2">
-																										<button onclick="agregartodocontrato(<?php echo $object->getId(); ?>)" class="btn btn-outline-info"><i class="fa fa-print"></i> Todo</button>
+																										<a target="_blank" href="php/report/impresioncontratos.php?id=<?php echo $object->getId(); ?>" class="btn btn-outline-success"><i class="fa fa-print"></i>Imprimir Todo</a>
+																										<!--<button onclick="agregartodocontrato(<?php // echo $object->getId(); ?>)" class="btn btn-outline-info"><i class="fa fa-plus"></i> Agregar Todo</button>-->
 																									</div>
 																								</div>
 																								<div class="table-responsive">
@@ -529,6 +530,9 @@ foreach ($permiso as $p) {
 																													Trabajador</th>
 																												<th
 																													class="bg-transparent text-center">
+																													<i class="fa fa-plus"></i> Agregar</th>
+																												<th
+																													class="bg-transparent text-center">
 																													<i class="fa fa-print"></i> Imprimir</th>
 																											</tr>
 																										</thead>
@@ -537,17 +541,19 @@ foreach ($permiso as $p) {
 																											foreach ($lista1 as $object1) {
 																												echo "<tr class='border-bottom-0'>";
 																												echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
-																												$fecha = $object1->getFecha_inicio();
-																												//Convertir fecha en formato dd-mm-YYYY
-																												$fecha = date("d-m-Y", strtotime($fecha));
-
-																												echo $object1->getContrato() . " - " . $fecha;
+																												echo $object1->getContrato() ;
 																												echo "</td>";
 																												echo "<td class='text-muted fs-15 font-weight-semibold'>";
 																												echo $object1->getTrabajador();
 																												echo "</td>";
 																												echo "<td class='text-center'>";
-																												echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='printcontract(" . $object1->getId() . ",1)' data-toggle='tooltip' data-original-title='Agregar al Lote'>";
+																												echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='addcart(1," . $object1->getId() . ",\"" . $object1->getContrato() . "\",\"" . $object1->getTrabajador() . "\",\"" . $object1->getFecha_inicio() . "\")' data-toggle='tooltip' data-original-title='Agregar'>";
+																												echo "<i class='fa fa-plus'>";
+																												echo "</i>";
+																												echo "</a>";
+																												echo "</td>";
+																												echo "<td class='text-center'>";
+																												echo "<a class='btn btn-outline-info btn-sm rounded-11' href='uploads/Contratos/" . $object1->getFecha_inicio() . "' target='_blank' data-toggle='tooltip' data-original-title='Imprimir'>";
 																												echo "<i class='fa fa-print'>";
 																												echo "</i>";
 																												echo "</a>";
@@ -752,6 +758,10 @@ foreach ($permiso as $p) {
 					</div>
 					<!-- ROW-4 END -->
 
+					<div class="row objetos">
+
+					</div>
+
 				</div>
 			</div>
 		</div>
@@ -824,6 +834,7 @@ foreach ($permiso as $p) {
 	<script src="JsFunctions/Alert/alert.js"></script>
 	<script src="JsFunctions/main.js"></script>
 	<script src="JsFunctions/Trabajadores.js"></script>
+	<script src="JsFunctions/masiva.js"></script>
 
 	<script>
 		$(document).ready(function () {

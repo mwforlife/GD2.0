@@ -5598,7 +5598,7 @@ class Controller
     function listarlotestext($empresa)
     {
         $this->conexion();
-        $sql = "select distinct detallelotes.contrato, detallelotes.id as id, lotes.nombre as nombre, contratos.tipocontrato as tipocontrato, fechainicio, fechatermino, trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2 from detallelotes, lotes, contratos, trabajadores where detallelotes.lotes = lotes.id and detallelotes.contrato = contratos.id and contratos.trabajador = trabajadores.id and contratos.estado = 1 and lotes=$empresa order by lotes.nombre asc";
+        $sql = "select distinct detallelotes.contrato, detallelotes.id as id, lotes.nombre as nombre, contratos.tipocontrato as tipocontrato, fechainicio, fechatermino, trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, contratos.documentos as documento, trabajadores.segundoapellido as apellido2 from detallelotes, lotes, contratos, trabajadores where detallelotes.lotes = lotes.id and detallelotes.contrato = contratos.id and contratos.trabajador = trabajadores.id and contratos.estado = 1 and lotes=$empresa order by lotes.nombre asc";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -5612,6 +5612,34 @@ class Controller
             $lote = $rs['nombre'];
             $nombre = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'] ;
             $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $l = new Lotes_contrato($id, $contrato, $nombre, $lote, $fechainicio, $fechatermino);
+            $lista[] = $l;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    
+    //Listar Lotes con contratos activos
+    function listarlotestext2($empresa)
+    {
+        $this->conexion();
+        $sql = "select distinct detallelotes.contrato, detallelotes.id as id, lotes.nombre as nombre, contratos.tipocontrato as tipocontrato, fechainicio, fechatermino, trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, contratos.documento as documento, trabajadores.segundoapellido as apellido2 from detallelotes, lotes, contratos, trabajadores where detallelotes.lotes = lotes.id and detallelotes.contrato = contratos.id and contratos.trabajador = trabajadores.id and contratos.estado = 1 and lotes=$empresa order by lotes.nombre asc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $contrato = $rs['tipocontrato'];
+            if($contrato=="Contrato a Plazo Fijo"){
+                $contrato = "Plazo Fijo";
+            }else if($contrato=="Contrato Indefinido"){
+                $contrato = "Indefinido";
+            }
+            $contrato = $contrato . " - " . date("d-m-Y", strtotime($rs['fechainicio']));
+            $lote = $rs['nombre'];
+            $nombre = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'] ;
+            $fechainicio = $rs['documento'];
             $fechatermino = $rs['fechatermino'];
             $l = new Lotes_contrato($id, $contrato, $nombre, $lote, $fechainicio, $fechatermino);
             $lista[] = $l;
