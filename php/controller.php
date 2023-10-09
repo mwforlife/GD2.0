@@ -49,18 +49,20 @@ require 'Class/Vacaciones.php';
 require 'Class/DocumentoSubido.php';
 require 'Class/Anexo.php';
 require 'Class/Clausulaanexo.php';
+require 'Class/Codigolre.php';
+require 'Class/Haber.php';
 
 //Class definition
 class Controller
 {
     private $host = "localhost";
-    /*Variables*/
+    /*Variables
     private $user = "root";
     private $pass = "";
     private $bd = "gestordocumentos";
 
 
-    /*Variables BD Remota
+    /*Variables BD Remota*/
     private $user = 'kaiserte_admin';
     private $pass = 'Kaiser2022$';
     private $bd = 'kaiserte_gd';
@@ -5738,6 +5740,32 @@ class Controller
          return $lista;
      }
 
+     //Listar Lotes con contratos Inactivos
+     function listarlotestext4($lote)
+     {
+         $this->conexion();
+         $sql = "select distinct detallelotes.contrato, detallelotes.id as id, finiquito.id as nombre, contratos.tipocontrato as tipocontrato, finiquito.fechainicio as fechainicio,finiquito.fechatermino as fechatermino, trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2 from detallelotes, lotes, contratos, finiquito,trabajadores where detallelotes.lotes = lotes.id and detallelotes.contrato = contratos.id and finiquito.contrato=contratos.id and contratos.trabajador = trabajadores.id and contratos.estado = 2 and lotes=$lote order by lotes.nombre asc";
+         $result = $this->mi->query($sql);
+         $lista = array();
+         while ($rs = mysqli_fetch_array($result)) {
+             $id = $rs['id'];
+             $contrato = $rs['tipocontrato'];
+             if($contrato=="Contrato a Plazo Fijo"){
+                 $contrato = "Plazo Fijo";
+             }else if($contrato=="Contrato Indefinido"){
+                 $contrato = "Indefinido";
+             }
+             $lote = $rs['nombre'];
+             $nombre = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'] ;
+             $fechainicio = $rs['fechainicio'];
+             $fechatermino = $rs['fechatermino'];
+             $l = new Lotes_contrato($id, $contrato, $nombre, $lote, $fechainicio, $fechatermino);
+             $lista[] = $l;
+         }
+         $this->desconectar();
+         return $lista;
+     }
+
     function validarloteids($id, $contrato){
         $this->conexion();
         $sql = "select * from detallelotes where contrato = $contrato and lotes = $id";
@@ -7076,8 +7104,6 @@ class Controller
         ];
     }
 
-    
-    
     function obtenerFechas($fechaInicio, $fechaFin) {
         $fechas = array();
         while ($fechaInicio <= $fechaFin) {
@@ -7086,5 +7112,226 @@ class Controller
         }
         return $fechas;
     }
+
+    /*****************************************************Sistema de Remunereaciones********************************************************************* */
+    //Listar Codigo lre
+    function listarcodigoslre(){
+        $this->conexion();
+        $sql = "select * from codigolre order by codigo asc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $articulo = $rs['articulo'];
+            $codigo = $rs['codigo'];
+            $codigoprevired = $rs['codigoprevired'];
+            $descripcion = $rs['nombre'];
+            $registro = $rs['register_at'];
+            $codigolre = new Codigolre($id,$articulo,$codigo,$codigoprevired,$descripcion,$registro);
+            $lista[] = $codigolre;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Registrar Codigo lre
+    function registrarcodigolre($articulo,$codigo,$codigoprevired,$descripcion){
+        $this->conexion();
+        $sql = "insert into codigolre(articulo,codigo,codigoprevired,nombre) values('$articulo','$codigo','$codigoprevired','$descripcion')";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Eliminar Codigo lre
+    function eliminarcodigolre($id){
+        $this->conexion();
+        $sql = "delete from codigolre where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Editar Codigo lre
+    function editarcodigolre($id,$articulo,$codigo,$codigoprevired,$descripcion){
+        $this->conexion();
+        $sql = "update codigolre set articulo='$articulo', codigo='$codigo', codigoprevired='$codigoprevired', nombre='$descripcion' where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Buscar Codigo lre
+    function buscarcodigolre($id){
+        $this->conexion();
+        $sql = "select * from codigolre where id=$id";
+        $result = $this->mi->query($sql);
+        $codigolre = false;
+        while($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $articulo = $rs['articulo'];
+            $codigo = $rs['codigo'];
+            $codigoprevired = $rs['codigoprevired'];
+            $descripcion = $rs['nombre'];
+            $registro = $rs['register_at'];
+            $codigolre = new Codigolre($id,$articulo,$codigo,$codigoprevired,$descripcion,$registro);
+        }
+        $this->desconectar();
+        return $codigolre;
+    }
+
+    //Listar Haberes y descuentos
+    function listarhaberesydescuentos(){
+        $this->conexion();
+        $sql = "select * from habres_descuentos order by codigo asc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $descripcion = $rs['descripcion'];
+            $tipo = $rs['tipo'];
+            $imponible = $rs['imponible'];
+            $tributable = $rs['tributable'];
+            $gratificacion = $rs['gratificacion'];
+            $reservado = $rs['reservado'];
+            $codigolre = $rs['codigolre'];
+            $agrupacion = $rs['agrupacion'];
+            $tipohaber = $rs['tipohaber'];
+            $registro = $rs['register_at'];
+            $haber = new Haber($id,$codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion, $tipohaber,$registro);
+            $lista[] = $haber;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Listar Descuentos relacional
+    function listarhaberesydescuentostext(){
+        $this->conexion();
+        $sql = "select habres_descuentos.id as id, habres_descuentos.codigo as codigo, habres_descuentos.descripcion as descripcion, habres_descuentos.tipo as tipo, habres_descuentos.imponible as imponible, habres_descuentos.tributable as tributable, habres_descuentos.gratificacion as gratificacion, habres_descuentos.reservado as reservado, habres_descuentos.codigolre as codigolre, habres_descuentos.agrupacion as agrupacion, habres_descuentos.tipohaber as tipohaber, habres_descuentos.register_at as register_at, codigolre.articulo as articulo, codigolre.codigo as codigolre, codigolre.codigoprevired as codigoprevired, codigolre.nombre as nombre from habres_descuentos, codigolre where habres_descuentos.codigolre=codigolre.id order by habres_descuentos.codigo asc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $descripcion = $rs['descripcion'];
+            $tipo = $rs['tipo'];
+            $imponible = $rs['imponible'];
+            $tributable = $rs['tributable'];
+            $gratificacion = $rs['gratificacion'];
+            $reservado = $rs['reservado'];
+            $codigolre = $rs['codigolre'];
+            $tipohaber = $rs['tipohaber'];
+            $registro = $rs['register_at'];
+            $articulo = $rs['articulo'];
+            $codigolre = $rs['nombre'] . " (" . $rs['codigolre'] . ")";
+            $agrupacion = $rs['agrupacion'];
+            $tipohaber = $rs['tipohaber'];
+            $registro = $rs['register_at'];
+            $haber = new Haber($id,$codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion,$tipohaber,$registro);
+            $lista[] = $haber;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Listar Haberes y descuentos por empresa
+    function listarhaberesydescuentosempresa($empresa){
+        $this->conexion();
+        $sql = "select * from habres_descuentos where empresa=$empresa or tipohaber=1 order by codigo asc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $descripcion = $rs['descripcion'];
+            $tipo = $rs['tipo'];
+            $imponible = $rs['imponible'];
+            $tributable = $rs['tributable'];
+            $gratificacion = $rs['gratificacion'];
+            $reservado = $rs['reservado'];
+            $codigolre = $rs['codigolre'];
+            $agrupacion = $rs['agrupacion'];
+            $tipohaber = $rs['tipohaber'];
+            $registro = $rs['register_at'];
+            $haber = new Haber($id,$codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion,$tipohaber,$registro);
+            $lista[] = $haber;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Buscar Haberes y descuentos
+    function buscarhaberesydescuentos($id){
+        $this->conexion();
+        $sql = "select * from habres_descuentos where id=$id";
+        $result = $this->mi->query($sql);
+        $haber = false;
+        while($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $descripcion = $rs['descripcion'];
+            $tipo = $rs['tipo'];
+            $imponible = $rs['imponible'];
+            $tributable = $rs['tributable'];
+            $gratificacion = $rs['gratificacion'];
+            $reservado = $rs['reservado'];
+            $codigolre = $rs['codigolre'];
+            $agrupacion = $rs['agrupacion'];
+            $tipohaber = $rs['tipohaber'];
+            $registro = $rs['register_at'];
+            $haber = new Haber($id,$codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion,$tipohaber,$registro);
+        }
+        $this->desconectar();
+        return $haber;
+    }
+
+    //Registrar Haberes y descuentos
+    function registrarhaberesydescuentos($codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion,$tipohaber, $empresa){
+        $this->conexion();
+        $sql = "insert into habres_descuentos values(null,'$codigo','$descripcion',$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion,$tipohaber, $empresa, now())";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Verificar si existe el codigo
+    function validarcodigohaberes($tipohaber, $empresa, $codigo){
+        $this->conexion();
+        $sql ="";
+        if($tipohaber==1){
+            $sql = "select * from habres_descuentos where (tipohaber=1 or tipohaber=2) and codigo='$codigo'";
+        }else if($tipohaber==2){
+            $sql = "select * from habres_descuentos where codigo='$codigo' and (empresa=$empresa or empresa=0)";
+        }
+        $result = $this->mi->query($sql);
+        if($rs = mysqli_fetch_array($result)){
+            $this->desconectar();
+            return true;
+        }
+        $this->desconectar();
+        return false;
+    }
+
+    //Eliminar Haberes y descuentos
+    function eliminarhaberesydescuentos($id){
+        $this->conexion();
+        $sql = "delete from habres_descuentos where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Editar Haberes y descuentos
+    function editarhaberesydescuentos($id,$codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion){
+        $this->conexion();
+        $sql = "update habres_descuentos set codigo='$codigo', descripcion='$descripcion', tipo=$tipo, imponible=$imponible, tributable=$tributable, gratificacion=$gratificacion, reservado=$reservado, codigolre=$codigolre, agrupacion=$agrupacion where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+
     
 }

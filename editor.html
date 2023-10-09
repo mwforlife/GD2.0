@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de Fórmulas</title>
+</head>
+
+<body>
+    <h1>Editor de Fórmulas</h1>
+    <textarea id="formulaInput" rows="4" cols="50"></textarea>
+    <button onclick="calcularFormula()">Calcular</button>
+    <p id="formula"></p>
+    <p>Resultado: <span id="resultado"></span></p>
+    <button onclick="variable('{salarioBase}')">salarioBase</button>
+    <button onclick="variable('{horasTrabajadas}')">horasTrabajadas</button>
+    <button onclick="variable('{AFP}')">AFP</button>
+
+    <script>
+        // Variables disponibles (simuladas)
+        const salarioBase = 440000;
+        const horasTrabajadas = 160;
+        const AFP = "11.27";
+
+        // Función para calcular la fórmula ingresada
+        function calcularFormula() {
+            var formulaInput = document.getElementById("formulaInput").value;
+
+            formulaInput = reemplazarVariable("{salarioBase}", salarioBase, formulaInput);
+            formulaInput = reemplazarVariable("{horasTrabajadas}", horasTrabajadas, formulaInput);
+            formulaInput = reemplazarVariable("{AFP}", AFP, formulaInput);
+            formulaInput = reemplazarVariable("%", "/100", formulaInput);
+            try {
+                // Evaluar la fórmula utilizando la función eval de JavaScript
+                const resultado = eval(formulaInput);
+                //Agregar separador de miles
+                const resultadoConSeparador = resultado.toLocaleString("es-CL");
+                // Mostrar la fórmula en la página
+                document.getElementById("formula").textContent = "Calculo: " + formulaInput;
+
+                // Mostrar el resultado en la página
+                document.getElementById("resultado").textContent = resultadoConSeparador;
+            } catch (error) {
+                // Manejo de errores si la fórmula es incorrecta
+                document.getElementById("formula").textContent = error;
+                document.getElementById("resultado").textContent = "Error en la fórmula";
+            }
+        }
+
+        // Función para agregar una variable a la fórmula
+        function variable(variable) {
+            const formulaInput = document.getElementById("formulaInput");
+            formulaInput.value += variable;
+            formulaInput.focus();
+        }
+
+        //Funcion para reemplazar una variable por su valor
+        function reemplazarVariable(variable, valor, formulaInput) {
+            formulaInput = formulaInput.replace(variable, valor);
+            return formulaInput;
+        }
+    </script>
+</body>
+
+</html>

@@ -862,3 +862,105 @@ create table clausulasanexos(
     tipodocumento int not null references tipodocumento(id),
     register_at timestamp not null default current_timestamp
 );
+
+/***************Sistema de REmuneraciones*************************/
+create table tipohaberes(
+    id int not null auto_increment primary key,
+    nombre varchar(200) not null
+);
+
+insert into tipohaberes values(null, 'Haberes');
+insert into tipohaberes values(null, 'Descuentos');
+
+create table imponible(
+    id int not null auto_increment primary key,
+    nombre varchar(200) not null
+);
+
+insert into imponible values(null, 'Si');
+insert into imponible values(null, 'No');
+
+create table tributable(
+    id int not null auto_increment primary key,
+    nombre varchar(200) not null
+);
+
+insert into tributable values(null, 'Si');
+insert into tributable values(null, 'No');
+
+create table gratificacion(
+    id int not null auto_increment primary key,
+    nombre varchar(200) not null
+);
+
+insert into gratificacion values(null, 'Si');
+insert into gratificacion values(null, 'No');
+
+create table reservado(
+    id int not null auto_increment primary key,
+    nombre varchar(200) not null
+);
+
+insert into reservado values(null, 'Si');
+insert into reservado values(null, 'No');
+
+
+create table codigolre(
+    id int not null auto_increment primary key,
+    articulo varchar(200) null,
+    codigo varchar(200) not null,
+    codigoprevired varchar(200) not null,
+    nombre text not null,
+    register_at timestamp not null default current_timestamp
+);
+
+insert into codigolre values (null, "", "2101","2101", "Sueldo", now());
+insert into codigolre values (null, "", "2102","2102", "Sobre Sueldo", now());
+insert into codigolre values (null, "", "2103","2103", "Comisiones (mensual)", now());
+insert into codigolre values (null, "Art. 45", "2104","2104", "Semana Corrida (mensual)", now());
+insert into codigolre values (null, "", "2105","2105", "Participación (mensual)", now());
+insert into codigolre values (null, "", "2106","2106", "Gratificación (mensual)", now());
+insert into codigolre values (null, "Art. 38", "2107", "2107", "Recargo 30% día domingo", now());
+insert into codigolre values (null, "Art. 71", "2108","2108", "Remuneración variables pagada en vacaciones", now());
+insert into codigolre values (null, "Art. 38 DFL 2", "2109","2109", "Remuneración variables pagada en Clausura", now());
+insert into codigolre values (null, "", "2110","2110", "Aguinaldo", now());
+insert into codigolre values (null, "", "2111","2111", "Bonos u otras remuneraciones fijas mensuales", now());
+insert into codigolre values (null, "", "2112","2112", "Tratos (mensual)", now());
+insert into codigolre values (null, "", "2113","2113", "Bonos u otras remuneraciones variables mensuales o superiores a un mes", now());
+insert into codigolre values (null, "Art. 17 N°8 LIR", "2114","2114", "Ejercicio opción no pactada en contrato", now());
+insert into codigolre values (null, "", "2115","2115", "Beneficios en especie constitutivos de remuneción", now());
+insert into codigolre values (null, "", "21024","21024", "Pago por horas de trabajo sindical", now());
+
+create table tipohaber(
+    id int not null auto_increment primary key,
+    nombre varchar(200) not null
+);
+
+insert into tipohaber values(null, 'Master');
+insert into tipohaber values(null, 'Empresa');
+
+create table agrupacionhaber(
+    id int not null auto_increment primary key,
+    nombre varchar(200) not null
+);
+
+insert into agrupacionhaber values(1, 'Valor');
+insert into agrupacionhaber values(2, 'Horas');
+insert into agrupacionhaber values(3, 'Dias');
+
+create table habres_descuentos(
+    id int not null auto_increment primary key,
+    codigo varchar(200) not null,
+    descripcion text not null,
+    tipo int not null references tipohaberes(id),
+    imponible int not null references imponible(id),
+    tributable int not null references tributable(id),
+    gratificacion int not null references gratificacion(id),
+    reservado int not null references reservado(id),    
+    codigolre int not null references codigolre(id),
+    agrupacion int not null references agrupacionhaber(id),
+    tipohaber int not null references tipohaber(id),
+    empresa int not null,
+    register_at timestamp not null default current_timestamp
+);
+

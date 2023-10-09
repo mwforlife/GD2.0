@@ -115,8 +115,7 @@ foreach ($permiso as $p) {
 				<a class="main-logo" href="index.php">
 					<img src="assets/img/brand/logo.png" class="header-brand-img desktop-logo" alt="logo">
 					<img src="assets/img/brand/icon.png" class="header-brand-img icon-logo" alt="logo">
-					<img src="assets/img/brand/dark-logo.png" class="header-brand-img desktop-logo theme-logo"
-						alt="logo">
+					<img src="assets/img/brand/dark-logo.png" class="header-brand-img desktop-logo theme-logo" alt="logo">
 					<img src="assets/img/brand/icon.png" class="header-brand-img icon-logo theme-logo" alt="logo">
 				</a>
 			</div>
@@ -129,10 +128,9 @@ foreach ($permiso as $p) {
 					if (isset($_SESSION['GESTION_PERMISO']) || isset($_SESSION['LECTURA_PERMISO']) || isset($_SESSION['ESCRITURA_PERMISO']) || isset($_SESSION['ACTUALIZACION_PERMISO']) || isset($_SESSION['ELIMINACION_PERMISO'])) {
 						if ($_SESSION['GESTION_PERMISO'] == true) {
 
-							?>
+					?>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span
-										class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="isapres.php">Institución de Salud</a>
@@ -176,38 +174,43 @@ foreach ($permiso as $p) {
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="diasferiados.php">DIAS FERIADOS</a>
 									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="codigolref.php">CODIGOS LRE</a>
+									</li>
 								</ul>
 							</li>
-							<?php
+						<?php
 						}
 						?>
 						<li class="nav-header"><span class="nav-label">FUNCIONES</span></li>
 
 
 						<li class="nav-item">
-							<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span
-									class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
+							<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
 							<ul class="nav-sub">
 								<?php
 								if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
-									?>
+								?>
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="empresas.php">Empresas</a>
 									</li>
-									<?php
+								<?php
 								}
 								?>
 								<li class="nav-sub-item">
 									<a class="nav-sub-link" href="trabajadores.php">Trabajadores</a>
 								</li>
+								<li class="nav-sub-item">
+									<a class="nav-sub-link" href="haberes.php">Haberes y Descuentos</a>
+								</li>
 
 								<?php
 								if ($_SESSION['GESTION_PERMISO'] == true) {
-									?>
+								?>
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="tipodocumento.php">Escritos</a>
 									</li>
-									<?php
+								<?php
 								}
 								?>
 
@@ -215,24 +218,23 @@ foreach ($permiso as $p) {
 								if (isset($_SESSION['GESTION_PERMISO'])) {
 									if ($_SESSION['GESTION_PERMISO'] == true) {
 
-										?>
+								?>
 										<li class="nav-sub-item">
 											<a class="nav-sub-link" href="usuarios.php">Usuarios</a>
 										</li>
-										<?php
+								<?php
 									}
 								}
 								?>
 							</ul>
 						</li>
-						<?php
+					<?php
 					}
 
 					if ($_SESSION['GESTION_PERMISO'] == true) {
-						?>
+					?>
 						<li class="nav-item">
-							<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span
-									class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
+							<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
 							<ul class="nav-sub">
 								<li class="nav-sub-item">
 									<a class="nav-sub-link" href="auditoriatrabajadores.php">Auditoria de trabajadores</a>
@@ -243,12 +245,11 @@ foreach ($permiso as $p) {
 
 							</ul>
 						</li>
-						<?php
+					<?php
 					}
 					?>
 					<li class="nav-item">
-						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
-								class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
+						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
 						<ul class="nav-sub">
 							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="contratoindividual.php">Contrato Individual</a>
@@ -280,8 +281,15 @@ foreach ($permiso as $p) {
 						</ul>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
-								class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
+						<a class="nav-link with-sub" href="#"><i class="fe fe-dollar-sign sidemenu-icon"></i><span class="sidemenu-label">Remuneraciones</span><i class="angle fe fe-chevron-right"></i></a>
+						<ul class="nav-sub">
+							<li class="nav-sub-item">
+								<a class="nav-sub-link" href="habmaster.php">Haberes y Descuentos</a>
+							</li>
+						</ul>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
 						<ul class="nav-sub">
 							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="impresiondocumentos.php">Impresión Documentos</a>
@@ -304,15 +312,12 @@ foreach ($permiso as $p) {
 				</div>
 				<div class="main-header-center">
 					<div class="responsive-logo">
-						<a href="index.php"><img src="assets/img/brand/dark-logo.png" class="mobile-logo"
-								alt="logo"></a>
-						<a href="index.php"><img src="assets/img/brand/logo.png" class="mobile-logo-dark"
-								alt="logo"></a>
+						<a href="index.php"><img src="assets/img/brand/dark-logo.png" class="mobile-logo" alt="logo"></a>
+						<a href="index.php"><img src="assets/img/brand/logo.png" class="mobile-logo-dark" alt="logo"></a>
 					</div>
 					<div class="input-group">
 						<div class="w-100" style="position: relative; z-index: 999999;">
-							<select name="currententerprise" id="currententerprise" class="form-control select2"
-								onchange="seleccionarEmpresa(this.value)">
+							<select name="currententerprise" id="currententerprise" class="form-control select2" onchange="seleccionarEmpresa(this.value)">
 								<?php
 								if (isset($_SESSION['GESTION_PERMISO'])) {
 									if ($_SESSION['GESTION_PERMISO'] == true) {
@@ -382,27 +387,21 @@ foreach ($permiso as $p) {
 				<div class="main-header-right">
 					<div class="dropdown d-md-flex header-settings">
 						<a href="#">
-							<i class="header-icons"><svg xmlns="http://www.w3.org/2000/svg" height="24"
-									viewBox="0 0 24 24" width="24">
+							<i class="header-icons"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
 									<path d="M0 0h24v24H0V0z" fill="none" />
-									<path
-										d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z" />
+									<path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z" />
 								</svg></i>
 						</a>
 					</div>
 					<div class="dropdown d-md-flex">
 						<a class="nav-link icon full-screen-link fullscreen-button" href="">
-							<i class="fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24"
-									viewBox="0 0 24 24" width="24">
+							<i class="fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
 									<path d="M0 0h24v24H0V0z" fill="none" />
-									<path
-										d="M5 15H3v4c0 1.1.9 2 2 2h4v-2H5v-4zM5 5h4V3H5c-1.1 0-2 .9-2 2v4h2V5zm14-2h-4v2h4v4h2V5c0-1.1-.9-2-2-2zm0 16h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4zM12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+									<path d="M5 15H3v4c0 1.1.9 2 2 2h4v-2H5v-4zM5 5h4V3H5c-1.1 0-2 .9-2 2v4h2V5zm14-2h-4v2h4v4h2V5c0-1.1-.9-2-2-2zm0 16h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4zM12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
 								</svg></i>
-							<i class="exit-fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24"
-									viewBox="0 0 24 24" width="24">
+							<i class="exit-fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
 									<path d="M0 0h24v24H0V0z" fill="none" />
-									<path
-										d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
+									<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
 								</svg></i>
 						</a>
 					</div>
@@ -421,9 +420,7 @@ foreach ($permiso as $p) {
 							</a>
 						</div>
 					</div>
-					<button class="navbar-toggler navresponsive-toggler" type="button" data-toggle="collapse"
-						data-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4"
-						aria-expanded="false" aria-label="Toggle navigation">
+					<button class="navbar-toggler navresponsive-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4" aria-expanded="false" aria-label="Toggle navigation">
 						<i class="fe fe-more-vertical header-icons navbar-toggler-icon"></i>
 					</button><!-- Navresponsive closed -->
 				</div>
@@ -437,18 +434,13 @@ foreach ($permiso as $p) {
 				<div class="collapse navbar-collapse" id="navbarSupportedContent-4">
 					<div class="d-flex order-lg-2 ml-auto">
 						<div class="dropdown">
-							<a class="nav-link icon full-screen-link fullscreen-button" href=""><i
-									class="fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24"
-										viewBox="0 0 24 24" width="24">
+							<a class="nav-link icon full-screen-link fullscreen-button" href=""><i class="fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
 										<path d="M0 0h24v24H0V0z" fill="none" />
-										<path
-											d="M5 15H3v4c0 1.1.9 2 2 2h4v-2H5v-4zM5 5h4V3H5c-1.1 0-2 .9-2 2v4h2V5zm14-2h-4v2h4v4h2V5c0-1.1-.9-2-2-2zm0 16h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4zM12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+										<path d="M5 15H3v4c0 1.1.9 2 2 2h4v-2H5v-4zM5 5h4V3H5c-1.1 0-2 .9-2 2v4h2V5zm14-2h-4v2h4v4h2V5c0-1.1-.9-2-2-2zm0 16h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4zM12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
 									</svg></i>
-								<i class="exit-fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24"
-										viewBox="0 0 24 24" width="24">
+								<i class="exit-fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
 										<path d="M0 0h24v24H0V0z" fill="none" />
-										<path
-											d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
+										<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
 									</svg></i>
 							</a>
 						</div>
@@ -468,13 +460,10 @@ foreach ($permiso as $p) {
 							</div>
 						</div>
 						<div class="dropdown  header-settings">
-							<a href="#" class="nav-link icon" title="Seleccionar Empresa" class="nav-link icon"
-								data-toggle="modal" data-target="#modalempresa">
-								<i class="header-icons"><svg xmlns="http://www.w3.org/2000/svg" height="24"
-										viewBox="0 0 24 24" width="24">
+							<a href="#" class="nav-link icon" title="Seleccionar Empresa" class="nav-link icon" data-toggle="modal" data-target="#modalempresa">
+								<i class="header-icons"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
 										<path d="M0 0h24v24H0V0z" fill="none" />
-										<path
-											d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z" />
+										<path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z" />
 									</svg></i>
 							</a>
 						</div>
@@ -1027,8 +1016,7 @@ foreach ($permiso as $p) {
 		<!--End Footer-->
 
 		<!-- Modal Detalle Empresa-->
-		<div class="modal fade" id="modalempresa" data-backdrop="static" data-keyboard="false" tabindex="-1"
-			aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal fade" id="modalempresa" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 			<div class="modal-dialog modal-xl ">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -1041,8 +1029,7 @@ foreach ($permiso as $p) {
 						<div class="row">
 							<div class="col-md-12">
 								<div class="table-responsive">
-									<table class="table w-100 table-striped table-bordered text-nowrap w-100"
-										id="table-empresa">
+									<table class="table w-100 table-striped table-bordered text-nowrap w-100" id="table-empresa">
 										<thead class="text-center">
 											<tr>
 												<th class="wd-15p">RUT</th>
@@ -1220,7 +1207,7 @@ foreach ($permiso as $p) {
 	<script src="JsFunctions/main.js"></script>
 
 	<script>
-		$(document).ready(function () {
+		$(document).ready(function() {
 			mostrarEmpresa();
 		});
 	</script>

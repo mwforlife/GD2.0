@@ -697,45 +697,91 @@ foreach ($permiso as $p) {
 													</div>
 													<div class="tab-pane" id="tabCont3">
 														<!-- Row -->
+														<!-- Row -->
 														<div class="row">
-															<div class="col-md-12 table-responsive">
-																<table class="table w-100 table-hover " id="example3">
-																	<thead>
-																		<tr>
-																			<td>RUT</td>
-																			<td>Trabajador</td>
-																			<td>Fecha Notificación</td>
-																			<td>Causal de Hechos</td>
-																			<td>Comunicacion</td>
-																			<td>PDF</td>
-																			<td>CSV</td>
-																			<td class='text-center'>Eliminar</td>
-																		</tr>
-																	</thead>
-																	<tbody class="tablenotificacion">
-																		<?php
-																		$notifi = $c->listarnotificacionesempresa($_SESSION['CURRENT_ENTERPRISE']);
-																		if ($notifi != null) {
-																			foreach ($notifi as $notificacion) {
-																				echo "<tr>";
-																				echo "<td>" . $notificacion->getAcrediacion() . "</td>";
-																				echo "<td>" . $notificacion->getComunicacion() . "</td>";
-																				echo "<td>" . $notificacion->getFechanotificacion() . "</td>";
-																				echo "<td>" . $notificacion->getCausal() . "</td>";
-																				echo "<td>" . $notificacion->getComunicacion() . "</td>";
-																				echo "<td><a href='php/pdf/notificacion.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
-																				echo "<td><a href='php/pdf/notificacioncsv.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-file-excel-o'></i></a></td>";
-																				echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarnotificacion(" . $notificacion->getId() . ")'><i class='fa fa-trash'></i></button></td>";
-																				echo "</tr>";
+															<div class="col-lg-12">
+																<div class="card">
+																	<div class="card-body">
+																		<div aria-multiselectable="true"
+																			class="accordion" >
+																			<?php
+																			$lista = $c->listarlotescontrato($_SESSION['CURRENT_ENTERPRISE']);
+																			foreach ($lista as $object) {
+																				$lista1 = $c->listarlotestext4($object->getId());
+																				if (count($lista1) > 0) {
+																					$lotenobre = $object->getNombre_lote();
+																					//Borrar el resto del texto despues del _
+																					$pos = strpos($lotenobre, "_");
+																					if ($pos === false) {
+																					} else {
+																						$lotenobre = substr($lotenobre, 0, $pos);
+																					}
+																					?>
+																					<div class="card accordion-item">
+																						<div class="card-header accordion-header" id="headingOne-1" role="tab">
+																							<a aria-controls="collapseOne" aria-expanded="true" data-toggle="collapse" href="#collapse-<?php echo ($object->getId()+1)?>" class="accordion-toggle bg-primary text-white collapsed" data-parent="#accordion"><i class="fe fe-arrow-right mr-2"></i><?php echo $lotenobre; ?></a>
+																						</div>
+																						<div aria-labelledby="headingOne-1" class="collapse" data-parent="#accordion" id="collapse-<?php echo ($object->getId()+1)?>" role="tabpanel">
+																							<div class="card-body">
+																								<div class="row">
+																									<div class="col-md-12 text-right mb-2">
+																									<a target="_blank" href="php/report/impresionnotificaciones.php?id=<?php echo $object->getId(); ?>" class="btn btn-success"><i class="fa fa-print"></i> Imprimir Todo</a>
+																										<button onclick="eliminartodonotificaciones(<?php echo $object->getId(); ?>)" class="btn btn-danger"><i class="fa fa-trash-alt"></i> Eliminar Lote</button>
+																									</div>
+																								</div>
+																								<div class="table-responsive">
+																									<table
+																										class="table w-100 text-nowrap table-lote">
+																										<thead class="border-top">
+																											<tr>
+																												<th class="bg-transparent">
+																													RUT</th>
+																												<th class="bg-transparent">
+																													Nombre</th>
+																												<th class="bg-transparent">
+																													Fecha Notificacion</th>
+																												<th class="bg-transparent">
+																													Causal de Hechos</th>
+																												<th class="bg-transparent">
+																													Comunicacion</th>
+																												<th class="bg-transparent">
+																													PDF</th>
+																												<th class="bg-transparent">
+																													CSV</th>
+																												<th
+																													class="bg-transparent text-center">
+																													<i class="fa fa-print"></i> Agregar</th>
+																											</tr>
+																										</thead>
+																										<tbody>
+																											<?php
+																											foreach ($lista1 as $object1) {
+																												$fecha = $object1->getFecha_inicio();
+																												//Convertir fecha en formato dd-mm-YYYY
+																												$fecha = date("d-m-Y", strtotime($fecha));
+																												$fechatermino = $object1->getFecha_fin();
+																												//Convertir fecha en formato dd-mm-YYYY
+																												$fechatermino = date("d-m-Y", strtotime($fechatermino));
+
+																											}
+																											?>
+																										</tbody>
+																									</table>
+																								</div>
+																							</div>
+																						</div>
+																					</div>
+																					<?php
+																				}
 																			}
-																		}
-																		?>
-																	</tbody>
-
-																</table>
-
+																			?>
+																		</div>
+																	</div>
+																</div>
 															</div>
+
 														</div>
+														<!-- End Row -->
 														<!-- End Row -->
 													</div>
 													<div class="tab-pane" id="tabCont4">
