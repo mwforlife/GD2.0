@@ -95,10 +95,7 @@ if (isset($_SESSION['USER_ID']) && isset($_GET['id'])) {
     $trarut = str_replace(".", "", $trabajador->getRut());
 
     $spreadsheet = new Spreadsheet();
-    $writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($spreadsheet);
-    $writer->setDelimiter(';');
-    $writer->setEnclosure('"');
-    $writer->setLineEnding("\r\n");
+    $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xls($spreadsheet);
     $spreadsheet->getActiveSheet()->setCellValue('A1', 'rut_tr');
     $spreadsheet->getActiveSheet()->setCellValue('B1', 'dv_tr');
     $spreadsheet->getActiveSheet()->setCellValue('C1', 'nombres_tr');
@@ -124,7 +121,7 @@ if (isset($_SESSION['USER_ID']) && isset($_GET['id'])) {
     $spreadsheet->getActiveSheet()->setCellValue('C2', $trabajador->getNombre());
     $spreadsheet->getActiveSheet()->setCellValue('D2', $trabajador->getApellido1());
     $spreadsheet->getActiveSheet()->setCellValue('E2', $trabajador->getApellido2());
-    $spreadsheet->getActiveSheet()->setCellValue('F2', $comunatra->getCodigo());
+    $spreadsheet->getActiveSheet()->setCellValue('F2', $comunatra->getCodigox());
     $spreadsheet->getActiveSheet()->setCellValue('G2', $sexo);
     $spreadsheet->getActiveSheet()->setCellValue('H2', $fechanotificacion);
     $spreadsheet->getActiveSheet()->setCellValue('I2', $comunicacion);
@@ -141,7 +138,7 @@ if (isset($_SESSION['USER_ID']) && isset($_GET['id'])) {
 
     //Descargar por navegador
     header('Content-Type: application/vnd.ms-excel');
-    header('Content-Disposition: attachment;filename="notificaciones'.$trarut.'.csv"');
+    header('Content-Disposition: attachment;filename="notificaciones'.$trarut.'.xls"');
     header('Cache-Control: max-age=0');
     $writer->save('php://output');
 }

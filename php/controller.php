@@ -56,13 +56,13 @@ require 'Class/Haber.php';
 class Controller
 {
     private $host = "localhost";
-    /*Variables*/
+    /*Variables
     private $user = "root";
     private $pass = "";
     private $bd = "gestordocumentos";
 
 
-    /*Variables BD Remota
+    /*Variables BD Remota*/
     private $user = 'kaiserte_admin';
     private $pass = 'Kaiser2022$';
     private $bd = 'kaiserte_gd';

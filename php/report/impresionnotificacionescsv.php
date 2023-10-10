@@ -11,10 +11,7 @@ if (isset($_GET['id'])) {
     $lista1 = $c->listarlotestext4($lote);
     if (count($lista1) > 0) {
         $spreadsheet = new Spreadsheet();
-        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($spreadsheet);
-        $writer->setDelimiter(';');
-        $writer->setEnclosure('"');
-        $writer->setLineEnding("\r\n");
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xls($spreadsheet);
         $spreadsheet->getActiveSheet()->setCellValue('A1', 'rut_tr');
         $spreadsheet->getActiveSheet()->setCellValue('B1', 'dv_tr');
         $spreadsheet->getActiveSheet()->setCellValue('C1', 'nombres_tr');
@@ -129,7 +126,7 @@ if (isset($_GET['id'])) {
             $spreadsheet->getActiveSheet()->setCellValue('C'.$pos, $trabajador->getNombre());
             $spreadsheet->getActiveSheet()->setCellValue('D'.$pos, $trabajador->getApellido1());
             $spreadsheet->getActiveSheet()->setCellValue('E'.$pos, $trabajador->getApellido2());
-            $spreadsheet->getActiveSheet()->setCellValue('F'.$pos, $comunatra->getCodigo());
+            $spreadsheet->getActiveSheet()->setCellValue('F'.$pos, $comunatra->getCodigox());
             $spreadsheet->getActiveSheet()->setCellValue('G'.$pos, $sexo);
             $spreadsheet->getActiveSheet()->setCellValue('H'.$pos, $fechanotificacion);
             $spreadsheet->getActiveSheet()->setCellValue('I'.$pos, $comunicacion);
@@ -149,7 +146,7 @@ if (isset($_GET['id'])) {
         $fecha = date("d-m-Y");
         //Descargar por navegador
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="notificaciones' . $fecha . '.csv"');
+        header('Content-Disposition: attachment;filename="notificaciones' . $fecha . '.xls"');
         header('Cache-Control: max-age=0');
         $writer->save('php://output');
     } else {
