@@ -62,6 +62,8 @@ create table comunas(
     provincia int not null references provincias(id)
 );
 
+alter table comunas add column codigox varchar(20) not null default '1' after codigoprevired;
+
 create table ciudades (
     id int not null auto_increment primary key,
     codigo varchar(20) not null,

@@ -41,6 +41,7 @@ function Editar(id){
 function Actualizar(id){
     $("#global-loader").hide();
     var codigo = $("#codigo").val();
+    var codigoxedit = $("#codigoxedit").val();
     var codigoPrevired = $("#codigoPrevired").val();
     var nombre = $("#nombre").val();
     var provincia = $("#provincia").val();
@@ -48,7 +49,7 @@ function Actualizar(id){
     $.ajax({
         type: "POST",
         url: "php/update/comunas.php",
-        data: {id: id, codigo: codigo, codigoPrevired: codigoPrevired, nombre: nombre, provincia: provincia},
+        data: {id: id, codigo: codigo, codigoPrevired: codigoPrevired, codigoxedit:codigoxedit, nombre: nombre, provincia: provincia},
         success: function(data){
             if(data == 1 || data == "1"){
                 $("#global-loader").hide();

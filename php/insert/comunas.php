@@ -11,9 +11,10 @@ if (!isset($_SESSION['USER_ID'])) {
 	}
 }
 
-if(isset($_POST['Codigo']) && isset($_POST['CodigoPrevired']) && isset($_POST['Nombre']) && isset($_POST['provincia'])){
+if(isset($_POST['Codigo']) && isset($_POST['CodigoPrevired']) && isset($_POST['codigox']) && isset($_POST['Nombre']) && isset($_POST['provincia'])){
     $codigo = $_POST['Codigo'];
     $codigoPrevired = $_POST['CodigoPrevired'];
+    $codigox = $_POST['codigox'];
     $nombre = $_POST['Nombre'];
     $nombre = strtoupper($nombre);
     $region = $_POST['Region'];
@@ -22,7 +23,7 @@ if(isset($_POST['Codigo']) && isset($_POST['CodigoPrevired']) && isset($_POST['N
         echo "No hay Provincias Seleccionada";
         return;
     }
-    $result = $c->registrarcomunas($codigo,$codigoPrevired, $nombre, $region, $provincia);
+    $result = $c->registrarcomunas($codigo,$codigoPrevired,$codigox, $nombre, $region, $provincia);
 
     if($result == true){
         echo 1;

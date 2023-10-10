@@ -456,6 +456,12 @@ foreach ($permiso as $p) {
 											</div>
 											<div class="col-lg-6">
 												<div class="form-group has-success mg-b-0">
+													<label>Codigo (xls Depidos)</label>
+													<input class="form-control" id="codigox" name="codigox" placeholder="Codigo (XLS Despidos)" required="" type="text" value="">
+												</div>
+											</div>
+											<div class="col-lg-6">
+												<div class="form-group has-success mg-b-0">
 													<label>Nombre</label>
 													<input class="form-control" id="Nombre" name="Nombre" placeholder="Nombre Comuna" required="" type="text" value="">
 												</div>
@@ -504,6 +510,7 @@ foreach ($permiso as $p) {
 													<tr>
 														<th class="bg-transparent">Codigo (DT)</th>
 														<th class="bg-transparent">Codigo (PREVIRED)</th>
+														<th class="bg-transparent">Codigo (XLS Despidos)</th>
 														<th class="bg-transparent">Comuna</th>
 														<th class="bg-transparent">Provincia</th>
 														<th class="bg-transparent text-center">Accion</th>
@@ -517,6 +524,7 @@ foreach ($permiso as $p) {
 															echo "<tr>
 																		<td>" . $object->getCodigo() . "</td>
 																		<td>" . $object->getCodigoPrevired() . "</td>
+																		<td>" . $object->getCodigox() . "</td>
 																		<td>" . $object->getNombre() . "</td>
 																		<td>" . $object->getProvincia() . "</td>
 																		<td class='text-center'>

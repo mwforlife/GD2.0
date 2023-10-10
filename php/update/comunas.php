@@ -13,12 +13,13 @@ if (!isset($_SESSION['USER_ID'])) {
 $id = $_POST['id'];
 $codigo = $_POST['codigo'];
 $codigoPrevired = $_POST['codigoPrevired'];
+$codigox = $_POST['codigoxedit'];
 $nombre = $_POST['nombre'];
 $nombre = strtoupper($nombre);
 $nombre = $c->escapeString($nombre);
 $provincia = $_POST['provincia'];
 
-$result = $c->actualizarcomuna($id, $codigo, $codigoPrevired, $nombre, $provincia);
+$result = $c->actualizarcomuna($id, $codigo, $codigoPrevired,$codigox, $nombre, $provincia);
 
 if($result == true){
     echo 1;

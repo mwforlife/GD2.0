@@ -65,6 +65,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid'])  && isset($_P
         $regiontra = $regiontra->getNombre();
 
         $swap_var = array(
+            "{CEL_COMUNA}" => $empresa->getComuna(),
             "{RUT_EMPRESA}" => $empresa->getRut(),
             "{NOMBRE_EMPRESA}" => $empresa->getRazonSocial(),
             "{REPRESENTANTE_LEGAL}" => $repre->getNombre() . " " . $repre->getApellido1() . " " . $repre->getApellido2(),
@@ -90,7 +91,6 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid'])  && isset($_P
             "{DISCAPACIDAD}" => $trabajador->getDiscapacidad(),
             "{PENSION_INVALIDEZ}" => $trabajador->getPension(),
             "{CODIGO_ACTIVIDAD}" => $codigo,
-            "{FECHA_GENERACION}" => $fechageneracion,
             "{SEXO}" => $trabajador->getSexo(),
             "{NACIONALIDAD}" => $trabajador->getNacionalidad(),
             "{ESTADO_CIVIL}" => $trabajador->getCivil(),

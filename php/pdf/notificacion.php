@@ -131,6 +131,7 @@ if (isset($_SESSION['USER_ID']) && isset($_GET['id'])) {
         
     
     $swap_var = array(
+        "{CEL_COMUNA}" => $comuna,
         "{FECHA_FINIQUITO}" => $fechafiniquito,
         "{NOMBRE_EMPRESA}" => $empresa->getRazonSocial(),
         "{RUT_EMPRESA}" => $empresa->getRut(),

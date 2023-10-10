@@ -244,3 +244,260 @@ function eliminartodofiniquito(id){
     });
 }
 
+//Notificaciones Masivas
+var cartnot = new Array();
+
+//addcart2(3," . $notificacion->getId() . ",\"" . $notificacion->getRegistro() . "\",\"" . $notificacion->getFechanotificacion() . "\",\"" . $notificacion->getCausal() . "\",\"" . $notificacion->getComunicacion() . "\")
+function addcart2(tipo, id, trabajador, fechanotificacion, causal, comunicacion){
+    var obj = new Object();
+    obj.tipo = tipo;
+    obj.id = id;
+    obj.trabajador = trabajador;
+    obj.fechanotificacion = fechanotificacion;
+    obj.causal = causal;
+    obj.comunicacion = comunicacion;
+    //Validar si existe el objeto
+    if(validarobjeto2(id)){
+        ToastifyError('El objeto ya existe en la lista');
+        return;
+    }
+    cartnot.push(obj);
+    ToastifySuccess('Objeto agregado a la lista');
+    console.log(cartnot);
+    listarobjectos2();
+}
+
+function validarobjeto2(id){
+    var existe = false;
+    for (var i = 0; i < cartnot.length; i++) {
+        if(cartnot[i].id == id){
+            existe = true;
+        }
+    }
+    return existe;
+}
+
+function listarobjectos2(){
+    if(cartnot.length > 0){
+    var html = '';
+    html += "<div class='col-md-12'>";
+    html += "<div class='card'>";
+    html += "<div class='card-header d-flex justify-content-between'>";
+    html += "<h3 class='card-title'>Notificaciones a imprimir</h3>";
+    html += "<div>";
+    html += "<button class='btn btn-outline-danger' onclick='cartnot = []; listarobjectos2();'><i class='fa fa-trash'></i>Limpiar lista </button>";
+    html += "<button class='ml-2 btn btn-outline-success' onclick='imprimir2();'><i class='fa fa-print'></i>Imprimir </button>";
+    html += "</div>";
+    html += "</div>";
+    html += "<div class='card-body'>";
+    html += "<table class='table table-bordered'>";
+    html += "<thead>";
+    html += "<tr>";
+    html += "<th>Tipo</th>";
+    html += "<th>Trabajador</th>";
+    html += "<th>Fecha Notificacion</th>";
+    html += "<th>Comunicacion</th>";
+    html += "<th>Eliminar</th>";
+    html += "</tr>";
+    html += "</thead>";
+    html += "<tbody>";
+    for (var i = 0; i < cartnot.length; i++) {
+        html += '<tr>';
+        if(cartnot[i].tipo == 3){
+            html += '<td>Notificación</td>';
+        }
+        html += '<td>'+cartnot[i].trabajador+'</td>';
+        html += '<td>'+cartnot[i].fechanotificacion+'</td>';
+        html += '<td>'+cartnot[i].comunicacion+'</td>';
+        html += '<td><button class="btn btn-outline-danger" onclick="eliminarobjeto2('+i+')"><i class="fa fa-trash"></i></button></td>';
+        html += '</tr>';
+    }
+    html += "</tbody>";
+    html += "</table>";
+    html += "</div>";
+    html += "</div>";
+    html += "</div>";
+    $('.objetos2').html(html);
+    }else{
+        $('.objetos2').html('');
+    }
+}
+
+function eliminarobjeto2(id){
+    cartnot.splice(id, 1);
+    listarobjectos2();
+}
+
+function imprimir2(){
+    if(cartnot.length > 0){
+        window.open('php/report/imprimir2.php?cart='+JSON.stringify(cartnot), '_blank');
+    }
+}
+
+function eliminartodonotificacion(id){
+    swal.fire({
+        title: '¿Estas seguro?',
+        text: "¡No podrás revertir esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText:'Si, Eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result)=>{
+        if(result.value){
+            $.ajax({
+                url: 'php/eliminar/masivonotificacion.php',
+                type: 'POST',
+                data: {id: id,},
+                success: function(data){
+                    try {
+                        data = JSON.parse(data);
+                        if(data.status == true || data.status.trim() == 'true'){
+                            ToastifySuccess(data.message);
+                            setTimeout(function(){
+                                location.reload();
+                            }, 2000);
+                        }else{
+                            ToastifyError(data.message);
+                        }
+                    } catch (error) {
+                        ToastifyError('Error al eliminar');                        
+                    }
+                }
+            })
+        }
+    });
+}
+
+//Documentos Masivos
+var cartdoc = new Array();
+
+//addcart3(4," . $object1->getId() . ",\"" . $object1->getEmpresa() . "\",\"" . $object1->getTrabajador() . "\",\"" . $object1->getFechageneracion() . "\",\"" . $object1->getTipodocumento() . "\",\"" . $object1->getDocumento() . "\")
+
+function addcart3(tipo, id, empresa, trabajador, fechageneracion, tipodocumento, documento){
+    var obj = new Object();
+    obj.tipo = tipo;
+    obj.id = id;
+    obj.empresa = empresa;
+    obj.trabajador = trabajador;
+    obj.fechageneracion = fechageneracion;
+    obj.tipodocumento = tipodocumento;
+    obj.documento = documento;
+    //Validar si existe el objeto
+    if(validarobjeto3(id)){
+        ToastifyError('El objeto ya existe en la lista');
+        return;
+    }
+    cartdoc.push(obj);
+    ToastifySuccess('Objeto agregado a la lista');
+    console.log(cartdoc);
+    listarobjectos3();
+}
+
+function validarobjeto3(id){
+    var existe = false;
+    for (var i = 0; i < cartdoc.length; i++) {
+        if(cartdoc[i].id == id){
+            existe = true;
+        }
+    }
+    return existe;
+}
+
+function listarobjectos3(){
+    if(cartdoc.length > 0){
+    var html = '';
+    html += "<div class='col-md-12'>";
+    html += "<div class='card'>";
+    html += "<div class='card-header d-flex justify-content-between'>";
+    html += "<h3 class='card-title'>Documentos a imprimir</h3>";
+    html += "<div>";
+    html += "<button class='btn btn-outline-danger' onclick='cartdoc = []; listarobjectos3();'><i class='fa fa-trash'></i>Limpiar lista </button>";
+    html += "<button class='ml-2 btn btn-outline-success' onclick='imprimir3();'><i class='fa fa-print'></i>Imprimir </button>";
+    html += "</div>";
+    html += "</div>";
+    html += "<div class='card-body'>";
+    html += "<table class='table table-bordered'>";
+    html += "<thead>";
+    html += "<tr>";
+    html += "<th>Tipo</th>";
+    html += "<th>RUT</th>";
+    html += "<th>Trabajador</th>";
+    html += "<th>Tipo Documento</th>";
+    html += "<th>Fecha Generacion</th>";
+    html += "<th>Eliminar</th>";
+    html += "</tr>";
+    html += "</thead>";
+    html += "<tbody>";
+    for (var i = 0; i < cartdoc.length; i++) {
+        html += '<tr>';
+        if(cartdoc[i].tipo == 4){
+            html += '<td>Documento</td>';
+        }
+        html += '<td>'+cartdoc[i].empresa+'</td>';
+        html += '<td>'+cartdoc[i].trabajador+'</td>';
+        html += '<td>'+cartdoc[i].tipodocumento+'</td>';
+        html += '<td>'+cartdoc[i].fechageneracion+'</td>';
+        html += '<td><button class="btn btn-outline-danger" onclick="eliminarobjeto3('+i+')"><i class="fa fa-trash"></i></button></td>';
+        html += '</tr>';
+    }
+    html += "</tbody>";
+    html += "</table>";
+    html += "</div>";
+    html += "</div>";
+    html += "</div>";
+    $('.objetos3').html(html);
+    }
+    else{
+        $('.objetos3').html('');
+    }
+}
+
+function eliminarobjeto3(id){
+    cartdoc.splice(id, 1);
+    listarobjectos3();
+}
+
+function imprimir3(){
+    if(cartdoc.length > 0){
+        window.open('php/report/imprimir3.php?cart='+JSON.stringify(cartdoc), '_blank');
+    }
+}
+
+function eliminartododocumento(id){
+    swal.fire({
+        title: '¿Estas seguro?',
+        text: "¡No podrás revertir esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText:'Si, Eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result)=>{
+        if(result.value){
+            $.ajax({
+                url: 'php/eliminar/masivodocumento.php',
+                type: 'POST',
+                data: {id: id,},
+                success: function(data){
+                    try {
+                        data = JSON.parse(data);
+                        if(data.status == true || data.status.trim() == 'true'){
+                            ToastifySuccess(data.message);
+                            setTimeout(function(){
+                                location.reload();
+                            }, 2000);
+                        }else{
+                            ToastifyError(data.message);
+                        }
+                    } catch (error) {
+                        ToastifyError('Error al eliminar');                        
+                    }
+                }
+            })
+        }
+    });
+}
+

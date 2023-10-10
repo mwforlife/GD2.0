@@ -56,13 +56,13 @@ require 'Class/Haber.php';
 class Controller
 {
     private $host = "localhost";
-    /*Variables
+    /*Variables*/
     private $user = "root";
     private $pass = "";
     private $bd = "gestordocumentos";
 
 
-    /*Variables BD Remota*/
+    /*Variables BD Remota
     private $user = 'kaiserte_admin';
     private $pass = 'Kaiser2022$';
     private $bd = 'kaiserte_gd';
@@ -297,10 +297,10 @@ class Controller
     }
 
     //Registar Comunas
-    public function registrarcomunas($codigo, $codigoPrevired, $nombre, $region, $provincia)
+    public function registrarcomunas($codigo, $codigoPrevired,$codigox, $nombre, $region, $provincia)
     {
         $this->conexion();
-        $sql = "insert into comunas values (null, '$codigo', '$codigoPrevired', '$nombre', $region, $provincia)";
+        $sql = "insert into comunas values (null, '$codigo', '$codigoPrevired','$codigox', '$nombre', $region, $provincia)";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return json_encode($result);
@@ -1784,9 +1784,10 @@ class Controller
             $id = $rs['id'];
             $codigo = $rs['codigo'];
             $codigoPrevired = $rs['codigoprevired'];
+            $codigox = $rs['codigox'];
             $nombre = $rs['nombre'];
             $provincia = $rs['provincia'];
-            $comuna = new Comunas($id, $codigo, $codigoPrevired, $nombre, $id, $provincia);
+            $comuna = new Comunas($id, $codigo, $codigoPrevired,$codigox, $nombre, $id, $provincia);
             $lista[] = $comuna;
         }
         $this->desconectar();
@@ -1804,9 +1805,10 @@ class Controller
             $id = $rs['id'];
             $codigo = $rs['codigo'];
             $codigoPrevired = $rs['codigoprevired'];
+            $codigox = $rs['codigox'];
             $nombre = $rs['nombre'];
             $provincia = $rs['provincia'];
-            $comuna = new Comunas($id, $codigo, $codigoPrevired, $nombre, $id, $provincia);
+            $comuna = new Comunas($id, $codigo, $codigoPrevired,$codigox, $nombre, $id, $provincia);
             $lista[] = $comuna;
         }
         $this->desconectar();
@@ -1824,9 +1826,10 @@ class Controller
             $id = $rs['id'];
             $codigo = $rs['codigo'];
             $codigoPrevired = $rs['codigoprevired'];
+            $codigox = $rs['codigox'];
             $nombre = $rs['nombre'];
             $provincia = $rs['provincia'];
-            $comuna = new Comunas($id, $codigo, $codigoPrevired, $nombre, $id, $provincia);
+            $comuna = new Comunas($id, $codigo, $codigoPrevired,$codigox, $nombre, $id, $provincia);
             $lista[] = $comuna;
         }
         $this->desconectar();
@@ -1837,16 +1840,17 @@ class Controller
     public function listarcomunas1($id)
     {
         $this->conexion();
-        $sql = "select comunas.id as id, comunas.codigo as codigo, comunas.codigoprevired as codigoprevired, comunas.nombre as nombre , provincias.nombre as provincia from comunas, provincias where comunas.provincia = provincias.id and comunas.region = $id";
+        $sql = "select comunas.id as id, comunas.codigo as codigo, comunas.codigoprevired as codigoprevired, comunas.codigox as codigox, comunas.nombre as nombre , provincias.nombre as provincia from comunas, provincias where comunas.provincia = provincias.id and comunas.region = $id";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $codigo = $rs['codigo'];
             $codigoPrevired = $rs['codigoprevired'];
+            $codigox = $rs['codigox'];
             $nombre = $rs['nombre'];
             $provincia = $rs['provincia'];
-            $comuna = new Comunas($id, $codigo, $codigoPrevired, $nombre, $id, $provincia);
+            $comuna = new Comunas($id, $codigo, $codigoPrevired,$codigox, $nombre, $id, $provincia);
             $lista[] = $comuna;
         }
         $this->desconectar();
@@ -2470,10 +2474,10 @@ class Controller
     }
 
     //Actualizar Comuna
-    public function actualizarcomuna($id, $codigo, $codigoPrevired, $nombre, $provincia)
+    public function actualizarcomuna($id, $codigo, $codigoPrevired,$codigox, $nombre, $provincia)
     {
         $this->conexion();
-        $sql = "update comunas set codigo='$codigo', codigoprevired='$codigoPrevired', nombre='$nombre', provincia=$provincia where id=$id";
+        $sql = "update comunas set codigo='$codigo', codigoprevired='$codigoPrevired', codigox='$codigox', nombre='$nombre', provincia=$provincia where id=$id";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return $result;
@@ -3014,10 +3018,11 @@ class Controller
             $id = $rs['id'];
             $codigo = $rs['codigo'];
             $codigoprevired = $rs['codigoprevired'];
+            $codigox = $rs['codigox'];
             $nombre = $rs['nombre'];
             $region = $rs['region'];
             $provincia = $rs['provincia'];
-            $comuna = new Comunas($id, $codigo, $codigoprevired, $nombre, $region, $provincia);
+            $comuna = new Comunas($id, $codigo, $codigoprevired, $codigox, $nombre, $region, $provincia);
             $this->desconectar();
             return $comuna;
         } else {
@@ -4654,7 +4659,7 @@ class Controller
             $codigo = $rs['codigo'];
             $codigoPrevired = $rs['codigoprevired'];
             $nombre = $rs['nombre'];
-            $comuna = new Comunas($id, $codigo, $codigoPrevired, $nombre, $id, $id);
+            $comuna = new Comunas($id, $codigo, $codigoPrevired,$id, $nombre, $id, $id);
             $lista[] = $comuna;
         }
         $this->desconectar();
@@ -4672,7 +4677,7 @@ class Controller
             $id = $rs['id'];
             $comunaid = $rs['comunaid'];
             $comuna = $rs['comuna'];
-            $comuna = new Comunas($id, $comunaid, $comunaid, $comuna, $id, $id);
+            $comuna = new Comunas($id, $comunaid, $comunaid,$comunaid, $comuna, $id, $id);
             $lista[] = $comuna;
         }
         $this->desconectar();
@@ -5492,6 +5497,35 @@ class Controller
         $this->desconectar();
         return $lista;
     }
+
+    
+     //Listar Lotes con contratos Inactivos
+     function listarlotestext4($lote)
+     {
+         $this->conexion();
+         $sql = "select distinct detallelotes.contrato, detallelotes.id as id, finiquito.id as nombre, contratos.tipocontrato as tipocontrato, finiquito.fechainicio as fechainicio,finiquito.fechatermino as fechatermino, trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, notificaciones.id as notifid, fechanotificacion, finiquito, notificaciones.tipodocumento as tipodocumento, causal, causalhechos, cotizacionprevisional, comunicacion.nombre as comunicacion, acreditacion, comuna,texto from comunicacion, detallelotes, lotes, contratos, finiquito,trabajadores, notificaciones where detallelotes.lotes = lotes.id and detallelotes.contrato = contratos.id and finiquito.contrato=contratos.id and notificaciones.finiquito=finiquito.id and contratos.trabajador = trabajadores.id and contratos.estado = 2 and lotes=$lote and comunicacion.id = notificaciones.comunicacion order by lotes.nombre asc";
+         $result = $this->mi->query($sql);
+         $lista = array();
+         while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['notifid'];
+            $fechanotificacion = $rs['fechanotificacion'];
+            $finiquito = $rs['finiquito'];
+            $tipodocumento = $rs['tipodocumento'];
+            $causal = $rs['causal'];
+            $causalhechos = $rs['causalhechos'];
+            $cotizacionprevisional = $rs['cotizacionprevisional'];
+            $comunicacion = $rs['comunicacion'];
+            $acreditacion = $rs['acreditacion'];
+            $comuna = $rs['comuna'];
+            $texto = $rs['texto'];
+            $register_at = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
+            $n = new Notificacion($id, $fechanotificacion, $finiquito, $tipodocumento, $causal, $causalhechos, $cotizacionprevisional, $comunicacion, $acreditacion, $comuna, $texto, $register_at);
+            $lista[] = $n;
+         }
+         $this->desconectar();
+         return $lista;
+     }
+
     //Listar Notificaciones
     function listarnotificacionestext($trabajador)
     {
@@ -5578,12 +5612,12 @@ class Controller
     {
         //copiar el texto que esta dentro de los parentesis
 
-        $parte1 = explode('(', $texto);
-        $parte2 = explode(')', $parte1[1]);
+        //$parte1 = explode('(', $texto);
+        //$parte2 = explode(')', $parte1[1]);
 
-        $parentesis = $parte2[0];
+       //$parentesis = $parte2[0];
 
-        return $parentesis;
+        return $texto;
     }
 
     //eliminarnotificacion
@@ -5740,31 +5774,6 @@ class Controller
          return $lista;
      }
 
-     //Listar Lotes con contratos Inactivos
-     function listarlotestext4($lote)
-     {
-         $this->conexion();
-         $sql = "select distinct detallelotes.contrato, detallelotes.id as id, finiquito.id as nombre, contratos.tipocontrato as tipocontrato, finiquito.fechainicio as fechainicio,finiquito.fechatermino as fechatermino, trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2 from detallelotes, lotes, contratos, finiquito,trabajadores where detallelotes.lotes = lotes.id and detallelotes.contrato = contratos.id and finiquito.contrato=contratos.id and contratos.trabajador = trabajadores.id and contratos.estado = 2 and lotes=$lote order by lotes.nombre asc";
-         $result = $this->mi->query($sql);
-         $lista = array();
-         while ($rs = mysqli_fetch_array($result)) {
-             $id = $rs['id'];
-             $contrato = $rs['tipocontrato'];
-             if($contrato=="Contrato a Plazo Fijo"){
-                 $contrato = "Plazo Fijo";
-             }else if($contrato=="Contrato Indefinido"){
-                 $contrato = "Indefinido";
-             }
-             $lote = $rs['nombre'];
-             $nombre = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'] ;
-             $fechainicio = $rs['fechainicio'];
-             $fechatermino = $rs['fechatermino'];
-             $l = new Lotes_contrato($id, $contrato, $nombre, $lote, $fechainicio, $fechatermino);
-             $lista[] = $l;
-         }
-         $this->desconectar();
-         return $lista;
-     }
 
     function validarloteids($id, $contrato){
         $this->conexion();
@@ -6270,6 +6279,30 @@ class Controller
          $this->desconectar();
          return $lista;
      }
+
+      //Listar Lotes con contratos Inactivos
+      function listarlotestext5($lote)
+      {
+          $this->conexion();
+          $sql = "select distinct detallelotes.contrato, detallelotes.id as id, documentos.id as id, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, documentos.empresa as empresa, tipodocumento.nombre as tipodocumento, fechageneracion, documentos.documento as documento, documentos.register_at as register_at from detallelotes, trabajadores,documentos, tipodocumento, contratos where documentos.tipodocumento = tipodocumento.id and lotes=$lote and trabajadores.id = documentos.trabajador and contratos.trabajador = trabajadores.id and contratos.estado = 1 and detallelotes.contrato = contratos.id";
+          $result = $this->mi->query($sql);
+          $lista = array();
+          while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $trabajador = $rs['nombre'] . " " . $rs['apellido'];
+            $empresa = $rs['rut'];
+            $tipodocumento = $rs['tipodocumento'];
+            $fechageneracion = $rs['fechageneracion'];
+            //cambiar formato de fecha a dd/mm/yyyy
+            $fechageneracion = date("d/m/Y", strtotime($fechageneracion));
+            $documento = $rs['documento'];
+            $register_at = $rs['register_at'];
+            $l = new Documento($id, $trabajador, $empresa, $tipodocumento, $fechageneracion, $documento, $register_at);
+            $lista[] = $l;
+          }
+          $this->desconectar();
+          return $lista;
+      }
 
     //Registrar Anotacion
     public function registraranotacion($trabajador, $empresa, $tipo, $anotacion)

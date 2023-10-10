@@ -3,18 +3,21 @@ class Comunas{
     private $id;
     private $codigo;
     private $codigoPrevired;
+    private $codigox;
     private $nombre;
     private $region;
     private $provincia;
 
-    public function Comunas($id, $codigo, $codigoPrevired, $nombre, $region, $provincia){
+    public function __construct($id, $codigo, $codigoPrevired,$codigox, $nombre, $region, $provincia){
         $this->id = $id;
         $this->codigo = $codigo;
         $this->codigoPrevired = $codigoPrevired;
+        $this->codigox = $codigox;
         $this->nombre = $nombre;
         $this->region = $region;
         $this->provincia = $provincia;
     }
+
 
     public function getId(){
         return $this->id;
@@ -31,6 +34,7 @@ class Comunas{
     public function setCodigo($codigo){
         $this->codigo = $codigo;
     }
+    
 
     public function getCodigoPrevired(){
         return $this->codigoPrevired;
@@ -38,6 +42,14 @@ class Comunas{
 
     public function setCodigoPrevired($codigoPrevired){
         $this->codigoPrevired = $codigoPrevired;
+    }
+
+    public function getCodigox(){
+        return $this->codigox;
+    }
+
+    public function setCodigox($codigox){
+        $this->codigox = $codigox;
     }
 
     public function getNombre(){

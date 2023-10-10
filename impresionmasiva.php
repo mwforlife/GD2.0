@@ -428,7 +428,7 @@ foreach ($permiso as $p) {
 							</ol>
 						</div>
 					</div>
-					
+
 					<!-- Row -->
 					<div class="row d-none">
 						<div class="col-lg-12">
@@ -436,36 +436,60 @@ foreach ($permiso as $p) {
 								<div class="card-body">
 									<div>
 										<h6 class="main-content-label mb-1">Basic Style Accordion</h6>
-										<p class="text-muted card-sub-title">The default collapse behavior to create an accordion.</p>
+										<p class="text-muted card-sub-title">The default collapse behavior to create an
+											accordion.</p>
 									</div>
 									<div aria-multiselectable="true" class="accordion" id="accordion" role="tablist">
 										<div class="card">
 											<div class="card-header" id="headingOne" role="tab">
-												<a aria-controls="collapseOne" aria-expanded="true" data-toggle="collapse" href="#collapseOne">Making a Beautiful CSS3 Button Set</a>
+												<a aria-controls="collapseOne" aria-expanded="true"
+													data-toggle="collapse" href="#collapseOne">Making a Beautiful CSS3
+													Button Set</a>
 											</div>
-											<div aria-labelledby="headingOne" class="collapse show" data-parent="#accordion" id="collapseOne" role="tabpanel">
+											<div aria-labelledby="headingOne" class="collapse show"
+												data-parent="#accordion" id="collapseOne" role="tabpanel">
 												<div class="card-body">
-													A concisely coded CSS3 button set increases usability across the board, gives you a ton of options, and keeps all the code involved to an absolute minimum. Anim pariatur cliche reprehEnderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch.
+													A concisely coded CSS3 button set increases usability across the
+													board, gives you a ton of options, and keeps all the code involved
+													to an absolute minimum. Anim pariatur cliche reprehEnderit, enim
+													eiusmod high life accusamus terry richardson ad squid. 3 wolf moon
+													officia aute, non cupidatat skateboard dolor brunch.
 												</div>
 											</div>
 										</div>
 										<div class="card">
 											<div class="card-header" id="headingTwo" role="tab">
-												<a aria-controls="collapseTwo" aria-expanded="false" class="collapsed" data-toggle="collapse" href="#collapseTwo">Horizontal Navigation Menu Fold Animation</a>
+												<a aria-controls="collapseTwo" aria-expanded="false" class="collapsed"
+													data-toggle="collapse" href="#collapseTwo">Horizontal Navigation
+													Menu Fold Animation</a>
 											</div>
-											<div aria-labelledby="headingTwo" class="collapse" data-parent="#accordion" id="collapseTwo" role="tabpanel">
+											<div aria-labelledby="headingTwo" class="collapse" data-parent="#accordion"
+												id="collapseTwo" role="tabpanel">
 												<div class="card-body">
-													Anim pariatur cliche reprehEnderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumEnda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore.
+													Anim pariatur cliche reprehEnderit, enim eiusmod high life accusamus
+													terry richardson ad squid. 3 wolf moon officia aute, non cupidatat
+													skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
+													Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid
+													single-origin coffee nulla assumEnda shoreditch et. Nihil anim
+													keffiyeh helvetica, craft beer labore.
 												</div>
 											</div>
 										</div>
 										<div class="card">
 											<div class="card-header" id="headingThree" role="tab">
-												<a aria-controls="collapseThree" aria-expanded="false" class="collapsed" data-toggle="collapse" href="#collapseThree">Creating CSS3 Button with Rounded Corners</a>
+												<a aria-controls="collapseThree" aria-expanded="false" class="collapsed"
+													data-toggle="collapse" href="#collapseThree">Creating CSS3 Button
+													with Rounded Corners</a>
 											</div>
-											<div aria-labelledby="headingThree" class="collapse" data-parent="#accordion" id="collapseThree" role="tabpanel">
+											<div aria-labelledby="headingThree" class="collapse"
+												data-parent="#accordion" id="collapseThree" role="tabpanel">
 												<div class="card-body">
-													Anim pariatur cliche reprehEnderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumEnda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore.
+													Anim pariatur cliche reprehEnderit, enim eiusmod high life accusamus
+													terry richardson ad squid. 3 wolf moon officia aute, non cupidatat
+													skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
+													Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid
+													single-origin coffee nulla assumEnda shoreditch et. Nihil anim
+													keffiyeh helvetica, craft beer labore.
 												</div>
 											</div><!-- collapse -->
 										</div>
@@ -503,7 +527,7 @@ foreach ($permiso as $p) {
 																<div class="card">
 																	<div class="card-body">
 																		<div aria-multiselectable="true"
-																			class="accordion" >
+																			class="accordion">
 																			<?php
 																			$lista = $c->listarlotescontrato($_SESSION['CURRENT_ENTERPRISE']);
 																			foreach ($lista as $object) {
@@ -519,32 +543,66 @@ foreach ($permiso as $p) {
 
 																					?>
 																					<div class="card accordion-item">
-																						<div class="card-header accordion-header" id="headingOne-1" role="tab">
-																							<a aria-controls="collapseOne" aria-expanded="true" data-toggle="collapse" href="#collapse-<?php echo $object->getId()?>" class="accordion-toggle bg-primary text-white collapsed" data-parent="#accordion"><i class="fe fe-arrow-right mr-2"></i><?php echo $lotenobre; ?></a>
+																						<div class="card-header accordion-header"
+																							id="headingOne-1" role="tab">
+																							<a aria-controls="collapseOne"
+																								aria-expanded="true"
+																								data-toggle="collapse"
+																								href="#collapse-<?php echo $object->getId() ?>"
+																								class="accordion-toggle bg-primary text-white collapsed"
+																								data-parent="#accordion"><i
+																									class="fe fe-arrow-right mr-2"></i>
+																								<?php echo $lotenobre; ?>
+																							</a>
 																						</div>
-																						<div aria-labelledby="headingOne-1" class="collapse" data-parent="#accordion" id="collapse-<?php echo $object->getId()?>" role="tabpanel">
+																						<div aria-labelledby="headingOne-1"
+																							class="collapse"
+																							data-parent="#accordion"
+																							id="collapse-<?php echo $object->getId() ?>"
+																							role="tabpanel">
 																							<div class="card-body">
 																								<div class="row mb-4">
-																									<div class="col-md-12 text-right mt-2">
-																										<a target="_blank" href="php/report/impresioncontratos.php?id=<?php echo $object->getId(); ?>" class="btn btn-success"><i class="fa fa-print"></i> Imprimir Todo</a>
-																										<button onclick="eliminartodoccontrato(<?php echo $object->getId(); ?>)" class="btn btn-danger"><i class="fa fa-trash-alt"></i> Eliminar Lote</button>
+																									<div
+																										class="col-md-12 text-right mt-2">
+																										<a target="_blank"
+																											href="php/report/impresioncontratos.php?id=<?php echo $object->getId(); ?>"
+																											class="btn btn-success"><i
+																												class="fa fa-print"></i>
+																											Imprimir Todo</a>
+																										<button
+																											onclick="eliminartodoccontrato(<?php echo $object->getId(); ?>)"
+																											class="btn btn-danger"><i
+																												class="fa fa-trash-alt"></i>
+																											Eliminar
+																											Lote</button>
 																									</div>
 																								</div>
 																								<div class="table-responsive">
 																									<table
 																										class="table w-100 text-nowrap table-lote">
-																										<thead class="border-top">
+																										<thead
+																											class="border-top">
 																											<tr>
-																												<th class="bg-transparent">
-																													Contrato</th>
-																												<th class="bg-transparent">
-																													Trabajador</th>
+																												<th
+																													class="bg-transparent">
+																													Contrato
+																												</th>
+																												<th
+																													class="bg-transparent">
+																													Trabajador
+																												</th>
 																												<th
 																													class="bg-transparent text-center">
-																													<i class="fa fa-plus"></i> Agregar</th>
+																													<i
+																														class="fa fa-plus"></i>
+																													Agregar
+																												</th>
 																												<th
 																													class="bg-transparent text-center">
-																													<i class="fa fa-print"></i> Imprimir</th>
+																													<i
+																														class="fa fa-print"></i>
+																													Imprimir
+																												</th>
 																											</tr>
 																										</thead>
 																										<tbody>
@@ -552,7 +610,7 @@ foreach ($permiso as $p) {
 																											foreach ($lista1 as $object1) {
 																												echo "<tr class='border-bottom-0'>";
 																												echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
-																												echo $object1->getContrato() ;
+																												echo $object1->getContrato();
 																												echo "</td>";
 																												echo "<td class='text-muted fs-15 font-weight-semibold'>";
 																												echo $object1->getTrabajador();
@@ -597,7 +655,7 @@ foreach ($permiso as $p) {
 																<div class="card">
 																	<div class="card-body">
 																		<div aria-multiselectable="true"
-																			class="accordion" >
+																			class="accordion">
 																			<?php
 																			$lista = $c->listarlotescontrato($_SESSION['CURRENT_ENTERPRISE']);
 																			foreach ($lista as $object) {
@@ -612,34 +670,70 @@ foreach ($permiso as $p) {
 																					}
 																					?>
 																					<div class="card accordion-item">
-																						<div class="card-header accordion-header" id="headingOne-1" role="tab">
-																							<a aria-controls="collapseOne" aria-expanded="true" data-toggle="collapse" href="#collapse-<?php echo ($object->getId()+1)?>" class="accordion-toggle bg-primary text-white collapsed" data-parent="#accordion"><i class="fe fe-arrow-right mr-2"></i><?php echo $lotenobre; ?></a>
+																						<div class="card-header accordion-header"
+																							id="headingOne-1" role="tab">
+																							<a aria-controls="collapseOne"
+																								aria-expanded="true"
+																								data-toggle="collapse"
+																								href="#collapse-<?php echo ($object->getId() + 1) ?>"
+																								class="accordion-toggle bg-primary text-white collapsed"
+																								data-parent="#accordion"><i
+																									class="fe fe-arrow-right mr-2"></i>
+																								<?php echo $lotenobre; ?>
+																							</a>
 																						</div>
-																						<div aria-labelledby="headingOne-1" class="collapse" data-parent="#accordion" id="collapse-<?php echo ($object->getId()+1)?>" role="tabpanel">
+																						<div aria-labelledby="headingOne-1"
+																							class="collapse"
+																							data-parent="#accordion"
+																							id="collapse-<?php echo ($object->getId() + 1) ?>"
+																							role="tabpanel">
 																							<div class="card-body">
 																								<div class="row">
-																									<div class="col-md-12 text-right mb-2">
-																									<a target="_blank" href="php/report/impresionfiniquitos.php?id=<?php echo $object->getId(); ?>" class="btn btn-success"><i class="fa fa-print"></i> Imprimir Todo</a>
-																										<button onclick="eliminartodofiniquito(<?php echo $object->getId(); ?>)" class="btn btn-danger"><i class="fa fa-trash-alt"></i> Eliminar Lote</button>
+																									<div
+																										class="col-md-12 text-right mb-2">
+																										<a target="_blank"
+																											href="php/report/impresionfiniquitos.php?id=<?php echo $object->getId(); ?>"
+																											class="btn btn-success"><i
+																												class="fa fa-print"></i>
+																											Imprimir Todo</a>
+																										<button
+																											onclick="eliminartodofiniquito(<?php echo $object->getId(); ?>)"
+																											class="btn btn-danger"><i
+																												class="fa fa-trash-alt"></i>
+																											Eliminar
+																											Lote</button>
 																									</div>
 																								</div>
 																								<div class="table-responsive">
 																									<table
 																										class="table w-100 text-nowrap table-lote">
-																										<thead class="border-top">
+																										<thead
+																											class="border-top">
 																											<tr>
-																												<th class="bg-transparent">
-																													Contrato</th>
-																												<th class="bg-transparent">
-																													Fecha Termino</th>
-																												<th class="bg-transparent">
-																													Trabajador</th>
+																												<th
+																													class="bg-transparent">
+																													Contrato
+																												</th>
+																												<th
+																													class="bg-transparent">
+																													Fecha
+																													Termino</th>
+																												<th
+																													class="bg-transparent">
+																													Trabajador
+																												</th>
 																												<th
 																													class="bg-transparent text-center">
-																													<i class="fa fa-print"></i> Agregar</th>
+																													<i
+																														class="fa fa-print"></i>
+																													Agregar
+																												</th>
 																												<th
 																													class="bg-transparent text-center">
-																													<i class="fa fa-print"></i> Imprimir</th>
+																													<i
+																														class="fa fa-print"></i>
+																													Imprimir
+																												</th>
 																											</tr>
 																										</thead>
 																										<tbody>
@@ -703,7 +797,7 @@ foreach ($permiso as $p) {
 																<div class="card">
 																	<div class="card-body">
 																		<div aria-multiselectable="true"
-																			class="accordion" >
+																			class="accordion">
 																			<?php
 																			$lista = $c->listarlotescontrato($_SESSION['CURRENT_ENTERPRISE']);
 																			foreach ($lista as $object) {
@@ -718,50 +812,97 @@ foreach ($permiso as $p) {
 																					}
 																					?>
 																					<div class="card accordion-item">
-																						<div class="card-header accordion-header" id="headingOne-1" role="tab">
-																							<a aria-controls="collapseOne" aria-expanded="true" data-toggle="collapse" href="#collapse-<?php echo ($object->getId()+1)?>" class="accordion-toggle bg-primary text-white collapsed" data-parent="#accordion"><i class="fe fe-arrow-right mr-2"></i><?php echo $lotenobre; ?></a>
+																						<div class="card-header accordion-header"
+																							id="headingOne-1" role="tab">
+																							<a aria-controls="collapseOne"
+																								aria-expanded="true"
+																								data-toggle="collapse"
+																								href="#collapse-<?php echo ($object->getId() + 1) ?>"
+																								class="accordion-toggle bg-primary text-white collapsed"
+																								data-parent="#accordion"><i
+																									class="fe fe-arrow-right mr-2"></i>
+																								<?php echo $lotenobre; ?>
+																							</a>
 																						</div>
-																						<div aria-labelledby="headingOne-1" class="collapse" data-parent="#accordion" id="collapse-<?php echo ($object->getId()+1)?>" role="tabpanel">
+																						<div aria-labelledby="headingOne-1"
+																							class="collapse"
+																							data-parent="#accordion"
+																							id="collapse-<?php echo ($object->getId() + 1) ?>"
+																							role="tabpanel">
 																							<div class="card-body">
 																								<div class="row">
-																									<div class="col-md-12 text-right mb-2">
-																									<a target="_blank" href="php/report/impresionnotificaciones.php?id=<?php echo $object->getId(); ?>" class="btn btn-success"><i class="fa fa-print"></i> Imprimir Todo</a>
-																										<button onclick="eliminartodonotificaciones(<?php echo $object->getId(); ?>)" class="btn btn-danger"><i class="fa fa-trash-alt"></i> Eliminar Lote</button>
+																									<div
+																										class="col-md-12 text-right mb-2">
+																										<a target="_blank"
+																											href="php/report/impresionnotificaciones.php?id=<?php echo $object->getId(); ?>"
+																											class="btn btn-success"><i
+																												class="fa fa-print"></i>
+																											Imprimir Todo</a>
+																										<a target="_blank"
+																											href="php/report/impresionnotificacionescsv.php?id=<?php echo $object->getId(); ?>"
+																											class="btn btn-success"><i
+																												class="fa fa-file-excel-o"></i>
+																											Imprimir Todo
+																											CSV</a>
+																										<button
+																											onclick="eliminartodonotificacion(<?php echo $object->getId(); ?>)"
+																											class="btn btn-danger"><i
+																												class="fa fa-trash-alt"></i>
+																											Eliminar
+																											Lote</button>
 																									</div>
 																								</div>
 																								<div class="table-responsive">
 																									<table
 																										class="table w-100 text-nowrap table-lote">
-																										<thead class="border-top">
+																										<thead
+																											class="border-top">
 																											<tr>
-																												<th class="bg-transparent">
-																													RUT</th>
-																												<th class="bg-transparent">
-																													Nombre</th>
-																												<th class="bg-transparent">
-																													Fecha Notificacion</th>
-																												<th class="bg-transparent">
-																													Causal de Hechos</th>
-																												<th class="bg-transparent">
-																													Comunicacion</th>
-																												<th class="bg-transparent">
+																												<th
+																													class="bg-transparent">
+																													Trabajador
+																												</th>
+																												<th
+																													class="bg-transparent">
+																													Fecha
+																													Notificacion
+																												</th>
+																												<th
+																													class="bg-transparent">
+																													Comunicacion
+																												</th>
+																												<th
+																													class="bg-transparent text-center">
 																													PDF</th>
-																												<th class="bg-transparent">
+																												<th
+																													class="bg-transparent text-center">
 																													CSV</th>
 																												<th
 																													class="bg-transparent text-center">
-																													<i class="fa fa-print"></i> Agregar</th>
+																													<i
+																														class="fa fa-print"></i>
+																													Agregar
+																												</th>
+																												<th
+																													class="bg-transparent text-center">
+																													<i
+																														class="fa fa-print"></i>
+																													Eliminar
+																												</th>
 																											</tr>
 																										</thead>
 																										<tbody>
 																											<?php
-																											foreach ($lista1 as $object1) {
-																												$fecha = $object1->getFecha_inicio();
-																												//Convertir fecha en formato dd-mm-YYYY
-																												$fecha = date("d-m-Y", strtotime($fecha));
-																												$fechatermino = $object1->getFecha_fin();
-																												//Convertir fecha en formato dd-mm-YYYY
-																												$fechatermino = date("d-m-Y", strtotime($fechatermino));
+																											foreach ($lista1 as $notificacion) {
+																												echo "<tr>";
+																												echo "<td>" . $notificacion->getRegistro() . "</td>";
+																												echo "<td>" . $notificacion->getFechanotificacion() . "</td>";
+																												echo "<td>" . $notificacion->getComunicacion() . "</td>";
+																												echo "<td class='text-center'><a href='php/pdf/notificacion.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
+																												echo "<td class='text-center'><a href='php/pdf/notificacioncsv.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-file-excel-o'></i></a></td>";
+																												echo "<td class='text-center'><a class='btn btn-outline-info btn-sm rounded-11' onclick='addcart2(3," . $notificacion->getId() . ",\"" . $notificacion->getRegistro() . "\",\"" . $notificacion->getFechanotificacion() . "\",\"" . $notificacion->getCausal() . "\",\"" . $notificacion->getComunicacion() . "\")' data-toggle='tooltip' data-original-title='Agregar'><i class='fa fa-plus'></i></a></td>";
+																												echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarnotificacion(" . $notificacion->getId() . ")'><i class='fa fa-trash'></i></button></td>";
+																												echo "</tr>";
 
 																											}
 																											?>
@@ -786,37 +927,120 @@ foreach ($permiso as $p) {
 													</div>
 													<div class="tab-pane" id="tabCont4">
 														<div class="row">
-															<div class="col-md-12 table-responsive">
-																<table class="table w-100 table-hover " id="example4">
-																	<thead>
-																		<tr>
-																			<td>RUT</td>
-																			<td>Trabajador</td>
-																			<td>Fecha de Generación</td>
-																			<td>Tipo de Documento</td>
-																			<td>Documento</td>
-																			<td class='text-center'>Eliminar</td>
-																		</tr>
-																	</thead>
-																	<tbody>
-																		<?php
-																		$notifi = $c->listardocumentostextempresa($_SESSION['CURRENT_ENTERPRISE']);
-																		if ($notifi != null) {
-																			foreach ($notifi as $notificacion) {
-																				echo "<tr>";
-																				echo "<td>" . $notificacion->getEmpresa() . "</td>";
-																				echo "<td>" . $notificacion->getTrabajador() . "</td>";
-																				echo "<td>" . $notificacion->getFechageneracion() . "</td>";
-																				echo "<td>" . $notificacion->getTipodocumento() . "</td>";
-																				echo "<td><a href='uploads/documentos/" . $notificacion->getDocumento() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
-																				echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminardocumento(" . $notificacion->getId() . ")'><i class='fa fa-trash'></i></button></td>";
-																				echo "</tr>";
-																			}
-																		}
-																		?>
-																	</tbody>
-																</table>
 
+															<div class="col-lg-12">
+																<div class="card">
+																	<div class="card-body">
+																		<div aria-multiselectable="true"
+																			class="accordion">
+																			<?php
+																			$lista = $c->listarlotescontrato($_SESSION['CURRENT_ENTERPRISE']);
+																			foreach ($lista as $object) {
+																				$lista1 = $c->listarlotestext5($object->getId());
+																				if (count($lista1) > 0) {
+																					$lotenobre = $object->getNombre_lote();
+																					//Borrar el resto del texto despues del _
+																					$pos = strpos($lotenobre, "_");
+																					if ($pos === false) {
+																					} else {
+																						$lotenobre = substr($lotenobre, 0, $pos);
+																					}
+
+																					?>
+																					<div class="card accordion-item">
+																						<div class="card-header accordion-header"
+																							id="headingOne-1" role="tab">
+																							<a aria-controls="collapseOne"
+																								aria-expanded="true"
+																								data-toggle="collapse"
+																								href="#collapse-<?php echo $object->getId() ?>"
+																								class="accordion-toggle bg-primary text-white collapsed"
+																								data-parent="#accordion"><i
+																									class="fe fe-arrow-right mr-2"></i>
+																								<?php echo $lotenobre; ?>
+																							</a>
+																						</div>
+																						<div aria-labelledby="headingOne-1"
+																							class="collapse"
+																							data-parent="#accordion"
+																							id="collapse-<?php echo $object->getId() ?>"
+																							role="tabpanel">
+																							<div class="card-body">
+																								<div class="row mb-4">
+																									<div
+																										class="col-md-12 text-right mt-2">
+																										<a target="_blank"
+																											href="php/report/impresiondocumentos.php?id=<?php echo $object->getId(); ?>"
+																											class="btn btn-success"><i
+																												class="fa fa-print"></i>
+																											Imprimir Todo</a>
+																										<button
+																											onclick="eliminartododocumento(<?php echo $object->getId(); ?>)"
+																											class="btn btn-danger"><i
+																												class="fa fa-trash-alt"></i>
+																											Eliminar
+																											Lote</button>
+																									</div>
+																								</div>
+																								<div class="table-responsive">
+																									<table
+																										class="table w-100 text-nowrap table-lote">
+																										<thead>
+																											<tr>
+																												<td>RUT</td>
+																												<td>Trabajador
+																												</td>
+																												<td>Fecha de
+																													Generación
+																												</td>
+																												<td>Tipo de
+																													Documento
+																												</td>
+																												<td>Documento
+																												</td>
+																												<td
+																													class='text-center'>
+																													Agregar</td>
+																												<td
+																													class='text-center'>
+																													Eliminar
+																												</td>
+																											</tr>
+																										</thead>
+																										<tbody>
+																											<?php
+																											foreach ($lista1 as $object1) {
+																												echo "<tr class='border-bottom-0'>";
+																												echo "<td>" . $object1->getEmpresa() . "</td>";
+																												echo "<td>" . $object1->getTrabajador() . "</td>";
+																												echo "<td>" . $object1->getFechageneracion() . "</td>";
+																												echo "<td>" . $object1->getTipodocumento() . "</td>";
+																												echo "<td><a href='uploads/documentos/" . $object1->getDocumento() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
+																												echo "<td class='text-center'>";
+																												echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='addcart3(4," . $object1->getId() . ",\"" . $object1->getEmpresa() . "\",\"" . $object1->getTrabajador() . "\",\"" . $object1->getFechageneracion() . "\",\"" . $object1->getTipodocumento() . "\",\"" . $object1->getDocumento() . "\")' data-toggle='tooltip' data-original-title='Agregar'>";
+																												echo "<i class='fa fa-plus'>";
+																												echo "</i>";
+																												echo "</a>";
+																												echo "</td>";
+																												echo "<td class='text-center'>";
+																												echo "<button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminardocumento(" . $object1->getId() . ")'><i class='fa fa-trash'></i></button>";
+																												echo "</td>";
+																												echo "</tr>";
+																											}
+																											?>
+																										</tbody>
+																									</table>
+																								</div>
+																							</div>
+																						</div>
+																					</div>
+																					<?php
+																				}
+																			}
+																			?>
+																		</div>
+																	</div>
+																</div>
 															</div>
 														</div>
 													</div>
@@ -833,9 +1057,17 @@ foreach ($permiso as $p) {
 					<div class="row objetos mt-2">
 
 					</div>
-					
+
 
 					<div class="row objetos1 mt-2">
+
+					</div>
+
+					<div class="row objetos2 mt-2">
+
+					</div>
+
+					<div class="row objetos3 mt-2">
 
 					</div>
 

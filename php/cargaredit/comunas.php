@@ -27,6 +27,11 @@ if($isapre != null){
         echo "</div>";
 
         echo "<div class='col-md-12'>";
+        echo "<label>Codigo (XLS Despidos)</label>";
+        echo "<input type='text' class='form-control' id='codigoxedit' value='".$isapre->getCodigox()."'/>";
+        echo "</div>";
+
+        echo "<div class='col-md-12'>";
         echo "<label>Nombre</label>";
         echo "<input type='text' class='form-control' id='nombre' value='".$isapre->getNombre()."'/>";
         echo "</div>";

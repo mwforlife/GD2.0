@@ -19,6 +19,6 @@ if (isset($_POST['id'])) {
     }
     echo json_encode(array('status' => true, 'message' => 'Finiquitos eliminados correctamente'));
 } else {
-    echo json_encode(array('status' => false, 'message' => 'Hubo un error al eliminar los contratos'));
+    echo json_encode(array('status' => false, 'message' => 'Hubo un error al eliminar los Finiquitos'));
     exit();
 }
