@@ -114,12 +114,11 @@ if (isset($_GET['id'])) {
 
             $trarut = str_replace(".", "", $trabajador->getRut());
 
-            $rut = $trabajador->getRut();
             $dv = "";
             //dv = el ultimo digito del rut despues del guion
-            $dv = substr($rut, -1);
+            $dv = substr($trarut, -1);
             //rut = el rut sin el guion ni el ultimo digito
-            $rut = substr($rut, 0, -2);
+            $rut = substr($trarut, 0, -2);
 
             $spreadsheet->getActiveSheet()->setCellValue('A'.$pos, $rut);
             $spreadsheet->getActiveSheet()->setCellValue('B'.$pos, $dv);
@@ -143,7 +142,7 @@ if (isset($_GET['id'])) {
             $pos++;
         }
 
-        $fecha = date("d-m-Y");
+        $fecha = date("d-m-YHis");
         //Descargar por navegador
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="notificaciones' . $fecha . '.xls"');

@@ -56,13 +56,13 @@ require 'Class/Haber.php';
 class Controller
 {
     private $host = "localhost";
-    /*Variables
+    /*Variables*/
     private $user = "root";
     private $pass = "";
     private $bd = "gestordocumentos";
 
 
-    /*Variables BD Remota*/
+    /*Variables BD Remota
     private $user = 'kaiserte_admin';
     private $pass = 'Kaiser2022$';
     private $bd = 'kaiserte_gd';
@@ -5611,13 +5611,12 @@ class Controller
     function extrartexto($texto)
     {
         //copiar el texto que esta dentro de los parentesis
+        $parte1 = explode('(', $texto);
+        $parte2 = explode(')', $parte1[1]);
 
-        //$parte1 = explode('(', $texto);
-        //$parte2 = explode(')', $parte1[1]);
+       $parentesis = $parte2[0];
 
-       //$parentesis = $parte2[0];
-
-        return $texto;
+        return $parentesis;
     }
 
     //eliminarnotificacion
@@ -7364,6 +7363,17 @@ class Controller
         $this->desconectar();
         return $result;
     }
+
+    //Registrar Haberes Y Descuentos
+    function registrarhaberes_descuentos_trabajador($codigo, $periodo_inicio, $periodo_termino, $monto, $dias, $horas, $modalidad, $trabajador, $empresa){
+        $this->conexion();
+        $sql = "insert into haberes_descuentos_trabajador values(null,$codigo,'$periodo_inicio','$periodo_termino',$monto,$dias,$horas,$modalidad,$trabajador,$empresa,now())";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Listar Haberes Y Descuentos
 
 
     

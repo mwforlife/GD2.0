@@ -413,8 +413,8 @@ foreach ($permiso as $p) {
 									</div>
 									<div class="row">
 										<div class="col-md-6">
-											<label for="Codigo de Haber/Descuento"></label>
-											<select name="codigohaber" id="codigohaber" class="form-control select2">
+											<label for="">Codigo de Haber/Descuento</label>
+											<select name="codigohaber" id="codigohaber" class="form-control select2" onchange="verificartipo()">
 												<?php
 												$haberes = array();
 												if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
@@ -423,7 +423,7 @@ foreach ($permiso as $p) {
 													$haberes = $c->listarhaberesydescuentos();
 												}
 												foreach ($haberes as $haber) {
-													echo "<option value='" . $haber->getId() . "'>" . $haber->getCodigo() . " " . $haber->getDescripcion() . "</option>";
+													echo "<option  value='" . $haber->getId() . "' tipo='" . $haber->getAgrupacion() . "'>(" . $haber->getCodigo() . ") " . $haber->getDescripcion() . "</option>";
 												}
 
 												?>
@@ -431,19 +431,31 @@ foreach ($permiso as $p) {
 										</div>
 										<div class="col-md-3">
 											<label for="">Periodo Inicio</label>
-											<input type="month" name="periodoini" id="periodoini" class="form-control">
+											<input type="month" name="periodoini" id="periodoini" class="form-control" value="<?php echo date("Y-m"); ?>">
 										</div>
 										<div class="col-md-3">
 											<label for="">Periodo Termino</label>
-											<input type="month" name="periodoter" id="periodoter" class="form-control">
+											<input type="month" name="periodoter" id="periodoter" class="form-control"  value="<?php echo date("Y-m"); ?>">
 										</div>
+
 										<div class="col-md-6">
-											<label for="">Monto</label>
-											<input type="number" name="monto" id="monto" class="form-control" min="0">
+											<div class="monto">
+												<label for="">Monto</label>
+												<input type="text" name="monto" id="monto" class="form-control" min="0" step="0.01" onkeyup="formatoMiles(this)">
+											</div>
+											<div class="dias">
+												<label for="">Dias</label>
+												<input type="number" name="dias" id="dias" class="form-control" min="0">
+											</div>
+											<div class="horas">
+												<label for="">Horas</label>
+												<input type="number" name="horas" id="horas" class="form-control" min="0" step="0.01">
+											</div>
 										</div>
+
 										<div class="col-md-6">
 											<label for="">Modalidad</label>
-											<select name="tipo" id="tipo" class="form-control">
+											<select name="modalidad" id="modalidad" class="form-control">
 												<option value="1">Fijo</option>
 												<option value="2">Proporcional</option>
 											</select>

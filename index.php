@@ -175,7 +175,7 @@ foreach ($permiso as $p) {
 										<a class="nav-sub-link" href="diasferiados.php">DIAS FERIADOS</a>
 									</li>
 									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="codigolref.php">CODIGOS LRE</a>
+										<a class="nav-sub-link" href="codigolre.php">CODIGOS LRE</a>
 									</li>
 								</ul>
 							</li>

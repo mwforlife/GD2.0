@@ -152,6 +152,10 @@ create table causalterminocontrato(
     codigoprevired varchar(20) not null,
     nombre varchar(50) not null
 );
+
+--Cambiar cantidad de caracteres nombre causales de termino de contrato de 50 a 500
+alter table causalterminocontrato modify column nombre varchar(500) not null;
+
 create table empresa(
     id int not null auto_increment primary key,
     rut varchar(20) not null,
@@ -966,3 +970,24 @@ create table habres_descuentos(
     register_at timestamp not null default current_timestamp
 );
 
+create table modalidad(
+    id int not null auto_increment primary key,
+    nombre varchar(200) not null
+);
+
+insert into modalidad values(null, 'Fijo');
+insert into modalidad values(null, 'Proporcional');
+
+create table haberes_descuentos_trabajador(
+    id int not null auto_increment primary key,
+    codigo int not null references habres_descuentos(id),
+    periodo_inicio date not null,
+    periodo_termino date not null,
+    monto decimal(10,2) not null,
+    dias int not null,
+    horas decimal(10,2) not null,
+    modalidad int not null references modalidad(id),
+    trabajador int not null references trabajadores(id),
+    empresa int not null references empresa(id),
+    register_at timestamp not null default current_timestamp
+);

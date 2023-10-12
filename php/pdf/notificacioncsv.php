@@ -93,6 +93,11 @@ if (isset($_SESSION['USER_ID']) && isset($_GET['id'])) {
     }
 
     $trarut = str_replace(".", "", $trabajador->getRut());
+    $dv = "";
+    //dv = el ultimo digito del rut despues del guion
+    $dv = substr($trarut, -1);
+    //rut = el rut sin el guion ni el ultimo digito
+    $rut = substr($trarut, 0, -2);
 
     $spreadsheet = new Spreadsheet();
     $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xls($spreadsheet);
@@ -116,8 +121,8 @@ if (isset($_SESSION['USER_ID']) && isset($_GET['id'])) {
     $spreadsheet->getActiveSheet()->setCellValue('R1', 'EstadoCotizaciones');
     $spreadsheet->getActiveSheet()->setCellValue('S1', 'TipoDocCotizaciones');
 
-    $spreadsheet->getActiveSheet()->setCellValue('A2', $trabajador->getRut());
-    $spreadsheet->getActiveSheet()->setCellValue('B2', $trabajador->getDni());
+    $spreadsheet->getActiveSheet()->setCellValue('A2', $rut);
+    $spreadsheet->getActiveSheet()->setCellValue('B2', $dv);
     $spreadsheet->getActiveSheet()->setCellValue('C2', $trabajador->getNombre());
     $spreadsheet->getActiveSheet()->setCellValue('D2', $trabajador->getApellido1());
     $spreadsheet->getActiveSheet()->setCellValue('E2', $trabajador->getApellido2());
@@ -136,9 +141,11 @@ if (isset($_SESSION['USER_ID']) && isset($_GET['id'])) {
     $spreadsheet->getActiveSheet()->setCellValue('R2', $cotipre);
     $spreadsheet->getActiveSheet()->setCellValue('S2', $acreditacion);
 
+    $fechadate = date("d-m-YHis");
+
     //Descargar por navegador
     header('Content-Type: application/vnd.ms-excel');
-    header('Content-Disposition: attachment;filename="notificaciones'.$trarut.'.xls"');
+    header('Content-Disposition: attachment;filename="notificaciones'.$fechadate.'.xls"');
     header('Cache-Control: max-age=0');
     $writer->save('php://output');
 }
