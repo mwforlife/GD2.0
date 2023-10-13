@@ -7375,6 +7375,30 @@ class Controller
     }
 
     //Listar Haberes Y Descuentos
+    function listarhaberes_despuesto($periodo_ini, $periodo_ter){
+        $this->conexion();
+        $sql = "select haberes_descuentos_trabajador.id as id, haberes_descuentos_trabajador.codigo as codigo, habres_descuentos.descripcion as descripcion, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, haberes_descuentos_trabajador.trabajador as trabajador, haberes_descuentos_trabajador.empresa as empresa, haberes_descuentos_trabajador.register_at as register_at from haberes_descuentos_trabajador, habres_descuentos where haberes_descuentos_trabajador.codigo=habres_descuentos.codigo and haberes_descuentos_trabajador.periodo_inicio='$periodo_ini' and haberes_descuentos_trabajador.periodo_termino='$periodo_ter' order by haberes_descuentos_trabajador.codigo asc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id=$rs['id'];
+            $codigo=$rs['codigo'];
+            $descripcion=$rs['descripcion'];
+            $periodo_inicio=$rs['periodo_inicio'];
+            $periodo_termino=$rs['periodo_termino'];
+            $monto=$rs['monto'];
+            $dias=$rs['dias'];
+            $horas=$rs['horas'];
+            $modalidad=$rs['modalidad'];
+            $trabajador=$rs['trabajador'];
+            $empresa=$rs['empresa'];
+            $registro=$rs['register_at'];
+            $haber = new Haber($id,$codigo,$descripcion,$periodo_inicio,$periodo_termino,$monto,$dias,$horas,$modalidad,$trabajador,$empresa,$registro);
+            $lista[] = $haber;
+        }
+        $this->desconectar();
+        return $lista;
+    }
 
 
 
