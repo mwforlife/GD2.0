@@ -1,14 +1,7 @@
 <?php
-//Recepcion de datos
-/*codigo: 1
-periodoini: 2023-10
-periodofin: 2023-10
-monto: 2.0.0.0.0.000
-dias: 
-horas: 
-tipo: 1
-modalidad: 1
-trabajadores: [{"id":"9","rut":"11.337.156-0","nombre":"PATRICIO JACOB MOENA AGUAYO"},{"id":"10","rut":"8.054.994-6","nombre":"RENE DANIEL REYES FUENZALIDA"},{"id":"11","rut":"12.515.380-1","nombre":"DANIEL ANDRES CANTILLANA ESPINOSA"},{"id":"12","rut":"13.261.793-7","nombre":"RODOLFO ANDRES  VALLEJOS REYES"}]*/
+require '../controller.php';
+$c = new Controller();
+session_start();
 
 if(isset($_POST['codigo']) && isset($_POST['periodoini']) && isset($_POST['periodofin']) && isset($_POST['monto']) && isset($_POST['tipo']) && isset($_POST['modalidad']) && isset($_POST['trabajadores'])){
     $codigo = $_POST['codigo'];
@@ -21,6 +14,10 @@ if(isset($_POST['codigo']) && isset($_POST['periodoini']) && isset($_POST['perio
     $dias = $_POST['dias'];
     $horas = $_POST['horas'];
     $trabajadores = $_POST['trabajadores'];
+    //Recibir el array
+    $trabajadores = json_decode($trabajadores, true);
+
+    $monto = str_replace('.', '', $monto);
 
     //Validacion de datos
     if($codigo == "" || $periodoini == "" || $periodofin == "" || $tipo == "" || $modalidad == "" || $trabajadores == ""){
@@ -33,22 +30,38 @@ if(isset($_POST['codigo']) && isset($_POST['periodoini']) && isset($_POST['perio
         if($monto == "" || $monto <= 0){
             echo json_encode(array("status" => false, "message" => "Debes ingresar un monto mayor a 0"));
             return;
+        }else{
+            $dias = 0;
+            $horas = 0;
         }
     }else if($tipo==3){
         if($dias == "" || $dias <= 0){
             echo json_encode(array("status" => false, "message" => "Debes ingresar un numero de dias mayor a 0"));
             return;
+        }else{
+            $monto = 0;
+            $horas = 0;
         }
     }else if($tipo==2){
         if($horas == "" || $horas <= 0){
             echo json_encode(array("status" => false, "message" => "Debes ingresar un numero de horas mayor a 0"));
             return;
+        }else{
+            $monto = 0;
+            $dias = 0;
         }
     }
 
+    $empresa = $_SESSION['CURRENT_ENTERPRISE'];
+
     foreach($trabajadores as $trabajador){
         $id = $trabajador['id'];
-        $c->registrarhaberes_descuentos_trabajador($codigo,)
+        $result = $c->registrarhaberes_descuentos_trabajador($codigo,$periodoini,$periodofin,$monto,$dias,$horas,$modalidad,$id,$empresa);
+        if($result==true){
+            echo json_encode(array("status" => true, "message" => "Se ha registrado el haber/descuento correctamente"));
+        }else{
+            echo json_encode(array("status" => false, "message" => "No se ha podido registrar el haber/descuento"));
+        }
     }
 
 }else{

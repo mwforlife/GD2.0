@@ -51,6 +51,7 @@ require 'Class/Anexo.php';
 require 'Class/Clausulaanexo.php';
 require 'Class/Codigolre.php';
 require 'Class/Haber.php';
+require 'Class/Haber_trabajador.php';
 
 //Class definition
 class Controller
@@ -7374,6 +7375,7 @@ class Controller
     }
 
     //Listar Haberes Y Descuentos
+
 
 
     
