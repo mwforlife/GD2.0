@@ -6416,7 +6416,7 @@ class Controller
     function listarcontratosquevenceranenlosproximos30diasempresa($empresa)
     {
         $this->conexion();
-        $sql = "select contratos.id as id, trabajadores.nombre as nombre, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.empresa = $empresa and fechatermino!='' and estado=1 and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and fechatermino between curdate() and date_add(curdate(), interval 30 day)";
+        $sql = "select contratos.id as id, trabajadores.nombre as nombre,contratos.centrocosto as centrocosto, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.empresa = $empresa and fechatermino!='' and estado=1 and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and fechatermino between curdate() and date_add(curdate(), interval 30 day)";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -6424,6 +6424,7 @@ class Controller
             $nombre = $rs['nombre'] . " " . $rs['primerapellido'] . " " . $rs['segundoapellido'];
             $razonsocial = $rs['razonsocial'];
             $tipocontrato = $rs['tipocontrato'];
+            $centrocosto = $rs['centrocosto'];
             $cargo = $rs['cargo'];
             $sueldo = $rs['sueldo'];
             $fechainicio = $rs['fechainicio'];
@@ -6431,7 +6432,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['register_at'];
-            $contrato = new Contrato($id, $nombre, $razonsocial, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $lista[] = $contrato;
         }
         $this->desconectar();
@@ -6441,7 +6442,7 @@ class Controller
     function listarcontratosquevenceranenlosproximos30dias()
     {
         $this->conexion();
-        $sql = "select contratos.id as id, trabajadores.nombre as nombre, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where fechatermino!='' and estado=1 and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and fechatermino between curdate() and date_add(curdate(), interval 30 day)";
+        $sql = "select contratos.id as id, trabajadores.nombre as nombre,contratos.centrocosto as centrocosto, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where fechatermino!='' and estado=1 and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and fechatermino between curdate() and date_add(curdate(), interval 30 day)";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -6449,6 +6450,7 @@ class Controller
             $nombre = $rs['nombre'] . " " . $rs['primerapellido'] . " " . $rs['segundoapellido'];
             $razonsocial = $rs['razonsocial'];
             $tipocontrato = $rs['tipocontrato'];
+            $centrocosto = $rs['centrocosto'];
             $cargo = $rs['cargo'];
             $sueldo = $rs['sueldo'];
             $fechainicio = $rs['fechainicio'];
@@ -6456,7 +6458,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['register_at'];
-            $contrato = new Contrato($id, $nombre, $razonsocial, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $lista[] = $contrato;
         }
         $this->desconectar();
@@ -6466,7 +6468,7 @@ class Controller
     function listarcontratosquevenceranenlosproximos60diasempresa($empresa)
     {
         $this->conexion();
-        $sql = "select contratos.id as id, trabajadores.nombre as nombre, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.empresa = $empresa and fechatermino!='' and estado=1 and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and fechatermino between curdate() and date_add(curdate(), interval 60 day)";
+        $sql = "select contratos.id as id, trabajadores.nombre as nombre,contratos.centrocosto as centrocosto, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.empresa = $empresa and fechatermino!='' and estado=1 and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and fechatermino between curdate() and date_add(curdate(), interval 60 day)";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -6474,6 +6476,7 @@ class Controller
             $nombre = $rs['nombre'] . " " . $rs['primerapellido'] . " " . $rs['segundoapellido'];
             $razonsocial = $rs['razonsocial'];
             $tipocontrato = $rs['tipocontrato'];
+            $centrocosto = $rs['centrocosto'];
             $cargo = $rs['cargo'];
             $sueldo = $rs['sueldo'];
             $fechainicio = $rs['fechainicio'];
@@ -6481,7 +6484,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['register_at'];
-            $contrato = new Contrato($id, $nombre, $razonsocial, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $lista[] = $contrato;
         }
         $this->desconectar();
@@ -6492,7 +6495,7 @@ class Controller
     function listarcontratosquevenceranenlosproximos60dias()
     {
         $this->conexion();
-        $sql = "select contratos.id as id, trabajadores.nombre as nombre, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where fechatermino!='' and estado=1 and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and fechatermino between curdate() and date_add(curdate(), interval 60 day)";
+        $sql = "select contratos.id as id, trabajadores.nombre as nombre, contratos.centrocosto as centrocostom, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where fechatermino!='' and estado=1 and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and fechatermino between curdate() and date_add(curdate(), interval 60 day)";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -6500,6 +6503,7 @@ class Controller
             $nombre = $rs['nombre'] . " " . $rs['primerapellido'] . " " . $rs['segundoapellido'];
             $razonsocial = $rs['razonsocial'];
             $tipocontrato = $rs['tipocontrato'];
+            $centrocosto = $rs['centrocosto'];
             $cargo = $rs['cargo'];
             $sueldo = $rs['sueldo'];
             $fechainicio = $rs['fechainicio'];
@@ -6507,7 +6511,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['register_at'];
-            $contrato = new Contrato($id, $nombre, $razonsocial, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial, $centrocosto,$tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $lista[] = $contrato;
         }
         $this->desconectar();
@@ -6518,7 +6522,7 @@ class Controller
     function listarcontratosquevenceranenlosproximos90diasempresa($empresa)
     {
         $this->conexion();
-        $sql = "select contratos.id as id, trabajadores.nombre as nombre, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.empresa = $empresa and fechatermino!='' and estado=1 and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and fechatermino between curdate() and date_add(curdate(), interval 90 day)";
+        $sql = "select contratos.id as id, trabajadores.nombre as nombre, contratos.centrocosto as centrocosto,trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.empresa = $empresa and fechatermino!='' and estado=1 and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and fechatermino between curdate() and date_add(curdate(), interval 90 day)";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -6526,6 +6530,7 @@ class Controller
             $nombre = $rs['nombre'] . " " . $rs['primerapellido'] . " " . $rs['segundoapellido'];
             $razonsocial = $rs['razonsocial'];
             $tipocontrato = $rs['tipocontrato'];
+            $centrocosto = $rs['centrocosto'];
             $cargo = $rs['cargo'];
             $sueldo = $rs['sueldo'];
             $fechainicio = $rs['fechainicio'];
@@ -6533,7 +6538,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['register_at'];
-            $contrato = new Contrato($id, $nombre, $razonsocial, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $lista[] = $contrato;
         }
         $this->desconectar();
@@ -6544,7 +6549,7 @@ class Controller
     function listarcontratosquevenceranenlosproximos90dias()
     {
         $this->conexion();
-        $sql = "select contratos.id as id, trabajadores.nombre as nombre, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where fechatermino!='' and estado=1 and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and fechatermino between curdate() and date_add(curdate(), interval 90 day)";
+        $sql = "select contratos.id as id, trabajadores.nombre as nombre, contratos.centrocosto as centrocosto, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where fechatermino!='' and estado=1 and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and fechatermino between curdate() and date_add(curdate(), interval 90 day)";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -6552,6 +6557,7 @@ class Controller
             $nombre = $rs['nombre'] . " " . $rs['primerapellido'] . " " . $rs['segundoapellido'];
             $razonsocial = $rs['razonsocial'];
             $tipocontrato = $rs['tipocontrato'];
+            $centrocosto = $rs['centrocosto'];
             $cargo = $rs['cargo'];
             $sueldo = $rs['sueldo'];
             $fechainicio = $rs['fechainicio'];
@@ -6559,7 +6565,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['register_at'];
-            $contrato = new Contrato($id, $nombre, $razonsocial, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $lista[] = $contrato;
         }
         $this->desconectar();
@@ -7374,31 +7380,145 @@ class Controller
         return $result;
     }
 
-    //Listar Haberes Y Descuentos
-    function listarhaberes_despuesto($periodo_ini, $periodo_ter){
+    //Listar Haberes Y Descuentos por periodo
+    function listarhaberes_descuento($periodo_ini, $periodo_ter, $empresa){
         $this->conexion();
-        $sql = "select haberes_descuentos_trabajador.id as id, haberes_descuentos_trabajador.codigo as codigo, habres_descuentos.descripcion as descripcion, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, haberes_descuentos_trabajador.trabajador as trabajador, haberes_descuentos_trabajador.empresa as empresa, haberes_descuentos_trabajador.register_at as register_at from haberes_descuentos_trabajador, habres_descuentos where haberes_descuentos_trabajador.codigo=habres_descuentos.codigo and haberes_descuentos_trabajador.periodo_inicio='$periodo_ini' and haberes_descuentos_trabajador.periodo_termino='$periodo_ter' order by haberes_descuentos_trabajador.codigo asc";
+        $sql = "select haberes_descuentos_trabajador.id as id, habres_descuentos.descripcion as codigo,habres_descuentos.tipo as tipo, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, empresa.razonsocial as empresa, haberes_descuentos_trabajador.register_at as register_at from haberes_descuentos_trabajador, habres_descuentos, trabajadores, empresa where haberes_descuentos_trabajador.codigo=habres_descuentos.id and haberes_descuentos_trabajador.trabajador=trabajadores.id and haberes_descuentos_trabajador.empresa=empresa.id and haberes_descuentos_trabajador.periodo_inicio between '$periodo_ini' and '$periodo_ter' and haberes_descuentos_trabajador.empresa=$empresa order by haberes_descuentos_trabajador.periodo_inicio asc";
         $result = $this->mi->query($sql);
         $lista = array();
         while($rs = mysqli_fetch_array($result)){
             $id=$rs['id'];
             $codigo=$rs['codigo'];
-            $descripcion=$rs['descripcion'];
             $periodo_inicio=$rs['periodo_inicio'];
             $periodo_termino=$rs['periodo_termino'];
             $monto=$rs['monto'];
             $dias=$rs['dias'];
             $horas=$rs['horas'];
             $modalidad=$rs['modalidad'];
-            $trabajador=$rs['trabajador'];
+            $trabajador=$rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
             $empresa=$rs['empresa'];
+            $tipo = $rs['tipo'];
             $registro=$rs['register_at'];
-            $haber = new Haber($id,$codigo,$descripcion,$periodo_inicio,$periodo_termino,$monto,$dias,$horas,$modalidad,$trabajador,$empresa,$registro);
+            $haber = new haberes_trabajador($id,$codigo,$periodo_inicio,$periodo_termino,$monto,$dias,$horas,$modalidad,$trabajador,$empresa,$tipo,$registro);
             $lista[] = $haber;
         }
         $this->desconectar();
         return $lista;
     }
+
+    //Listar Haberes Y Descuentos por periodo
+    function listarhaberes_descuentotrababajador($periodo_ini, $periodo_ter, $empresa,$trabajador){
+        $this->conexion();
+        $sql = "select haberes_descuentos_trabajador.id as id, habres_descuentos.descripcion as codigo,habres_descuentos.tipo as tipo, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, empresa.razonsocial as empresa, haberes_descuentos_trabajador.register_at as register_at from haberes_descuentos_trabajador, habres_descuentos, trabajadores, empresa where haberes_descuentos_trabajador.codigo=habres_descuentos.id and haberes_descuentos_trabajador.trabajador=trabajadores.id and haberes_descuentos_trabajador.empresa=empresa.id and haberes_descuentos_trabajador.periodo_inicio between  '$periodo_ini' and '$periodo_ter' and haberes_descuentos_trabajador.empresa=$empresa and haberes_descuentos_trabajador.trabajador=$trabajador order by haberes_descuentos_trabajador.periodo_inicio asc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id=$rs['id'];
+            $codigo=$rs['codigo'];
+            $periodo_inicio=$rs['periodo_inicio'];
+            $periodo_termino=$rs['periodo_termino'];
+            $monto=$rs['monto'];
+            $dias=$rs['dias'];
+            $horas=$rs['horas'];
+            $modalidad=$rs['modalidad'];
+            $trabajador=$rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
+            $empresa=$rs['empresa'];
+            $tipo = $rs['tipo'];
+            $registro=$rs['register_at'];
+            $haber = new haberes_trabajador($id,$codigo,$periodo_inicio,$periodo_termino,$monto,$dias,$horas,$modalidad,$trabajador,$empresa,$tipo,$registro);
+            $lista[] = $haber;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Listar todo Haberes Y Descuentos
+    function listarhaberesdescuentos($empresa){
+        $this->conexion();
+        $sql = "select haberes_descuentos_trabajador.id as id, habres_descuentos.descripcion as codigo,habres_descuentos.tipo as tipo, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, empresa.razonsocial as empresa, haberes_descuentos_trabajador.register_at as register_at from haberes_descuentos_trabajador, habres_descuentos, trabajadores, empresa where haberes_descuentos_trabajador.codigo=habres_descuentos.id and haberes_descuentos_trabajador.trabajador=trabajadores.id and haberes_descuentos_trabajador.empresa=empresa.id and haberes_descuentos_trabajador.empresa=$empresa order by haberes_descuentos_trabajador.periodo_inicio asc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id=$rs['id'];
+            $codigo=$rs['codigo'];
+            $periodo_inicio=$rs['periodo_inicio'];
+            $periodo_termino=$rs['periodo_termino'];
+            $monto=$rs['monto'];
+            $dias=$rs['dias'];
+            $horas=$rs['horas'];
+            $modalidad=$rs['modalidad'];
+            $trabajador=$rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
+            $empresa=$rs['empresa'];
+            $tipo = $rs['tipo'];
+            $registro=$rs['register_at'];
+            $haber = new haberes_trabajador($id,$codigo,$periodo_inicio,$periodo_termino,$monto,$dias,$horas,$modalidad,$trabajador,$empresa,$tipo,$registro);
+            $lista[] = $haber;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Listar Haberes y Descuentos del Mes actual
+    function listarhaberesdescuentosactual($empresa){
+        $this->conexion();
+        $sql = "select haberes_descuentos_trabajador.id as id, habres_descuentos.descripcion as codigo,habres_descuentos.tipo as tipo, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, empresa.razonsocial as empresa, haberes_descuentos_trabajador.register_at as register_at from haberes_descuentos_trabajador, habres_descuentos, trabajadores, empresa where haberes_descuentos_trabajador.codigo=habres_descuentos.id and haberes_descuentos_trabajador.trabajador=trabajadores.id and haberes_descuentos_trabajador.empresa=empresa.id and haberes_descuentos_trabajador.empresa=$empresa and month(haberes_descuentos_trabajador.periodo_inicio)=month(curdate()) and year(haberes_descuentos_trabajador.periodo_inicio)=year(curdate()) and month(haberes_descuentos_trabajador.periodo_termino)=month(curdate()) and year(haberes_descuentos_trabajador.periodo_termino)=year(curdate()) order by haberes_descuentos_trabajador.periodo_inicio asc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id=$rs['id'];
+            $codigo=$rs['codigo'];
+            $periodo_inicio=$rs['periodo_inicio'];
+            $periodo_termino=$rs['periodo_termino'];
+            $monto=$rs['monto'];
+            $dias=$rs['dias'];
+            $horas=$rs['horas'];
+            $modalidad=$rs['modalidad'];
+            $trabajador=$rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
+            $empresa=$rs['empresa'];
+            $tipo = $rs['tipo'];
+            $registro=$rs['register_at'];
+            $haber = new haberes_trabajador($id,$codigo,$periodo_inicio,$periodo_termino,$monto,$dias,$horas,$modalidad,$trabajador,$empresa,$tipo,$registro);
+            $lista[] = $haber;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Listar Haberes y Descuentos del Mes actual
+    function listarhaberesdescuentosactualtrabajador($empresa,$trabajador){
+        $this->conexion();
+        $sql = "select haberes_descuentos_trabajador.id as id, habres_descuentos.descripcion as codigo,habres_descuentos.tipo as tipo, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, empresa.razonsocial as empresa, haberes_descuentos_trabajador.register_at as register_at from haberes_descuentos_trabajador, habres_descuentos, trabajadores, empresa where haberes_descuentos_trabajador.codigo=habres_descuentos.id and haberes_descuentos_trabajador.trabajador=trabajadores.id and haberes_descuentos_trabajador.empresa=empresa.id and haberes_descuentos_trabajador.empresa=$empresa and month(haberes_descuentos_trabajador.periodo_inicio)=month(curdate()) and year(haberes_descuentos_trabajador.periodo_inicio)=year(curdate()) and month(haberes_descuentos_trabajador.periodo_termino)=month(curdate()) and year(haberes_descuentos_trabajador.periodo_termino)=year(curdate()) and trabajadores.id=$trabajador order by haberes_descuentos_trabajador.periodo_inicio asc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id=$rs['id'];
+            $codigo=$rs['codigo'];
+            $periodo_inicio=$rs['periodo_inicio'];
+            $periodo_termino=$rs['periodo_termino'];
+            $monto=$rs['monto'];
+            $dias=$rs['dias'];
+            $horas=$rs['horas'];
+            $modalidad=$rs['modalidad'];
+            $trabajador=$rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
+            $empresa=$rs['empresa'];
+            $tipo = $rs['tipo'];
+            $registro=$rs['register_at'];
+            $haber = new haberes_trabajador($id,$codigo,$periodo_inicio,$periodo_termino,$monto,$dias,$horas,$modalidad,$trabajador,$empresa,$tipo,$registro);
+            $lista[] = $haber;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    function eliminarhaberesdescuentos($id){
+        $this->conexion();
+        $sql = "delete from haberes_descuentos_trabajador where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+
 
 
 

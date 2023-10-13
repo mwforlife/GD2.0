@@ -4,6 +4,7 @@ class Contrato
     private $id;
     private $trabajador;
     private $empresa;
+    private $centrocosto;
     private $tipocontrato;
     private $cargo;
     private $sueldo;
@@ -13,11 +14,12 @@ class Contrato
     private $estado;
     private $fecharegistro;
 
-    public function __construct($id, $trabajador, $empresa, $tipocontrato,$cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $fecharegistro)
+    public function __construct($id, $trabajador, $empresa,$centrocosto, $tipocontrato,$cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $fecharegistro)
     {
         $this->id = $id;
         $this->trabajador = $trabajador;
         $this->empresa = $empresa;
+        $this->centrocosto = $centrocosto;
         $this->tipocontrato = $tipocontrato;
         $this->cargo = $cargo;
         $this->sueldo = $sueldo;
@@ -41,6 +43,11 @@ class Contrato
     public function getEmpresa()
     {
         return $this->empresa;
+    }
+
+    public function getCentrocosto()
+    {
+        return $this->centrocosto;
     }
 
     public function getTipocontrato()

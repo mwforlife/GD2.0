@@ -25,6 +25,9 @@ if(isset($_POST['codigo']) && isset($_POST['periodoini']) && isset($_POST['perio
         return;
     }
 
+    $periodoini = $periodoini. "-01";
+    $periodofin = $periodofin. "-01";
+
     //Validacion de datos
     if($tipo==1){
         if($monto == "" || $monto <= 0){
@@ -54,14 +57,22 @@ if(isset($_POST['codigo']) && isset($_POST['periodoini']) && isset($_POST['perio
 
     $empresa = $_SESSION['CURRENT_ENTERPRISE'];
 
+    $resultado = false;
     foreach($trabajadores as $trabajador){
         $id = $trabajador['id'];
         $result = $c->registrarhaberes_descuentos_trabajador($codigo,$periodoini,$periodofin,$monto,$dias,$horas,$modalidad,$id,$empresa);
         if($result==true){
-            echo json_encode(array("status" => true, "message" => "Se ha registrado el haber/descuento correctamente"));
+            $resultado = true;
         }else{
-            echo json_encode(array("status" => false, "message" => "No se ha podido registrar el haber/descuento"));
+            $resultado = false;
+            break;
         }
+    }
+
+    if($resultado==true){
+        echo json_encode(array("status" => true, "message" => "Se ha registrado el haber/descuento correctamente"));
+    }else{
+        echo json_encode(array("status" => false, "message" => "No se ha podido registrar el haber/descuento"));
     }
 
 }else{

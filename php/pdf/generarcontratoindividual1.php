@@ -169,6 +169,9 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
 
     //Informacion de lugar de trabajo
     $centrocosto = $_POST['centrocosto'];
+    $centrocostoid = $centrocosto;
+    $centrocosto = $c->buscarcentrcosto($centrocosto);
+    $centrocosto = $centrocosto->getNombre();
     $Charge = $_POST['Charge'];
     //Comprobar si charge es tipo numerico
     if (is_numeric($Charge)) {
@@ -2032,7 +2035,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
     }
     
     //Guardar en la base de datos
-    $result = $c->query("insert into contratos values(null, $trabajador, $empresa, '$typecontract','$Charge',$sueldo, '$fechainicioregistro', '$fechatermino1', '$nombre_documento',1,now())");
+    $result = $c->query("insert into contratos values(null, $trabajador, $empresa,$centrocostoid, '$typecontract','$Charge',$sueldo, '$fechainicioregistro', '$fechatermino1', '$nombre_documento',1,now())");
     if ($result == true) {
         echo 1;
         $usuario = $_SESSION['USER_ID'];

@@ -85,6 +85,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
 
         //Informacion de lugar de trabajo
         $centrocosto = $_POST['centrocosto'];
+        $centrocostoid = $centrocosto;
         $centrocosto = $c->buscarcentrcosto($centrocosto);
         $centrocosto = $centrocosto->getNombre();
         $Charge = $_POST['Charge'];
@@ -1952,7 +1953,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             $fecha_termino = date('Y-m-d', strtotime($fecha_termino));
         }
         //Guardar en la base de datos
-        $result = $c->query("insert into contratos values(null, " . $tra->getEmpresa() . ", $empresa, '$typecontract','$Charge',$sueldo, '$fechainicioregistro', '$fecha_termino', '$nombre_documento',1,now())");
+        $result = $c->query("insert into contratos values(null, " . $tra->getEmpresa() . ", $empresa,$centrocostoid, '$typecontract','$Charge',$sueldo, '$fechainicioregistro', '$fecha_termino', '$nombre_documento',1,now())");
         if ($result == true) {
             $c->eliminartrabajadorlote($tra->getEmpresa(), $_SESSION['USER_ID']);
             $id = $c->buscaridultimocontrato();

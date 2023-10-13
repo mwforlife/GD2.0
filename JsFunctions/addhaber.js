@@ -125,10 +125,6 @@ function verificartipo(){
 }
 
 
-$(document).ready(function(){
-   verificartipo(); 
-});
-
 function registrarhaberes(){
     //Validar lista
     if(!validalista()){
@@ -219,4 +215,109 @@ function registrarhaberes(){
             ToastifyError("Error al asignar haberes y descuentos");
         },
     });
+}
+
+function filtrarhaberesdescuentos(){
+    var periodoinico = $("#periodoinico").val();
+    var periodofin = $("#periodofin").val();
+    var funcionario = $("#funcionario").val();
+
+    if(periodoinico.trim().length==0){
+        ToastifyError("Debe ingresar el periodo inicial");
+        $("#periodoinico").focus();
+        return false;
+    }
+
+    if(periodofin.trim().length==0){
+        ToastifyError("Debe ingresar el periodo final");
+        $("#periodofin").focus();
+        return false;
+    }
+
+    //Comparar si el periodo inicial es mayor al periodo final
+    var dateini = new Date(periodoinico);
+    var datefin = new Date(periodofin);
+    if(dateini>datefin){
+        ToastifyError("El periodo inicial no puede ser mayor al periodo final");
+        $("#periodoinico").focus();
+        return false;
+    }
+    $.ajax({
+        url: "php/cargar/filtrohaberessession.php",
+        type: "POST",
+        data: {periodoinico: periodoinico, periodofin: periodofin, funcionario: funcionario},
+        success: function (response) {
+            try {
+                var json = JSON.parse(response);
+                if(json.status==true){
+                    location.reload();
+                }else{
+                    ToastifyError("UPS! No se pudo cargar el Filtro");
+                }
+            } catch (error) {
+                console.log(error);
+                ToastifyError("UPS! No se pudo cargar el Filtro");
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.log(xhr.status);
+            console.log(thrownError);
+            ToastifyError("Error al cargar los haberes y descuentos");
+        },
+    });
+}
+
+function limpiarfiltro(){
+    $.ajax({
+        url: "php/cargar/limpiarfiltrohaberes.php",
+        success: function (response) {
+            location.reload();
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.log(xhr.status);
+            console.log(thrownError);
+            ToastifyError("Error al cargar los haberes y descuentos");
+        },
+    });
+}
+
+function eliminarhabertrabajador(id){
+    swal.fire({
+        title: '¿Está seguro de eliminar este haber o descuento?',
+        text: "Esta acción no se puede revertir",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText:'Si, eliminar',
+        cancelButtonText: 'No, cancelar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "php/eliminar/habertrabajador.php",
+                type: "POST",
+                data: {id: id},
+                success: function (response) {
+                    try {
+                        var json = JSON.parse(response);
+                        if(json.status==true){
+                            ToastifySuccess(json.message);
+                            setTimeout(function(){ 
+                                location.reload();
+                             }, 1500);
+                        }else{
+                            ToastifyError(json.message);
+                        }
+                    } catch (error) {
+                        ToastifyError("Error al eliminar el haber o descuento");
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(xhr.status);
+                    console.log(thrownError);
+                    ToastifyError("Error al eliminar el haber o descuento");
+                },
+            });
+        }
+    })
 }

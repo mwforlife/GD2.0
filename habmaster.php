@@ -416,26 +416,55 @@ foreach ($permiso as $p) {
                                         <div class="col-md-12 text-right">
                                             <a href="addhaber.php" class="btn btn-primary"><i class="fa fa-plus"></i> Agregar Haber o Descuento</a>
                                         </div>
+                                        <?php
+                                            $periodoinicio = "";
+                                            $periodofin = "";
+                                            $funcionarioid = 0;
+                                            if(isset($_SESSION['periodoinico'])){
+                                                //Periodo en formaro yyyy-mm
+                                                $periodoinicio = date("Y-m", strtotime($_SESSION['periodoinico']));
+                                            }else{
+                                                $periodoinicio = date("Y-m");
+                                            }
+                                            if(isset($_SESSION['periodofin'])){
+                                                //Periodo en formaro yyyy-mm
+                                                $periodofin = date("Y-m", strtotime($_SESSION['periodofin']));
+                                            }else{
+                                                $periodofin = date("Y-m");
+                                            }
+                                            if(isset($_SESSION['funcionario'])){
+                                                $funcionarioid = $_SESSION['funcionario'];
+                                            }
+                                        ?>
                                         <div class="col-md-12 mb-2">
                                             <div class="row">
                                                 <div class="col-lg-2">
                                                     <label for="">Periodo</label>
-                                                    <input type="month" class="form-control" id="periodoinico">
+                                                    <input type="month" class="form-control" id="periodoinico" value="<?php echo $periodoinicio; ?>">
                                                 </div>
                                                 <div class="col-lg-2">
                                                     <label for="">Hasta</label>
-                                                    <input type="month" class="form-control" id="periodofin">
+                                                    <input type="month" class="form-control" id="periodofin" value="<?php echo $periodofin; ?>">
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label for="">Funcionario</label>
-                                                    <select name="funcionario" id="funcionario" class="form-control select2">
+                                                    <select name="funcionario" id="funcionario" class="form-control">
+                                                        <option value="0">Seleccione un Funcionario</option>
                                                         <?php
                                                         $lista = $c->listartrabajadoresactivos($_SESSION['CURRENT_ENTERPRISE']);
                                                         foreach ($lista as $object) {
-                                                            echo "<option value='" . $object->getId() . "'>" . $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2() . "</option>";
+                                                            if($funcionarioid == $object->getId()){
+                                                                echo "<option value='" . $object->getId() . "' selected>" . $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2() . "</option>";
+                                                            }else{
+                                                                echo "<option value='" . $object->getId() . "'>" . $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2() . "</option>";
+                                                            }
                                                         }
                                                         ?>
                                                     </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button class="btn btn-outline-primary mt-4" onclick="filtrarhaberesdescuentos()"> <i class="fa fa-filter"></i> Filtrar</button>
+                                                    <button class="btn btn-outline-danger mt-4" onclick="limpiarfiltro()"><i class="fa fa-close"></i> Limpiar Filtro </button>
                                                 </div>
 
                                             </div>
@@ -454,44 +483,296 @@ foreach ($permiso as $p) {
                                                     <div class="tab-pane active show" id="tabCont1">
                                                         <!-- Row -->
                                                         <div class="row">
-                                                            <table class="table table-hover">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-hover w-100" id="example2">
                                                                 <thead>
                                                                     <tr>
+                                                                        <th>Periodo</th>
                                                                         <th>Funcionario</th>
                                                                         <th>Haber / Descuento</th>
-                                                                        <th>Periodo</th>
                                                                         <th>Tipo</th>
                                                                         <th>Modalidad</th>
-                                                                        <th>Monto</th>
+                                                                        <th>Monto / Dias / horas</th>
+                                                                        <th>Eliminar</th>
                                                                     </tr>
                                                                 </thead>
-                                                                <tbody id="haberesmensuales">
+                                                                <tbody id="haberesfijos">
+                                                                    <?php
+                                                                    $lista = $c->listarhaberesdescuentos($_SESSION['CURRENT_ENTERPRISE']);
+                                                                    if(isset($_SESSION['periodoinico']) && isset($_SESSION['periodofin'])){
+                                                                        $periodoinicio = $_SESSION['periodoinico'];
+                                                                        $periodofin = $_SESSION['periodofin'];
+                                                                        if(isset($_SESSION['funcionario'])){
+                                                                            $funcionario = $_SESSION['funcionario'];
+                                                                            if($funcionario <= 0){
+                                                                                $lista = $c->listarhaberes_descuento($periodoinicio, $periodofin, $_SESSION['CURRENT_ENTERPRISE']);
+                                                                            }else{
+                                                                                $lista = $c->listarhaberes_descuentotrababajador($periodoinicio, $periodofin, $_SESSION['CURRENT_ENTERPRISE'], $funcionario);
+                                                                            }
+                                                                        }else{
+                                                                            $lista = $c->listarhaberes_descuento($periodoinicio, $periodofin, $_SESSION['CURRENT_ENTERPRISE']);
+                                                                        }
+                                                                    }
 
+                                                                    foreach ($lista as $object) {
+                                                                        echo "<tr>";
+                                                                        $periodoinit = date("Y-m", strtotime($object->getPeriodoini()));
+                                                                        $mesinit = date("m", strtotime($object->getPeriodoini()));
+                                                                        $anoinit = date("Y", strtotime($object->getPeriodoini()));
+                                                                        $periodofin = date("Y-m", strtotime($object->getPeriodofin()));
+                                                                        $mesfin = date("m", strtotime($object->getPeriodofin()));
+                                                                        $anofin = date("Y", strtotime($object->getPeriodofin()));
+                                                                        switch ($mesinit) {
+                                                                            case 1:
+                                                                                $mesinit = "Enero";
+                                                                                break;
+                                                                            case 2:
+                                                                                $mesinit = "Febrero";
+                                                                                break;
+                                                                            case 3:
+                                                                                $mesinit = "Marzo";
+                                                                                break;
+                                                                            case 4:
+                                                                                $mesinit = "Abril";
+                                                                                break;
+                                                                            case 5:
+                                                                                $mesinit = "Mayo";
+                                                                                break;
+                                                                            case 6:
+                                                                                $mesinit = "Junio";
+                                                                                break;
+                                                                            case 7:
+                                                                                $mesinit = "Julio";
+                                                                                break;
+                                                                            case 8:
+                                                                                $mesinit = "Agosto";
+                                                                                break;
+                                                                            case 9:
+                                                                                $mesinit = "Septiembre";
+                                                                                break;
+                                                                            case 10:
+                                                                                $mesinit = "Octubre";
+                                                                                break;
+                                                                            case 11:
+                                                                                $mesinit = "Noviembre";
+                                                                                break;
+                                                                            case 12:
+                                                                                $mesinit = "Diciembre";
+                                                                                break;
+                                                                        }
+
+                                                                        switch ($mesfin) {
+                                                                            case 1:
+                                                                                $mesfin = "Enero";
+                                                                                break;
+                                                                            case 2:
+                                                                                $mesfin = "Febrero";
+                                                                                break;
+                                                                            case 3:
+                                                                                $mesfin = "Marzo";
+                                                                                break;
+                                                                            case 4:
+                                                                                $mesfin = "Abril";
+                                                                                break;
+                                                                            case 5:
+                                                                                $mesfin = "Mayo";
+                                                                                break;
+                                                                            case 6:
+                                                                                $mesfin = "Junio";
+                                                                                break;
+                                                                            case 7:
+                                                                                $mesfin = "Julio";
+                                                                                break;
+                                                                            case 8:
+                                                                                $mesfin = "Agosto";
+                                                                                break;
+                                                                            case 9:
+                                                                                $mesfin = "Septiembre";
+                                                                                break;
+                                                                            case 10:
+                                                                                $mesfin = "Octubre";
+                                                                                break;
+                                                                            case 11:
+                                                                                $mesfin = "Noviembre";
+                                                                                break;
+                                                                            case 12:
+                                                                                $mesfin = "Diciembre";
+                                                                                break;
+                                                                        }
+
+                                                                        echo "<td>" . $mesinit . " " . $anoinit . " - " . $mesfin . " " . $anofin . "</td>";
+                                                                        echo "<td>" . $object->getTrabajador(). "</td>";
+                                                                        echo "<td>" . $object->getCodigo() . "</td>";
+                                                                        if($object->getTipo() == 1){
+                                                                            echo "<td>HABER</td>";
+                                                                        }else{
+                                                                            echo "<td>DESCUENTO</td>";
+                                                                        }
+                                                                        if($object->getModalidad() == 1){
+                                                                            echo "<td>FIJO</td>";
+                                                                        }else{
+                                                                            echo "<td>PROPORCIONAL</td>";
+                                                                        }
+                                                                        if($object->getMonto()>0){
+                                                                        echo "<td>" . $object->getMonto() . "</td>";
+                                                                        }else if($object->getDias()>0){
+                                                                            echo "<td>" . $object->getDias() . " Dias</td>";
+                                                                        }else{
+                                                                            echo "<td>" . $object->getHoras() . " Horas</td>";
+                                                                        }
+                                                                        echo "<td><a class='btn btn-outline-danger' href='#' onclick='eliminarhabertrabajador(" . $object->getId() . ")'><i class='fa fa-trash'></i></a></td>";
+                                                                        echo "</tr>";
+                                                                    }
+
+                                                                    ?>
                                                                 </tbody>
 
                                                             </table>
+                                                            </div>
                                                         </div>
                                                         <!-- End Row -->
                                                     </div>
                                                     <div class="tab-pane" id="tabCont2">
                                                         <!-- Row -->
                                                         <div class="row">
-                                                        <table class="table table-hover">
-                                                                <thead>
+                                                            <div class="table-responsive">
+                                                            <table class="table table-hover w-100" id="example1">
+                                                            <thead>
                                                                     <tr>
+                                                                        <th>Periodo</th>
                                                                         <th>Funcionario</th>
                                                                         <th>Haber / Descuento</th>
-                                                                        <th>Periodo</th>
                                                                         <th>Tipo</th>
                                                                         <th>Modalidad</th>
-                                                                        <th>Monto</th>
+                                                                        <th>Monto / Dias / horas</th>
+                                                                        <th>Eliminar</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody id="haberesfijos">
+                                                                    <?php
+                                                                    $lista = $c->listarhaberesdescuentosactual($_SESSION['CURRENT_ENTERPRISE']);
+                                                                    if(isset($_SESSION['funcionario'])){
+                                                                        $funcionario = $_SESSION['funcionario'];
+                                                                        if($funcionario>0){
+                                                                            $lista = $c->listarhaberesdescuentosactualtrabajador($_SESSION['CURRENT_ENTERPRISE'], $funcionario);
+                                                                        }
+                                                                    }
+                                                                    foreach ($lista as $object) {
+                                                                        echo "<tr>";
+                                                                        $periodoinit = date("Y-m", strtotime($object->getPeriodoini()));
+                                                                        $mesinit = date("m", strtotime($object->getPeriodoini()));
+                                                                        $anoinit = date("Y", strtotime($object->getPeriodoini()));
+                                                                        $periodofin = date("Y-m", strtotime($object->getPeriodofin()));
+                                                                        $mesfin = date("m", strtotime($object->getPeriodofin()));
+                                                                        $anofin = date("Y", strtotime($object->getPeriodofin()));
+                                                                        switch ($mesinit) {
+                                                                            case 1:
+                                                                                $mesinit = "Enero";
+                                                                                break;
+                                                                            case 2:
+                                                                                $mesinit = "Febrero";
+                                                                                break;
+                                                                            case 3:
+                                                                                $mesinit = "Marzo";
+                                                                                break;
+                                                                            case 4:
+                                                                                $mesinit = "Abril";
+                                                                                break;
+                                                                            case 5:
+                                                                                $mesinit = "Mayo";
+                                                                                break;
+                                                                            case 6:
+                                                                                $mesinit = "Junio";
+                                                                                break;
+                                                                            case 7:
+                                                                                $mesinit = "Julio";
+                                                                                break;
+                                                                            case 8:
+                                                                                $mesinit = "Agosto";
+                                                                                break;
+                                                                            case 9:
+                                                                                $mesinit = "Septiembre";
+                                                                                break;
+                                                                            case 10:
+                                                                                $mesinit = "Octubre";
+                                                                                break;
+                                                                            case 11:
+                                                                                $mesinit = "Noviembre";
+                                                                                break;
+                                                                            case 12:
+                                                                                $mesinit = "Diciembre";
+                                                                                break;
+                                                                        }
 
+                                                                        switch ($mesfin) {
+                                                                            case 1:
+                                                                                $mesfin = "Enero";
+                                                                                break;
+                                                                            case 2:
+                                                                                $mesfin = "Febrero";
+                                                                                break;
+                                                                            case 3:
+                                                                                $mesfin = "Marzo";
+                                                                                break;
+                                                                            case 4:
+                                                                                $mesfin = "Abril";
+                                                                                break;
+                                                                            case 5:
+                                                                                $mesfin = "Mayo";
+                                                                                break;
+                                                                            case 6:
+                                                                                $mesfin = "Junio";
+                                                                                break;
+                                                                            case 7:
+                                                                                $mesfin = "Julio";
+                                                                                break;
+                                                                            case 8:
+                                                                                $mesfin = "Agosto";
+                                                                                break;
+                                                                            case 9:
+                                                                                $mesfin = "Septiembre";
+                                                                                break;
+                                                                            case 10:
+                                                                                $mesfin = "Octubre";
+                                                                                break;
+                                                                            case 11:
+                                                                                $mesfin = "Noviembre";
+                                                                                break;
+                                                                            case 12:
+                                                                                $mesfin = "Diciembre";
+                                                                                break;
+                                                                        }
+
+                                                                        echo "<td>" . $mesinit . " " . $anoinit . " - " . $mesfin . " " . $anofin . "</td>";
+                                                                        echo "<td>" . $object->getTrabajador(). "</td>";
+                                                                        echo "<td>" . $object->getCodigo() . "</td>";
+                                                                        if($object->getTipo() == 1){
+                                                                            echo "<td>HABER</td>";
+                                                                        }else{
+                                                                            echo "<td>DESCUENTO</td>";
+                                                                        }
+                                                                        if($object->getModalidad() == 1){
+                                                                            echo "<td>FIJO</td>";
+                                                                        }else{
+                                                                            echo "<td>PROPORCIONAL</td>";
+                                                                        }
+                                                                        if($object->getMonto()>0){
+                                                                        echo "<td>" . $object->getMonto() . "</td>";
+                                                                        }else if($object->getDias()>0){
+                                                                            echo "<td>" . $object->getDias() . " Dias</td>";
+                                                                        }else{
+                                                                            echo "<td>" . $object->getHoras() . " Horas</td>";
+                                                                        }
+                                                                        echo "<td><a class='btn btn-outline-danger' href='#' onclick='eliminarhabertrabajador(" . $object->getId() . ")'><i class='fa fa-trash'></i></a></td>";
+                                                                        echo "</tr>";
+                                                                    }
+
+                                                                    ?>
                                                                 </tbody>
 
                                                             </table>
+                                                            </div>
+                                                       
                                                         </div>
                                                         <!-- End Row -->
                                                     </div>
@@ -589,6 +870,7 @@ foreach ($permiso as $p) {
     <script src="JsFunctions/Alert/alert.js"></script>
     <script src="JsFunctions/main.js"></script>
     <script src="JsFunctions/Trabajadores.js"></script>
+    <script src="JsFunctions/addhaber.js"></script>
 
     <script>
         $(document).ready(function() {

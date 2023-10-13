@@ -239,6 +239,16 @@ create table status(
 insert into status(nombre) values('Activo');
 insert into status(nombre) values('Inactivo');
 
+create table tipousuario(
+    id int not null auto_increment primary key,
+    nombre varchar(50) not null
+);
+
+insert into tipousuario(nombre) values('Administrador');
+insert into tipousuario(nombre) values('Contratista');
+insert into tipousuario(nombre) values('Mandante');
+
+
 create table users (
     id_usu int not null auto_increment primary key,
     rut varchar(20) not null,
@@ -255,6 +265,9 @@ create table users (
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp on update current_timestamp
 );
+
+--Agregar tipo de usuario a tabla users con valor por defecto 1 a referencia tipousuario(id)
+alter table users add column tipousuario int not null references tipousuario(id) default 2 after token;
 
 create table sesionusuario (
     id int not null auto_increment primary key,
@@ -276,7 +289,7 @@ insert into permisos(nombre,descripcion) values('Escritura','Permite escribir lo
 insert into permisos(nombre,descripcion) values('Actualizacion','Permite actualizar los datos');
 insert into permisos(nombre,descripcion) values('Eliminacion','Permite eliminar los datos');
 
-create table permisosusuarios(
+create table permisosusers(
     id int not null auto_increment primary key,
     idusuario int not null references users(id_usu),
     idpermiso int not null references permisos(id)
@@ -545,25 +558,25 @@ create table lote(
     id int not null auto_increment primary key,
     trabajador int not null references trabajadores(id),
     token varchar(200) not null,
-    usuario int not null references usuarios(id)
+    usuario int not null references users(id)
 );
 
 create table resumenregion(
     id int not null auto_increment primary key,
     region int not null references regiones(id),
-    usuario int not null references usuarios(id)
+    usuario int not null references users(id)
 );
 
 create table resumenprovincia(
     id int not null auto_increment primary key,
     provincia int not null references provincias(id),
-    usuario int not null references usuarios(id)
+    usuario int not null references users(id)
 );
 
 create table resumencomuna(
     id int not null auto_increment primary key,
     comuna int not null references comunas(id),
-    usuario int not null references usuarios(id)
+    usuario int not null references users(id)
 );
 
 
@@ -617,6 +630,9 @@ create table contratos(
     estado int not null references estadocontrato(id),
     register_at timestamp not null default current_timestamp
 );
+
+--Agregar id centro de costo a tabla contratos despues de id empresa con valor por defecto 1 a referencia centrocosto(id)
+alter table contratos add column centrocosto int not null references centrocosto(id) default 0 after empresa;
 
 create table estadoafectoavacaciones(
     id int not null auto_increment primary key,
@@ -705,7 +721,7 @@ create table resumenfiniquito(
     tipoindemnizacion int not null references tipodeindezacion(id),
     descripcion varchar(500) not null,
     monto decimal(10,2) not null,
-    usuario int not null references usuarios(id)
+    usuario int not null references users(id)
 );
 
 create table finiquito(
@@ -794,7 +810,7 @@ create table lote4(
 create table lote3(
     id int not null auto_increment primary key,
     finiquito int not null references finiquito(id),
-    usuario int not null references usuarios(id),
+    usuario int not null references users(id),
     register_at timestamp not null default current_timestamp
 );
 
