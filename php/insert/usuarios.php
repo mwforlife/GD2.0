@@ -11,7 +11,7 @@ if (!isset($_SESSION['USER_ID'])) {
 	}
 }
 
-if (isset($_POST['UserRut']) && isset($_POST['UserNombre']) && isset($_POST['UserApellido']) && isset($_POST['UserEmail']) && isset($_POST['UserDireccion'])  && isset($_POST['UserRegion']) && isset($_POST['UserComuna']) && isset($_POST['UserPhone']) && isset($_POST['UserPassword'])) {
+if (isset($_POST['UserRut']) && isset($_POST['UserNombre']) && isset($_POST['UserApellido']) && isset($_POST['UserEmail']) && isset($_POST['UserDireccion'])  && isset($_POST['UserRegion']) && isset($_POST['UserComuna']) && isset($_POST['UserPhone']) && isset($_POST['UserPassword']) && isset($_POST['UserType'])) {
     $UserRut = $_POST['UserRut'];
     $UserNombre = $_POST['UserNombre'];
     if (strlen($UserNombre) <= 0) {
@@ -62,12 +62,14 @@ if (isset($_POST['UserRut']) && isset($_POST['UserNombre']) && isset($_POST['Use
         return;
     }
 
+    $UserType = $_POST['UserType'];
+
     $valid = $c->validarusuario($UserEmail, $UserRut);
     if ($valid == true) {
         echo "El usuario ya existe";
         return;
     } else {
-        $result = $c->registrarusuario($UserRut, $UserNombre, $UserApellido, $UserEmail, $UserDireccion, $UserRegion, $UserComuna, $UserTelefono, $UserPassword);
+        $result = $c->registrarusuario($UserRut, $UserNombre, $UserApellido, $UserEmail, $UserDireccion, $UserRegion, $UserComuna, $UserTelefono, $UserPassword, $UserType);
         if ($result == true) {
             echo 1;
             $usuario = $_SESSION['USER_ID'];

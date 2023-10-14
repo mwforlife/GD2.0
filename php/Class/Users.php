@@ -12,10 +12,11 @@ class Users{
     private $pass;
     private $estado;
     private $token;
+    private $tipo;
     private $registro;
     private $update;
 
-    public function Users($id, $rut, $nombre, $apellido, $correo, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $registro, $update){
+    public function Users($id, $rut, $nombre, $apellido, $correo, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $tipo, $registro, $update){
         $this->id = $id;
         $this->rut = $rut;
         $this->nombre = $nombre;
@@ -28,6 +29,7 @@ class Users{
         $this->pass = $pass;
         $this->estado = $estado;
         $this->token = $token;
+        $this->tipo = $tipo;
         $this->registro = $registro;
         $this->update = $update;
     }
@@ -78,6 +80,10 @@ class Users{
 
     public function getToken(){
         return $this->token;
+    }
+
+    public function getTipo(){
+        return $this->tipo;
     }
 
     public function getRegistro(){
@@ -134,6 +140,10 @@ class Users{
 
     public function setToken($token){
         $this->token = $token;
+    }
+
+    public function setTipo($tipo){
+        $this->tipo = $tipo;
     }
 
     public function setRegistro($registro){

@@ -44,6 +44,7 @@ require 'Class/TrabajadorDomicilio.php';
 require 'Class/Trabajadores.php';
 require 'Class/TrabajadorRemuneracion.php';
 require 'Class/Tramos.php';
+require 'Class/Tipousuario.php';
 require 'Class/Users.php';
 require 'Class/Vacaciones.php';
 require 'Class/DocumentoSubido.php';
@@ -163,9 +164,10 @@ class Controller
             $pass = $rs['password'];
             $estado = $rs['estado'];
             $token = $rs['token'];
+            $tipo = $rs['tipousuario'];
             $registro = $rs['created_at'];
             $update = $rs['updated_at'];
-            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $registro, $update);
+            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token,$tipo, $registro, $update);
             $this->desconectar();
             return $user;
         }
@@ -450,11 +452,27 @@ class Controller
         return json_encode($result);
     }
 
+    //Listar Tipo Usuario
+    function listartipousuario(){
+        $this->conexion();
+        $sql = "select * from tipousuario";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $nombre = $rs['nombre'];
+            $tipousuario = new TipoUsuario($id, $nombre);
+            $lista[] = $tipousuario;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
     //Registrar Usuarios
-    public function registrarusuario($rut, $nombre, $apellido, $correo, $direccion, $region, $comuna, $telefono, $pass)
+    public function registrarusuario($rut, $nombre, $apellido, $correo, $direccion, $region, $comuna, $telefono, $pass,$tipo)
     {
         $this->conexion();
-        $sql = "insert into users values(null, '$rut', '$nombre', '$apellido', '$correo', '$direccion', $region, $comuna, '$telefono', sha1('$pass'), 1, sha1('$correo'), now(), now());";
+        $sql = "insert into users values(null, '$rut', '$nombre', '$apellido', '$correo', '$direccion', $region, $comuna, '$telefono', sha1('$pass'), 1,$tipo, sha1('$correo'), now(), now());";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return json_encode($result);
@@ -2256,9 +2274,10 @@ class Controller
             $pass = $rs['password'];
             $estado = $rs['estado'];
             $token = $rs['token'];
+            $tipo = $rs['tipousuario'];
             $registro = $rs['created_at'];
             $update = $rs['updated_at'];
-            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $registro, $update);
+            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token,$tipo, $registro, $update);
             $lista[] = $user;
         }
         $this->desconectar();
@@ -2625,10 +2644,10 @@ class Controller
     }
 
     //Actualizar Usuario
-    public function actualizarusuario($id, $rut, $nombre, $apellido, $correo, $direccion, $region, $comuna, $telefono)
+    public function actualizarusuario($id, $rut, $nombre, $apellido, $correo, $direccion, $region, $comuna, $telefono, $tipo)
     {
         $this->conexion();
-        $sql = "update users set rut = '$rut', nombre = '$nombre', apellidos = '$apellido', email = '$correo', direccion = '$direccion', region = $region, comuna = $comuna, telefono = '$telefono', updated_at = now() where id_usu = $id";
+        $sql = "update users set rut = '$rut', nombre = '$nombre', apellidos = '$apellido', email = '$correo', direccion = '$direccion', region = $region, comuna = $comuna, telefono = '$telefono', tipousuario=$tipo, updated_at = now() where id_usu = $id";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return json_encode($result);
@@ -3334,9 +3353,10 @@ class Controller
             $pass = $rs['password'];
             $estado = $rs['estado'];
             $token = $rs['token'];
+            $tipo = $rs['tipousuario'];
             $registro = $rs['created_at'];
             $update = $rs['updated_at'];
-            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $registro, $update);
+            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token,$tipo, $registro, $update);
             $this->desconectar();
             return $user;
         }
@@ -3597,7 +3617,7 @@ class Controller
     public function getuser1($id)
     {
         $this->conexion();
-        $sql = "select id_usu,rut, users.nombre as nombre, apellidos, email, direccion, regiones.nombre as region, comunas.nombre as comuna, telefono, password, status.nombre as estado, token, created_at, updated_at from users, regiones, comunas, status where regiones.id = users.region and comunas.id = users.comuna and status.id = users.estado and users.id_usu = $id";
+        $sql = "select id_usu,rut, users.nombre as nombre, apellidos, email, direccion,tipousuario, regiones.nombre as region, comunas.nombre as comuna, telefono, password, status.nombre as estado, token, created_at, updated_at from users, regiones, comunas, status where regiones.id = users.region and comunas.id = users.comuna and status.id = users.estado and users.id_usu = $id";
         $result = $this->mi->query($sql);
         if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id_usu'];
@@ -3612,9 +3632,10 @@ class Controller
             $pass = $rs['password'];
             $estado = $rs['estado'];
             $token = $rs['token'];
+            $tipo = $rs['tipousuario'];
             $registro = $rs['created_at'];
             $update = $rs['updated_at'];
-            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $registro, $update);
+            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token,$tipo, $registro, $update);
             $this->desconectar();
             return $user;
         }
@@ -3642,9 +3663,10 @@ class Controller
             $pass = $rs['password'];
             $estado = $rs['estado'];
             $token = $rs['token'];
+            $tipo = $rs['tipousuario'];
             $registro = $rs['created_at'];
             $update = $rs['updated_at'];
-            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $registro, $update);
+            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token,$tipo, $registro, $update);
             $lista[] = $user;
         }
         $this->desconectar();
@@ -4689,7 +4711,7 @@ class Controller
     function listarcontratos($trabajador)
     {
         $this->conexion();
-        $sql = "select contratos.id as id, trabajadores.nombre as nombre, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.trabajador = $trabajador and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa";
+        $sql = "select contratos.id as id, trabajadores.nombre as nombre, trabajadores.primerapellido as primerapellido, contratos.centrocosto as centrocosto, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.trabajador = $trabajador and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -4697,6 +4719,7 @@ class Controller
             $nombre = $rs['nombre'] . " " . $rs['primerapellido'] . " " . $rs['segundoapellido'];
             $razonsocial = $rs['razonsocial'];
             $tipocontrato = $rs['tipocontrato'];
+            $centrocosto = $rs['centrocosto'];
             $cargo = $rs['cargo'];
             $sueldo = $rs['sueldo'];
             $fechainicio = $rs['fechainicio'];
@@ -4704,7 +4727,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['register_at'];
-            $contrato = new Contrato($id, $nombre, $razonsocial, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $lista[] = $contrato;
         }
         $this->desconectar();
@@ -4715,7 +4738,7 @@ class Controller
     function listarcontratosactivosempresa($empresa)
     {
         $this->conexion();
-        $sql = "select contratos.id as id, trabajadores.rut as rut,trabajadores.nombre as nombre, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.empresa = $empresa and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and contratos.estado=1";
+        $sql = "select contratos.id as id, trabajadores.rut as rut,trabajadores.nombre as nombre, contratos.centrocosto as centrocosto, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.empresa = $empresa and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and contratos.estado=1";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -4724,6 +4747,7 @@ class Controller
             $nombre = $rs['nombre'] . " " . $rs['primerapellido'] . " " . $rs['segundoapellido'];
             $razonsocial = $rs['razonsocial'];
             $tipocontrato = $rs['tipocontrato'];
+            $centrocosto = $rs['centrocosto'];
             $cargo = $rs['cargo'];
             $sueldo = $rs['sueldo'];
             $fechainicio = $rs['fechainicio'];
@@ -4731,7 +4755,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['rut'];
-            $contrato = new Contrato($id, $nombre, $razonsocial, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $lista[] = $contrato;
         }
         $this->desconectar();
@@ -4743,13 +4767,14 @@ class Controller
     function buscarcontratoid($id)
     {
         $this->conexion();
-        $sql = "select contratos.id as id, trabajadores.id as traid, trabajadores.nombre as nombre, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.id = $id and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa";
+        $sql = "select contratos.id as id, trabajadores.id as traid,contratos.centrocosto as centrocosto, trabajadores.nombre as nombre, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.id = $id and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa";
         $result = $this->mi->query($sql);
         if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $nombre = $rs['nombre'] . " " . $rs['primerapellido'] . " " . $rs['segundoapellido'];
             $razonsocial = $rs['razonsocial'];
             $tipocontrato = $rs['tipocontrato'];
+            $centrocosto = $rs['centrocosto'];
             $cargo = $rs['cargo'];
             $sueldo = $rs['sueldo'];
             $fechainicio = $rs['fechainicio'];
@@ -4757,7 +4782,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['traid'];
-            $contrato = new Contrato($id, $nombre, $razonsocial, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $this->desconectar();
             return $contrato;
         }
@@ -4769,13 +4794,14 @@ class Controller
     function buscarultimocontratoactivo($trabajador)
     {
         $this->conexion();
-        $sql = "select contratos.id as id, trabajadores.id as traid, trabajadores.nombre as nombre, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.trabajador=$trabajador and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and contratos.estado=1 order by contratos.id desc limit 1";
+        $sql = "select contratos.id as id, trabajadores.id as traid, trabajadores.nombre as nombre,contratos.centrocosto as centrocosto, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.trabajador=$trabajador and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and contratos.estado=1 order by contratos.id desc limit 1";
         $result = $this->mi->query($sql);
         if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $nombre = $rs['nombre'] . " " . $rs['primerapellido'] . " " . $rs['segundoapellido'];
             $razonsocial = $rs['razonsocial'];
             $tipocontrato = $rs['tipocontrato'];
+            $centrocosto = $rs['centrocosto'];
             $cargo = $rs['cargo'];
             $sueldo = $rs['sueldo'];
             $fechainicio = $rs['fechainicio'];
@@ -4783,7 +4809,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['traid'];
-            $contrato = new Contrato($id, $nombre, $razonsocial, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $this->desconectar();
             return $contrato;
         }
@@ -5930,7 +5956,7 @@ class Controller
     function buscarlotefiniquito($usuario)
     {
         $this->conexion();
-        $sql = "select lote2.id as id, lote2.contrato as contrato, tipocontrato, cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as registro,trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2 from lote2, contratos, trabajadores where lote2.contrato = contratos.id and contratos.trabajador = trabajadores.id and usuario=$usuario";
+        $sql = "select lote2.id as id, lote2.contrato as contrato, tipocontrato,contratos.centrocosto as centrocosto, cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as registro,trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2 from lote2, contratos, trabajadores where lote2.contrato = contratos.id and contratos.trabajador = trabajadores.id and usuario=$usuario";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -5938,6 +5964,7 @@ class Controller
             $trabajador = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
             $lote = $rs['id'];
             $tipocontrato = $rs['tipocontrato'];
+            $centrocosto = $rs['centrocosto'];
             $cargo = $rs['cargo'];
             $sueldo = $rs['sueldo'];
             $fechainicio = $rs['fechainicio'];
@@ -5945,7 +5972,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $registro = $rs['registro'];
-            $l = new Contrato($id, $trabajador, $lote, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $registro);
+            $l = new Contrato($id, $trabajador, $lote,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $registro);
             $lista[] = $l;
         }
         $this->desconectar();
@@ -5955,7 +5982,7 @@ class Controller
     //Buscar Lote Anexo
     function buscarloteanexo($usuario,$empresa){
         $this->conexion();
-        $sql = "select lote4.id as id, lote4.contrato as contrato, tipocontrato, cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as registro,trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2 from lote4, contratos, trabajadores where lote4.contrato = contratos.id and contratos.trabajador = trabajadores.id and usuario=$usuario and lote4.empresa=$empresa";
+        $sql = "select lote4.id as id, lote4.contrato as contrato, contratos.centrocosto as centrocosto, tipocontrato, cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as registro,trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2 from lote4, contratos, trabajadores where lote4.contrato = contratos.id and contratos.trabajador = trabajadores.id and usuario=$usuario and lote4.empresa=$empresa";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)){
@@ -5963,6 +5990,7 @@ class Controller
             $trabajador = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
             $lote = $rs['id'];
             $tipocontrato = $rs['tipocontrato'];
+            $centrocosto = $rs['centrocosto'];
             $cargo = $rs['cargo'];
             $sueldo = $rs['sueldo'];
             $fechainicio = $rs['fechainicio'];
@@ -5970,7 +5998,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $registro = $rs['registro'];
-            $l = new Contrato($id, $trabajador, $lote, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $registro);
+            $l = new Contrato($id, $trabajador, $lote,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $registro);
             $lista[] = $l;
         }
         $this->desconectar();

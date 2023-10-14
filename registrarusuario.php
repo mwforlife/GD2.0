@@ -641,6 +641,22 @@ foreach ($permiso as $p) {
                                         <label for="">Confirmar Contraseña:</label>
                                         <input type="password" autocomplete="false" required placeholder="Repite la contraseña" name="UserPassword1" id="UserPassword1" class="form-control">
                                     </div>
+                                    <div class="col-md-6 col-lg-6">
+                                        <label for="">Tipo Usuario</label>
+                                        <select name="UserType" autocapitalize="true" id="UserType" required class="form-control">
+                                            <?php
+                                                $lista = $c->listartipousuario();
+                                                foreach ($lista as $object){
+                                                    if($object->getId()==2){
+                                                        echo "<option value='".$object->getId()."' selected>".$object->getNombre()."</option>";
+                                                    }else{
+                                                    echo "<option value='".$object->getId()."'>".$object->getNombre()."</option>";
+                                                    }
+                                                }
+
+                                            ?>
+                                        </select>
+                                    </div>
                                     <div class="col-md-12 col-lg-12 text-right">
                                         <a href="usuarios.php" class="btn btn-danger"><i class="fa fa-arrow-left"></i> Volver</a>
                                         <button type="reset" class="btn btn-warning"><i class="fa fa-refresh"></i> Restablecer</button>

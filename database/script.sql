@@ -1007,3 +1007,10 @@ create table haberes_descuentos_trabajador(
     empresa int not null references empresa(id),
     register_at timestamp not null default current_timestamp
 );
+
+create table mandate(
+    id int not null auto_increment primary key,
+    usuario int not null references users(id),
+    centrocosto int not null references centrocosto(id),
+    register_at timestamp not null default current_timestamp
+);

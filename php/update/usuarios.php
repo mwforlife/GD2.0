@@ -11,7 +11,7 @@ if (!isset($_SESSION['USER_ID'])) {
 	}
 }
 
-if(isset($_POST['UserRut']) && isset($_POST['UserNombre']) && isset($_POST['UserApellido']) && isset($_POST['UserEmail']) && isset($_POST['UserDireccion'])  &&isset($_POST['UserRegion']) && isset($_POST['UserComuna']) && isset($_POST['UserPhone']) && isset($_POST['UserId']) ){
+if(isset($_POST['UserRut']) && isset($_POST['UserNombre']) && isset($_POST['UserApellido']) && isset($_POST['UserEmail']) && isset($_POST['UserDireccion'])  &&isset($_POST['UserRegion']) && isset($_POST['UserComuna']) && isset($_POST['UserPhone']) && isset($_POST['UserType']) && isset($_POST['UserId']) ){
     $UserRut = $_POST['UserRut'];
     $UserNombre = $_POST['UserNombre'];
     if(strlen($UserNombre) <=0){
@@ -48,11 +48,12 @@ if(isset($_POST['UserRut']) && isset($_POST['UserNombre']) && isset($_POST['User
         return;
     }
     $UserTelefono = $c->escapeString($UserTelefono);
+    $UserType = $_POST['UserType'];
     $UserId = $_POST['UserId'];
 
     $valid = $c->validarusuario1($UserEmail, $UserRut, $UserId);
     if ($valid==true) {
-        $result = $c->actualizarusuario($UserId, $UserRut, $UserNombre, $UserApellido, $UserEmail, $UserDireccion, $UserRegion, $UserComuna, $UserTelefono);
+        $result = $c->actualizarusuario($UserId, $UserRut, $UserNombre, $UserApellido, $UserEmail, $UserDireccion, $UserRegion, $UserComuna, $UserTelefono,$UserType);
         if ($result==true) {
             echo 1;
             $usuario = $_SESSION['USER_ID'];

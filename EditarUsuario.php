@@ -3,18 +3,18 @@ session_start();
 unset($_SESSION['TRABJADOR_CONTRATO']);
 require 'php/controller.php';
 $c = new Controller();
-$nombre ="";
-$id=0;
+$nombre = "";
+$id = 0;
 if (isset($_GET['code'])) {
-    $id = $_GET['code'];
-    $usuario = $c->getuser($id);
-    if ($usuario != null) {
-        $nombre = $usuario->getNombre()." ".$usuario->getApellido();
-        $id = $usuario->getId();
-    } else {
-        header("Location: usuarios.php");
-    }
-}else{
+	$id = $_GET['code'];
+	$usuario = $c->getuser($id);
+	if ($usuario != null) {
+		$nombre = $usuario->getNombre() . " " . $usuario->getApellido();
+		$id = $usuario->getId();
+	} else {
+		header("Location: usuarios.php");
+	}
+} else {
 	header("Location: usuarios.php");
 }
 $permiso = $c->listarPermisosUsuario1($_SESSION['USER_ID']);
@@ -49,49 +49,50 @@ foreach ($permiso as $p) {
 ?>
 <!DOCTYPE html>
 <html lang="es">
-	<head>
 
-		<meta charset="utf-8">
-		<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-		<meta name="description" content="">
-		<meta name="author" content="">
-		<meta name="keywords" content="">
+<head>
 
-		<!-- Favicon -->
-		<link rel="icon" href="assets/img/brand/favicon.ico" type="image/x-icon"/>
+	<meta charset="utf-8">
+	<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<meta name="keywords" content="">
 
-		<!-- Title -->
-		<title>Gestor de Documentos</title>
+	<!-- Favicon -->
+	<link rel="icon" href="assets/img/brand/favicon.ico" type="image/x-icon" />
 
-		<!-- Bootstrap css-->
-		<link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+	<!-- Title -->
+	<title>Gestor de Documentos</title>
 
-		<!-- Icons css-->
-		<link href="assets/css/icons.css" rel="stylesheet"/>
+	<!-- Bootstrap css-->
+	<link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+	<!-- Icons css-->
+	<link href="assets/css/icons.css" rel="stylesheet" />
 	<link href="assets/css/toastify.min.css" rel="stylesheet" />
 
-		<!-- Style css-->
-		<link href="assets/css/style.css" rel="stylesheet">
-		<link href="assets/css/dark-boxed.css" rel="stylesheet">
-		<link href="assets/css/boxed.css" rel="stylesheet">
-		<link href="assets/css/skins.css" rel="stylesheet">
-		<link href="assets/css/dark-style.css" rel="stylesheet">
+	<!-- Style css-->
+	<link href="assets/css/style.css" rel="stylesheet">
+	<link href="assets/css/dark-boxed.css" rel="stylesheet">
+	<link href="assets/css/boxed.css" rel="stylesheet">
+	<link href="assets/css/skins.css" rel="stylesheet">
+	<link href="assets/css/dark-style.css" rel="stylesheet">
 
-		<!-- Color css-->
-		<link id="theme" rel="stylesheet" type="text/css" media="all" href="assets/css/colors/color.css">
+	<!-- Color css-->
+	<link id="theme" rel="stylesheet" type="text/css" media="all" href="assets/css/colors/color.css">
 
-		<!-- Select2 css -->
-		<link href="assets/plugins/select2/css/select2.min.css" rel="stylesheet">
+	<!-- Select2 css -->
+	<link href="assets/plugins/select2/css/select2.min.css" rel="stylesheet">
 
-		<!-- Internal DataTables css-->
-		<link href="assets/plugins/datatable/dataTables.bootstrap4.min.css" rel="stylesheet" />
-		<link href="assets/plugins/datatable/responsivebootstrap4.min.css" rel="stylesheet" />
-		<link href="assets/plugins/datatable/fileexport/buttons.bootstrap4.min.css" rel="stylesheet" />
+	<!-- Internal DataTables css-->
+	<link href="assets/plugins/datatable/dataTables.bootstrap4.min.css" rel="stylesheet" />
+	<link href="assets/plugins/datatable/responsivebootstrap4.min.css" rel="stylesheet" />
+	<link href="assets/plugins/datatable/fileexport/buttons.bootstrap4.min.css" rel="stylesheet" />
 
-		<!-- Sidemenu css-->
-		<link href="assets/css/sidemenu/sidemenu.css" rel="stylesheet">
+	<!-- Sidemenu css-->
+	<link href="assets/css/sidemenu/sidemenu.css" rel="stylesheet">
 
-		<link rel="stylesheet" href="JsFunctions/Alert/loader.css">
+	<link rel="stylesheet" href="JsFunctions/Alert/loader.css">
 	<script src="JsFunctions/Alert/loader.js"></script>
 
 </head>
@@ -127,8 +128,8 @@ foreach ($permiso as $p) {
 				</a>
 			</div>
 			<div class="main-sidebar-body">
-				
-			<ul class="nav">
+
+				<ul class="nav">
 					<li class="nav-header"><span class="nav-label">Dashboard</span></li>
 
 					<?php
@@ -136,10 +137,9 @@ foreach ($permiso as $p) {
 					if (isset($_SESSION['GESTION_PERMISO']) || isset($_SESSION['LECTURA_PERMISO']) || isset($_SESSION['ESCRITURA_PERMISO']) || isset($_SESSION['ACTUALIZACION_PERMISO']) || isset($_SESSION['ELIMINACION_PERMISO'])) {
 						if ($_SESSION['GESTION_PERMISO'] == true) {
 
-							?>
+					?>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span
-										class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="isapres.php">Institución de Salud</a>
@@ -185,23 +185,22 @@ foreach ($permiso as $p) {
 									</li>
 								</ul>
 							</li>
-							<?php
+						<?php
 						}
 						?>
 						<li class="nav-header"><span class="nav-label">FUNCIONES</span></li>
 
 
 						<li class="nav-item">
-							<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span
-									class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
+							<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
 							<ul class="nav-sub">
 								<?php
 								if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
-									?>
+								?>
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="empresas.php">Empresas</a>
 									</li>
-									<?php
+								<?php
 								}
 								?>
 								<li class="nav-sub-item">
@@ -210,11 +209,11 @@ foreach ($permiso as $p) {
 
 								<?php
 								if ($_SESSION['GESTION_PERMISO'] == true) {
-									?>
+								?>
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="tipodocumento.php">Escritos</a>
 									</li>
-									<?php
+								<?php
 								}
 								?>
 
@@ -222,24 +221,23 @@ foreach ($permiso as $p) {
 								if (isset($_SESSION['GESTION_PERMISO'])) {
 									if ($_SESSION['GESTION_PERMISO'] == true) {
 
-										?>
+								?>
 										<li class="nav-sub-item">
 											<a class="nav-sub-link" href="usuarios.php">Usuarios</a>
 										</li>
-										<?php
+								<?php
 									}
 								}
 								?>
 							</ul>
 						</li>
-						<?php
+					<?php
 					}
 
 					if ($_SESSION['GESTION_PERMISO'] == true) {
-						?>
+					?>
 						<li class="nav-item">
-							<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span
-									class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
+							<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
 							<ul class="nav-sub">
 								<li class="nav-sub-item">
 									<a class="nav-sub-link" href="auditoriatrabajadores.php">Auditoria de trabajadores</a>
@@ -250,12 +248,11 @@ foreach ($permiso as $p) {
 
 							</ul>
 						</li>
-						<?php
+					<?php
 					}
 					?>
 					<li class="nav-item">
-						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
-								class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
+						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
 						<ul class="nav-sub">
 							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="contratoindividual.php">Contrato Individual</a>
@@ -287,8 +284,7 @@ foreach ($permiso as $p) {
 						</ul>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
-								class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
+						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
 						<ul class="nav-sub">
 							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="impresiondocumentos.php">Impresión Documentos</a>
@@ -386,7 +382,7 @@ foreach ($permiso as $p) {
 								<div class="header-navheading">
 									<h6 class="main-notification-title"><?php echo $_SESSION['USER_NAME']; ?></h6>
 								</div>
-								
+
 								<a class="dropdown-item" href="close.php">
 									<i class="fe fe-power"></i> Cerrar Sesión
 								</a>
@@ -398,218 +394,235 @@ foreach ($permiso as $p) {
 		</div>
 		<!-- Mobile-header closed -->
 
-			<!-- Main Content-->
-			<div class="main-content side-content pt-0">
+		<!-- Main Content-->
+		<div class="main-content side-content pt-0">
 
-				<div class="container-fluid">
-					<div class="inner-body">
-						<!-- Page Header -->
-						<div class="page-header">
-							<div class="page-header-1">
-								<h1 class="main-content-title tx-30">Editar Usuario</h1>
-								<ol class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.php">Inicio</a></li>
-								</ol>
-							</div>
-							<div class="row">
-								<div class="col-md-12">
-									<h6 class="main-content-label mb-1">Usuario: <?php echo $nombre?></h6>
-								</div>
+			<div class="container-fluid">
+				<div class="inner-body">
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="page-header-1">
+							<h1 class="main-content-title tx-30">Editar Usuario</h1>
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="index.php">Inicio</a></li>
+							</ol>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<h6 class="main-content-label mb-1">Usuario: <?php echo $nombre ?></h6>
 							</div>
 						</div>
-						<!-- End Page Header -->
-							<div class="row">
-								<div class="col-lg-12">
-									<div class="card orverflow-hidden">
-										<div class="card-body">
-											<form id="UserEditForm" name="UserEditForm" action="" class="needs-validation was-validated">
-												<div class="row">
-													<div class="col-md-6 col-lg-6">
-														<label for="">RUT</label>
-														<input name="UserRut" value='<?php echo $usuario->getRut();?>' autocapitalize="true" id="UserRut" type="text" onkeyup="formatRut(this)" placeholder="11.111.111-1" required class="form-control">
-													</div>
-													<div class="col-md-6 col-lg-6">
-														<label for="">Nombres</label>
-														<input type="text" value='<?php echo $usuario->getNombre();?>' autocapitalize="true" name="UserNombre" id="UserNombre" class="form-control" required placeholder="Ingrese el Nombre">
-													</div>
-													<div class="col-md-6 col-lg-6">
-														<label for="">Apellidos</label>
-														<input type="text" value='<?php echo $usuario->getApellido();?>' autocapitalize="true" class="form-control" name="UserApellido" id="UserApellido" required placeholder="Ingrese sus apellidos">
-													</div>
-													<div class="col-md-6 col-lg-6">
-														<label for="">Correo Electronico</label>
-														<input type="email" value="<?php echo $usuario->getCorreo();?>" autocapitalize="true" class="form-control" name="UserEmail" id="UserEmail" required placeholder="Ingrese el Correo Electronico">
-													</div>
-													<div class="col-md-6 col-lg-6">
-														<label for="">Dirección</label>
-														<input type="text" value="<?php echo $usuario->getDireccion();?>" autocapitalize="true" class="form-control" name="UserDireccion" id="UserDireccion" required placeholder="Ingrese su Direccion">
-													</div>
-													<div class="col-md-6 col-lg-6">
-														<label for="">Región</label>
-														<select name="UserRegion" autocapitalize="true" id="UserRegion" onchange="listarcomunas()" required class="form-control regiones">
-															<?php
-																$lista = $c->listarregiones();
-																foreach ($lista as $object){
-																	if($object->getId() == $usuario->getRegion()){
-																		echo "<option value='".$object->getId()."' selected>".$object->getNombre()."</option>";
-																	}else{
-																		echo "<option value='".$object->getId()."'>".$object->getNombre()."</option>";
-																	}
-																}
-
-															?>
-														</select>
-													</div>
-													<div class="col-md-6 col-lg-6">
-														<label for="">Comuna</label>
-														<select name="UserComuna" autocapitalize="true" required id="UserComuna" class="form-control comunas">
-
-														</select>
-													</div>
-													
-													<div class="col-md-6 col-lg-6">
-														<label for="">Telefono</label>
-														<input type="text" value='<?php echo $usuario->getTelefono();?>' autocapitalize="true" class="form-control" required name="UserPhone" id="UserPhone" placeholder="Ingrese su numero de telefono">
-													</div>
-													
-													<input type="hidden" value="<?php echo $id; ?>" name="UserId">
-													<div class="col-md-12 mt-3 text-right">
-														<a type="reset" href="usuarios.php" class="btn btn-warning btn-md"> <i class="fa fa-arrow-left"></i> Volver</a>
-														<button type="submit"  href="#" class="btn btn-primary btn-md"> <i class="fa fa-save"></i> Guardar Cambios</button>
-													</div>
-												</div>
-											</form>
-										</div>
-									</div>
-								</div>
-							</div>
-						<!-- End PAge Content -->
 					</div>
-				</div>
-			</div>
-			<!-- End Main Content-->
-
-			<!-- Main Footer-->
-			<div class="main-footer text-center">
-				<div class="container">
+					<!-- End Page Header -->
 					<div class="row">
-						<div class="col-md-12">
-							<span>Copyright © 2022 - KaiserTech  Todos los derechos reservados.</span>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!--End Footer-->
+						<div class="col-lg-12">
+							<div class="card orverflow-hidden">
+								<div class="card-body">
+									<form id="UserEditForm" name="UserEditForm" action="" class="needs-validation was-validated">
+										<div class="row">
+											<div class="col-md-6 col-lg-6">
+												<label for="">RUT</label>
+												<input name="UserRut" value='<?php echo $usuario->getRut(); ?>' autocapitalize="true" id="UserRut" type="text" onkeyup="formatRut(this)" placeholder="11.111.111-1" required class="form-control">
+											</div>
+											<div class="col-md-6 col-lg-6">
+												<label for="">Nombres</label>
+												<input type="text" value='<?php echo $usuario->getNombre(); ?>' autocapitalize="true" name="UserNombre" id="UserNombre" class="form-control" required placeholder="Ingrese el Nombre">
+											</div>
+											<div class="col-md-6 col-lg-6">
+												<label for="">Apellidos</label>
+												<input type="text" value='<?php echo $usuario->getApellido(); ?>' autocapitalize="true" class="form-control" name="UserApellido" id="UserApellido" required placeholder="Ingrese sus apellidos">
+											</div>
+											<div class="col-md-6 col-lg-6">
+												<label for="">Correo Electronico</label>
+												<input type="email" value="<?php echo $usuario->getCorreo(); ?>" autocapitalize="true" class="form-control" name="UserEmail" id="UserEmail" required placeholder="Ingrese el Correo Electronico">
+											</div>
+											<div class="col-md-6 col-lg-6">
+												<label for="">Dirección</label>
+												<input type="text" value="<?php echo $usuario->getDireccion(); ?>" autocapitalize="true" class="form-control" name="UserDireccion" id="UserDireccion" required placeholder="Ingrese su Direccion">
+											</div>
+											<div class="col-md-6 col-lg-6">
+												<label for="">Región</label>
+												<select name="UserRegion" autocapitalize="true" id="UserRegion" onchange="listarcomunas()" required class="form-control regiones">
+													<?php
+													$lista = $c->listarregiones();
+													foreach ($lista as $object) {
+														if ($object->getId() == $usuario->getRegion()) {
+															echo "<option value='" . $object->getId() . "' selected>" . $object->getNombre() . "</option>";
+														} else {
+															echo "<option value='" . $object->getId() . "'>" . $object->getNombre() . "</option>";
+														}
+													}
 
-			<!-- Sidebar -->
-			<div class="sidebar sidebar-right sidebar-animate">
-				<div class="sidebar-icon">
-					<a href="#" class="text-right float-right text-dark fs-20" data-toggle="sidebar-right" data-target=".sidebar-right"><i class="fe fe-x"></i></a>
+													?>
+												</select>
+											</div>
+											<div class="col-md-6 col-lg-6">
+												<label for="">Comuna</label>
+												<select name="UserComuna" autocapitalize="true" required id="UserComuna" class="form-control comunas">
+
+												</select>
+											</div>
+
+											<div class="col-md-6 col-lg-6">
+												<label for="">Telefono</label>
+												<input type="text" value='<?php echo $usuario->getTelefono(); ?>' autocapitalize="true" class="form-control" required name="UserPhone" id="UserPhone" placeholder="Ingrese su numero de telefono">
+											</div>
+											
+											<div class="col-md-6 col-lg-6">
+												<label for="">Tipo Usuario</label>
+												<select name="UserType" autocapitalize="true" id="UserType" required class="form-control">
+													<?php
+													$lista = $c->listartipousuario();
+													foreach ($lista as $object) {
+														if ($object->getId() == $usuario->getTipo()) {
+															echo "<option value='" . $object->getId() . "' selected>" . $object->getNombre() . "</option>";
+														} else {
+															echo "<option value='" . $object->getId() . "'>" . $object->getNombre() . "</option>";
+														}
+													}
+
+													?>
+												</select>
+											</div>
+
+											<input type="hidden" value="<?php echo $id; ?>" name="UserId">
+											<div class="col-md-12 mt-3 text-right">
+												<a type="reset" href="usuarios.php" class="btn btn-warning btn-md"> <i class="fa fa-arrow-left"></i> Volver</a>
+												<button type="submit" href="#" class="btn btn-primary btn-md"> <i class="fa fa-save"></i> Guardar Cambios</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- End PAge Content -->
 				</div>
-				<div class="sidebar-body">
-					<h5>Todo</h5>
-					<div class="d-flex p-3">
-						<label class="ckbox"><input checked  type="checkbox"><span>Hangout With friends</span></label>
-						<span class="ml-auto">
-							<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
-							<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
-						</span>
-					</div>
-					<div class="d-flex p-3 border-top">
-						<label class="ckbox"><input type="checkbox"><span>Prepare for presentation</span></label>
-						<span class="ml-auto">
-							<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
-							<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
-						</span>
-					</div>
-					<div class="d-flex p-3 border-top">
-						<label class="ckbox"><input type="checkbox"><span>Prepare for presentation</span></label>
-						<span class="ml-auto">
-							<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
-							<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
-						</span>
-					</div>
-					<div class="d-flex p-3 border-top">
-						<label class="ckbox"><input checked type="checkbox"><span>System Updated</span></label>
-						<span class="ml-auto">
-							<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
-							<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
-						</span>
-					</div>
-					<div class="d-flex p-3 border-top">
-						<label class="ckbox"><input type="checkbox"><span>Do something more</span></label>
-						<span class="ml-auto">
-							<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
-							<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
-						</span>
-					</div>
-					<div class="d-flex p-3 border-top">
-						<label class="ckbox"><input  type="checkbox"><span>System Updated</span></label>
-						<span class="ml-auto">
-							<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
-							<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
-						</span>
-					</div>
-					<div class="d-flex p-3 border-top">
-						<label class="ckbox"><input  type="checkbox"><span>Find an Idea</span></label>
-						<span class="ml-auto">
-							<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
-							<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
-						</span>
-					</div>
-					<div class="d-flex p-3 border-top mb-0">
-						<label class="ckbox"><input  type="checkbox"><span>Project review</span></label>
-						<span class="ml-auto">
-							<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
-							<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
-						</span>
-					</div>
-					<h5>Overview</h5>
-					<div class="p-4">
-						<div class="main-traffic-detail-item">
-							<div>
-								<span>Founder &amp; CEO</span> <span>24</span>
-							</div>
-							<div class="progress">
-								<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="20" class="progress-bar progress-bar-xs wd-20p" role="progressbar"></div>
-							</div><!-- progress -->
-						</div>
-						<div class="main-traffic-detail-item">
-							<div>
-								<span>UX Designer</span> <span>1</span>
-							</div>
-							<div class="progress">
-								<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="15" class="progress-bar progress-bar-xs bg-secondary wd-15p" role="progressbar"></div>
-							</div><!-- progress -->
-						</div>
-						<div class="main-traffic-detail-item">
-							<div>
-								<span>Recruitment</span> <span>87</span>
-							</div>
-							<div class="progress">
-								<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="45" class="progress-bar progress-bar-xs bg-success wd-45p" role="progressbar"></div>
-							</div><!-- progress -->
-						</div>
-						<div class="main-traffic-detail-item">
-							<div>
-								<span>Software Engineer</span> <span>32</span>
-							</div>
-							<div class="progress">
-								<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" class="progress-bar progress-bar-xs bg-info wd-25p" role="progressbar"></div>
-							</div><!-- progress -->
-						</div>
-						<div class="main-traffic-detail-item">
-							<div>
-								<span>Project Manager</span> <span>32</span>
-							</div>
-							<div class="progress">
-								<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" class="progress-bar progress-bar-xs bg-danger wd-25p" role="progressbar"></div>
-							</div><!-- progress -->
-						</div>
+			</div>
+		</div>
+		<!-- End Main Content-->
+
+		<!-- Main Footer-->
+		<div class="main-footer text-center">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<span>Copyright © 2022 - KaiserTech Todos los derechos reservados.</span>
 					</div>
 				</div>
 			</div>
-			<!-- End Sidebar -->
+		</div>
+		<!--End Footer-->
+
+		<!-- Sidebar -->
+		<div class="sidebar sidebar-right sidebar-animate">
+			<div class="sidebar-icon">
+				<a href="#" class="text-right float-right text-dark fs-20" data-toggle="sidebar-right" data-target=".sidebar-right"><i class="fe fe-x"></i></a>
+			</div>
+			<div class="sidebar-body">
+				<h5>Todo</h5>
+				<div class="d-flex p-3">
+					<label class="ckbox"><input checked type="checkbox"><span>Hangout With friends</span></label>
+					<span class="ml-auto">
+						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
+						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+					</span>
+				</div>
+				<div class="d-flex p-3 border-top">
+					<label class="ckbox"><input type="checkbox"><span>Prepare for presentation</span></label>
+					<span class="ml-auto">
+						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
+						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+					</span>
+				</div>
+				<div class="d-flex p-3 border-top">
+					<label class="ckbox"><input type="checkbox"><span>Prepare for presentation</span></label>
+					<span class="ml-auto">
+						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
+						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+					</span>
+				</div>
+				<div class="d-flex p-3 border-top">
+					<label class="ckbox"><input checked type="checkbox"><span>System Updated</span></label>
+					<span class="ml-auto">
+						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
+						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+					</span>
+				</div>
+				<div class="d-flex p-3 border-top">
+					<label class="ckbox"><input type="checkbox"><span>Do something more</span></label>
+					<span class="ml-auto">
+						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
+						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+					</span>
+				</div>
+				<div class="d-flex p-3 border-top">
+					<label class="ckbox"><input type="checkbox"><span>System Updated</span></label>
+					<span class="ml-auto">
+						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
+						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+					</span>
+				</div>
+				<div class="d-flex p-3 border-top">
+					<label class="ckbox"><input type="checkbox"><span>Find an Idea</span></label>
+					<span class="ml-auto">
+						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
+						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+					</span>
+				</div>
+				<div class="d-flex p-3 border-top mb-0">
+					<label class="ckbox"><input type="checkbox"><span>Project review</span></label>
+					<span class="ml-auto">
+						<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
+						<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+					</span>
+				</div>
+				<h5>Overview</h5>
+				<div class="p-4">
+					<div class="main-traffic-detail-item">
+						<div>
+							<span>Founder &amp; CEO</span> <span>24</span>
+						</div>
+						<div class="progress">
+							<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="20" class="progress-bar progress-bar-xs wd-20p" role="progressbar"></div>
+						</div><!-- progress -->
+					</div>
+					<div class="main-traffic-detail-item">
+						<div>
+							<span>UX Designer</span> <span>1</span>
+						</div>
+						<div class="progress">
+							<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="15" class="progress-bar progress-bar-xs bg-secondary wd-15p" role="progressbar"></div>
+						</div><!-- progress -->
+					</div>
+					<div class="main-traffic-detail-item">
+						<div>
+							<span>Recruitment</span> <span>87</span>
+						</div>
+						<div class="progress">
+							<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="45" class="progress-bar progress-bar-xs bg-success wd-45p" role="progressbar"></div>
+						</div><!-- progress -->
+					</div>
+					<div class="main-traffic-detail-item">
+						<div>
+							<span>Software Engineer</span> <span>32</span>
+						</div>
+						<div class="progress">
+							<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" class="progress-bar progress-bar-xs bg-info wd-25p" role="progressbar"></div>
+						</div><!-- progress -->
+					</div>
+					<div class="main-traffic-detail-item">
+						<div>
+							<span>Project Manager</span> <span>32</span>
+						</div>
+						<div class="progress">
+							<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" class="progress-bar progress-bar-xs bg-danger wd-25p" role="progressbar"></div>
+						</div><!-- progress -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End Sidebar -->
 
 
 		<!-- Edit Modal -->
@@ -630,64 +643,65 @@ foreach ($permiso as $p) {
 				</div>
 			</div>
 		</div>
-		</div>
-		<!-- End Page -->
+	</div>
+	<!-- End Page -->
 
-		<!-- Back-to-top -->
-		<a href="#top" id="back-to-top"><i class="fe fe-arrow-up"></i></a>
+	<!-- Back-to-top -->
+	<a href="#top" id="back-to-top"><i class="fe fe-arrow-up"></i></a>
 
-		<!-- Jquery js-->
-		<script src="assets/plugins/jquery/jquery.min.js"></script>
+	<!-- Jquery js-->
+	<script src="assets/plugins/jquery/jquery.min.js"></script>
 
-		<!-- Bootstrap js-->
-		<script src="assets/plugins/bootstrap/js/popper.min.js"></script>
-		<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+	<!-- Bootstrap js-->
+	<script src="assets/plugins/bootstrap/js/popper.min.js"></script>
+	<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
 
-		<!-- Internal Chart.Bundle js-->
-		<script src="assets/plugins/chart.js/Chart.bundle.min.js"></script>
+	<!-- Internal Chart.Bundle js-->
+	<script src="assets/plugins/chart.js/Chart.bundle.min.js"></script>
 
-		<!-- Peity js-->
-		<script src="assets/plugins/peity/jquery.peity.min.js"></script>
+	<!-- Peity js-->
+	<script src="assets/plugins/peity/jquery.peity.min.js"></script>
 
-		<!--Internal Apexchart js-->
-		<script src="assets/js/apexcharts.js"></script>
+	<!--Internal Apexchart js-->
+	<script src="assets/js/apexcharts.js"></script>
 
-		<!-- Internal Data Table js -->
-		<script src="assets/plugins/datatable/jquery.dataTables.min.js"></script>
-		<script src="assets/plugins/datatable/dataTables.bootstrap4.min.js"></script>
-		<script src="assets/js/table-data.js"></script>
-		<script src="assets/plugins/datatable/dataTables.responsive.min.js"></script>
-		<script src="assets/plugins/datatable/fileexport/dataTables.buttons.min.js"></script>
-		<script src="assets/plugins/datatable/fileexport/buttons.bootstrap4.min.js"></script>
+	<!-- Internal Data Table js -->
+	<script src="assets/plugins/datatable/jquery.dataTables.min.js"></script>
+	<script src="assets/plugins/datatable/dataTables.bootstrap4.min.js"></script>
+	<script src="assets/js/table-data.js"></script>
+	<script src="assets/plugins/datatable/dataTables.responsive.min.js"></script>
+	<script src="assets/plugins/datatable/fileexport/dataTables.buttons.min.js"></script>
+	<script src="assets/plugins/datatable/fileexport/buttons.bootstrap4.min.js"></script>
 
 
-		<!-- Perfect-scrollbar js -->
-		<script src="assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+	<!-- Perfect-scrollbar js -->
+	<script src="assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 
-		<!-- Select2 js-->
-		<script src="assets/plugins/select2/js/select2.min.js"></script>
-		<script src="assets/js/select2.js"></script>
+	<!-- Select2 js-->
+	<script src="assets/plugins/select2/js/select2.min.js"></script>
+	<script src="assets/js/select2.js"></script>
 
-		<!-- Sidemenu js -->
-		<script src="assets/plugins/sidemenu/sidemenu.js"></script>
+	<!-- Sidemenu js -->
+	<script src="assets/plugins/sidemenu/sidemenu.js"></script>
 
-		<!-- Sidebar js -->
-		<script src="assets/plugins/sidebar/sidebar.js"></script>
+	<!-- Sidebar js -->
+	<script src="assets/plugins/sidebar/sidebar.js"></script>
 
-		<!-- INTERNAL INDEX js -->
-		<script src="assets/js/index.js"></script>
+	<!-- INTERNAL INDEX js -->
+	<script src="assets/js/index.js"></script>
 
-		<!-- Sticky js -->
-		<script src="assets/js/sticky.js"></script>
+	<!-- Sticky js -->
+	<script src="assets/js/sticky.js"></script>
 
-		<!-- Custom js -->
-		<script src="assets/js/custom.js"></script>
-        <script src="JsFunctions/validation.js"></script>
-		<script src="JsFunctions/Alert/toastify.js"></script>
-		<script src="JsFunctions/Alert/sweetalert2.all.min.js"></script>
-		<script src="JsFunctions/Alert/alert.js"></script>
-		<script src="JsFunctions/Comunas.js"></script>
-        <script src="JsFunctions/precargado.js"></script>
-        <script src="JsFunctions/Usuarios.js"></script>
-	</body>
+	<!-- Custom js -->
+	<script src="assets/js/custom.js"></script>
+	<script src="JsFunctions/validation.js"></script>
+	<script src="JsFunctions/Alert/toastify.js"></script>
+	<script src="JsFunctions/Alert/sweetalert2.all.min.js"></script>
+	<script src="JsFunctions/Alert/alert.js"></script>
+	<script src="JsFunctions/Comunas.js"></script>
+	<script src="JsFunctions/precargado.js"></script>
+	<script src="JsFunctions/Usuarios.js"></script>
+</body>
+
 </html>
