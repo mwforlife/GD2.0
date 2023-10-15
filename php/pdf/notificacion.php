@@ -57,7 +57,7 @@ if (isset($_SESSION['USER_ID']) && isset($_GET['id'])) {
     
 
     $causal = $c->buscarcausalterminacioncontrato($causal);
-    $causal = $causal->getNombre();
+    $causal = $causal->getNombre()."( ".$causal->getArticulo()." )";
     $trabajador = $c->buscartrabajador($trabajadorid);
     $dom = $c->ultimodomicilio($trabajadorid);
     $comunatra = $c->buscarcomuna($dom->getComuna());

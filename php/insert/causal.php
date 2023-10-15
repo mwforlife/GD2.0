@@ -11,11 +11,23 @@ if (!isset($_SESSION['USER_ID'])) {
 	}
 }
 
-if(isset($_POST['Codigo']) && isset($_POST['CodigoPrevired']) && isset($_POST['Nombre']) ){
+if(isset($_POST['Codigo']) && isset($_POST['CodigoPrevired']) && isset($_POST['articulo']) && isset($_POST['letra']) && isset($_POST['Nombre']) ){
     $codigo = $_POST['Codigo'];
     $codigoPrevired = $_POST['CodigoPrevired'];
+    $articulo = $_POST['articulo'];
+    $letra = $_POST['letra'];
     $nombre = $_POST['Nombre'];
-    $result = $c->registrarcausaltermino($codigo,$codigoPrevired, $nombre);
+    $codigo = strtoupper($codigo);
+    $codigo = $c->escapeString($codigo);
+    $codigoPrevired = strtoupper($codigoPrevired);
+    $codigoPrevired = $c->escapeString($codigoPrevired);
+    $articulo = strtoupper($articulo);
+    $articulo = $c->escapeString($articulo);
+    $letra = strtoupper($letra);
+    $letra = $c->escapeString($letra);
+    $nombre = strtoupper($nombre);
+    $nombre = $c->escapeString($nombre);
+    $result = $c->registrarcausaltermino($codigo,$codigoPrevired,$articulo,$letra,$nombre);
 
     if($result == true){
         echo 1;

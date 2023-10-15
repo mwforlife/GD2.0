@@ -62,7 +62,6 @@ create table comunas(
     provincia int not null references provincias(id)
 );
 
-alter table comunas add column codigox varchar(20) not null default '1' after codigoprevired;
 
 create table ciudades (
     id int not null auto_increment primary key,
@@ -153,8 +152,6 @@ create table causalterminocontrato(
     nombre varchar(50) not null
 );
 
---Cambiar cantidad de caracteres nombre causales de termino de contrato de 50 a 500
-alter table causalterminocontrato modify column nombre varchar(500) not null;
 
 create table empresa(
     id int not null auto_increment primary key,
@@ -1014,3 +1011,53 @@ create table mandate(
     centrocosto int not null references centrocosto(id),
     register_at timestamp not null default current_timestamp
 );
+
+
+--Documentos Firmados
+create table contratosfirmados(
+    id int not null auto_increment primary key,
+    empresa int not null references empresa(id),
+    centrocosto int not null references centrocosto(id),
+    contrato int not null references contratos(id),
+    documento varchar(200) not null,
+    register_at timestamp not null default current_timestamp
+);
+
+create table finiquitosfirmados(
+    id int not null auto_increment primary key,
+    empresa int not null references empresa(id),
+    centrocosto int not null references centrocosto(id),
+    finiquito int not null references finiquito(id),
+    documento varchar(200) not null,
+    register_at timestamp not null default current_timestamp
+);
+
+create table notificacionesfirmadas(
+    id int not null auto_increment primary key,
+    empresa int not null references empresa(id),
+    centrocosto int not null references centrocosto(id),
+    notificacion int not null references notificaciones(id),
+    documento varchar(200) not null,
+    carta varchar(200) not null,
+    register_at timestamp not null default current_timestamp
+);
+
+create table otrosdocumentosfirmados(
+    id int not null auto_increment primary key,
+    id_doc int not null references documentos(id),
+    empresa int not null references empresa(id),
+    documento varchar(200) not null,
+    register_at timestamp not null default current_timestamp
+);
+
+
+
+
+--Cambiar cantidad de caracteres nombre causales de termino de contrato de 50 a 500
+alter table causalterminocontrato modify column nombre varchar(500) not null;
+--Agregar una columna de articulo a causalterminocontrato despues de codigoprevired con 200 caracteres
+alter table causalterminocontrato add column articulo varchar(200) not null after codigoprevired;
+--Agregar una columna de letra a causalterminocontrato despues de articulo con 50 caracteres
+alter table causalterminocontrato add column letra varchar(50) not null after articulo;
+--Agregar una columna de articulo a codigolre despues de codigo con 200 caracteres
+alter table comunas add column codigox varchar(20) not null default '1' after codigoprevired;

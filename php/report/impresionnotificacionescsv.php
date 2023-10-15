@@ -77,9 +77,7 @@ if (isset($_GET['id'])) {
 
             $causal = $c->buscarcausalterminacioncontrato($causal);
             $causalcod = $causal->getCodigo();
-            $acticulo = $causal->getNombre();
-            //Extraer texto dentro de parentesis
-            $acticulo = $c->extrartexto($acticulo);
+            $acticulo = $causal->getArticulo();
             $trabajador = $c->buscartrabajador($trabajadorid);
             $dom = $c->ultimodomicilio($trabajadorid);
             $comunatra = $c->buscarcomuna($dom->getComuna());

@@ -164,6 +164,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
     $trabajadorregion = $_POST['trabajadorregion'];
     $trabajadorcomuna = $_POST['trabajadorcomuna'];
     $calletrabajador = $_POST['calletrabajador'];
+    $villatrabajador = $dom->getVilla();
     $numerotrabajador = $_POST['numerotrabajador'];
     $departamentotrabajador = $_POST['departamentotrabajador'];
 
@@ -1948,6 +1949,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
         "{REGION_TRABAJADOR}" => $trabajadorregion,
         "{COMUNA_TRABAJADOR}" => $trabajadorcomuna,
         "{CALLE_TRABAJADOR}" => $calletrabajador,
+        "{VILLA_TRABAJADOR}" => $villatrabajador,
         "{NUMERO_CASA_TRABAJADOR}" => $numerotrabajador,
         "{DEPARTAMENTO_TRABAJADOR}" => $departamentotrabajador,
         "{DISCAPACIDAD" => $discapacidad,

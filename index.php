@@ -248,6 +248,7 @@ foreach ($permiso as $p) {
 					<?php
 					}
 					?>
+					<!--------------------Generarion de documentos------------------>
 					<li class="nav-item">
 						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
 						<ul class="nav-sub">
@@ -280,6 +281,8 @@ foreach ($permiso as $p) {
 							</li>
 						</ul>
 					</li>
+					<!--------------------------------------------------------------->
+					<!--------------------Remuneraciones------------------>
 					<li class="nav-item">
 						<a class="nav-link with-sub" href="#"><i class="fe fe-dollar-sign sidemenu-icon"></i><span class="sidemenu-label">Remuneraciones</span><i class="angle fe fe-chevron-right"></i></a>
 						<ul class="nav-sub">
@@ -288,6 +291,20 @@ foreach ($permiso as $p) {
 							</li>
 						</ul>
 					</li>
+					<!--------------------------------------------------------------->
+					<!--------------------Carga de documentos------------------>
+					<li class="nav-item">
+						<a class="nav-link with-sub" href="#"><i class="fe fe-upload sidemenu-icon"></i><span class="sidemenu-label">Carga de Documentos</span><i class="angle fe fe-chevron-right"></i></a>
+						<ul class="nav-sub">
+							<li class="nav-sub-item">
+								<a class="nav-sub-link" href="cargatrabajador.php">Trabajadores</a>
+							</li>
+							<li class="nav-sub-item">
+								<a class="nav-sub-link" href="cargaempresa.php">Empresa</a>
+							</li>
+						</ul>
+					</li>
+					<!--------------------Reportes------------------>
 					<li class="nav-item">
 						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
 						<ul class="nav-sub">
@@ -297,8 +314,13 @@ foreach ($permiso as $p) {
 							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="impresionmasiva.php">Impresión Masiva</a>
 							</li>
+							<li class="nav-sub-item">
+								<a class="nav-sub-link" href="documentosfirmados.php">Documentos Firmados</a>
+							</li>
 						</ul>
 					</li>
+					<!--------------------------------------------------------------->
+
 				</ul>
 			</div>
 		</div>

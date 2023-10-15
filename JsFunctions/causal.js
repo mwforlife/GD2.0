@@ -42,12 +42,41 @@ function Actualizar(id){
     $("#global-loader").hide();
     var codigo = $("#codigo").val();
     var codigoPrevired = $("#codigoPrevired").val();
+    var articulo = $("#articuloedit").val();
+    var letra = $("#letraedit").val();
     var nombre = $("#nombre").val();
+
+    //Validaciones
+    if(codigo == ""){
+        ToastifyError("Ingrese el codigo");
+        $("#codigo").focus();
+        return false;
+    }
+
+    if(codigoPrevired == ""){
+        ToastifyError("Ingrese el codigo previred");
+        $("#codigoPrevired").focus();
+        return false;
+    }
+
+    if(articulo == ""){
+        ToastifyError("Ingrese el articulo");
+        $("#articuloedit").focus();
+        return false;
+    }
+
+
+    if(nombre == ""){
+        ToastifyError("Ingrese el nombre");
+        $("#nombre").focus();
+        return false;
+    }
+
 
     $.ajax({
         type: "POST",
         url: "php/update/causal.php",
-        data: {id: id, codigo: codigo, codigoPrevired: codigoPrevired, nombre: nombre},
+        data: {id: id, codigo: codigo, codigoPrevired: codigoPrevired, articulo: articulo, letra: letra, nombre: nombre},
         success: function(data){
             if(data == 1 || data == "1"){
                 $("#global-loader").hide();

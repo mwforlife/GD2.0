@@ -26,6 +26,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
     $conteo = 0;
     foreach ($lista as $tra) {
         $dom = $c->ultimodomiciliotexto($tra->getEmpresa());
+        $villatrabajador = $dom->getVilla();
         $con = $c->ultimocontacto($tra->getEmpresa());
         if ($con == false) {
             echo "El trabajador " . $tra->getNombre() . " " . $tra->getApellido1() . " " . $tra->getApellido2() . " no tiene Información de Contacto registrado";
@@ -1864,6 +1865,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             "{REGION_TRABAJADOR}" => $trabajadorregion,
             "{COMUNA_TRABAJADOR}" => $trabajadorcomuna,
             "{CALLE_TRABAJADOR}" => $calletrabajador,
+            "{VILLA_TRABAJADOR}" => $villatrabajador,
             "{NUMERO_CASA_TRABAJADOR}" => $numerotrabajador,
             "{DEPARTAMENTO_TRABAJADOR}" => $departamentotrabajador,
             "{DISCAPACIDAD" => $discapacidad,

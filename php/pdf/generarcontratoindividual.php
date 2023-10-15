@@ -22,7 +22,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
     $con = $c->ultimocontacto($trabajador);
     $prevision = $c->ultimaprevision($trabajador);
     $contenido = $c->buscarplantilla($tipocontrato);
-
+    $villatrabajador = $dom->getVilla();
     //Informacion de Celebracion de Contrato
     $categoria_contrato = $_POST['categoria_contrato'];
     $regioncelebracion = $_POST['regioncelebracion'];

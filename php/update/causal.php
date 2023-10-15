@@ -13,11 +13,17 @@ if (!isset($_SESSION['USER_ID'])) {
 $id = $_POST['id'];
 $codigo = $_POST['codigo'];
 $codigoPrevired = $_POST['codigoPrevired'];
+$articulo = $_POST['articulo'];
+$articulo = strtoupper($articulo);
+$articulo = $c->escapeString($articulo);
+$letra = $_POST['letra'];
+$letra = strtoupper($letra);
+$letra = $c->escapeString($letra);
 $nombre = $_POST['nombre'];
 $nombre = strtoupper($nombre);
 $nombre = $c->escapeString($nombre);
 
-$result = $c->actualizarcausalterminocontrato($id, $codigo, $codigoPrevired, $nombre);
+$result = $c->actualizarcausalterminocontrato($id, $codigo, $codigoPrevired, $articulo, $letra, $nombre);
 
 if($result == true){
     echo 1;

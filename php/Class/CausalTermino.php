@@ -3,12 +3,16 @@ class CausalTermino{
     private $id;
     private $codigo;
     private $codigoPrevired;
+    private $articulo;
+    private $letra;
     private $nombre;
 
-    public function CausalTermino($id, $codigo, $codigoPrevired, $nombre){
+    public function CausalTermino($id, $codigo, $codigoPrevired,$articulo, $letra, $nombre){
         $this->id = $id;
         $this->codigo = $codigo;
         $this->codigoPrevired = $codigoPrevired;
+        $this->articulo = $articulo;
+        $this->letra = $letra;
         $this->nombre = $nombre;
     }
 
@@ -34,6 +38,22 @@ class CausalTermino{
 
     public function setCodigoPrevired($codigoPrevired){
         $this->codigoPrevired = $codigoPrevired;
+    }
+
+    public function getArticulo(){
+        return $this->articulo;
+    }
+
+    public function setArticulo($articulo){
+        $this->articulo = $articulo;
+    }
+
+    public function getLetra(){
+        return $this->letra;
+    }
+
+    public function setLetra($letra){
+        $this->letra = $letra;
     }
 
     public function getNombre(){

@@ -53,6 +53,7 @@ require 'Class/Clausulaanexo.php';
 require 'Class/Codigolre.php';
 require 'Class/Haber.php';
 require 'Class/Haber_trabajador.php';
+require 'Class/Documentofirmado.php';
 
 //Class definition
 class Controller
@@ -433,10 +434,10 @@ class Controller
     }
 
     //Registrar Causal Termino Contrato
-    public function registrarcausaltermino($codigo, $codigoPrevired, $nombre)
+    public function registrarcausaltermino($codigo, $codigoPrevired, $articulo,$letra,$nombre)
     {
         $this->conexion();
-        $sql = "insert into causalterminocontrato values (null, '$codigo', '$codigoPrevired', '$nombre')";
+        $sql = "insert into causalterminocontrato values (null, '$codigo', '$codigoPrevired', '$articulo','$letra','$nombre')";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return json_encode($result);
@@ -2173,8 +2174,10 @@ class Controller
             $id = $rs['id'];
             $codigo = $rs['codigo'];
             $codigoPrevired = $rs['codigoprevired'];
+            $articulo = $rs['articulo'];
+            $letra = $rs['letra'];
             $nombre = $rs['nombre'];
-            $causal = new CausalTermino($id, $codigo, $codigoPrevired, $nombre);
+            $causal = new CausalTermino($id, $codigo, $codigoPrevired, $articulo, $letra, $nombre);
             $lista[] = $causal;
         }
         $this->desconectar();
@@ -2624,10 +2627,10 @@ class Controller
     }
 
     //Actualizar Causal Termino Contrato
-    public function actualizarcausalterminocontrato($id, $codigo, $codigoPrevired, $nombre)
+    public function actualizarcausalterminocontrato($id, $codigo, $codigoPrevired, $articulo,$letra, $nombre)
     {
         $this->conexion();
-        $sql = "update causalterminocontrato set codigo='$codigo', codigoprevired='$codigoPrevired', nombre='$nombre' where id=$id";
+        $sql = "update causalterminocontrato set codigo='$codigo', codigoprevired='$codigoPrevired', articulo='$articulo', letra='$letra', nombre='$nombre' where id=$id";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return $result;
@@ -3304,8 +3307,10 @@ class Controller
             $id = $rs['id'];
             $codigo = $rs['codigo'];
             $codigoprevired = $rs['codigoprevired'];
+            $articulo = $rs['articulo'];
+            $letra = $rs['letra'];
             $nombre = $rs['nombre'];
-            $causal = new CausalTermino($id, $codigo, $codigoprevired, $nombre);
+            $causal = new CausalTermino($id, $codigo, $codigoprevired, $articulo, $letra, $nombre);
             $this->desconectar();
             return $causal;
         } else {
@@ -4738,7 +4743,7 @@ class Controller
     function listarcontratosactivosempresa($empresa)
     {
         $this->conexion();
-        $sql = "select contratos.id as id, trabajadores.rut as rut,trabajadores.nombre as nombre, contratos.centrocosto as centrocosto, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.empresa = $empresa and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and contratos.estado=1";
+        $sql = "select contratos.id as id, trabajadores.rut as rut,trabajadores.nombre as nombre, centrocosto.nombre as centrocosto, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos,centrocosto, trabajadores, empresa where contratos.empresa = $empresa and trabajadores.id = contratos.trabajador and contratos.centrocosto=centrocosto.id and empresa.id = contratos.empresa and contratos.estado=1";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -4768,6 +4773,33 @@ class Controller
     {
         $this->conexion();
         $sql = "select contratos.id as id, trabajadores.id as traid,contratos.centrocosto as centrocosto, trabajadores.nombre as nombre, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.id = $id and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $nombre = $rs['nombre'] . " " . $rs['primerapellido'] . " " . $rs['segundoapellido'];
+            $razonsocial = $rs['razonsocial'];
+            $tipocontrato = $rs['tipocontrato'];
+            $centrocosto = $rs['centrocosto'];
+            $cargo = $rs['cargo'];
+            $sueldo = $rs['sueldo'];
+            $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $documento = $rs['documento'];
+            $estado = $rs['estado'];
+            $register_at = $rs['traid'];
+            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $this->desconectar();
+            return $contrato;
+        }
+        $this->desconectar();
+        return false;
+    }
+
+    //Buscar contrato por id
+    function buscarcontratoid1($id)
+    {
+        $this->conexion();
+        $sql = "select contratos.id as id, trabajadores.id as traid,contratos.centrocosto as centrocosto, trabajadores.nombre as nombre, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.id as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.id = $id and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa";
         $result = $this->mi->query($sql);
         if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
@@ -7547,8 +7579,70 @@ class Controller
     }
 
 
+    /******************Documento Firmado *****************************************/
+    //Registrar Contrato Firmado
+    function registrarcontratofirmado($empresa,$centrocosto,$contrato,$documento){
+        $this->conexion();
+        $sql = "insert into contratosfirmados values(null,$empresa,$centrocosto,$contrato,'$documento',now())";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Buscar Contrato Firmado
+    function buscarcontratofirmado($contrato){
+        $this->conexion();
+        $sql = "select * from contratosfirmados where contrato=$contrato";
+        $result = $this->mi->query($sql);
+        $contrato = false;
+        while($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $empresa = $rs['empresa'];
+            $centrocosto = $rs['centrocosto'];
+            $contrato = $rs['contrato'];
+            $documento = $rs['documento'];
+            $registro = $rs['register_at'];
+            $contrato = new DocumentoFirmado($id,$empresa,$centrocosto,$contrato,$documento,$registro);
+        }
+        $this->desconectar();
+        return $contrato;
+    }
+
+    //actualizar Contrato Firmado
+    function actualizarcontratofirmado($id,$documento){
+        $this->conexion();
+        $sql = "update contratosfirmados set documento='$documento' where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
 
 
+    //Registrar Finiquito Firmado
+    function registrarfiniquitofirmado($empresa,$centrocosto,$finiquito,$documento){
+        $this->conexion();
+        $sql = "insert into finiquitosfirmados values(null,$empresa,$centrocosto,$finiquito,'$documento',now())";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
 
+    //Registrar Notificacion Firmada
+    function registrarnotificacionfirmada($empresa,$centrocosto,$notificacion,$documento){
+        $this->conexion();
+        $sql = "insert into notificacionesfirmadas values(null,$empresa,$centrocosto,$notificacion,'$documento',now())";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Registrar Otros Documentos Firmados
+    function registrarotrosdocumentosfirmados($empresa,$documento,$id_doc){
+        $this->conexion();
+        $sql = "insert into otrosdocumentosfirmados values(null,$id_doc,$empresa,'$documento',now())";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
     
 }

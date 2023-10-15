@@ -27,6 +27,16 @@ if($isapre != null){
         echo "</div>";
 
         echo "<div class='col-md-12'>";
+        echo "<label>Articulo</label>";
+        echo "<input type='text' class='form-control' id='articuloedit' placeholder='Ingrese el Articulo' value='".$isapre->getArticulo()."'/>";
+        echo "</div>";
+
+        echo "<div class='col-md-12'>";
+        echo "<label>Letra</label>";
+        echo "<input type='text' class='form-control' id='letraedit' placeholder='Ingrese la Letra (si Corresponde)' value='".$isapre->getLetra()."'/>";
+        echo "</div>";
+
+        echo "<div class='col-md-12'>";
         echo "<label>Nombre</label>";
         echo "<input type='text' class='form-control' id='nombre' value='".$isapre->getNombre()."'/>";
         echo "</div>";
