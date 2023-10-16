@@ -66,7 +66,7 @@ $(document).ready(function(){
             }
         }
         $.ajax({
-            url: "php/insert/cargacontrato.php",
+            url: "php/insert/cargafirmados.php",
             type: "POST",
             data: formData,
             cache: false,
@@ -90,3 +90,43 @@ $(document).ready(function(){
     });
     });
 });
+
+//Cargar finiquito
+function cargarfiniquito(id, rut, trabajador, centrocosto,fechainicio, fechatermino, fechafiniquito, causal) {
+    if(fechatermino == "0000-00-00" || fechatermino == null || fechatermino == ""){
+        fechatermino = "Indefinido";
+    }
+    $(".modal-title").html("Cargar Finiquito Firmado");
+    $(".info-doc").html("<div class='alert alert-info'><i class='fa fa-info-circle'></i> <strong>Cargando Finiquito Firmado</strong> <br>Trabajador: " + trabajador + "<br>Centro de Costo: " + centrocosto + "<br>Fecha Inicio: " + fechainicio + "<br>Fecha Termino: " + fechatermino + "<br>Fecha Finiquito: " + fechafiniquito + "<br>Causal: " + causal + "</div>");
+    $("#idcontrato").val("");
+    $("#idfiniquito").val(id);
+    $("#idnotificacion").val("");
+    $("#iddocumento").val("");
+    $("#tipodocumento").val(2);
+    $("#modalcarga").modal("show");
+    validarfiniquito(id);
+}
+
+//Validar Carga de finiquito
+function validarfiniquito(id){
+    $.ajax({
+        url: "php/validation/cargarfiniquito.php",
+        type: "POST",
+        data: {id: id},
+        success:function(response){
+        try {
+            var data = JSON.parse(response);
+            if(data.status == true){
+                $(".message").html(data.message);
+                $(".message").append("");
+            }else{
+                $(".message").html("");
+            }
+        } catch (error) {
+            ToastifyError("Error interno".error);
+        }
+    }
+    });
+}
+
+//Cargar notificacion

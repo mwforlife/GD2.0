@@ -263,8 +263,6 @@ create table users (
     updated_at timestamp not null default current_timestamp on update current_timestamp
 );
 
---Agregar tipo de usuario a tabla users con valor por defecto 1 a referencia tipousuario(id)
-alter table users add column tipousuario int not null references tipousuario(id) default 2 after token;
 
 create table sesionusuario (
     id int not null auto_increment primary key,
@@ -1087,13 +1085,15 @@ create table documentos_empresa(
 );
 
 
+------Modificaciones
 
-
---Cambiar cantidad de caracteres nombre causales de termino de contrato de 50 a 500
+--------Agregar tipo de usuario a tabla users con valor por defecto 1 a referencia tipousuario(id)
+alter table users add column tipousuario int not null references tipousuario(id) default 2 after token;
+----------Cambiar cantidad de caracteres nombre causales de termino de contrato de 50 a 500
 alter table causalterminocontrato modify column nombre varchar(500) not null;
---Agregar una columna de articulo a causalterminocontrato despues de codigoprevired con 200 caracteres
+----------Agregar una columna de articulo a causalterminocontrato despues de codigoprevired con 200 caracteres
 alter table causalterminocontrato add column articulo varchar(200) not null after codigoprevired;
---Agregar una columna de letra a causalterminocontrato despues de articulo con 50 caracteres
+----------Agregar una columna de letra a causalterminocontrato despues de articulo con 50 caracteres
 alter table causalterminocontrato add column letra varchar(50) not null after articulo;
---Agregar una columna de articulo a codigolre despues de codigo con 200 caracteres
+----------Agregar una columna de articulo a codigolre despues de codigo con 200 caracteres
 alter table comunas add column codigox varchar(20) not null default '1' after codigoprevired;

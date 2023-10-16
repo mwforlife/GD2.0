@@ -502,11 +502,12 @@ foreach ($permiso as $p) {
 																				$fecha_finiquito = date("d-m-Y", strtotime($finiquito->getFechafiniquito()));
 																				echo "<td>" . $finiquito->getEmpresa() . "</td>";
 																				echo "<td>" . $finiquito->getTrabajador() . "</td>";
+																				echo "<td>" . $finiquito->getFecha() . "</td>";
 																				echo "<td>" . $fecha_termino . "</td>";
 																				echo "<td>" . $fecha_termino . "</td>";
 																				echo "<td>" . $fecha_finiquito . "</td>";
 																				echo "<td>" . $finiquito->getCausal() . "</td>";
-																				echo "<td class='text-center'><button class='text-center btn btn-outline-info btn-sm rounded-11' onclick='eliminarfiniquito(" . $finiquito->getId() . ")'><i class='fa fa-upload'></i></button></td>";
+																				echo "<td class='text-center'><button class='text-center btn btn-outline-success btn-sm rounded-11' onclick='cargarfiniquito(" . $finiquito->getId() . ",\"" . $finiquito->getEmpresa() . "\",\"" . $finiquito->getTrabajador() . "\",\"" . $finiquito->getFecha() . "\",\"" . $fecha_inicio . "\",\"" . $fecha_termino . "\",\"" . $fecha_finiquito . "\",\"" . $finiquito->getCausal() . "\")'><i class='fa fa-upload'></i></button></td>";
 																				echo "</tr>";
 																			}
 																		}

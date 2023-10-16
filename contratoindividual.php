@@ -1157,7 +1157,7 @@ foreach ($permiso as $p) {
 														<input class="form-control" id="sueldo" name="sueldo" placeholder="Sueldo" required>
 													</div>
 												</div>
-												<div class="col-lg-6">
+												<div class="col-lg-6 d-none">
 													<div class="form-group select2-lg">
 														<label for="">Asignación Zona Extrema:</label>
 														<input type="text" class="form-control" id="asignacion" name="asignacion" placeholder="Asignación Zona Extrema" required>
@@ -1166,9 +1166,9 @@ foreach ($permiso as $p) {
 
 											</div>
 											<!---------Haberes Imponibles------------>
-											<h6 class="main-content-label mb-1">Haberes Imponibles</h6>
+											<h6 class="main-content-label mb-1 d-none">Haberes Imponibles</h6>
 											<hr />
-											<div class="row">
+											<div class="row d-none">
 												<div class="col-md-12">
 													<h6 class="main-content-label mb-1">Haberes Imponibles Tributables</h6>
 													<p class="text-mutted card-sub-title"></p>
@@ -1236,7 +1236,7 @@ foreach ($permiso as $p) {
 
 											</div>
 
-											<div class="row">
+											<div class="row d-none">
 												<div class="col-md-12">
 													<h6 class="main-content-label mb-1">Haberes Imponibles No Tributables</h6>
 													<p class="text-mutted card-sub-title"></p>
@@ -1287,9 +1287,9 @@ foreach ($permiso as $p) {
 											<!------------------------------------------>
 
 											<!---------Haberes No Imponibles------------>
-											<h6 class="main-content-label mb-1">Haberes No Imponibles</h6>
+											<h6 class="main-content-label mb-1 d-none">Haberes No Imponibles</h6>
 											<hr />
-											<div class="row">
+											<div class="row d-none">
 												<div class="col-md-12">
 													<h6 class="main-content-label mb-1">Haberes No Imponibles Tributables</h6>
 													<p class="text-mutted card-sub-title"></p>
@@ -1336,7 +1336,7 @@ foreach ($permiso as $p) {
 
 											</div>
 
-											<div class="row">
+											<div class="row d-none">
 												<div class="col-md-12">
 													<h6 class="main-content-label mb-1">Haberes No Imponibles No Tributables</h6>
 													<p class="text-mutted card-sub-title"></p>
@@ -2111,7 +2111,7 @@ foreach ($permiso as $p) {
 												</div>
 											</div>
 											<!----------------------------------------------------->
-											<div class="row">
+											<div class="row  d-none">
 												<div class="col-lg-12">
 													<h4 class="main-content-label mb-1">Otras Estipulaciones Adicionales</h4>
 												</div>

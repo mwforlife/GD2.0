@@ -5364,7 +5364,7 @@ class Controller
     function listarfiniquitosempresa($empresa)
     {
         $this->conexion();
-        $sql = "select finiquito.id as id, contrato, finiquito.tipodocumento as tipodocumento, fechafiniqito, fechainicio, fechatermino, causalterminocontrato.nombre as causalterminocontrato, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, finiquito.empresa as empresa, finiquito.register_at as register_at from finiquito,trabajadores, causalterminocontrato where finiquito.causalterminocontrato = causalterminocontrato.id and  finiquito.empresa = $empresa and finiquito.trabajador = trabajadores.id";
+        $sql = "select finiquito.id as id, centrocosto.nombre as centrocosto, finiquito.contrato as contrato, finiquito.tipodocumento as tipodocumento, finiquito.fechafiniqito as fechafiniqito, finiquito.fechainicio as fechainicio, finiquito.fechatermino as fechatermino, causalterminocontrato.nombre as causalterminocontrato, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, finiquito.empresa as empresa, finiquito.register_at as register_at from contratos,centrocosto, finiquito,trabajadores, causalterminocontrato where finiquito.causalterminocontrato = causalterminocontrato.id and  finiquito.empresa = $empresa and finiquito.trabajador = trabajadores.id and finiquito.contrato = contratos.id and contratos.centrocosto = centrocosto.id";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -5377,12 +5377,34 @@ class Controller
             $causalterminocontrato = $rs['causalterminocontrato'];
             $trabajador = $rs['nombre'] . " " . $rs['apellido'];
             $empresa = $rs['rut'];
-            $register_at = $rs['register_at'];
-            $finiquito = new Finiquito($id, $contrato, $tipodocumento, $fechafiniquito, $fechainicio, $fechatermino, $causalterminocontrato, $trabajador, $empresa, $register_at);
+            $register_at = $rs['centrocosto'];
+            $finiquito = new Finiquito($id, $contrato, $tipodocumento, $fechafiniquito, $fechainicio, $fechatermino, $causalterminocontrato, $trabajador, $empresa,$register_at);
             $lista[] = $finiquito;
         }
         $this->desconectar();
         return $lista;
+    }
+
+    //Buscar Finiquito valores por id
+    function buscarfiniquito1($id){
+        $sql = "select finiquito.id as id, centrocosto.id as centrocosto, finiquito.contrato as contrato, finiquito.tipodocumento as tipodocumento, finiquito.fechafiniqito as fechafiniqito, finiquito.fechainicio as fechainicio, finiquito.fechatermino as fechatermino, causalterminocontrato.nombre as causalterminocontrato, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, finiquito.empresa as empresa, finiquito.register_at as register_at from contratos,centrocosto, finiquito,trabajadores, causalterminocontrato where finiquito.causalterminocontrato = causalterminocontrato.id  and finiquito.trabajador = trabajadores.id and finiquito.contrato = contratos.id and contratos.centrocosto = centrocosto.id and finiquito.id = $id";
+        $result = $this->mi->query($sql);
+        $finiquito = null;
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $contrato = $rs['contrato'];
+            $tipodocumento = $rs['tipodocumento'];
+            $fechafiniquito = $rs['fechafiniqito'];
+            $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $causalterminocontrato = $rs['causalterminocontrato'];
+            $trabajador = $rs['nombre'] . " " . $rs['apellido'];
+            $empresa = $rs['rut'];
+            $register_at = $rs['centrocosto'];
+            $finiquito = new Finiquito($id, $contrato, $tipodocumento, $fechafiniquito, $fechainicio, $fechatermino, $causalterminocontrato, $trabajador, $empresa,$register_at);
+        }
+        $this->desconectar();
+        return $finiquito;
     }
 
     //Listar Finiquito text
@@ -7581,6 +7603,7 @@ class Controller
 
 
     /******************Documento Firmado *****************************************/
+    /******************Contrato Firmado *****************************************/
     //Registrar Contrato Firmado
     function registrarcontratofirmado($empresa,$centrocosto,$contrato,$documento){
         $this->conexion();
@@ -7617,7 +7640,17 @@ class Controller
         $this->desconectar();
         return $result;
     }
-
+    /************************************************************************************************************************ */
+    /**************************************************Finiquito Firmado*************************************************** */
+    /*create table finiquitosfirmados(
+    id int not null auto_increment primary key,
+    empresa int not null references empresa(id),
+    centrocosto int not null references centrocosto(id),
+    finiquito int not null references finiquito(id),
+    documento varchar(200) not null,
+    register_at timestamp not null default current_timestamp
+    );
+    */
 
     //Registrar Finiquito Firmado
     function registrarfiniquitofirmado($empresa,$centrocosto,$finiquito,$documento){
@@ -7628,6 +7661,35 @@ class Controller
         return $result;
     }
 
+    //Buscar Finiquito Firmado
+    function buscarfiniquitofirmado($finiquito){
+        $this->conexion();
+        $sql = "select * from finiquitosfirmados where finiquito=$finiquito";
+        $result = $this->mi->query($sql);
+        $finiquito = false;
+        while($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $empresa = $rs['empresa'];
+            $centrocosto = $rs['centrocosto'];
+            $finiquito = $rs['finiquito'];
+            $documento = $rs['documento'];
+            $registro = $rs['register_at'];
+            $finiquito = new DocumentoFirmado($id,$empresa,$centrocosto,$finiquito,$documento,$registro);
+        }
+        $this->desconectar();
+        return $finiquito;
+    }
+
+    //actualizar Finiquito Firmado
+    function actualizarfiniquitofirmado($id,$documento){
+        $this->conexion();
+        $sql = "update finiquitosfirmados set documento='$documento' where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+    /************************************************************************************************************************ */
+    /**************************************************Notificaciones Firmadas*************************************************** */
     //Registrar Notificacion Firmada
     function registrarnotificacionfirmada($empresa,$centrocosto,$notificacion,$documento){
         $this->conexion();
