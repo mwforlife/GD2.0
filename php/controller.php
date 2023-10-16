@@ -54,6 +54,7 @@ require 'Class/Codigolre.php';
 require 'Class/Haber.php';
 require 'Class/Haber_trabajador.php';
 require 'Class/Documentofirmado.php';
+require 'Class/Documentoempresa.php';
 
 //Class definition
 class Controller
@@ -7644,5 +7645,263 @@ class Controller
         $this->desconectar();
         return $result;
     }
+
+    //Listar tipo_documento_empresa
+    function listartipodocumentoempresa(){
+        $this->conexion();
+        $sql = "select * from tipo_documento_empresa;";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id=$rs['id'];
+            $nombre = $rs['nombre'];
+            $periodo = $rs['periodo'];
+            $tipo = new Regiones($id,$periodo,$nombre,$nombre);
+            $lista[] = $tipo;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Listar tipo_documento_empresa del periodo x
+    function listartipodocumentoempresaperiodo($periodo){
+        $this->conexion();
+        $sql = "select * from tipo_documento_empresa where periodo=$periodo;";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id=$rs['id'];
+            $nombre = $rs['nombre'];
+            $periodo = $rs['periodo'];
+            $tipo = new Regiones($id,$periodo,$nombre,$nombre);
+            $lista[] = $tipo;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Cargar documento empresa
+    function registrardocumentoempresa($tipo,$centrocosto,$documento,$periodo,$empresa){
+        $this->conexion();
+        $sql = "insert into documentos_empresa values(null,$tipo,$centrocosto,'$documento','$periodo',$empresa,now())";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    function listardocumentoempresa($empresa,$centrocosto,$tipo){
+        $this->conexion();
+        $sql = "select * from documentos_empresa where empresa=$empresa and centrocosto=$centrocosto and tipo=$tipo order by register_at desc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $tipo = $rs['tipo'];
+            $centrocosto = $rs['centrocosto'];
+            $documento = $rs['documento'];
+            $periodo = $rs['periodo'];
+            $empresa = $rs['empresa'];
+            $registro = $rs['register_at'];
+            $documento = new DocumentoEmpresa($id,$tipo,$centrocosto,$documento,$periodo,$empresa,$registro);
+            $lista[] = $documento;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Eliminar Documento empresa
+    function eliminardocumentoempresa($id){
+        $this->conexion();
+        $sql = "delete from documentos_empresa where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //buscar documento empresa por documento
+    function buscardocumentoempresadocumento($documento){
+        $this->conexion();
+        $sql = "select * from documentos_empresa where documento='$documento'";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $tipo = $rs['tipo'];
+            $centrocosto = $rs['centrocosto'];
+            $documento = $rs['documento'];
+            $periodo = $rs['periodo'];
+            $empresa = $rs['empresa'];
+            $registro = $rs['register_at'];
+            $documento = new DocumentoEmpresa($id,$tipo,$centrocosto,$documento,$periodo,$empresa,$registro);
+            $lista[] = $documento;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //buscar documento empresa por id
+    function buscardocumentoempresaid($id){
+        $this->conexion();
+        $sql = "select * from documentos_empresa where id=$id";
+        $result = $this->mi->query($sql);
+        $documento = false;
+        while($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $tipo = $rs['tipo'];
+            $centrocosto = $rs['centrocosto'];
+            $documento = $rs['documento'];
+            $periodo = $rs['periodo'];
+            $empresa = $rs['empresa'];
+            $registro = $rs['register_at'];
+            $documento = new DocumentoEmpresa($id,$tipo,$centrocosto,$documento,$periodo,$empresa,$registro);
+        }
+        $this->desconectar();
+        return $documento;
+    }
+
+    //Buscar DOcumento
+    function buscardocumentoempresa($empresa, $tipo){
+        $this->conexion();
+        $sql = "select * from documentos_empresa where empresa=$empresa and tipo=$tipo order by register_at desc";
+        $result = $this->mi->query($sql);
+        $documento = false;
+        while($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $tipo = $rs['tipo'];
+            $centrocosto = $rs['centrocosto'];
+            $documento = $rs['documento'];
+            $periodo = $rs['periodo'];
+            if($periodo=="0000-00-00" || $periodo=="" || $periodo==null){
+                $periodo = "Documento Unico";
+            }else{
+                $mes = date("m",strtotime($periodo));
+                $anio = date("Y",strtotime($periodo));
+
+                switch($mes){
+                    case 1:
+                        $mes = "Enero";
+                        break;
+                    case 2:
+                        $mes = "Febrero";
+                        break;
+                    case 3:
+                        $mes = "Marzo";
+                        break;
+                    case 4:
+                        $mes = "Abril";
+                        break;
+                    case 5:
+                        $mes = "Mayo";
+                        break;
+                    case 6:
+                        $mes = "Junio";
+                        break;
+                    case 7:
+                        $mes = "Julio";
+                        break;
+                    case 8:
+                        $mes = "Agosto";
+                        break;
+                    case 9:
+                        $mes = "Septiembre";
+                        break;
+                    case 10:
+                        $mes = "Octubre";
+                        break;
+                    case 11:
+                        $mes = "Noviembre";
+                        break;
+                    case 12:
+                        $mes = "Diciembre";
+                        break;
+                }
+                $periodo = $mes ." ".$anio;
+            }
+            $empresa = $rs['empresa'];
+            $registro = $rs['register_at'];
+            $documento = new DocumentoEmpresa($id,$tipo,$centrocosto,$documento,$periodo,$empresa,$registro);
+        }
+        $this->desconectar();
+        return $documento;
+    }
+
+    function listardocumentoempresa1($empresa,$centrocosto,$tipo){
+        $this->conexion();
+        $sql = "select documentos_empresa.id as id, tipo_documento_empresa.nombre as tipo, centrocosto.nombre as centrocosto, documentos_empresa.documento as documento, documentos_empresa.periodo as periodo, empresa.razonsocial as empresa, documentos_empresa.register_at as register_at from documentos_empresa , tipo_documento_empresa, centrocosto, empresa where documentos_empresa.empresa=empresa.id and documentos_empresa.tipo=tipo_documento_empresa.id and documentos_empresa.centrocosto=centrocosto.id and documentos_empresa.empresa=$empresa and documentos_empresa.tipo=$tipo";
+        $i = 0;
+        foreach($centrocosto as $cc){
+            if($i==0){
+                $sql .= " and (documentos_empresa.centrocosto=$cc";
+            }else{
+                $sql .= " or documentos_empresa.centrocosto=$cc";
+            }
+            $i++;
+        }
+        $sql .= ")";
+        $sql .= " order by documentos_empresa.register_at desc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $tipo = $rs['tipo'];
+            $centrocosto = $rs['centrocosto'];
+            $documento = $rs['documento'];
+            $periodo = $rs['periodo'];
+            if($periodo=="0000-00-00" || $periodo=="" || $periodo==null){
+                $periodo = "Documento Unico";
+            }else{
+                $mes = date("m",strtotime($periodo));
+                $anio = date("Y",strtotime($periodo));
+
+                switch($mes){
+                    case 1:
+                        $mes = "Enero";
+                        break;
+                    case 2:
+                        $mes = "Febrero";
+                        break;
+                    case 3:
+                        $mes = "Marzo";
+                        break;
+                    case 4:
+                        $mes = "Abril";
+                        break;
+                    case 5:
+                        $mes = "Mayo";
+                        break;
+                    case 6:
+                        $mes = "Junio";
+                        break;
+                    case 7:
+                        $mes = "Julio";
+                        break;
+                    case 8:
+                        $mes = "Agosto";
+                        break;
+                    case 9:
+                        $mes = "Septiembre";
+                        break;
+                    case 10:
+                        $mes = "Octubre";
+                        break;
+                    case 11:
+                        $mes = "Noviembre";
+                        break;
+                    case 12:
+                        $mes = "Diciembre";
+                        break;
+                }
+                $periodo = $mes ." ".$anio;
+            }
+            $empresa = $rs['empresa'];
+            $registro = $rs['register_at'];
+            $documento = new DocumentoEmpresa($id,$tipo,$centrocosto,$documento,$periodo,$empresa,$registro);
+            $lista[] = $documento;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+
     
 }

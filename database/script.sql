@@ -1050,6 +1050,42 @@ create table otrosdocumentosfirmados(
     register_at timestamp not null default current_timestamp
 );
 
+--Documentos EMPRESA
+create table periododocumento(
+    id int not null auto_increment primary key,
+    nombre varchar(200) not null
+);
+
+insert into periododocumento values(1, 'Mensual');
+insert into periododocumento values(2, 'Unico');
+
+create table tipo_documento_empresa(
+    id int not null auto_increment primary key,
+    nombre varchar(500) not null,
+    periodo int not null references periododocumento(id)
+);
+
+insert into tipo_documento_empresa values(1, 'Certificado de Inicio actividad SII', 2);
+insert into tipo_documento_empresa values(2, 'Certificado de adhesión a mutualidad', 1);
+insert into tipo_documento_empresa values(3, 'Certificado de tasa de accidentabilidad', 1);
+insert into tipo_documento_empresa values(4, 'Inscripción de Faena (DT)', 1);
+insert into tipo_documento_empresa values(5, 'Inscripción de RIOHS (DT)', 2);
+insert into tipo_documento_empresa values(6, 'Inscripción de RIOHS (Seremi de Salud)', 2);
+insert into tipo_documento_empresa values(7, 'F30', 1);
+insert into tipo_documento_empresa values(8, 'F30-1', 1);
+insert into tipo_documento_empresa values(9, 'Planilla de Pagos Obligaciones Laborales', 1);
+insert into tipo_documento_empresa values(10, 'Copia Libro de Asistencia', 1);
+
+create table documentos_empresa(
+    id int not null auto_increment primary key,
+    tipo int not null references tipo_documento_empresa(id),
+    centrocosto int not null references centrocosto(id),
+    documento varchar(200) not null,
+    periodo date null,
+    empresa int not null references empresa(id),
+    register_at timestamp not null default current_timestamp
+);
+
 
 
 

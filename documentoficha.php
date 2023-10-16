@@ -636,18 +636,11 @@ foreach ($permiso as $p) {
 		<script src="JsFunctions/precargado.js"></script>
 
 		<script src="JsFunctions/chargedocument.js"></script>
-		<?php
-		if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-			$id = $_SESSION['CURRENT_ENTERPRISE'];
-			echo "<script>";
-			echo "window.onload = function(){
-			validarpacto();
-		mostrarEmpresa(" . $id . ");
-	}";
-			echo "</script>";
-		}
-
-		?>
+		<script>
+			$(document).ready(function() {
+				mostrarEmpresa();
+			});
+		</script>
 
 
 

@@ -496,17 +496,13 @@ foreach ($permiso as $p) {
 										<div class="row">
 											<div class="col-md-3">
 												<label>Tipo de Documento</label>
-												<select name="tipo" id="tipo" class="form-control select2" required>
-													<option value="1" period="2">Certificado de Inicio actividad SII</option>
-													<option value="2">Certificado de adesion a mutualidad</option>
-													<option value="3">Certificado de tasa de accidentabilidad</option>
-													<option value="4">Inscripción de Faena (DT)</option>
-													<option value="5" period="2">Inscripción de RIOHS (DT)</option>
-													<option value="6" period="2">Inscripción de RIOHS (Seremi de Salud)</option>
-													<option value="7">F30</option>
-													<option value="8">F30-1</option>
-													<option value="9">Planilla de Pagos Obligaciones Laborales</option>
-													<option value="10">Copia Libro de Asistencia</option>
+												<select name="tipo" id="tipo" class="form-control select2" onchange="checktype(this)" required>
+													<?php
+													$listas = $c->listartipodocumentoempresa();
+													foreach ($listas as $lista) {
+														echo "<option value='" . $lista->getId() . "' period='" . $lista->getCodigo() . "'>" . $lista->getNombre() . "</option>";
+													}
+													?>
 												</select>
 											</div>
 											<div class="col-md-3">
@@ -525,7 +521,7 @@ foreach ($permiso as $p) {
 											</div>
 											<div class="col-md-3">
 												<label>Periodo</label>
-												<input type="month" name="periodo" id="periodo" class="form-control">
+												<input type="month" name="periodo" id="periodo" class="form-control" required>
 											</div>
 										</div>
 										<hr />
@@ -564,64 +560,77 @@ foreach ($permiso as $p) {
 									<h5>Documentos Cargados</h5>
 								</div>
 								<div class="card-body">
-									<div aria-multiselectable="true" class="accordion">
-										
-										<div class="card accordion-item">
-											<div class="card-header accordion-header" id="headingOne-1" role="tab">
-												<a aria-controls="collapseOne" aria-expanded="true" data-toggle="collapse" href="#collapse-1" class="accordion-toggle bg-primary text-white collapsed" data-parent="#accordion"><i class="fe fe-arrow-right mr-2"></i>
-													Cerfiticado de Adhesión a Mutualidad
-												</a>
-											</div>
-											<div aria-labelledby="headingOne-1" class="collapse" data-parent="#accordion" id="collapse-1" role="tabpanel">
-												<div class="card-body">
-													<div class="row">
-														<div class="table-responsive">
-															<table class="table table-hover mg-b-0 w-100" id="example1">
-																<thead>
-																	<tr>
-																		<th>Centro de Costo</th>
-																		<th>Periodo</th>
-																		<th>Documento</th>
-																		<th>Eliminar</th>
-																	</tr>
-																</thead>
-																<tbody id="mutualidad">
-																</tbody>
-															</table>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										
-										<div class="card accordion-item">
-											<div class="card-header accordion-header" id="headingOne-1" role="tab">
-												<a aria-controls="collapseOne" aria-expanded="true" data-toggle="collapse" href="#collapse-2" class="accordion-toggle bg-primary text-white collapsed" data-parent="#accordion"><i class="fe fe-arrow-right mr-2"></i>
-													Cerfiticado de tasa de accidentabilidad
-												</a>
-											</div>
-											<div aria-labelledby="headingOne-1" class="collapse" data-parent="#accordion" id="collapse-2" role="tabpanel">
-												<div class="card-body">
-													<div class="row">
-														<div class="table-responsive">
-															<table class="table table-hover mg-b-0 w-100" id="example2">
-																<thead>
-																	<tr>
-																		<th>Centro de Costo</th>
-																		<th>Periodo</th>
-																		<th>Documento</th>
-																		<th>Eliminar</th>
-																	</tr>
-																</thead>
-																<tbody id="mutualidad">
-																</tbody>
-															</table>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
+									<div class="row">
+										<div class="col-md-12 mb-3">
+											<?php
+											$tipos = $c->listartipodocumentoempresaperiodo(2);
+											foreach ($tipos as $tipo) {
+												$documento = $c->buscardocumentoempresa($_SESSION['CURRENT_ENTERPRISE'], $tipo->getId());
+												if($documento==false){
+												echo "<button class='btn btn-outline-danger mr-2'>" . $tipo->getNombre() . "</button>";
+												}else{
+													echo "<a class='btn btn-outline-success mr-2' href='uploads/documento_empresa/" . $documento->getDocumento() . "' target='_blank'><i class='fa fa-download'></i>" . $tipo->getNombre() . " </a>";
+												}
+											}
+											?>
 
+										</div>
+									</div>
+									<div aria-multiselectable="true" class="accordion">
+
+										<?php
+										$tipos = $c->listartipodocumentoempresaperiodo(1);
+										foreach ($tipos as $tipo) {
+										?>
+											<div class="card accordion-item">
+												<div class="card-header accordion-header" id="headingOne-1" role="tab">
+													<a aria-controls="collapseOne" aria-expanded="true" data-toggle="collapse" href="#collapse-<?php echo $tipo->getId() ?>" class="accordion-toggle bg-primary text-white collapsed" data-parent="#accordion"><i class="fe fe-arrow-right mr-2"></i>
+														<?php echo $tipo->getNombre() ?>
+													</a>
+												</div>
+												<div aria-labelledby="headingOne-1" class="collapse" data-parent="#accordion" id="collapse-<?php echo $tipo->getId() ?>" role="tabpanel">
+													<div class="card-body">
+														<div class="row">
+															<div class="table-responsive">
+																<table class="table table-hover mg-b-0 w-100">
+																	<thead>
+																		<tr>
+																			<th>Centro de Costo</th>
+																			<th>Periodo</th>
+																			<th>Documento</th>
+																			<th>Eliminar</th>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		<?php
+																		$centrocosto = $c->listarCentroCosto($_SESSION['CURRENT_ENTERPRISE']);
+																		$centros = array();
+																		foreach ($centrocosto as $cc) {
+																			$centros[] = $cc->getId();
+																		}
+
+																		$documentos = $c->listardocumentoempresa1($_SESSION['CURRENT_ENTERPRISE'],$centros, $tipo->getId());
+																		$centros = array();
+																		foreach ($documentos as $documento) {
+																			echo "<tr>";
+																			echo "<td>" . $documento->getCentrocosto() . "</td>";
+																			echo "<td>" . $documento->getPeriodo() . "</td>";
+																			echo "<td><a href='uploads/documento_empresa/" . $documento->getDocumento() . "' target='_blank' class='btn btn-outline-primary btn-sm'><i class='fa fa-download'></i> Descargar</a></td>";
+																			echo "<td><button class='btn btn-outline-danger btn-sm' onclick='eliminardocumento(" . $documento->getId() . ")'><i class='fa fa-trash'></i></button></td>";
+																			echo "</tr>";
+																		}
+																		
+																		?>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										<?php
+										}
+										?>
 									</div>
 								</div>
 
@@ -687,7 +696,6 @@ foreach ($permiso as $p) {
 		<script src="assets/plugins/fancyuploder/fancy-uploader.js"></script>
 
 		<!-- Internal Form-elements js-->
-		<script src="assets/js/advanced-form-elements.js"></script>
 		<script src="assets/js/select2.js"></script>
 
 		<!-- Internal TelephoneInput js-->
@@ -726,25 +734,41 @@ foreach ($permiso as $p) {
 		<script src="JsFunctions/Alert/toastify.js"></script>
 		<script src="JsFunctions/Alert/sweetalert2.all.min.js"></script>
 		<script src="JsFunctions/Alert/alert.js"></script>
+
+		<script src="JsFunctions/chargedocumententerprise.js"></script>
 		<script src="JsFunctions/main.js"></script>
-		<script src="JsFunctions/Comunas.js"></script>
-		<script src="JsFunctions/precargado.js"></script>
 
-		<script src="JsFunctions/chargedocument.js"></script>
-		<?php
-		if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-			$id = $_SESSION['CURRENT_ENTERPRISE'];
-			echo "<script>";
-			echo "window.onload = function(){
-			validarpacto();
-		mostrarEmpresa(" . $id . ");
-	}";
-			echo "</script>";
-		}
-
-		?>
-
-
+		<script>
+			$(document).ready(function() {
+				mostrarEmpresa();
+			});
+		</script>
+		<script>
+			$(document).ready(function() {
+				mostrarEmpresa();
+				$(".table").DataTable({
+					"responsive": true,
+					"autoWidth": false,
+					"language": {
+						"lengthMenu": "Mostrar _MENU_ registros por pagina",
+						"zeroRecords": "No se encontraron resultados en su busqueda",
+						"searchPlaceholder": "Buscar registros",
+						"info": "Mostrando registros de _START_ al _END_ de un total de  _TOTAL_ registros",
+						"infoEmpty": "No existen registros",
+						"infoFiltered": "(filtrado de un total de _MAX_ registros)",
+						"search": "Buscar:",
+						"paginate": {
+							"first": "Primero",
+							"last": "Último",
+							"next": "Siguiente",
+							"previous": "Anterior"
+						},
+					},
+					"lengthMenu": [5, 10, 20, 50, 100],
+					"iDisplayLength": 5,
+				});
+			});
+		</script>
 
 
 </body>
