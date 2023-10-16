@@ -5387,6 +5387,7 @@ class Controller
 
     //Buscar Finiquito valores por id
     function buscarfiniquito1($id){
+        $this->conexion();
         $sql = "select finiquito.id as id, centrocosto.id as centrocosto, finiquito.contrato as contrato, finiquito.tipodocumento as tipodocumento, finiquito.fechafiniqito as fechafiniqito, finiquito.fechainicio as fechainicio, finiquito.fechatermino as fechatermino, causalterminocontrato.nombre as causalterminocontrato, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, finiquito.empresa as empresa, finiquito.register_at as register_at from contratos,centrocosto, finiquito,trabajadores, causalterminocontrato where finiquito.causalterminocontrato = causalterminocontrato.id  and finiquito.trabajador = trabajadores.id and finiquito.contrato = contratos.id and contratos.centrocosto = centrocosto.id and finiquito.id = $id";
         $result = $this->mi->query($sql);
         $finiquito = null;
@@ -5639,7 +5640,7 @@ class Controller
     function listarnotificacionesempresa($empresa)
     {
         $this->conexion();
-        $sql = "select notificaciones.id as id, fechanotificacion, finiquito, notificaciones.tipodocumento as tipodocumento, causal, causalhechos, cotizacionprevisional, comunicacion.nombre as comunicacion, acreditacion, comuna,texto, notificaciones.register_at as register_at, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido from notificaciones inner join finiquito on notificaciones.finiquito = finiquito.id inner join comunicacion on notificaciones.comunicacion = comunicacion.id inner join trabajadores on finiquito.trabajador = trabajadores.id where finiquito.empresa = $empresa";
+        $sql = "select notificaciones.id as id, fechanotificacion, finiquito, notificaciones.tipodocumento as tipodocumento, causalterminocontrato.nombre as causal, causalhechos, cotizacionprevisional, comunicacion.nombre as comunicacion, acreditacion, comuna,texto, notificaciones.register_at as register_at, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, centrocosto.nombre as centrocosto from notificaciones,causalterminocontrato, finiquito,contratos, comunicacion, trabajadores, centrocosto where notificaciones.finiquito = finiquito.id and finiquito.contrato = contratos.id and finiquito.trabajador = trabajadores.id and comunicacion.id = notificaciones.comunicacion and contratos.centrocosto = centrocosto.id and finiquito.empresa = $empresa and causalterminocontrato.id = notificaciones.causal";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -5653,8 +5654,8 @@ class Controller
             $comunicacion = $rs['nombre'] . " " . $rs['apellido'];
             $acreditacion = $rs['rut'];
             $comuna = $rs['comuna'];
-            $texto = $rs['texto'];
-            $register_at = $rs['register_at'];
+            $texto = $rs['comunicacion'];
+            $register_at = $rs['centrocosto'];
             $n = new Notificacion($id, $fechanotificacion, $finiquito, $tipodocumento, $causal, $causalhechos, $cotizacionprevisional, $comunicacion, $acreditacion, $comuna, $texto, $register_at);
             $lista[] = $n;
         }
@@ -7640,17 +7641,36 @@ class Controller
         $this->desconectar();
         return $result;
     }
+
+    //listar contratos activos por empresa
+    function listarcontratosfirmados($empresa)
+    {
+        $this->conexion();
+        $sql = "select contratos.id as id, trabajadores.rut as rut,trabajadores.nombre as nombre, centrocosto.nombre as centrocosto, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, contratosfirmados.documento as documento, estado, contratos.register_at as register_at from contratosfirmados,contratos,centrocosto, trabajadores, empresa where contratos.empresa = $empresa and trabajadores.id = contratos.trabajador and contratos.centrocosto=centrocosto.id and empresa.id = contratos.empresa and contratos.estado=1 and contratosfirmados.contrato=contratos.id order by contratos.id desc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+
+            $id = $rs['id'];
+            $nombre = $rs['nombre'] . " " . $rs['primerapellido'] . " " . $rs['segundoapellido'];
+            $razonsocial = $rs['razonsocial'];
+            $tipocontrato = $rs['tipocontrato'];
+            $centrocosto = $rs['centrocosto'];
+            $cargo = $rs['cargo'];
+            $sueldo = $rs['sueldo'];
+            $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $documento = $rs['documento'];
+            $estado = $rs['estado'];
+            $register_at = $rs['rut'];
+            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $lista[] = $contrato;
+        }
+        $this->desconectar();
+        return $lista;
+    }
     /************************************************************************************************************************ */
     /**************************************************Finiquito Firmado*************************************************** */
-    /*create table finiquitosfirmados(
-    id int not null auto_increment primary key,
-    empresa int not null references empresa(id),
-    centrocosto int not null references centrocosto(id),
-    finiquito int not null references finiquito(id),
-    documento varchar(200) not null,
-    register_at timestamp not null default current_timestamp
-    );
-    */
 
     //Registrar Finiquito Firmado
     function registrarfiniquitofirmado($empresa,$centrocosto,$finiquito,$documento){

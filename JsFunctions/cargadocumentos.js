@@ -130,3 +130,38 @@ function validarfiniquito(id){
 }
 
 //Cargar notificacion
+function cargarnotificacion(id, rut, trabajador, centrocosto, fechanotificacion, causal, comunicacion){
+    $(".modal-title").html("Cargar Notificacion Firmada");
+    $(".info-doc").html("<div class='alert alert-info'><i class='fa fa-info-circle'></i> <strong>Cargando Notificacion Firmada</strong> <br>Trabajador: " + trabajador + "<br>Centro de Costo: " + centrocosto + "<br>Fecha Notificacion: " + fechanotificacion + "<br>Causal: " + causal + "<br>Comunicacion: " + comunicacion + "</div>");
+    $("#idcontrato").val("");
+    $("#idfiniquito").val("");
+    $("#idnotificacion").val(id);
+    $("#iddocumento").val("");
+    $("#tipodocumento").val(3);
+    $("#modalcarga").modal("show");
+    validarnotificacion(id);
+}
+
+//Validar Carga de notificacion
+function validarnotificacion(id){
+    $.ajax({
+        url: "php/validation/cargarnotificacion.php",
+        type: "POST",
+        data: {id: id},
+        success:function(response){
+        try {
+            var data = JSON.parse(response);
+            if(data.status == true){
+                $(".message").html(data.message);
+                $(".message").append("");
+            }else{
+                $(".message").html("");
+            }
+        } catch (error) {
+            ToastifyError("Error interno".error);
+        }
+    }
+    });
+}
+
+//Cargar documento

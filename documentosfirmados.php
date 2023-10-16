@@ -65,7 +65,7 @@ foreach ($permiso as $p) {
 	<link rel="icon" href="assets/img/brand/favicon.ico" type="image/x-icon" />
 
 	<!-- Title -->
-	<title>Gestor de Documentos</title>
+	<title>Gestor de Documentos | Documentos Firmados</title>
 
 	<!-- Bootstrap css-->
 	<link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
@@ -86,11 +86,6 @@ foreach ($permiso as $p) {
 
 	<!-- Select2 css -->
 	<link href="assets/plugins/select2/css/select2.min.css" rel="stylesheet">
-	<!-- InternalFileupload css-->
-	<link href="assets/plugins/fileuploads/css/fileupload.css" rel="stylesheet" type="text/css" />
-
-	<!-- InternalFancy uploader css-->
-	<link href="assets/plugins/fancyuploder/fancy_fileupload.css" rel="stylesheet" />
 
 	<!-- Internal DataTables css-->
 	<link href="assets/plugins/datatable/dataTables.bootstrap4.min.css" rel="stylesheet" />
@@ -136,8 +131,8 @@ foreach ($permiso as $p) {
 				</a>
 			</div>
 			<div class="main-sidebar-body">
-
-				<ul class="nav">
+				
+			<ul class="nav">
 					<li class="nav-header"><span class="nav-label">Dashboard</span></li>
 
 					<?php
@@ -145,9 +140,10 @@ foreach ($permiso as $p) {
 					if (isset($_SESSION['GESTION_PERMISO']) || isset($_SESSION['LECTURA_PERMISO']) || isset($_SESSION['ESCRITURA_PERMISO']) || isset($_SESSION['ACTUALIZACION_PERMISO']) || isset($_SESSION['ELIMINACION_PERMISO'])) {
 						if ($_SESSION['GESTION_PERMISO'] == true) {
 
-					?>
+							?>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span
+										class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="isapres.php">Institución de Salud</a>
@@ -193,22 +189,23 @@ foreach ($permiso as $p) {
 									</li>
 								</ul>
 							</li>
-						<?php
+							<?php
 						}
 						?>
 						<li class="nav-header"><span class="nav-label">FUNCIONES</span></li>
 
 
 						<li class="nav-item">
-							<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
+							<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span
+									class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
 							<ul class="nav-sub">
 								<?php
 								if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
-								?>
+									?>
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="empresas.php">Empresas</a>
 									</li>
-								<?php
+									<?php
 								}
 								?>
 								<li class="nav-sub-item">
@@ -217,11 +214,11 @@ foreach ($permiso as $p) {
 
 								<?php
 								if ($_SESSION['GESTION_PERMISO'] == true) {
-								?>
+									?>
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="tipodocumento.php">Escritos</a>
 									</li>
-								<?php
+									<?php
 								}
 								?>
 
@@ -229,23 +226,24 @@ foreach ($permiso as $p) {
 								if (isset($_SESSION['GESTION_PERMISO'])) {
 									if ($_SESSION['GESTION_PERMISO'] == true) {
 
-								?>
+										?>
 										<li class="nav-sub-item">
 											<a class="nav-sub-link" href="usuarios.php">Usuarios</a>
 										</li>
-								<?php
+										<?php
 									}
 								}
 								?>
 							</ul>
 						</li>
-					<?php
+						<?php
 					}
 
 					if ($_SESSION['GESTION_PERMISO'] == true) {
-					?>
+						?>
 						<li class="nav-item">
-							<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
+							<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span
+									class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
 							<ul class="nav-sub">
 								<li class="nav-sub-item">
 									<a class="nav-sub-link" href="auditoriatrabajadores.php">Auditoria de trabajadores</a>
@@ -256,11 +254,12 @@ foreach ($permiso as $p) {
 
 							</ul>
 						</li>
-					<?php
+						<?php
 					}
 					?>
 					<li class="nav-item">
-						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
+						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
+								class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
 						<ul class="nav-sub">
 							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="contratoindividual.php">Contrato Individual</a>
@@ -292,7 +291,8 @@ foreach ($permiso as $p) {
 						</ul>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
+						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
+								class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
 						<ul class="nav-sub">
 							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="impresiondocumentos.php">Impresión Documentos</a>
@@ -405,7 +405,7 @@ foreach ($permiso as $p) {
 					<!-- Page Header -->
 					<div class="page-header">
 						<div class="page-header-1">
-							<h1 class="main-content-title tx-30">Carga de Documentos</h1>
+							<h1 class="main-content-title tx-30">Documentos Firmados</h1>
 							<ol class="breadcrumb">
 								<li class="breadcrumb-item"><a href="index.php">Inicio</a></li>
 							</ol>
@@ -437,16 +437,17 @@ foreach ($permiso as $p) {
 																		<tr>
 																			<td>Rut</td>
 																			<td>Trabajador</td>
-																			<td>Centro de Costo</td>
+																			<td>Centro Costo</td>
 																			<td>Fecha Inicio</td>
 																			<td>Fecha Termino</td>
 																			<td>Tipo Contrato</td>
-																			<td class='text-center'>Cargar</td>
+																			<td class='text-center'>Imprimir</td>
+																			<td class='text-center'>Eliminar</td>
 																		</tr>
 																	</thead>
 																	<tbody>
 																		<?php
-																		$contratos = $c->listarcontratosactivosempresa($_SESSION['CURRENT_ENTERPRISE']);
+																		$contratos = $c->listarcontratosfirmados($_SESSION['CURRENT_ENTERPRISE']);
 																		if (count($contratos) > 0) {
 																			foreach ($contratos as $contrato) {
 																				echo "<tr>";
@@ -461,8 +462,13 @@ foreach ($permiso as $p) {
 																				}
 																				echo "<td>" . $contrato->getTipoContrato() . "</td>";
 																				echo "<td  class='text-center'> 
-																						<a class='btn btn-outline-success btn-sm rounded-11' href='javascript:void(0);' onclick='cargarcontrato(" . $contrato->getId() . ",\"" . $contrato->getTrabajador() . "\",\"" . $contrato->getCentrocosto() . "\",\"" . $contrato->getFechaInicio() . "\",\"" . $contrato->getFechaTermino() . "\",\"" . $contrato->getTipoContrato() . "\")'><i class='fa fa-upload'></i></a>
+																						<a class='btn btn-outline-success btn-sm rounded-11' target='_blank' href='uploads/documentosfirmados/" . $contrato->getDocumento() . "'><i class='fa fa-print'></i></a>
 																					</td>";
+																				if ($contrato->getEstado() == 1) {
+																					echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarcontrato(" . $contrato->getId() . ")'><i class='fa fa-trash'></i></button></td>";
+																				} else {
+																					echo "<td class='text-center'>-</td>";
+																				}
 																				echo "</tr>";
 																			}
 																		}
@@ -482,12 +488,13 @@ foreach ($permiso as $p) {
 																		<tr>
 																			<td>RUT</td>
 																			<td>Trabajador</td>
-																			<td>Centro de Costo</td>
+																			<td>Centro Costo</td>
 																			<td>Fecha Inicio</td>
 																			<td>Fecha Termino</td>
 																			<td>Fecha Finiquito</td>
 																			<td>Causal Termino de Contrato</td>
-																			<td class='text-center'>Cargar</td>
+																			<td class='text-center'>Imprimir</td>
+																			<td class='text-center'>Eliminar</td>
 																		</tr>
 																	</thead>
 																	<tbody class="tablecontratos">
@@ -502,12 +509,12 @@ foreach ($permiso as $p) {
 																				$fecha_finiquito = date("d-m-Y", strtotime($finiquito->getFechafiniquito()));
 																				echo "<td>" . $finiquito->getEmpresa() . "</td>";
 																				echo "<td>" . $finiquito->getTrabajador() . "</td>";
-																				echo "<td>" . $finiquito->getFecha() . "</td>";
 																				echo "<td>" . $fecha_termino . "</td>";
 																				echo "<td>" . $fecha_termino . "</td>";
 																				echo "<td>" . $fecha_finiquito . "</td>";
 																				echo "<td>" . $finiquito->getCausal() . "</td>";
-																				echo "<td class='text-center'><button class='text-center btn btn-outline-success btn-sm rounded-11' onclick='cargarfiniquito(" . $finiquito->getId() . ",\"" . $finiquito->getEmpresa() . "\",\"" . $finiquito->getTrabajador() . "\",\"" . $finiquito->getFecha() . "\",\"" . $fecha_inicio . "\",\"" . $fecha_termino . "\",\"" . $fecha_finiquito . "\",\"" . $finiquito->getCausal() . "\")'><i class='fa fa-upload'></i></button></td>";
+																				echo "<td class='text-center'><a href='php/pdf/finiquito.php?id=" . $finiquito->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
+																				echo "<td class='text-center'><button class='text-center btn btn-outline-danger btn-sm rounded-11' onclick='eliminarfiniquito(" . $finiquito->getId() . ")'><i class='fa fa-trash'></i></button></td>";
 																				echo "</tr>";
 																			}
 																		}
@@ -530,11 +537,12 @@ foreach ($permiso as $p) {
 																		<tr>
 																			<td>RUT</td>
 																			<td>Trabajador</td>
-																			<td>Centro de Costo</td>
 																			<td>Fecha Notificación</td>
 																			<td>Causal</td>
 																			<td>Comunicacion</td>
-																			<td>Cargar</td>
+																			<td>PDF</td>
+																			<td>CSV</td>
+																			<td class='text-center'>Eliminar</td>
 																		</tr>
 																	</thead>
 																	<tbody class="tablenotificacion">
@@ -545,11 +553,12 @@ foreach ($permiso as $p) {
 																				echo "<tr>";
 																				echo "<td>" . $notificacion->getAcrediacion() . "</td>";
 																				echo "<td>" . $notificacion->getComunicacion() . "</td>";
-																				echo "<td>" . $notificacion->getRegistro() . "</td>";
 																				echo "<td>" . $notificacion->getFechanotificacion() . "</td>";
 																				echo "<td>" . $notificacion->getCausal() . "</td>";
 																				echo "<td>" . $notificacion->getTexto() . "</td>";
-																				echo "<td><button class='btn btn-outline-success btn-sm rounded-11' onclick='cargarnotificacion(" . $notificacion->getId() . ",\"" . $notificacion->getAcrediacion() . "\",\"" . $notificacion->getComunicacion() . "\",\"" . $notificacion->getRegistro() . "\",\"" . $notificacion->getFechanotificacion() . "\",\"" . $notificacion->getCausal() . "\",\"" . $notificacion->getTexto() . "\")'><i class='fa fa-upload'></i></button></td>";
+																				echo "<td><a href='php/pdf/notificacion.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
+																				echo "<td><a href='php/pdf/notificacioncsv.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-file-excel-o'></i></a></td>";
+																				echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarnotificacion(" . $notificacion->getId() . ")'><i class='fa fa-trash'></i></button></td>";
 																				echo "</tr>";
 																			}
 																		}
@@ -573,7 +582,7 @@ foreach ($permiso as $p) {
 																			<td>Fecha de Generación</td>
 																			<td>Tipo de Documento</td>
 																			<td>Documento</td>
-																			<td class='text-center'>Cargar</td>
+																			<td class='text-center'>Eliminar</td>
 																		</tr>
 																	</thead>
 																	<tbody>
@@ -587,7 +596,7 @@ foreach ($permiso as $p) {
 																				echo "<td>" . $notificacion->getFechageneracion() . "</td>";
 																				echo "<td>" . $notificacion->getTipodocumento() . "</td>";
 																				echo "<td><a href='uploads/documentos/" . $notificacion->getDocumento() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
-																				echo "<td class='text-center'><button class='btn btn-outline-info btn-sm rounded-11' onclick='eliminardocumento(" . $notificacion->getId() . ")'><i class='fa fa-upload'></i></button></td>";
+																				echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminardocumento(" . $notificacion->getId() . ")'><i class='fa fa-trash'></i></button></td>";
 																				echo "</tr>";
 																			}
 																		}
@@ -626,60 +635,6 @@ foreach ($permiso as $p) {
 		<!--End Footer-->
 
 
-		<!-- Edit Modal -->
-		<div class="modal fade" id="modalcarga" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="staticBackdropLabel">Cargar Documento</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<div class="row">
-							<div class="col-md-12">
-								<div class="info-doc"></div>
-							</div>
-							<div class="col-md-12">
-								<div class="message"></div>
-							</div>
-						</div>
-						<form id="formcarga" method="POST" enctype="multipart/form-data">
-							<div class="row">
-								<input type="hidden" name="enterpriseid" id="enterpriseid" value="<?php echo $_SESSION['CURRENT_ENTERPRISE']; ?>">
-								<input type="hidden" name="idcontrato" id="idcontrato">
-								<input type="hidden" name="idfiniquito" id="idfiniquito">
-								<input type="hidden" name="idnotificacion" id="idnotificacion">
-								<input type="hidden" name="iddocumento" id="iddocumento">
-								<input type="hidden" name="tipodocumento" id="tipodocumento">
-
-								<div class="col-lg-12 col-md-12">
-									<div class="card">
-										<div class="card-body">
-											<div>
-												<h6 class="main-content-label mb-1">Cargar Documento</h6>
-											</div>
-											<div class="row">
-												<div class="col-sm-12 col-md-12">
-													<input type="file" name="documento" id="documento" class="dropify" data-height="200" required />
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="col-lg-12 text-right">
-									<div class="form-group">
-										<button type="submit" class="btn btn-success btn-block" id="cargar"><i class="fa fa-upload"></i> Cargar</button>
-									</div>
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-
 	</div>
 	<!-- End Page -->
 
@@ -708,16 +663,6 @@ foreach ($permiso as $p) {
 	<script src="assets/plugins/datatable/fileexport/dataTables.buttons.min.js"></script>
 	<script src="assets/plugins/datatable/fileexport/buttons.bootstrap4.min.js"></script>
 
-	<!-- Internal Fileuploads js-->
-	<script src="assets/plugins/fileuploads/js/fileupload.js"></script>
-	<script src="assets/plugins/fileuploads/js/file-upload.js"></script>
-
-	<!-- InternalFancy uploader js-->
-	<script src="assets/plugins/fancyuploder/jquery.ui.widget.js"></script>
-	<script src="assets/plugins/fancyuploder/jquery.fileupload.js"></script>
-	<script src="assets/plugins/fancyuploder/jquery.iframe-transport.js"></script>
-	<script src="assets/plugins/fancyuploder/jquery.fancy-fileupload.js"></script>
-	<script src="assets/plugins/fancyuploder/fancy-uploader.js"></script>
 
 	<!-- Perfect-scrollbar js -->
 	<script src="assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
@@ -743,10 +688,10 @@ foreach ($permiso as $p) {
 	<script src="JsFunctions/Alert/sweetalert2.all.min.js"></script>
 	<script src="JsFunctions/Alert/alert.js"></script>
 	<script src="JsFunctions/main.js"></script>
-	<script src="JsFunctions/cargadocumentos.js"></script>
+	<script src="JsFunctions/Trabajadores.js"></script>
 
 	<script>
-		$(document).ready(function() {
+		$(document).ready(function(){
 			mostrarEmpresa();
 		});
 	</script>

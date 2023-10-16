@@ -1,6 +1,7 @@
 <?php
 require '../controller.php';
 $c = new Controller();
+session_start();
 
 if(isset($_POST['enterpriseid']) && isset($_POST['idcontrato']) && isset($_POST['idfiniquito']) && isset($_POST['idnotificacion']) && isset($_POST['iddocumento']) && isset($_POST['tipodocumento']) && isset($_FILES['documento'])){
     $enterpriseid = $_POST['enterpriseid'];
@@ -60,7 +61,7 @@ if(isset($_POST['enterpriseid']) && isset($_POST['idcontrato']) && isset($_POST[
     }else if($tipodocumento==2){
 
         $finiquito = $c->buscarfiniquito1($idfiniquito);
-        $empresa = $finiquito->getEmpresa();
+        $empresa = $_SESSION['CURRENT_ENTERPRISE'];
         $centrocosto = $finiquito->getFecha();
         if (isset($_FILES['documento'])) {
             //Validar si viene un archivo
