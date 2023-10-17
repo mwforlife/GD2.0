@@ -496,7 +496,7 @@ foreach ($permiso as $p) {
 																						<a class='btn btn-outline-success btn-sm rounded-11' target='_blank' href='uploads/documentosfirmados/" . $contrato->getDocumento() . "'><i class='fa fa-print'></i></a>
 																					</td>";
 																				if ($contrato->getEstado() == 1) {
-																					echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarcontrato(" . $contrato->getId() . ")'><i class='fa fa-trash'></i></button></td>";
+																					echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarcontratofirmado(" . $contrato->getId() . ")'><i class='fa fa-trash'></i></button></td>";
 																				} else {
 																					echo "<td class='text-center'>-</td>";
 																				}
@@ -530,7 +530,7 @@ foreach ($permiso as $p) {
 																	</thead>
 																	<tbody class="tablecontratos">
 																		<?php
-																		$finiquitos = $c->listarfiniquitosempresa($_SESSION['CURRENT_ENTERPRISE']);
+																		$finiquitos = $c->listarfiniquitofirmados($_SESSION['CURRENT_ENTERPRISE']);
 																		if (count($finiquitos) > 0) {
 																			foreach ($finiquitos as $finiquito) {
 																				echo "<tr>";
@@ -540,12 +540,13 @@ foreach ($permiso as $p) {
 																				$fecha_finiquito = date("d-m-Y", strtotime($finiquito->getFechafiniquito()));
 																				echo "<td>" . $finiquito->getEmpresa() . "</td>";
 																				echo "<td>" . $finiquito->getTrabajador() . "</td>";
+																				echo "<td>" . $finiquito->getFecha() . "</td>";
 																				echo "<td>" . $fecha_termino . "</td>";
 																				echo "<td>" . $fecha_termino . "</td>";
 																				echo "<td>" . $fecha_finiquito . "</td>";
 																				echo "<td>" . $finiquito->getCausal() . "</td>";
-																				echo "<td class='text-center'><a href='php/pdf/finiquito.php?id=" . $finiquito->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
-																				echo "<td class='text-center'><button class='text-center btn btn-outline-danger btn-sm rounded-11' onclick='eliminarfiniquito(" . $finiquito->getId() . ")'><i class='fa fa-trash'></i></button></td>";
+																				echo "<td class='text-center'><a href='uploads/documentosfirmados/" . $finiquito->getContrato() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
+																				echo "<td class='text-center'><button class='text-center btn btn-outline-danger btn-sm rounded-11' onclick='eliminarfiniquitofirmado(" . $finiquito->getId() . ")'><i class='fa fa-trash'></i></button></td>";
 																				echo "</tr>";
 																			}
 																		}
@@ -571,14 +572,14 @@ foreach ($permiso as $p) {
 																			<td>Fecha Notificación</td>
 																			<td>Causal</td>
 																			<td>Comunicacion</td>
-																			<td>PDF</td>
-																			<td>CSV</td>
+																			<td>Documento</td>
+																			<td>Carta</td>
 																			<td class='text-center'>Eliminar</td>
 																		</tr>
 																	</thead>
 																	<tbody class="tablenotificacion">
 																		<?php
-																		$notifi = $c->listarnotificacionesempresa($_SESSION['CURRENT_ENTERPRISE']);
+																		$notifi = $c->listarnotificacionesfirmadas($_SESSION['CURRENT_ENTERPRISE']);
 																		if ($notifi != null) {
 																			foreach ($notifi as $notificacion) {
 																				echo "<tr>";
@@ -587,8 +588,8 @@ foreach ($permiso as $p) {
 																				echo "<td>" . $notificacion->getFechanotificacion() . "</td>";
 																				echo "<td>" . $notificacion->getCausal() . "</td>";
 																				echo "<td>" . $notificacion->getTexto() . "</td>";
-																				echo "<td><a href='php/pdf/notificacion.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
-																				echo "<td><a href='php/pdf/notificacioncsv.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-file-excel-o'></i></a></td>";
+																				echo "<td><a href='uploads/documentosfirmados/" . $notificacion->getCausalhechos() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
+																				echo "<td><a href='uploads/documentosfirmados/" . $notificacion->getFiniquito() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
 																				echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarnotificacion(" . $notificacion->getId() . ")'><i class='fa fa-trash'></i></button></td>";
 																				echo "</tr>";
 																			}

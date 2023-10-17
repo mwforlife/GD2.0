@@ -472,6 +472,7 @@ foreach ($permiso as $p) {
 																			<td>Fecha Termino</td>
 																			<td>Tipo Contrato</td>
 																			<td class='text-center'>Imprimir</td>
+																			<td class="text-center">Inscripcion de Faena</td>
 																			<td class='text-center'>Eliminar</td>
 																		</tr>
 																	</thead>
@@ -493,6 +494,8 @@ foreach ($permiso as $p) {
 																				echo "<td  class='text-center'> 
 																						<a class='btn btn-outline-success btn-sm rounded-11' target='_blank' href='uploads/Contratos/" . $contrato->getDocumento() . "'><i class='fa fa-print'></i></a>
 																					</td>";
+																				echo "<td class='text-center'><a class='btn btn-outline-success btn-sm rounded-11' target='_blank' href='php/report/inscripcionfaena.php?id=" . $contrato->getId() . "'><i class='fa fa-file-excel'></i></a></td>";
+
 																				if ($contrato->getEstado() == 1) {
 																					echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarcontrato(" . $contrato->getId() . ")'><i class='fa fa-trash'></i></button></td>";
 																				} else {
@@ -568,8 +571,9 @@ foreach ($permiso as $p) {
 																			<td>Fecha Notificación</td>
 																			<td>Causal de Hechos</td>
 																			<td>Comunicacion</td>
-																			<td>PDF</td>
-																			<td>XLS</td>
+																			<td class='text-center'>PDF</td>
+																			<td class='text-center'>XLS</td>
+																			<td class='text-center'>Retiro Previred</td>
 																			<td class='text-center'>Eliminar</td>
 																		</tr>
 																	</thead>
@@ -584,8 +588,9 @@ foreach ($permiso as $p) {
 																				echo "<td>" . $notificacion->getFechanotificacion() . "</td>";
 																				echo "<td>" . $notificacion->getCausal() . "</td>";
 																				echo "<td>" . $notificacion->getComunicacion() . "</td>";
-																				echo "<td><a href='php/pdf/notificacion.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
-																				echo "<td><a href='php/pdf/notificacioncsv.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-file-excel-o'></i></a></td>";
+																				echo "<td class='text-center'><a href='php/pdf/notificacion.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
+																				echo "<td class='text-center'><a href='php/pdf/notificacioncsv.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-file-excel-o'></i></a></td>";
+																				echo "<td class='text-center'><a href='php/report/retiroprevired.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-file-excel-o'></i></a></td>";
 																				echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarnotificacion(" . $notificacion->getId() . ")'><i class='fa fa-trash'></i></button></td>";
 																				echo "</tr>";
 																			}

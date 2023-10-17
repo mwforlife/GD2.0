@@ -690,7 +690,7 @@ foreach ($permiso as $p) {
 								<input type="hidden" name="iddocumento" id="iddocumento">
 								<input type="hidden" name="tipodocumento" id="tipodocumento">
 
-								<div class="col-lg-12 col-md-12">
+								<div class="col-md-12 documento">
 									<div class="card">
 										<div class="card-body">
 											<div>
@@ -704,6 +704,22 @@ foreach ($permiso as $p) {
 										</div>
 									</div>
 								</div>
+
+								<div class="col-md-6 carta">
+									<div class="card">
+										<div class="card-body">
+											<div>
+												<h6 class="main-content-label mb-1">Cargar Carta</h6>
+											</div>
+											<div class="row">
+												<div class="col-sm-12 col-md-12">
+													<input type="file" name="carta" id="carta" class="dropify" data-height="200" />
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
 								<div class="col-lg-12 text-right">
 									<div class="form-group">
 										<button type="submit" class="btn btn-success btn-block" id="cargar"><i class="fa fa-upload"></i> Cargar</button>

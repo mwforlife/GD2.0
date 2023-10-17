@@ -99,7 +99,7 @@ if (isset($_SESSION['USER_ID']) && isset($_GET['id'])) {
 
     $spreadsheet = new Spreadsheet();
     $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xls($spreadsheet);
-    $spreadsheet->getActiveSheet()->setTitle('Hoja 1');
+    $spreadsheet->getActiveSheet()->setTitle('Hoja1');
     $spreadsheet->getActiveSheet()->setCellValue('A1', 'rut_tr');
     $spreadsheet->getActiveSheet()->setCellValue('B1', 'dv_tr');
     $spreadsheet->getActiveSheet()->setCellValue('C1', 'nombres_tr');

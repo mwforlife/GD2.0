@@ -54,6 +54,7 @@ require 'Class/Codigolre.php';
 require 'Class/Haber.php';
 require 'Class/Haber_trabajador.php';
 require 'Class/Documentofirmado.php';
+require 'Class/Notificacionfirmado.php';
 require 'Class/Documentoempresa.php';
 
 //Class definition
@@ -4139,6 +4140,32 @@ class Controller
         return $lista;
     }
 
+    //Ultima Licencia Medica mostrando RUT pagador subsidio
+    public function ultimalicencia($trabajador)
+    {
+        $this->conexion();
+        $sql = "select licenciamedica.id as id,folio, tipolicencia.nombre as tipolicencia, fechainicio, fechatermino,pagadoressubsidio.codigoprevired as rut, pagadoressubsidio.nombre as pagado, comentario, documentolicencia,comprobantetramite, trabajador, register_at from licenciamedica,tipolicencia, pagadoressubsidio where tipolicencia.id=licenciamedica.tipolicencia and licenciamedica.pagadora = pagadoressubsidio.id and trabajador = $trabajador order by register_at desc limit 1";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $folio = $rs['folio'];
+            $tipolicencia = $rs['tipolicencia'];
+            $inicio = $rs['fechainicio'];
+            $fin = $rs['fechatermino'];
+            $pagadora = $rs['pagado'];
+            $comentario = $rs['comentario'];
+            $documentolicencia = $rs['documentolicencia'];
+            $comprobantetramite = $rs['comprobantetramite'];
+            $trabajador = $rs['trabajador'];
+            $registro = $rs['rut'];
+            $licencia = new Licencias($id, $folio, $tipolicencia, $inicio, $fin, $pagadora, $comentario, $documentolicencia, $comprobantetramite, $trabajador, $registro);
+            $this->desconectar();
+            return $licencia;
+        }
+        $this->desconectar();
+        return false;
+    }
+
     //Buscar Licencia Medica
     public function buscarlicencia($id)
     {
@@ -4789,6 +4816,32 @@ class Controller
             $estado = $rs['estado'];
             $register_at = $rs['traid'];
             $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $this->desconectar();
+            return $contrato;
+        }
+        $this->desconectar();
+        return false;
+    }
+
+    //Search COntrato
+    function searchcontrato($id){
+        $this->conexion();
+        $sql = "select * from contratos where id = $id";
+        $result = $this->mi->query($sql);
+        if($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $trabajador = $rs['trabajador'];
+            $empresa = $rs['empresa'];
+            $centrocosto = $rs['centrocosto'];
+            $tipocontrato = $rs['tipocontrato'];
+            $cargo = $rs['cargo'];
+            $sueldo = $rs['sueldo'];
+            $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $documento = $rs['documento'];
+            $estado = $rs['estado'];
+            $register_at = $rs['register_at'];
+            $contrato = new Contrato($id,$trabajador,$empresa,$centrocosto,$tipocontrato,$cargo,$sueldo,$fechainicio,$fechatermino,$documento,$estado,$register_at);
             $this->desconectar();
             return $contrato;
         }
@@ -5773,7 +5826,7 @@ class Controller
     function listarlotestext2($empresa)
     {
         $this->conexion();
-        $sql = "select distinct detallelotes.contrato, detallelotes.id as id, lotes.nombre as nombre, contratos.tipocontrato as tipocontrato, fechainicio, fechatermino, trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, contratos.documento as documento, trabajadores.segundoapellido as apellido2 from detallelotes, lotes, contratos, trabajadores where detallelotes.lotes = lotes.id and detallelotes.contrato = contratos.id and contratos.trabajador = trabajadores.id and contratos.estado = 1 and lotes=$empresa order by lotes.nombre asc";
+        $sql = "select distinct detallelotes.contrato as idcont, detallelotes.id as id, lotes.nombre as nombre, contratos.tipocontrato as tipocontrato, fechainicio, fechatermino, trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, contratos.documento as documento, trabajadores.segundoapellido as apellido2 from detallelotes, lotes, contratos, trabajadores where detallelotes.lotes = lotes.id and detallelotes.contrato = contratos.id and contratos.trabajador = trabajadores.id and contratos.estado = 1 and lotes=$empresa order by lotes.nombre asc";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -5788,7 +5841,7 @@ class Controller
             $lote = $rs['nombre'];
             $nombre = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'] ;
             $fechainicio = $rs['documento'];
-            $fechatermino = $rs['fechatermino'];
+            $fechatermino = $rs['idcont'];
             $l = new Lotes_contrato($id, $contrato, $nombre, $lote, $fechainicio, $fechatermino);
             $lista[] = $l;
         }
@@ -7642,6 +7695,15 @@ class Controller
         return $result;
     }
 
+    //Eliminar Contrato Firmado
+    function eliminarcontratofirmado($id){
+        $this->conexion();
+        $sql = "delete from contratosfirmados where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
     //listar contratos activos por empresa
     function listarcontratosfirmados($empresa)
     {
@@ -7708,16 +7770,130 @@ class Controller
         $this->desconectar();
         return $result;
     }
-    /************************************************************************************************************************ */
-    /**************************************************Notificaciones Firmadas*************************************************** */
-    //Registrar Notificacion Firmada
-    function registrarnotificacionfirmada($empresa,$centrocosto,$notificacion,$documento){
+
+    //eliminar Finiquito Firmado
+    function eliminarfiniquitofirmado($id){
         $this->conexion();
-        $sql = "insert into notificacionesfirmadas values(null,$empresa,$centrocosto,$notificacion,'$documento',now())";
+        $sql = "delete from finiquitosfirmados where id=$id";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return $result;
     }
+
+    //Listar Finiquitos Firmados
+    
+    function listarfiniquitofirmados($empresa)
+    {
+        $this->conexion();
+        $sql = "select finiquito.id as id, centrocosto.nombre as centrocosto, finiquito.contrato as contrato, finiquito.tipodocumento as tipodocumento, finiquito.fechafiniqito as fechafiniqito, finiquitosfirmados.documento as documento, finiquito.fechainicio as fechainicio, finiquito.fechatermino as fechatermino, causalterminocontrato.nombre as causalterminocontrato, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, finiquito.empresa as empresa, finiquito.register_at as register_at from contratos,centrocosto, finiquito,trabajadores, causalterminocontrato, finiquitosfirmados where finiquito.causalterminocontrato = causalterminocontrato.id and  finiquito.empresa = $empresa and finiquito.trabajador = trabajadores.id and finiquito.contrato = contratos.id and contratos.centrocosto = centrocosto.id and finiquitosfirmados.finiquito=finiquito.id order by finiquito.id desc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $contrato = $rs['documento'];
+            $tipodocumento = $rs['tipodocumento'];
+            $fechafiniquito = $rs['fechafiniqito'];
+            $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $causalterminocontrato = $rs['causalterminocontrato'];
+            $trabajador = $rs['nombre'] . " " . $rs['apellido'];
+            $empresa = $rs['rut'];
+            $register_at = $rs['centrocosto'];
+            $finiquito = new Finiquito($id, $contrato, $tipodocumento, $fechafiniquito, $fechainicio, $fechatermino, $causalterminocontrato, $trabajador, $empresa,$register_at);
+            $lista[] = $finiquito;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    /************************************************************************************************************************ */
+    /**************************************************Notificaciones Firmadas*************************************************** */
+    //Registrar Notificacion Firmada
+    function registrarnotificacionfirmada($empresa,$centrocosto,$notificacion,$documento,$carta){
+        $this->conexion();
+        $sql = "insert into notificacionesfirmadas values(null,$empresa,$centrocosto,$notificacion,'$documento','$carta',now())";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+
+    //actualizar Notificacion Firmada
+    function actualizarnotificacionfirmada($id,$documento){
+        $this->conexion();
+        $sql = "update notificacionesfirmadas set documento='$documento' where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //actualizar Notificacion Firmada Carta
+    function actualizarnotificacionfirmadacarta($id,$carta){
+        $this->conexion();
+        $sql = "update notificacionesfirmadas set carta='$carta' where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Eliminar Notificacion Firmada
+    function eliminarnotificacionfirmada($id){
+        $this->conexion();
+        $sql = "delete from notificacionesfirmadas where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Buscar Notificacion Firmada
+    function buscarnotificacionfirmada($notificacion){
+        $this->conexion();
+        $sql = "select * from notificacionesfirmadas where notificacion=$notificacion";
+        $result = $this->mi->query($sql);
+        $notificacion = false;
+        while($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $empresa = $rs['empresa'];
+            $centrocosto = $rs['centrocosto'];
+            $notificacion = $rs['notificacion'];
+            $documento = $rs['documento'];
+            $carta = $rs['carta'];
+            $registro = $rs['register_at'];
+            $notificacion = new NotificacionFirmada($id,$empresa,$centrocosto,$notificacion,$documento,$carta,$registro);
+        }
+        $this->desconectar();
+        return $notificacion;
+    }
+    
+    //Listar Notificaciones Firmadas
+    
+    //Listar Notificaciones por empresa
+    function listarnotificacionesfirmadas($empresa)
+    {
+        $this->conexion();
+        $sql = "select notificacionesfirmadas.id as id, notificacionesfirmadas.documento as documento, notificacionesfirmadas.carta as carta, fechanotificacion, finiquito, notificaciones.tipodocumento as tipodocumento, causalterminocontrato.nombre as causal, causalhechos, cotizacionprevisional, comunicacion.nombre as comunicacion, acreditacion, comuna,texto, notificaciones.register_at as register_at, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, centrocosto.nombre as centrocosto from notificaciones,causalterminocontrato, finiquito,contratos, comunicacion, trabajadores, centrocosto, notificacionesfirmadas where notificaciones.finiquito = finiquito.id and finiquito.contrato = contratos.id and finiquito.trabajador = trabajadores.id and comunicacion.id = notificaciones.comunicacion and contratos.centrocosto = centrocosto.id and finiquito.empresa = $empresa and causalterminocontrato.id = notificaciones.causal and notificacionesfirmadas.notificacion=notificaciones.id order by notificaciones.id desc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $fechanotificacion = $rs['fechanotificacion'];
+            $finiquito = $rs['carta'];
+            $tipodocumento = $rs['tipodocumento'];
+            $causal = $rs['causal'];
+            $causalhechos = $rs['documento'];
+            $cotizacionprevisional = $rs['cotizacionprevisional'];
+            $comunicacion = $rs['nombre'] . " " . $rs['apellido'];
+            $acreditacion = $rs['rut'];
+            $comuna = $rs['comuna'];
+            $texto = $rs['comunicacion'];
+            $register_at = $rs['centrocosto'];
+            $n = new Notificacion($id, $fechanotificacion, $finiquito, $tipodocumento, $causal, $causalhechos, $cotizacionprevisional, $comunicacion, $acreditacion, $comuna, $texto, $register_at);
+            $lista[] = $n;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
 
     //Registrar Otros Documentos Firmados
     function registrarotrosdocumentosfirmados($empresa,$documento,$id_doc){

@@ -600,6 +600,11 @@ foreach ($permiso as $p) {
 																											class="btn btn-success"><i
 																												class="fa fa-print"></i>
 																											Imprimir Todo</a>
+																										<a target="_blank"
+																											href="php/report/inscipcionfaenaall.php?id=<?php echo $object->getId(); ?>"
+																											class="btn btn-success"><i
+																												class="fa fa-file-excel"></i>
+																											Inscripcion Faena</a>
 																										<button
 																											onclick="eliminartodoccontrato(<?php echo $object->getId(); ?>)"
 																											class="btn btn-danger"><i
@@ -628,6 +633,7 @@ foreach ($permiso as $p) {
 																														class="fa fa-plus"></i>
 																													Agregar
 																												</th>
+																												<td class='text-center'>Inscripcion Faena</td>
 																												<th
 																													class="bg-transparent text-center">
 																													<i
@@ -647,11 +653,13 @@ foreach ($permiso as $p) {
 																												echo $object1->getTrabajador();
 																												echo "</td>";
 																												echo "<td class='text-center'>";
-																												echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='addcart(1," . $object1->getId() . ",\"" . $object1->getContrato() . "\",\"" . $object1->getTrabajador() . "\",\"" . $object1->getFecha_inicio() . "\")' data-toggle='tooltip' data-original-title='Agregar'>";
+																												echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='addcart(1," . $object1->getFecha_fin() . ",\"" . $object1->getContrato() . "\",\"" . $object1->getTrabajador() . "\",\"" . $object1->getFecha_inicio() . "\")' data-toggle='tooltip' data-original-title='Agregar'>";
 																												echo "<i class='fa fa-plus'>";
 																												echo "</i>";
 																												echo "</a>";
 																												echo "</td>";
+																												echo "<td class='text-center'><a class='btn btn-outline-success btn-sm rounded-11' target='_blank' href='php/report/inscripcionfaena.php?id=" . $object1->getFecha_fin() . "'><i class='fa fa-file-excel'></i></a></td>";
+
 																												echo "<td class='text-center'>";
 																												echo "<a class='btn btn-outline-success btn-sm rounded-11' href='uploads/Contratos/" . $object1->getFecha_inicio() . "' target='_blank' data-toggle='tooltip' data-original-title='Imprimir'>";
 																												echo "<i class='fa fa-print'>";
@@ -875,6 +883,11 @@ foreach ($permiso as $p) {
 																												class="fa fa-file-excel-o"></i>
 																											Imprimir Todo
 																											XLS</a>
+																										<a target="_blank"
+																											href="php/report/retiropreviredall.php?id=<?php echo $object->getId(); ?>"
+																											class="btn btn-success"><i
+																												class="fa fa-file-excel-o"></i>
+																											Retiro Previred</a>
 																										<button
 																											onclick="eliminartodonotificacion(<?php echo $object->getId(); ?>)"
 																											class="btn btn-danger"><i
@@ -910,6 +923,9 @@ foreach ($permiso as $p) {
 																													XLS</th>
 																												<th
 																													class="bg-transparent text-center">
+																													Retiro Previred</th>
+																												<th
+																													class="bg-transparent text-center">
 																													<i
 																														class="fa fa-print"></i>
 																													Agregar
@@ -931,6 +947,7 @@ foreach ($permiso as $p) {
 																												echo "<td>" . $notificacion->getComunicacion() . "</td>";
 																												echo "<td class='text-center'><a href='php/pdf/notificacion.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
 																												echo "<td class='text-center'><a href='php/pdf/notificacioncsv.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-file-excel-o'></i></a></td>";
+																												echo "<td class='text-center'><a href='php/report/retiroprevired.php?id=" . $notificacion->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-file-excel-o'></i></a></td>";
 																												echo "<td class='text-center'><a class='btn btn-outline-info btn-sm rounded-11' onclick='addcart2(3," . $notificacion->getId() . ",\"" . $notificacion->getRegistro() . "\",\"" . $notificacion->getFechanotificacion() . "\",\"" . $notificacion->getCausal() . "\",\"" . $notificacion->getComunicacion() . "\")' data-toggle='tooltip' data-original-title='Agregar'><i class='fa fa-plus'></i></a></td>";
 																												echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarnotificacion(" . $notificacion->getId() . ")'><i class='fa fa-trash'></i></button></td>";
 																												echo "</tr>";

@@ -11,6 +11,10 @@ function cargarcontrato(id, trabajador, centrocosto, fechainicio, fechatermino, 
     $("#iddocumento").val("");
     $("#tipodocumento").val(1);
     $("#modalcarga").modal("show");
+    $(".carta").addClass("d-none");
+    $("#carta").prop("required", false);
+    $(".documento").addClass("col-md-12");
+    $(".documento").removeClass("col-md-6");
     validarcontrato(id);
 }
 
@@ -104,6 +108,10 @@ function cargarfiniquito(id, rut, trabajador, centrocosto,fechainicio, fechaterm
     $("#iddocumento").val("");
     $("#tipodocumento").val(2);
     $("#modalcarga").modal("show");
+    $(".carta").addClass("d-none");
+    $("#carta").prop("required", false);
+    $(".documento").addClass("col-md-12");
+    $(".documento").removeClass("col-md-6");
     validarfiniquito(id);
 }
 
@@ -139,6 +147,10 @@ function cargarnotificacion(id, rut, trabajador, centrocosto, fechanotificacion,
     $("#iddocumento").val("");
     $("#tipodocumento").val(3);
     $("#modalcarga").modal("show");
+    $(".carta").removeClass("d-none");
+    $("#carta").prop("required", true);
+    $(".documento").removeClass("col-md-12");
+    $(".documento").addClass("col-md-6");
     validarnotificacion(id);
 }
 
@@ -163,5 +175,3 @@ function validarnotificacion(id){
     }
     });
 }
-
-//Cargar documento
