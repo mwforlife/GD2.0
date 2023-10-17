@@ -1769,6 +1769,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
     $numero = $emp->getNumero();
     //Extraer la letra de la direccion con todos los espacios en blanco
     $calle = $emp->getCalle();
+    $villa = $emp->getVilla();
     $discapacidad = "El trabajador no posee discapacidad";
     $pensionado = "El trabajador no es pensionado";
     if ($tra->getDiscapacidad() == 1) {

@@ -151,7 +151,7 @@ foreach ($permiso as $p) {
 										<a class="nav-sub-link" href="nacionalidad.php">NACIONALIDADES</a>
 									</li>
 									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="jornadas.php">JORNADAS</a>
+										<a class="nav-sub-link" href="jornadas.php">MOVIMIENTO PERSONAL</a>
 									</li>
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="tiposueldo.php">TIPO SUELDO BASE</a>

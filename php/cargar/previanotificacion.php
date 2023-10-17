@@ -164,7 +164,9 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['finiquito']) && isset($_POST['t
 
 
 
+
     $swap_var = array(
+        "{CEL_COMUNA}" => $empresa->getComuna(),
         "{FECHA_FINIQUITO}" => $fechafiniquito,
         "{NOMBRE_EMPRESA}" => $empresa->getRazonSocial(),
         "{RUT_EMPRESA}" => $empresa->getRut(),
@@ -181,7 +183,45 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['finiquito']) && isset($_POST['t
         "{APELLIDO_2}" => $trabajador->getApellido2(),
         "{RUT_TRABAJADOR}" => $trabajador->getRut(),
         "{CALLE_TRABAJADOR}" => $dom->getCalle(),
-        "{VILLA_TRABAJADOR}" => $dom->getVilla(),
+        "{NUMERO_CASA_TRABAJADOR}" => $dom->getNumero(),
+        "{DEPARTAMENTO_TRABAJADOR}" => $dom->getDepartamento(),
+        "{COMUNA_TRABAJADOR}" => $comunatra,
+        "{REGION_TRABAJADOR}" => $regiontra,
+        "{CARGO}" => $contrato->getCargo(),
+        "{INICIO_CONTRATO}" => $fechainicio,
+        "{TERMINO_CONTRATO}" => $fechatermino,
+        "{CAUSAL_FINIQUITO}" => $causal,
+        "{DETALLE_FINIQUITO}" => $detalle,
+        "{FECHA_NOTIFICACION}" => $fechanotificacion,
+        "{CAUSAL_DE_DERECHO}" => $causal,
+        "{CAUSAL_DE_HECHOS}" => $causalhechos,
+        "{COTIZACIONES_PREVISIONALES}" => $cotipre,
+        "{FORMA_DE_COMUNICACION}" => $comunicacion,
+        "{DOCUMENTACION_DE_ACREDITACION}" => $acreditacion,
+    );
+
+    foreach (array_keys($swap_var) as $key) {
+        $texto = str_replace($key, $swap_var[$key], $texto);
+    }
+
+    $swap_var = array(
+        "{CEL_COMUNA}" => $empresa->getComuna(),
+        "{FECHA_FINIQUITO}" => $fechafiniquito,
+        "{NOMBRE_EMPRESA}" => $empresa->getRazonSocial(),
+        "{RUT_EMPRESA}" => $empresa->getRut(),
+        "{REPRESENTANTE_LEGAL}" => $repre->getNombre() . " " . $repre->getApellido1() . " " . $repre->getApellido2(),
+        "{RUT_REPRESENTANTE_LEGAL}" => $repre->getRut(),
+        "{CALLE_EMPRESA}" => $empresa->getCalle(),
+        "{VILLA_EMPRESA}" => $empresa->getVilla(),
+        "{NUMERO_EMPRESA}" => $empresa->getNumero(),
+        "{DEPT_EMPRESA}" => $empresa->getDepartamento(),
+        "{COMUNA_EMPRESA}" => $empresa->getComuna(),
+        "{REGION_EMPRESA}" => $empresa->getRegion(),
+        "{NOMBRE_TRABAJADOR}" => $trabajador->getNombre(),
+        "{APELLIDO_1}" => $trabajador->getApellido1(),
+        "{APELLIDO_2}" => $trabajador->getApellido2(),
+        "{RUT_TRABAJADOR}" => $trabajador->getRut(),
+        "{CALLE_TRABAJADOR}" => $dom->getCalle(),
         "{NUMERO_CASA_TRABAJADOR}" => $dom->getNumero(),
         "{DEPARTAMENTO_TRABAJADOR}" => $dom->getDepartamento(),
         "{COMUNA_TRABAJADOR}" => $comunatra,
@@ -199,12 +239,12 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['finiquito']) && isset($_POST['t
         "{DOCUMENTACION_DE_ACREDITACION}" => $acreditacion,
         "{DISPOSICION_Y_PAGO}" => $texto
     );
-
     $contenido = $c->buscarplantilla($tipocontratoid);
 
     foreach (array_keys($swap_var) as $key) {
         $contenido = str_replace($key, $swap_var[$key], $contenido);
     }
+
 
     $mpdf = new \Mpdf\Mpdf();
     $mpdf->title = 'Notificacion de Termino de Contrato Laboralr';

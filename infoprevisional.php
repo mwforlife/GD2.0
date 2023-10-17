@@ -162,10 +162,9 @@ if (isset($_GET['code'])) {
 					if (isset($_SESSION['GESTION_PERMISO']) || isset($_SESSION['LECTURA_PERMISO']) || isset($_SESSION['ESCRITURA_PERMISO']) || isset($_SESSION['ACTUALIZACION_PERMISO']) || isset($_SESSION['ELIMINACION_PERMISO'])) {
 						if ($_SESSION['GESTION_PERMISO'] == true) {
 
-							?>
+					?>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span
-										class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="isapres.php">Institución de Salud</a>
@@ -186,7 +185,7 @@ if (isset($_GET['code'])) {
 										<a class="nav-sub-link" href="nacionalidad.php">NACIONALIDADES</a>
 									</li>
 									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="jornadas.php">JORNADAS</a>
+										<a class="nav-sub-link" href="jornadas.php">MOVIMIENTO PERSONAL</a>
 									</li>
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="tiposueldo.php">TIPO SUELDO BASE</a>
@@ -209,38 +208,43 @@ if (isset($_GET['code'])) {
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="diasferiados.php">DIAS FERIADOS</a>
 									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="codigolre.php">CODIGOS LRE</a>
+									</li>
 								</ul>
 							</li>
-							<?php
+						<?php
 						}
 						?>
 						<li class="nav-header"><span class="nav-label">FUNCIONES</span></li>
 
 
 						<li class="nav-item">
-							<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span
-									class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
+							<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
 							<ul class="nav-sub">
 								<?php
 								if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
-									?>
+								?>
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="empresas.php">Empresas</a>
 									</li>
-									<?php
+								<?php
 								}
 								?>
 								<li class="nav-sub-item">
 									<a class="nav-sub-link" href="trabajadores.php">Trabajadores</a>
 								</li>
+								<li class="nav-sub-item">
+									<a class="nav-sub-link" href="haberes.php">Haberes y Descuentos</a>
+								</li>
 
 								<?php
 								if ($_SESSION['GESTION_PERMISO'] == true) {
-									?>
+								?>
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="tipodocumento.php">Escritos</a>
 									</li>
-									<?php
+								<?php
 								}
 								?>
 
@@ -248,24 +252,23 @@ if (isset($_GET['code'])) {
 								if (isset($_SESSION['GESTION_PERMISO'])) {
 									if ($_SESSION['GESTION_PERMISO'] == true) {
 
-										?>
+								?>
 										<li class="nav-sub-item">
 											<a class="nav-sub-link" href="usuarios.php">Usuarios</a>
 										</li>
-										<?php
+								<?php
 									}
 								}
 								?>
 							</ul>
 						</li>
-						<?php
+					<?php
 					}
 
 					if ($_SESSION['GESTION_PERMISO'] == true) {
-						?>
+					?>
 						<li class="nav-item">
-							<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span
-									class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
+							<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
 							<ul class="nav-sub">
 								<li class="nav-sub-item">
 									<a class="nav-sub-link" href="auditoriatrabajadores.php">Auditoria de trabajadores</a>
@@ -276,12 +279,12 @@ if (isset($_GET['code'])) {
 
 							</ul>
 						</li>
-						<?php
+					<?php
 					}
 					?>
+					<!--------------------Generarion de documentos------------------>
 					<li class="nav-item">
-						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
-								class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
+						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
 						<ul class="nav-sub">
 							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="contratoindividual.php">Contrato Individual</a>
@@ -312,9 +315,32 @@ if (isset($_GET['code'])) {
 							</li>
 						</ul>
 					</li>
+					<!--------------------------------------------------------------->
+					<!--------------------Remuneraciones------------------>
 					<li class="nav-item">
-						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
-								class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
+						<a class="nav-link with-sub" href="#"><i class="fe fe-dollar-sign sidemenu-icon"></i><span class="sidemenu-label">Remuneraciones</span><i class="angle fe fe-chevron-right"></i></a>
+						<ul class="nav-sub">
+							<li class="nav-sub-item">
+								<a class="nav-sub-link" href="habmaster.php">Haberes y Descuentos</a>
+							</li>
+						</ul>
+					</li>
+					<!--------------------------------------------------------------->
+					<!--------------------Carga de documentos------------------>
+					<li class="nav-item">
+						<a class="nav-link with-sub" href="#"><i class="fe fe-upload sidemenu-icon"></i><span class="sidemenu-label">Carga de Documentos</span><i class="angle fe fe-chevron-right"></i></a>
+						<ul class="nav-sub">
+							<li class="nav-sub-item">
+								<a class="nav-sub-link" href="cargatrabajador.php">Trabajadores</a>
+							</li>
+							<li class="nav-sub-item">
+								<a class="nav-sub-link" href="cargaempresa.php">Empresa</a>
+							</li>
+						</ul>
+					</li>
+					<!--------------------Reportes------------------>
+					<li class="nav-item">
+						<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
 						<ul class="nav-sub">
 							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="impresiondocumentos.php">Impresión Documentos</a>
@@ -322,8 +348,13 @@ if (isset($_GET['code'])) {
 							<li class="nav-sub-item">
 								<a class="nav-sub-link" href="impresionmasiva.php">Impresión Masiva</a>
 							</li>
+							<li class="nav-sub-item">
+								<a class="nav-sub-link" href="documentosfirmados.php">Documentos Firmados</a>
+							</li>
 						</ul>
 					</li>
+					<!--------------------------------------------------------------->
+
 				</ul>
 			</div>
 		</div>

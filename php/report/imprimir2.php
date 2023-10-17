@@ -23,21 +23,21 @@ if (isset($_GET['cart'])) {
             $causal = $notif->getCausal();
             $causalhechos = $notif->getCausalhechos();
             $comunicacion = $notif->getComunicacion();
-            $comuna="";
-            if($comunicacion==2){
+            $comuna = "";
+            if ($comunicacion == 2) {
                 $comunicacion = "Carta Certificada";
                 $comuna = $notif->getComuna();
-            }else{
+            } else {
                 $comunicacion = "Personal";
             }
             $cotipre = $notif->getCotizacionprevisional();
-        
+
             $acreditacion = $notif->getAcrediacion();
-            if($acreditacion==1){
+            if ($acreditacion == 1) {
                 $acreditacion = "Planilla Cotizaciones";
-            }else if($acreditacion==2){
+            } else if ($acreditacion == 2) {
                 $acreditacion = "Certificado Cotizaciones";
-            }else{
+            } else {
                 $acreditacion = "No Corresponde Informar";
             }
             $trabajadorid = $finiquito->getTrabajador();
@@ -51,8 +51,8 @@ if (isset($_GET['cart'])) {
             $fechatermino = $finiquito->getFechatermino();
             //Cambiar formato de fecha a dd/mm/yyyy
             $fechatermino = date("d/m/Y", strtotime($fechatermino));
-            
-        
+
+
             $causal = $c->buscarcausalterminacioncontrato($causal);
             $causal = $causal->getNombre();
             $trabajador = $c->buscartrabajador($trabajadorid);
@@ -62,71 +62,73 @@ if (isset($_GET['cart'])) {
             $regiontra = $dom->getRegion();
             $regiontra = $c->buscarregion($regiontra);
             $regiontra = $regiontra->getNombre();
-        
+
             $empresa = $c->buscarempresa($empresa);
             $comuna = $empresa->getComuna();
             $region = $empresa->getRegion();
-        
+
             $repre = $c->BuscarRepresentanteLegalempresa($empresa->getId());
             $resum = $c->listarresumenfiniquitoids($usuario);
-            
+
             $detfin = $c->listarresumenfiniquito($usuario);
-                $detalle = "";
-                $descuento =0;
-                $haber = 0;
-                $saldo = 0;
-                $detalle = $detalle . "<h4 style='text-align: center;'>Haberes</h4>";
-                $detalle.= "<table style='width:100%; border: 1px solid black; border-collapse: collapse;'>";
-                foreach ($detfin as $df) {
-                    if($df->getTipo()==2){
-                        $detalle = $detalle . "<tr>";
-                        $detalle = $detalle . "<td style='border: 1px solid black; border-collapse: collapse; width:75%;'>" . $df->getIndemnizacion()." - ".$df->getDescripcion() . "</td>";
-                        $monto = $df->getMonto();
-                        //Redondear sin decimales
-                        $monto = round($monto, 0);
-                        $monto1 = number_format($monto, 0, ',', '.');
-                        $detalle = $detalle . "<td style='border: 1px solid black; border-collapse: collapse;width:25%;'>$ " . $monto1 . "</td>";
-                        $detalle = $detalle . "</tr>";
-                        $haber = $haber + $monto;
-                    }
+            $detalle = "";
+            $descuento = 0;
+            $haber = 0;
+            $saldo = 0;
+            $detalle = $detalle . "<h4 style='text-align: center;'>Haberes</h4>";
+            $detalle .= "<table style='width:100%; border: 1px solid black; border-collapse: collapse;'>";
+            foreach ($detfin as $df) {
+                if ($df->getTipo() == 2) {
+                    $detalle = $detalle . "<tr>";
+                    $detalle = $detalle . "<td style='border: 1px solid black; border-collapse: collapse; width:75%;'>" . $df->getIndemnizacion() . " - " . $df->getDescripcion() . "</td>";
+                    $monto = $df->getMonto();
+                    //Redondear sin decimales
+                    $monto = round($monto, 0);
+                    $monto1 = number_format($monto, 0, ',', '.');
+                    $detalle = $detalle . "<td style='border: 1px solid black; border-collapse: collapse;width:25%;'>$ " . $monto1 . "</td>";
+                    $detalle = $detalle . "</tr>";
+                    $haber = $haber + $monto;
                 }
-                $detalle = $detalle. "<tr>";
-                $detalle = $detalle. "<td style='border: 1px solid black; border-collapse: collapse;width:75%;'>TOTAL HABERES</td>";
-                $haber1 = number_format($haber, 0, ',', '.');
-                $detalle = $detalle . "<td style='border: 1px solid black; border-collapse: collapse;width:25%;'>$ " . $haber1 . "</td>";
-                $detalle = $detalle. "</tr>";
-                $detalle = $detalle . "</table>";
-        
-                $detalle = $detalle . "<h4 style='text-align: center;'>Descuentos</h4>";
-                $detalle.= "<table style='width:100%; border: 1px solid black; border-collapse: collapse;'>";
-                foreach ($detfin as $df) {
-                    if($df->getTipo()==1){
-                        $detalle = $detalle . "<tr>";
-                        $detalle = $detalle . "<td style='border: 1px solid black; border-collapse: collapse;width:75%;'>" . $df->getIndemnizacion()." - ".$df->getDescripcion() . "</td>";
-                        $monto = $df->getMonto();
-                        //Redondear sin decimales
-                        $monto = round($monto, 0);
-                        $monto1 = number_format($monto, 0, ',', '.');
-                        $detalle = $detalle .  "<td style='border: 1px solid black; border-collapse: collapse;width:25%;'>$ " . $monto1 . "</td>";
-                        $detalle = $detalle . "</tr>";
-                        $descuento = $descuento + $df->getMonto();
-                    }
+            }
+            $detalle = $detalle . "<tr>";
+            $detalle = $detalle . "<td style='border: 1px solid black; border-collapse: collapse;width:75%;'>TOTAL HABERES</td>";
+            $haber1 = number_format($haber, 0, ',', '.');
+            $detalle = $detalle . "<td style='border: 1px solid black; border-collapse: collapse;width:25%;'>$ " . $haber1 . "</td>";
+            $detalle = $detalle . "</tr>";
+            $detalle = $detalle . "</table>";
+
+            $detalle = $detalle . "<h4 style='text-align: center;'>Descuentos</h4>";
+            $detalle .= "<table style='width:100%; border: 1px solid black; border-collapse: collapse;'>";
+            foreach ($detfin as $df) {
+                if ($df->getTipo() == 1) {
+                    $detalle = $detalle . "<tr>";
+                    $detalle = $detalle . "<td style='border: 1px solid black; border-collapse: collapse;width:75%;'>" . $df->getIndemnizacion() . " - " . $df->getDescripcion() . "</td>";
+                    $monto = $df->getMonto();
+                    //Redondear sin decimales
+                    $monto = round($monto, 0);
+                    $monto1 = number_format($monto, 0, ',', '.');
+                    $detalle = $detalle .  "<td style='border: 1px solid black; border-collapse: collapse;width:25%;'>$ " . $monto1 . "</td>";
+                    $detalle = $detalle . "</tr>";
+                    $descuento = $descuento + $df->getMonto();
                 }
-                $detalle = $detalle. "<tr>";
-                $detalle = $detalle. "<td style='border: 1px solid black; border-collapse: collapse;width:75%;'>TOTAL DESCUENTOS</td>";
-                $descuento1 = number_format($descuento, 0, ',', '.');
-                $detalle = $detalle . "<td style='border: 1px solid black; border-collapse: collapse;width:25%;'>$ " . $descuento1 . "</td>";
-                $detalle = $detalle. "</tr>";
-                $detalle = $detalle . "<tr>";
-                $detalle = $detalle . "<td style='border: 1px solid black; border-collapse: collapse;width:75%;'>TOTAL A PAGAR</td>";
-                $saldo = $haber - $descuento;
-                $saldo1 = number_format($saldo, 0, ',', '.');
-                $detalle = $detalle . "<td style='border: 1px solid black; border-collapse: collapse;width:25%;'>$ " . $saldo1 . "</td>";
-                $detalle = $detalle . "</table>";
-        
-        
-                
-            
+            }
+            $detalle = $detalle . "<tr>";
+            $detalle = $detalle . "<td style='border: 1px solid black; border-collapse: collapse;width:75%;'>TOTAL DESCUENTOS</td>";
+            $descuento1 = number_format($descuento, 0, ',', '.');
+            $detalle = $detalle . "<td style='border: 1px solid black; border-collapse: collapse;width:25%;'>$ " . $descuento1 . "</td>";
+            $detalle = $detalle . "</tr>";
+            $detalle = $detalle . "<tr>";
+            $detalle = $detalle . "<td style='border: 1px solid black; border-collapse: collapse;width:75%;'>TOTAL A PAGAR</td>";
+            $saldo = $haber - $descuento;
+            $saldo1 = number_format($saldo, 0, ',', '.');
+            $detalle = $detalle . "<td style='border: 1px solid black; border-collapse: collapse;width:25%;'>$ " . $saldo1 . "</td>";
+            $detalle = $detalle . "</table>";
+
+
+
+
+            $texto = $notif->getTexto();
+
             $swap_var = array(
                 "{CEL_COMUNA}" => $comuna,
                 "{FECHA_FINIQUITO}" => $fechafiniquito,
@@ -161,29 +163,68 @@ if (isset($_GET['cart'])) {
                 "{COTIZACIONES_PREVISIONALES}" => $cotipre,
                 "{FORMA_DE_COMUNICACION}" => $comunicacion,
                 "{DOCUMENTACION_DE_ACREDITACION}" => $acreditacion,
-                "{DISPOSICION_Y_PAGO}" => $notif->getTexto(),
             );
-        
+
+            foreach (array_keys($swap_var) as $key) {
+                $texto = str_replace($key, $swap_var[$key], $texto);
+            }
+            $swap_var = array(
+                "{CEL_COMUNA}" => $comuna,
+                "{FECHA_FINIQUITO}" => $fechafiniquito,
+                "{NOMBRE_EMPRESA}" => $empresa->getRazonSocial(),
+                "{RUT_EMPRESA}" => $empresa->getRut(),
+                "{REPRESENTANTE_LEGAL}" => $repre->getNombre() . " " . $repre->getApellido1() . " " . $repre->getApellido2(),
+                "{RUT_REPRESENTANTE_LEGAL}" => $repre->getRut(),
+                "{CALLE_EMPRESA}" => $empresa->getCalle(),
+                "{NUMERO_EMPRESA}" => $empresa->getNumero(),
+                "{TELEFONO_EMPRESA}" => $empresa->getTelefono(),
+                "{CORREO_EMPRESA}" => $empresa->getEmail(),
+                "{DEPT_EMPRESA}" => $empresa->getDepartamento(),
+                "{COMUNA_EMPRESA}" => $empresa->getComuna(),
+                "{REGION_EMPRESA}" => $empresa->getRegion(),
+                "{NOMBRE_TRABAJADOR}" => $trabajador->getNombre(),
+                "{APELLIDO_1}" => $trabajador->getApellido1(),
+                "{APELLIDO_2}" => $trabajador->getApellido2(),
+                "{RUT_TRABAJADOR}" => $trabajador->getRut(),
+                "{CALLE_TRABAJADOR}" => $dom->getCalle(),
+                "{NUMERO_CASA_TRABAJADOR}" => $dom->getNumero(),
+                "{DEPARTAMENTO_TRABAJADOR}" => $dom->getDepartamento(),
+                "{COMUNA_TRABAJADOR}" => $comunatra,
+                "{REGION_TRABAJADOR}" => $regiontra,
+                "{CARGO}" => $contrato->getCargo(),
+                "{INICIO_CONTRATO}" => $fechainicio,
+                "{TERMINO_CONTRATO}" => $fechatermino,
+                "{CAUSAL_FINIQUITO}" => $causal,
+                "{DETALLE_FINIQUITO}" => $detalle,
+                "{FECHA_NOTIFICACION}" => $fechanotificacion,
+                "{CAUSAL_DE_DERECHO}" => $causal,
+                "{CAUSAL_DE_HECHOS}" => $causalhechos,
+                "{COTIZACIONES_PREVISIONALES}" => $cotipre,
+                "{FORMA_DE_COMUNICACION}" => $comunicacion,
+                "{DOCUMENTACION_DE_ACREDITACION}" => $acreditacion,
+                "{DISPOSICION_Y_PAGO}" => $texto,
+            );
+
             $contenido = $c->buscarplantilla($tipocontratoid);
-        
+
             foreach (array_keys($swap_var) as $key) {
                 $contenido = str_replace($key, $swap_var[$key], $contenido);
             }
-                $mpdf->AddPage();
-                $mpdf->title = 'Notificacion de Termino de Contrato Laboralr';
-                $mpdf->author = 'KaiserTech - Gestor de Documentos';
-                $mpdf->creator = 'WilkensTech';
-                $mpdf->subject = 'Notificacion de Termino de Contrato Laboralr';
-                $mpdf->keywords = 'Notificacion de Termino de Contrato Laboralr';
-                $mpdf->SetDisplayMode('fullpage');
-                $mpdf->WriteHTML($contenido);
-                $fecha = date('Ymdhis');
-                //Generar nombre documento
-                //Cambiar formato Fechainicio
-                $fechanotificacion = date("Y-m-d", strtotime($fechanotificacion));
+
+            $mpdf->AddPage();
+            $mpdf->title = 'Notificacion de Termino de Contrato Laboralr';
+            $mpdf->author = 'KaiserTech - Gestor de Documentos';
+            $mpdf->creator = 'WilkensTech';
+            $mpdf->subject = 'Notificacion de Termino de Contrato Laboralr';
+            $mpdf->keywords = 'Notificacion de Termino de Contrato Laboralr';
+            $mpdf->SetDisplayMode('fullpage');
+            $mpdf->WriteHTML($contenido);
+            $fecha = date('Ymdhis');
+            //Generar nombre documento
+            //Cambiar formato Fechainicio
+            $fechanotificacion = date("Y-m-d", strtotime($fechanotificacion));
             //Generar nombre documento
         }
-
     }
     $nombre_documento = 'notiticaciones' . $fechanotificacion . '.pdf';
     $mpdf->Output($nombre_documento, 'I');

@@ -2,7 +2,7 @@
 require '../controller.php';
 $c = new Controller();
 require '../plugins/vendor/autoload.php';
-//phpspreadsheet for CSV
+//phpspreadsheet for XLS
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 
@@ -99,6 +99,7 @@ if (isset($_SESSION['USER_ID']) && isset($_GET['id'])) {
 
     $spreadsheet = new Spreadsheet();
     $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xls($spreadsheet);
+    $spreadsheet->getActiveSheet()->setTitle('Hoja 1');
     $spreadsheet->getActiveSheet()->setCellValue('A1', 'rut_tr');
     $spreadsheet->getActiveSheet()->setCellValue('B1', 'dv_tr');
     $spreadsheet->getActiveSheet()->setCellValue('C1', 'nombres_tr');

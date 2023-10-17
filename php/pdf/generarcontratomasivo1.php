@@ -1834,6 +1834,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
         //convertir fecha de nacimiento a formato dd/mm/yyyy
         $nacimiento = date("d/m/Y", strtotime($nacimiento));
 
+        $villa = $emp->getVilla();
         $swap_var = array(
             "{CATEGORIA_CONTRATO}" => $categoria_contrato,
             "{CEL_REGION}" => $regioncelebracion,
@@ -1848,6 +1849,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             "{TELEFONO_EMPRESA}" => $emp->getTelefono(),
             "{CALLE_EMPRESA}" => $calle,
             "{NUMERO_EMPRESA}" => $numero,
+            "{VILLA_EMPRESA}" => $villa,
             "{REGION_EMPRESA}" => $empresaregion,
             "{COMUNA_EMPRESA}" => $empresacomuna,
             "{CODIGO_ACTIVIDAD}" => $codigoactividadid,
