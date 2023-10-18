@@ -5,6 +5,8 @@ $c = new Controller();
 <?php
 session_start();
 unset($_SESSION['TRABJADOR_CONTRATO']);
+$_SESSION['TRABJADOR_ID'] = 0;
+unset($_SESSION['TRABAJADOR_ID']);
 if (!isset($_SESSION['USER_ID'])) {
 	header("Location: signin.php");
 } else {
@@ -43,20 +45,6 @@ foreach ($permiso as $p) {
 	}
 }
 ?>
-<?php
-$id = 0;
-if (isset($_GET['code'])) {
-	$id = $_GET['code'];
-	$empresa = $c->buscarEmpresa($id);
-	if ($empresa != null) {
-		$nombre = $empresa->getRazonSocial();
-	} else {
-		header('Location: empresas.php');
-	}
-} else {
-	header('Location: empresas.php');
-}
-?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -72,7 +60,7 @@ if (isset($_GET['code'])) {
 	<link rel="icon" href="assets/img/brand/favicon.ico" type="image/x-icon" />
 
 	<!-- Title -->
-	<title>Gestor de Documentos</title>
+	<title>Gestor de Documentos | Documentos Firmados</title>
 
 	<!-- Bootstrap css-->
 	<link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
@@ -397,15 +385,9 @@ if (isset($_GET['code'])) {
 						<a href="index.php"><img src="assets/img/brand/logo.png" class="mobile-logo-dark" alt="logo"></a>
 					</div>
 					<div class="input-group">
-						<div class="mt-0">
-							<form class="form-inline">
-								<div class="search-element">
-									<input type="search" class="form-control header-search" placeholder="Search…" aria-label="Search" tabindex="1">
-									<button class="btn" type="submit">
-										<i class="fa fa-search"></i>
-									</button>
-								</div>
-							</form>
+						<div class="d-flex justify-content-center align-items-center">
+							<h5 class="empresaname m-0">
+								<h5>
 						</div>
 					</div>
 				</div>
@@ -487,101 +469,214 @@ if (isset($_GET['code'])) {
 			<div class="container-fluid">
 				<div class="inner-body">
 
-
 					<!-- Page Header -->
 					<div class="page-header">
 						<div class="page-header-1">
-							<h1 class="main-content-title tx-30">CARGOS</h1>
+							<h1 class="main-content-title tx-30">Documentos Firmados</h1>
 							<ol class="breadcrumb">
 								<li class="breadcrumb-item"><a href="index.php">Inicio</a></li>
 							</ol>
 						</div>
-						<div class="row">
-							<div class="col-md-12">
-								<h4 class="main-content-label mb-1">Empresa: <?php echo $nombre ?></h4>
-							</div>
-						</div>
 					</div>
-					<!-- End Page Header -->
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="card orverflow-hidden">
-								<div class="card-body">
-									<div>
-										<h6 class="main-content-label mb-1">Registro de Cargos</h6>
-										<p class="text-mutted card-sub-title"></p>
-									</div>
-									<form id="RegisForm" name="RegisForm" class="needs-validation was-validated">
-										<div class="row">
-											<div class="col-lg-6">
-												<div class="form-group has-success mg-b-0">
-													<label>Codigo (DT)</label>
-													<input class="form-control" id="Codigo" name="Codigo" placeholder="Codigo" required="" type="text" value="">
-												</div>
-											</div>
-											<div class="col-lg-6">
-												<div class="form-group has-success mg-b-0">
-													<label>Codigo (PREVIRED)</label>
-													<input class="form-control" id="CodigoPrevired" name="CodigoPrevired" placeholder="Codigo (PREVIRED)" required="" type="text" value="">
-												</div>
-											</div>
-											<div class="col-lg-6">
-												<div class="form-group has-success mg-b-0">
-													<label>Nombre</label>
-													<input class="form-control" id="Nombre" name="Nombre" placeholder="Nombre Cargo" required="" type="text" value="">
-												</div>
-												<input type="hidden" id="empresa" name="empresa" value="<?php echo $id ?>">
-											</div>
-											<div class="col-md-12 mt-3 text-right">
-												<a href="empresas.php" class="btn btn-danger btn-md"> <i class="fa fa-arrow-left"></i> Volver</a>
-												<button type="reset" href="#" class="btn btn-warning btn-md"> <i class="fa fa-refresh"></i> Restablecer</button>
-												<button type="submit" href="#" class="btn btn-primary btn-md"> <i class="fa fa-save"></i> Registrar</button>
-											</div>
-										</div>
-									</form>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- ROW-4 opened -->
+					<!-- ROW- opened -->
 					<div class="row">
 						<div class="col-xl-12 col-lg-12 col-md-12">
-							<div class="card transcation-crypto1" id="transcation-crypto1">
-								<div class="card-header bd-b-0">
-									<h4 class="card-title font-weight-semibold mb-0">Listado de Cargos</h4>
-								</div>
+							<div class="card" id="tab">
 								<div class="card-body">
-									<div class="">
-										<div class="table-responsive">
-											<table class="table w-100 text-nowrap" id="example1">
-												<thead class="border-top text-center">
-													<tr>
-														<th class="bg-transparent">Codigo (DT)</th>
-														<th class="bg-transparent">Codigo (PREVIRED)</th>
-														<th class="bg-transparent">Cargo</th>
-														<th class="bg-transparent text-center">Accion</th>
-													</tr>
-												</thead>
-												<tbody class="text-center">
-													<?php
-													$lista = $c->listarcargos($id);
-													if (count($lista) > 0) {
-														foreach ($lista as $object) {
-															echo "<tr>
-																		<td>" . $object->getCodigo() . "</td>
-																		<td>" . $object->getCodigoPrevired() . "</td>
-																		<td>" . $object->getNombre() . "</td>
-																		<td class='text-center'>
-																			<a href='javascript:void(0)' class='btn btn-sm btn-primary' data-toggle='modal' data-target='#modaledit' onclick='Editar(" . $object->getId() . ")'><i class='fa fa-edit'></i></a>
-																			<a href='javascript:void(0)' class='btn btn-sm btn-danger' onclick='Eliminar(" . $object->getId() . ")'><i class='fa fa-trash'></i></a>
-																		</td>
-																	</tr>";
-														}
-													}
+									<div class="text-wrap">
+										<div class="example">
+											<div class="border">
+												<div class="bg-light-1 nav-bg">
+													<nav class="nav nav-tabs">
+														<a class="nav-link active" data-toggle="tab" href="#tabCont1">Contratos</a>
+														<a class="nav-link" data-toggle="tab" href="#tabCont2">Finiquitos</a>
+														<a class="nav-link" data-toggle="tab" href="#tabCont3">Notificaciones</a>
+														<a class="nav-link" data-toggle="tab" href="#tabCont4">Otros Documentos</a>
+													</nav>
+												</div>
+												<div class="card-body tab-content">
+													<div class="tab-pane active show" id="tabCont1">
+														<!-- Row -->
+														<div class="row">
+															<div class="col-md-12 table-responsive">
+																<table class="table w-100 table-hover " id="example1">
+																	<thead>
+																		<tr>
+																			<td>Rut</td>
+																			<td>Trabajador</td>
+																			<td>Centro Costo</td>
+																			<td>Fecha Inicio</td>
+																			<td>Fecha Termino</td>
+																			<td>Tipo Contrato</td>
+																			<td class='text-center'>Imprimir</td>
+																			<td class='text-center'>Eliminar</td>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		<?php
+																		$contratos = $c->listarcontratosfirmados($_SESSION['CURRENT_ENTERPRISE']);
+																		if (count($contratos) > 0) {
+																			foreach ($contratos as $contrato) {
+																				echo "<tr>";
+																				echo "<td>" . $contrato->getFecharegistro() . "</td>";
+																				echo "<td>" . $contrato->getTrabajador() . "</td>";
+																				echo "<td>" . $contrato->getCentrocosto() . "</td>";
+																				echo "<td>" . date("d-m-Y", strtotime($contrato->getFechaInicio())) . "</td>";
+																				if (strlen($contrato->getFechaTermino()) == 0 || $contrato->getFechaTermino() == "31-12-1969") {
+																					echo "<td>Sin Fecha de termino </td>";
+																				} else {
+																					echo "<td>" . date("d-m-Y", strtotime($contrato->getFechaTermino())) . "</td>";
+																				}
+																				echo "<td>" . $contrato->getTipoContrato() . "</td>";
+																				echo "<td  class='text-center'> 
+																						<a class='btn btn-outline-success btn-sm rounded-11' target='_blank' href='uploads/documentosfirmados/" . $contrato->getDocumento() . "'><i class='fa fa-print'></i></a>
+																					</td>";
+																				if ($contrato->getEstado() == 1) {
+																					echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarcontratofirmado(" . $contrato->getId() . ")'><i class='fa fa-trash'></i></button></td>";
+																				} else {
+																					echo "<td class='text-center'>-</td>";
+																				}
+																				echo "</tr>";
+																			}
+																		}
+																		?>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+														<!-- End Row -->
+													</div>
+													<div class="tab-pane" id="tabCont2">
+														<!-- Row -->
+														<div class="row">
+															<div class="col-md-12 table-responsive">
+																<table class="table w-100 table-hover " id="example2">
+																	<thead>
+																		<tr>
+																			<td>RUT</td>
+																			<td>Trabajador</td>
+																			<td>Centro Costo</td>
+																			<td>Fecha Inicio</td>
+																			<td>Fecha Termino</td>
+																			<td>Fecha Finiquito</td>
+																			<td>Causal Termino de Contrato</td>
+																			<td class='text-center'>Imprimir</td>
+																			<td class='text-center'>Eliminar</td>
+																		</tr>
+																	</thead>
+																	<tbody class="tablecontratos">
+																		<?php
+																		$finiquitos = $c->listarfiniquitofirmados($_SESSION['CURRENT_ENTERPRISE']);
+																		if (count($finiquitos) > 0) {
+																			foreach ($finiquitos as $finiquito) {
+																				echo "<tr>";
+																				//Convertir fecha en formato dd-mm-YYYY
+																				$fecha_inicio = date("d-m-Y", strtotime($finiquito->getFechaInicio()));
+																				$fecha_termino = date("d-m-Y", strtotime($finiquito->getFechaTermino()));
+																				$fecha_finiquito = date("d-m-Y", strtotime($finiquito->getFechafiniquito()));
+																				echo "<td>" . $finiquito->getEmpresa() . "</td>";
+																				echo "<td>" . $finiquito->getTrabajador() . "</td>";
+																				echo "<td>" . $finiquito->getFecha() . "</td>";
+																				echo "<td>" . $fecha_termino . "</td>";
+																				echo "<td>" . $fecha_termino . "</td>";
+																				echo "<td>" . $fecha_finiquito . "</td>";
+																				echo "<td>" . $finiquito->getCausal() . "</td>";
+																				echo "<td class='text-center'><a href='uploads/documentosfirmados/" . $finiquito->getContrato() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
+																				echo "<td class='text-center'><button class='text-center btn btn-outline-danger btn-sm rounded-11' onclick='eliminarfiniquitofirmado(" . $finiquito->getId() . ")'><i class='fa fa-trash'></i></button></td>";
+																				echo "</tr>";
+																			}
+																		}
+																		?>
 
-													?>
-												</tbody>
-											</table>
+																	</tbody>
+
+																</table>
+
+															</div>
+														</div>
+														<!-- End Row -->
+													</div>
+													<div class="tab-pane" id="tabCont3">
+														<!-- Row -->
+														<div class="row">
+															<div class="col-md-12 table-responsive">
+																<table class="table w-100 table-hover " id="example3">
+																	<thead>
+																		<tr>
+																			<td>RUT</td>
+																			<td>Trabajador</td>
+																			<td>Fecha Notificación</td>
+																			<td>Causal</td>
+																			<td>Comunicacion</td>
+																			<td>Documento</td>
+																			<td>Carta</td>
+																			<td class='text-center'>Eliminar</td>
+																		</tr>
+																	</thead>
+																	<tbody class="tablenotificacion">
+																		<?php
+																		$notifi = $c->listarnotificacionesfirmadas($_SESSION['CURRENT_ENTERPRISE']);
+																		if ($notifi != null) {
+																			foreach ($notifi as $notificacion) {
+																				echo "<tr>";
+																				echo "<td>" . $notificacion->getAcrediacion() . "</td>";
+																				echo "<td>" . $notificacion->getComunicacion() . "</td>";
+																				echo "<td>" . $notificacion->getFechanotificacion() . "</td>";
+																				echo "<td>" . $notificacion->getCausal() . "</td>";
+																				echo "<td>" . $notificacion->getTexto() . "</td>";
+																				echo "<td><a href='uploads/documentosfirmados/" . $notificacion->getCausalhechos() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
+																				echo "<td><a href='uploads/documentosfirmados/" . $notificacion->getFiniquito() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
+																				echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarnotificacion(" . $notificacion->getId() . ")'><i class='fa fa-trash'></i></button></td>";
+																				echo "</tr>";
+																			}
+																		}
+																		?>
+																	</tbody>
+
+																</table>
+
+															</div>
+														</div>
+														<!-- End Row -->
+													</div>
+													<div class="tab-pane" id="tabCont4">
+														<div class="row">
+															<div class="col-md-12 table-responsive">
+																<table class="table w-100 table-hover " id="example4">
+																	<thead>
+																		<tr>
+																			<td>RUT</td>
+																			<td>Trabajador</td>
+																			<td>Fecha de Generación</td>
+																			<td>Tipo de Documento</td>
+																			<td>Documento</td>
+																			<td class='text-center'>Eliminar</td>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		<?php
+																		$notifi = $c->listardocumentostextempresa($_SESSION['CURRENT_ENTERPRISE']);
+																		if ($notifi != null) {
+																			foreach ($notifi as $notificacion) {
+																				echo "<tr>";
+																				echo "<td>" . $notificacion->getEmpresa() . "</td>";
+																				echo "<td>" . $notificacion->getTrabajador() . "</td>";
+																				echo "<td>" . $notificacion->getFechageneracion() . "</td>";
+																				echo "<td>" . $notificacion->getTipodocumento() . "</td>";
+																				echo "<td><a href='uploads/documentos/" . $notificacion->getDocumento() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
+																				echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminardocumento(" . $notificacion->getId() . ")'><i class='fa fa-trash'></i></button></td>";
+																				echo "</tr>";
+																			}
+																		}
+																		?>
+																	</tbody>
+																</table>
+
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -589,7 +684,6 @@ if (isset($_GET['code'])) {
 						</div>
 					</div>
 					<!-- ROW-4 END -->
-
 
 				</div>
 			</div>
@@ -609,32 +703,11 @@ if (isset($_GET['code'])) {
 		<!--End Footer-->
 
 
-
-		<!-- Edit Modal -->
-		<div class="modal fade" id="modaledit" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="staticBackdropLabel">Edición</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<div class="content">
-
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 	</div>
 	<!-- End Page -->
 
 	<!-- Back-to-top -->
 	<a href="#top" id="back-to-top"><i class="fe fe-arrow-up"></i></a>
-
-	<!-- Jquery js-->
 	<script src="assets/plugins/jquery/jquery.min.js"></script>
 
 	<!-- Bootstrap js-->
@@ -677,15 +750,34 @@ if (isset($_GET['code'])) {
 	<script src="assets/js/sticky.js"></script>
 
 	<!-- Custom js -->
-	<!-- Custom js -->
 	<script src="assets/js/custom.js"></script>
+	<script src="JsFunctions/validation.js"></script>
 	<script src="JsFunctions/Alert/toastify.js"></script>
 	<script src="JsFunctions/Alert/sweetalert2.all.min.js"></script>
 	<script src="JsFunctions/Alert/alert.js"></script>
-	<script src="JsFunctions/cargos.js"></script>
+	<script src="JsFunctions/main.js"></script>
+	<script src="JsFunctions/Trabajadores.js"></script>
 
+	<script>
+		$(document).ready(function(){
+			mostrarEmpresa();
+		});
+	</script>
 
-
+	<script>
+		function mas(id) {
+			$.ajax({
+				type: "POST",
+				url: "php/cargar/mas.php",
+				data: {
+					id: id
+				},
+				success: function(data) {
+					window.location.href = "menuinfo.php";
+				}
+			});
+		}
+	</script>
 </body>
 
 </html>

@@ -42,19 +42,17 @@ foreach ($permiso as $p) {
 		$_SESSION['ELIMINACION_PERMISO'] = true;
 	}
 }
-?>
-<?php
 $id = 0;
-if (isset($_GET['code'])) {
-	$id = $_GET['code'];
+if(isset($_SESSION['CURRENT_ENTERPRISE'])){
+	$id = $_SESSION['CURRENT_ENTERPRISE'];
 	$empresa = $c->buscarEmpresa($id);
 	if ($empresa != null) {
 		$nombre = $empresa->getRazonSocial();
 	} else {
 		header('Location: empresas.php');
 	}
-} else {
-	header('Location: empresas.php');
+}else{
+	header("Location: index.php");
 }
 ?>
 <!DOCTYPE html>
@@ -491,7 +489,7 @@ if (isset($_GET['code'])) {
 					<!-- Page Header -->
 					<div class="page-header">
 						<div class="page-header-1">
-							<h1 class="main-content-title tx-30">CARGOS</h1>
+							<h1 class="main-content-title tx-30">Asignar Centro de Costo</h1>
 							<ol class="breadcrumb">
 								<li class="breadcrumb-item"><a href="index.php">Inicio</a></li>
 							</ol>
@@ -503,83 +501,41 @@ if (isset($_GET['code'])) {
 						</div>
 					</div>
 					<!-- End Page Header -->
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="card orverflow-hidden">
-								<div class="card-body">
-									<div>
-										<h6 class="main-content-label mb-1">Registro de Cargos</h6>
-										<p class="text-mutted card-sub-title"></p>
-									</div>
-									<form id="RegisForm" name="RegisForm" class="needs-validation was-validated">
-										<div class="row">
-											<div class="col-lg-6">
-												<div class="form-group has-success mg-b-0">
-													<label>Codigo (DT)</label>
-													<input class="form-control" id="Codigo" name="Codigo" placeholder="Codigo" required="" type="text" value="">
-												</div>
-											</div>
-											<div class="col-lg-6">
-												<div class="form-group has-success mg-b-0">
-													<label>Codigo (PREVIRED)</label>
-													<input class="form-control" id="CodigoPrevired" name="CodigoPrevired" placeholder="Codigo (PREVIRED)" required="" type="text" value="">
-												</div>
-											</div>
-											<div class="col-lg-6">
-												<div class="form-group has-success mg-b-0">
-													<label>Nombre</label>
-													<input class="form-control" id="Nombre" name="Nombre" placeholder="Nombre Cargo" required="" type="text" value="">
-												</div>
-												<input type="hidden" id="empresa" name="empresa" value="<?php echo $id ?>">
-											</div>
-											<div class="col-md-12 mt-3 text-right">
-												<a href="empresas.php" class="btn btn-danger btn-md"> <i class="fa fa-arrow-left"></i> Volver</a>
-												<button type="reset" href="#" class="btn btn-warning btn-md"> <i class="fa fa-refresh"></i> Restablecer</button>
-												<button type="submit" href="#" class="btn btn-primary btn-md"> <i class="fa fa-save"></i> Registrar</button>
-											</div>
-										</div>
-									</form>
-								</div>
-							</div>
-						</div>
-					</div>
 					<!-- ROW-4 opened -->
 					<div class="row">
 						<div class="col-xl-12 col-lg-12 col-md-12">
 							<div class="card transcation-crypto1" id="transcation-crypto1">
 								<div class="card-header bd-b-0">
-									<h4 class="card-title font-weight-semibold mb-0">Listado de Cargos</h4>
+									<h4 class="card-title font-weight-semibold mb-0">Listado de Centro de Costo</h4>
 								</div>
 								<div class="card-body">
+									<div class="row">
+										<div class="col-md-6 mb-2">
+											<label for="">Mandante</label>
+											<select name="tipo" id="tipo" class="form-control select2" onchange="checkcentrocosto(this.value)">
+												<option value="0">Seleccione</option>
+												<?php
+												$lista = $c->listarusuariostipo(3);
+												foreach ($lista as $l) {
+													echo "<option value='" . $l->getId() . "'>" . $l->getNombre() ." ". $l->getApellido() . "</option>";
+												}
+												?>
+											</select>
+											<input type="hidden" name="empresa" id="empresa" value="<?php echo $id ?>">
+										</div>
+									</div>
 									<div class="">
 										<div class="table-responsive">
-											<table class="table w-100 text-nowrap" id="example1">
+											<table class="tabletext-nowrap w-100">
 												<thead class="border-top text-center">
 													<tr>
 														<th class="bg-transparent">Codigo (DT)</th>
 														<th class="bg-transparent">Codigo (PREVIRED)</th>
-														<th class="bg-transparent">Cargo</th>
-														<th class="bg-transparent text-center">Accion</th>
+														<th class="bg-transparent">Centro Costo</th>
+														<th class="bg-transparent text-center">Asignar / Revocar</th>
 													</tr>
 												</thead>
-												<tbody class="text-center">
-													<?php
-													$lista = $c->listarcargos($id);
-													if (count($lista) > 0) {
-														foreach ($lista as $object) {
-															echo "<tr>
-																		<td>" . $object->getCodigo() . "</td>
-																		<td>" . $object->getCodigoPrevired() . "</td>
-																		<td>" . $object->getNombre() . "</td>
-																		<td class='text-center'>
-																			<a href='javascript:void(0)' class='btn btn-sm btn-primary' data-toggle='modal' data-target='#modaledit' onclick='Editar(" . $object->getId() . ")'><i class='fa fa-edit'></i></a>
-																			<a href='javascript:void(0)' class='btn btn-sm btn-danger' onclick='Eliminar(" . $object->getId() . ")'><i class='fa fa-trash'></i></a>
-																		</td>
-																	</tr>";
-														}
-													}
-
-													?>
+												<tbody class="text-center" id="centrocosto">
 												</tbody>
 											</table>
 										</div>
@@ -679,10 +635,12 @@ if (isset($_GET['code'])) {
 	<!-- Custom js -->
 	<!-- Custom js -->
 	<script src="assets/js/custom.js"></script>
+	<script src="JsFunctions/validation.js"></script>
 	<script src="JsFunctions/Alert/toastify.js"></script>
 	<script src="JsFunctions/Alert/sweetalert2.all.min.js"></script>
 	<script src="JsFunctions/Alert/alert.js"></script>
-	<script src="JsFunctions/cargos.js"></script>
+	<script src="JsFunctions/mandante.js"></script>
+	<script src="JsFunctions/precargado.js"></script>
 
 
 
