@@ -647,6 +647,7 @@ foreach ($permiso as $p) {
 																		<tr>
 																			<td>RUT</td>
 																			<td>Trabajador</td>
+																			<td>Centro de Costo</td>
 																			<td>Fecha de Generación</td>
 																			<td>Tipo de Documento</td>
 																			<td>Documento</td>
@@ -661,10 +662,11 @@ foreach ($permiso as $p) {
 																				echo "<tr>";
 																				echo "<td>" . $notificacion->getEmpresa() . "</td>";
 																				echo "<td>" . $notificacion->getTrabajador() . "</td>";
+																				echo "<td>" . $notificacion->getRegistro() . "</td>";
 																				echo "<td>" . $notificacion->getFechageneracion() . "</td>";
 																				echo "<td>" . $notificacion->getTipodocumento() . "</td>";
 																				echo "<td><a href='uploads/documentos/" . $notificacion->getDocumento() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
-																				echo "<td class='text-center'><button class='btn btn-outline-info btn-sm rounded-11' onclick='eliminardocumento(" . $notificacion->getId() . ")'><i class='fa fa-upload'></i></button></td>";
+																				echo "<td class='text-center'><button class='btn btn-outline-info btn-sm rounded-11' onclick='cargardocumento(" . $notificacion->getId() . ",\"" . $notificacion->getEmpresa() . "\",\"" . $notificacion->getTrabajador() . "\",\"" . $notificacion->getRegistro() . "\",\"" . $notificacion->getFechageneracion() . "\",\"" . $notificacion->getTipodocumento() . "\",\"" . $notificacion->getDocumento() . "\")'><i class='fa fa-upload'></i></button></td>";
 																				echo "</tr>";
 																			}
 																		}

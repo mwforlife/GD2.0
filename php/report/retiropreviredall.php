@@ -39,21 +39,16 @@ if (isset($_GET['id'])) {
         foreach ($lista1 as $notif) {
             $id = $notif->getId();
             $notificacion = $c->buscarnotificacion($id);
-            $finiquito= $notificacion->getFiniquito();
+            $finiquito = $notificacion->getFiniquito();
             $finiquito = $c->buscarfiniquito1($finiquito);
             $contrato = $c->searchcontrato($finiquito->getContrato());
-            $trabajador= $contrato->getTrabajador();
+            $trabajador = $contrato->getTrabajador();
             $trabajador = $c->buscartrabajador($trabajador);
             $nacionalidad = $c->buscarnacionalidad($trabajador->getNacionalidad());
             $prevision = $c->buscarprevisiontrabajador($trabajador->getId());
             $afp = $c->buscarafp($prevision->getAfp());
             $isapre = $c->buscarisapre($prevision->getIsapre());
             $licencia = $c->ultimalicencia($trabajador->getId());
-            if($licencia == false){
-                echo "El Trabajador ".$trabajador->getNombre()." ".$trabajador->getApellido1()." ".$trabajador->getApellido2()." no tiene licencias medicas registradas";
-                //Si no tiene licencias medicas, no se puede generar el archivo
-                return;
-            }
             $trarut = str_replace(".", "", $trabajador->getRut());
 
             $dv = "";
@@ -71,17 +66,22 @@ if (isset($_GET['id'])) {
             $spreadsheet->getActiveSheet()->setCellValue('H' . $pos, $notificacion->getFechanotificacion());
             $spreadsheet->getActiveSheet()->setCellValue('I' . $pos, $afp->getCodigoPrevired());
             $spreadsheet->getActiveSheet()->setCellValue('J' . $pos, $isapre->getCodigo());
-            
-            $pagador = str_replace(".", "", $licencia->getRegistro());
-            $pagador = str_replace(" ", "", $pagador);
+
             $dv1 = "";
-            //dv = el ultimo digito del rut despues del guion
-            $dv1 = substr($pagador, -1);
-            //rut = el rut sin el guion ni el ultimo digito
-            $rut1 = substr($pagador, 0, -2);
+            $rut1 = "";
+            if ($licencia == false) {
+
+            } else {
+                $pagador = str_replace(".", "", $licencia->getRegistro());
+                $pagador = str_replace(" ", "", $pagador);
+                //dv = el ultimo digito del rut despues del guion
+                $dv1 = substr($pagador, -1);
+                //rut = el rut sin el guion ni el ultimo digito
+                $rut1 = substr($pagador, 0, -2);
+            }
             $spreadsheet->getActiveSheet()->setCellValue('K' . $pos, $rut1);
             $spreadsheet->getActiveSheet()->setCellValue('L' . $pos, $dv1);
-            $pos++;     
+            $pos++;
         }
     }
 

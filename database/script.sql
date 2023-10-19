@@ -1043,8 +1043,9 @@ create table notificacionesfirmadas(
 
 create table otrosdocumentosfirmados(
     id int not null auto_increment primary key,
-    id_doc int not null references documentos(id),
     empresa int not null references empresa(id),
+    centrocosto int not null references centrocosto(id),
+    id_doc int not null references documentos(id),
     documento varchar(200) not null,
     register_at timestamp not null default current_timestamp
 );

@@ -6458,7 +6458,7 @@ class Controller
      function listardocumentostextempresa($empresa)
      {
          $this->conexion();
-         $sql = "select documentos.id as id, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, documentos.empresa as empresa, tipodocumento.nombre as tipodocumento, fechageneracion, documento, documentos.register_at as register_at from trabajadores,documentos, tipodocumento where documentos.tipodocumento = tipodocumento.id and documentos.empresa=$empresa and trabajadores.id = documentos.trabajador";
+         $sql = "select documentos.id as id, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, centrocosto.nombre as centrocosto, documentos.empresa as empresa, tipodocumento.nombre as tipodocumento, fechageneracion, documentos.documento as documento, documentos.register_at as register_at from centrocosto,contratos, trabajadores,documentos, tipodocumento where documentos.tipodocumento = tipodocumento.id and documentos.empresa=$empresa and trabajadores.id = documentos.trabajador and documentos.contrato=contratos.id and contratos.centrocosto = centrocosto.id";
          $result = $this->mi->query($sql);
          $lista = array();
          while ($rs = mysqli_fetch_array($result)) {
@@ -6470,12 +6470,60 @@ class Controller
              //cambiar formato de fecha a dd/mm/yyyy
              $fechageneracion = date("d/m/Y", strtotime($fechageneracion));
              $documento = $rs['documento'];
-             $register_at = $rs['register_at'];
+             $register_at = $rs['centrocosto'];
              $l = new Documento($id, $trabajador, $empresa, $tipodocumento, $fechageneracion, $documento, $register_at);
              $lista[] = $l;
          }
          $this->desconectar();
          return $lista;
+     }
+
+
+     
+     function listardocumentostextempresa1($empresa)
+     {
+         $this->conexion();
+         $sql = "select documentos.id as id, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, centrocosto.id as centrocosto, documentos.empresa as empresa, tipodocumento.nombre as tipodocumento, fechageneracion, documentos.documento as documento, documentos.register_at as register_at from centrocosto,contratos, trabajadores,documentos, tipodocumento where documentos.tipodocumento = tipodocumento.id and documentos.empresa=$empresa and trabajadores.id = documentos.trabajador and documentos.contrato=contratos.id and contratos.centrocosto = centrocosto.id";
+         $result = $this->mi->query($sql);
+         $lista = array();
+         while ($rs = mysqli_fetch_array($result)) {
+             $id = $rs['id'];
+             $trabajador = $rs['nombre'] . " " . $rs['apellido'];
+             $empresa = $rs['rut'];
+             $tipodocumento = $rs['tipodocumento'];
+             $fechageneracion = $rs['fechageneracion'];
+             //cambiar formato de fecha a dd/mm/yyyy
+             $fechageneracion = date("d/m/Y", strtotime($fechageneracion));
+             $documento = $rs['documento'];
+             $register_at = $rs['centrocosto'];
+             $l = new Documento($id, $trabajador, $empresa, $tipodocumento, $fechageneracion, $documento, $register_at);
+             $lista[] = $l;
+         }
+         $this->desconectar();
+         return $lista;
+     }
+
+     //Buscar Documento por id
+     function buscardocumentoporid($id){
+        $this->conexion();
+        $sql = "select documentos.id as id, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, centrocosto.id as centrocosto, documentos.empresa as empresa, tipodocumento.nombre as tipodocumento, fechageneracion, documentos.documento as documento, documentos.register_at as register_at from centrocosto,contratos, trabajadores,documentos, tipodocumento where documentos.tipodocumento = tipodocumento.id and documentos.id=$id and trabajadores.id = documentos.trabajador and documentos.contrato=contratos.id and contratos.centrocosto = centrocosto.id";
+        $result = $this->mi->query($sql);
+        if($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $trabajador = $rs['nombre'] . " " . $rs['apellido'];
+            $empresa = $rs['rut'];
+            $tipodocumento = $rs['tipodocumento'];
+            $fechageneracion = $rs['fechageneracion'];
+            //cambiar formato de fecha a dd/mm/yyyy
+            $fechageneracion = date("d/m/Y", strtotime($fechageneracion));
+            $documento = $rs['documento'];
+            $register_at = $rs['centrocosto'];
+            $l = new Documento($id, $trabajador, $empresa, $tipodocumento, $fechageneracion, $documento, $register_at);
+            $this->desconectar();
+            return $l;
+        }
+        $this->desconectar();
+        return null;
      }
 
       //Listar Lotes con contratos Inactivos
@@ -8125,13 +8173,47 @@ class Controller
 
 
     //Registrar Otros Documentos Firmados
-    function registrarotrosdocumentosfirmados($empresa,$documento,$id_doc){
+    function registrarotrosdocumentosfirmados($empresa,$centrocosto,$id_doc,$documento){
         $this->conexion();
-        $sql = "insert into otrosdocumentosfirmados values(null,$id_doc,$empresa,'$documento',now())";
+        $sql = "insert into otrosdocumentosfirmados values(null,$empresa,$centrocosto,$id_doc,'$documento',now())";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return $result;
     }
+
+    //Actualizar Otros Documentos Firmados
+    function actualizarotrosdocumentosfirmados($id,$documento){
+        $this->conexion();
+        $sql = "update otrosdocumentosfirmados set documento='$documento' where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //listar Otros documentos firmados
+    function buscarotrosdocumentosfirmados($id_doc){
+        $this->conexion();
+        $sql = "select * from otrosdocumentosfirmados where id_doc=$id_doc";
+        $result = $this->mi->query($sql);
+        if($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $empresa = $rs['empresa'];
+            $centrocosto = $rs['centrocosto'];
+            $id_doc = $rs['id_doc'];
+            $documento = $rs['documento'];
+            $registro = $rs['register_at'];
+            $documento = new DocumentoFirmado($id,$empresa,$centrocosto,$id_doc,$documento,$registro);
+            $this->desconectar();
+            return $documento;
+        }
+        $this->desconectar();
+        return false;
+    }
+
+
+
+
+    /*****************************************************Documentos Empresa*****************************************************/
 
     //Listar tipo_documento_empresa
     function listartipodocumentoempresa(){

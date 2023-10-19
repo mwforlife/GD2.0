@@ -10,26 +10,22 @@ session_start();
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
     $notificacion = $c->buscarnotificacion($id);
-    $finiquito= $notificacion->getFiniquito();
+    $finiquito = $notificacion->getFiniquito();
     $finiquito = $c->buscarfiniquito1($finiquito);
     $contrato = $c->searchcontrato($finiquito->getContrato());
-    $trabajador= $contrato->getTrabajador();
+    $trabajador = $contrato->getTrabajador();
     $trabajador = $c->buscartrabajador($trabajador);
     $nacionalidad = $c->buscarnacionalidad($trabajador->getNacionalidad());
     $prevision = $c->buscarprevisiontrabajador($trabajador->getId());
     $afp = $c->buscarafp($prevision->getAfp());
     $isapre = $c->buscarisapre($prevision->getIsapre());
     $licencia = $c->ultimalicencia($trabajador->getId());
-    if($licencia == false){
-        echo "Este trabajador no tiene licencias medicas registradas";
-    return;
-    }
     $sexo = "M";
     if ($trabajador->getSexo() == 2) {
         $sexo = "F";
     }
-    if($id > 0){
-        
+    if ($id > 0) {
+
         $spreadsheet = new Spreadsheet();
         $spreadsheet->getActiveSheet()->setTitle('Hoja 1');
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($spreadsheet);
@@ -51,37 +47,41 @@ if (isset($_GET['id'])) {
         $spreadsheet->getActiveSheet()->setCellValue('L1', 'Digito Verificador Pagador de Subsidios');
 
 
-            $trarut = str_replace(".", "", $trabajador->getRut());
+        $trarut = str_replace(".", "", $trabajador->getRut());
 
-            $dv = "";
-            //dv = el ultimo digito del rut despues del guion
-            $dv = substr($trarut, -1);
-            //rut = el rut sin el guion ni el ultimo digito
-            $rut = substr($trarut, 0, -2);
-            $pos = 2;
+        $dv = "";
+        //dv = el ultimo digito del rut despues del guion
+        $dv = substr($trarut, -1);
+        //rut = el rut sin el guion ni el ultimo digito
+        $rut = substr($trarut, 0, -2);
+        $pos = 2;
 
-            $spreadsheet->getActiveSheet()->setCellValue('A' . $pos, $rut);
-            $spreadsheet->getActiveSheet()->setCellValue('B' . $pos, $dv);
-            $spreadsheet->getActiveSheet()->setCellValue('C' . $pos, $trabajador->getNombre());
-            $spreadsheet->getActiveSheet()->setCellValue('D' . $pos, $trabajador->getApellido1());
-            $spreadsheet->getActiveSheet()->setCellValue('E' . $pos, $trabajador->getApellido2());
-            $spreadsheet->getActiveSheet()->setCellValue('F' . $pos, "2");
-            $spreadsheet->getActiveSheet()->setCellValue('G' . $pos, $contrato->getFechainicio());
-            $spreadsheet->getActiveSheet()->setCellValue('H' . $pos, $notificacion->getFechanotificacion());
-            $spreadsheet->getActiveSheet()->setCellValue('I' . $pos, $afp->getCodigoPrevired());
-            $spreadsheet->getActiveSheet()->setCellValue('J' . $pos, $isapre->getCodigo());
-            
+        $spreadsheet->getActiveSheet()->setCellValue('A' . $pos, $rut);
+        $spreadsheet->getActiveSheet()->setCellValue('B' . $pos, $dv);
+        $spreadsheet->getActiveSheet()->setCellValue('C' . $pos, $trabajador->getNombre());
+        $spreadsheet->getActiveSheet()->setCellValue('D' . $pos, $trabajador->getApellido1());
+        $spreadsheet->getActiveSheet()->setCellValue('E' . $pos, $trabajador->getApellido2());
+        $spreadsheet->getActiveSheet()->setCellValue('F' . $pos, "2");
+        $spreadsheet->getActiveSheet()->setCellValue('G' . $pos, $contrato->getFechainicio());
+        $spreadsheet->getActiveSheet()->setCellValue('H' . $pos, $notificacion->getFechanotificacion());
+        $spreadsheet->getActiveSheet()->setCellValue('I' . $pos, $afp->getCodigoPrevired());
+        $spreadsheet->getActiveSheet()->setCellValue('J' . $pos, $isapre->getCodigo());
+
+        $dv1 = "";
+        $rut1 = "";
+        if ($licencia == false) {
+
+        } else {
             $pagador = str_replace(".", "", $licencia->getRegistro());
-            
             $pagador = str_replace(" ", "", $pagador);
-            $dv = "";
             //dv = el ultimo digito del rut despues del guion
-            $dv = substr($pagador, -1);
+            $dv1 = substr($pagador, -1);
             //rut = el rut sin el guion ni el ultimo digito
-            $rut = substr($pagador, 0, -2);
-            $spreadsheet->getActiveSheet()->setCellValue('K' . $pos, $rut);
-            $spreadsheet->getActiveSheet()->setCellValue('L' . $pos, $dv);
-            $pos++;                     
+            $rut1 = substr($pagador, 0, -2);
+        }
+        $spreadsheet->getActiveSheet()->setCellValue('K' . $pos, $rut1);
+        $spreadsheet->getActiveSheet()->setCellValue('L' . $pos, $dv1);
+        $pos++;
 
 
         $fecha = date("d-m-YHis");

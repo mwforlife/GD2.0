@@ -14,8 +14,8 @@ if (isset($_GET['id'])) {
 
     $spreadsheet = new Spreadsheet();
     $writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($spreadsheet);
-    $spreadsheet->getActiveSheet()->setTitle('Hoja 1');
-    $writer->setDelimiter(',');
+    $spreadsheet->getActiveSheet()->setTitle('PLANTILLA_TRABAJADORES');
+    $writer->setDelimiter(';');
     $writer->setEnclosure('"');
     $writer->setLineEnding("\r\n");
     $spreadsheet->getActiveSheet()->setTitle('Hoja 1');
@@ -47,11 +47,20 @@ if (isset($_GET['id'])) {
             $dv = substr($trarut, -1);
             //rut = el rut sin el guion ni el ultimo digito
             $rut = substr($trarut, 0, -2);
+            $nombre = $trabajador->getNombre();
+            $apellido1 = $trabajador->getApellido1();
+            $apellido2 = $trabajador->getApellido2();
+
+            //Pasar a formato UTF-8
+            $nombre = iconv('UTF-8', 'ASCII//TRANSLIT', $nombre);
+            $apellido1 = iconv('UTF-8', 'ASCII//TRANSLIT', $apellido1);
+            $apellido2 = iconv('UTF-8', 'ASCII//TRANSLIT', $apellido2);
+            
             $spreadsheet->getActiveSheet()->setCellValue('A' . $pos, $rut);
             $spreadsheet->getActiveSheet()->setCellValue('B' . $pos, $dv);
-            $spreadsheet->getActiveSheet()->setCellValue('C' . $pos, $trabajador->getNombre());
-            $spreadsheet->getActiveSheet()->setCellValue('D' . $pos, $trabajador->getApellido1());
-            $spreadsheet->getActiveSheet()->setCellValue('E' . $pos, $trabajador->getApellido2());
+            $spreadsheet->getActiveSheet()->setCellValue('C' . $pos, $nombre);
+            $spreadsheet->getActiveSheet()->setCellValue('D' . $pos, $apellido1);
+            $spreadsheet->getActiveSheet()->setCellValue('E' . $pos, $apellido2);
             $spreadsheet->getActiveSheet()->setCellValue('F' . $pos, $sexo);
             $spreadsheet->getActiveSheet()->setCellValue('G' . $pos, "S");
             $spreadsheet->getActiveSheet()->setCellValue('H' . $pos, "S");
@@ -64,7 +73,7 @@ if (isset($_GET['id'])) {
     $fecha = date("dmYHis");
     //Descargar por navegador
     header('Content-Type: application/vnd.ms-excel');
-    header('Content-Disposition: attachment;filename="inscripcionfaena' . $fecha . '.csv"');
+    header('Content-Disposition: attachment;filename="PLANTILLA_TRABAJADORES.csv"');
     header('Cache-Control: max-age=0');
     $writer->save('php://output');
 }

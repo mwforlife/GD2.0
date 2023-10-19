@@ -30,6 +30,8 @@ if (isset($_GET['cart'])) {
     $spreadsheet->getActiveSheet()->setCellValue('K1', 'RUT Pagador de Subsidios');
     $spreadsheet->getActiveSheet()->setCellValue('L1', 'Digito Verificador Pagador de Subsidios');
     $pos = 2;
+
+    $cart = json_decode($cart);
     foreach ($cart as $object) {
         $id = $object->id;
         $notificacion = $c->buscarnotificacion($id);
@@ -43,11 +45,7 @@ if (isset($_GET['cart'])) {
         $afp = $c->buscarafp($prevision->getAfp());
         $isapre = $c->buscarisapre($prevision->getIsapre());
         $licencia = $c->ultimalicencia($trabajador->getId());
-        if ($licencia == false) {
-            echo "El Trabajador " . $trabajador->getNombre() . " " . $trabajador->getApellido1() . " " . $trabajador->getApellido2() . " no tiene licencias medicas registradas";
-            //Si no tiene licencias medicas, no se puede generar el archivo
-            return;
-        }
+       
         $trarut = str_replace(".", "", $trabajador->getRut());
 
         $dv = "";
@@ -66,13 +64,19 @@ if (isset($_GET['cart'])) {
         $spreadsheet->getActiveSheet()->setCellValue('I' . $pos, $afp->getCodigoPrevired());
         $spreadsheet->getActiveSheet()->setCellValue('J' . $pos, $isapre->getCodigo());
 
+
+        $dv1 = "";
+        $rut1 = "";
+        if ($licencia == false) {
+        
+        }else{
         $pagador = str_replace(".", "", $licencia->getRegistro());
         $pagador = str_replace(" ", "", $pagador);
-        $dv1 = "";
         //dv = el ultimo digito del rut despues del guion
         $dv1 = substr($pagador, -1);
         //rut = el rut sin el guion ni el ultimo digito
         $rut1 = substr($pagador, 0, -2);
+        }
         $spreadsheet->getActiveSheet()->setCellValue('K' . $pos, $rut1);
         $spreadsheet->getActiveSheet()->setCellValue('L' . $pos, $dv1);
         $pos++;

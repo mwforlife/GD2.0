@@ -194,6 +194,50 @@ if(isset($_POST['enterpriseid']) && isset($_POST['idcontrato']) && isset($_POST[
             }
         }
 
+    }else if($tipodocumento==4){
+
+        $otros = $c->buscardocumentoporid($iddocumento);
+        $empresa = $_SESSION['CURRENT_ENTERPRISE'];
+        $centrocosto = $otros->getRegistro();
+        if (isset($_FILES['documento'])) {
+            //Validar si viene un archivo
+            if ($_FILES['documento']['name'] != "") {
+                //Sacar Nombre del Archivo
+                $name_afp_documento = "OTRA_CARGADO" . date("dHis") . "." . pathinfo($_FILES['documento']['name'], PATHINFO_EXTENSION);
+    
+                //Ruta de la carpeta destino en servidor
+                $target_path = "../../uploads/documentosfirmados/";
+    
+                //Movemos el archivo desde la ruta temporal a nuestra ruta indicada anteriormente
+                move_uploaded_file($_FILES['documento']['tmp_name'], $target_path . $name_afp_documento);
+    
+                $firmado = $c->buscarotrosdocumentosfirmados($iddocumento);
+                if($firmado==false){
+                $result = $c->registrarotrosdocumentosfirmados($enterpriseid,$centrocosto,$iddocumento,$name_afp_documento);
+                    if ($result == true) {
+                        echo json_encode(array('status' => true, 'message' => 'Se cargó el Documento firmado'));
+                    } else {
+                        echo json_encode(array('status' => false, 'message' => 'No se pudo cargar el Documento firmado'));
+                    }
+                }else{
+                    $docu = $firmado->getDocumento();
+                    $result = $c->actualizarotrosdocumentosfirmados($firmado->getId(),$name_afp_documento);
+                    if ($result == true) {
+                        echo json_encode(array('status' => true, 'message' => 'Se cargó el Documento firmado'));
+                        //Eliminamos el archivo anterior si es que existe
+                        if (file_exists($target_path . $docu)) {
+                            unlink($target_path . $docu);
+                        }
+                        
+                    } else {
+                        echo json_encode(array('status' => false, 'message' => 'No se pudo cargar el Documento firmado'));
+                    }
+                }
+            }
+        } else {
+            echo json_encode(array('status' => false, 'message' => 'No se pudo cargar el Documento firmado'));
+            return false;
+        }
     }
 }else{
     echo json_encode(array('status' => false, 'message' => 'No se pudo cargaron los datos'));

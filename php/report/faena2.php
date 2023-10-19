@@ -11,7 +11,7 @@ session_start();
 if (isset($_GET['cart'])) {
     $cart = $_GET['cart'];
     $spreadsheet = new Spreadsheet();
-    $spreadsheet->getActiveSheet()->setTitle('Hoja 1');
+    $spreadsheet->getActiveSheet()->setTitle('PLANTILLA_TRABAJADORES');
     $writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($spreadsheet);
     $writer->setDelimiter(';');
     $writer->setEnclosure('"');
@@ -29,6 +29,7 @@ if (isset($_GET['cart'])) {
     $spreadsheet->getActiveSheet()->setCellValue('I1', 'NACIONALIDAD');
     $pos = 2;
     
+    $cart = json_decode($cart);
     foreach ($cart as $object) {
         $id = $object->id;
         $contrato = $c->searchcontrato($id);
@@ -47,11 +48,21 @@ if (isset($_GET['cart'])) {
             $dv = substr($trarut, -1);
             //rut = el rut sin el guion ni el ultimo digito
             $rut = substr($trarut, 0, -2);
+            $nombre = $trabajador->getNombre();
+            $apellido1 = $trabajador->getApellido1();
+            $apellido2 = $trabajador->getApellido2();
+
+            //Pasar a formato UTF-8
+            $nombre = iconv('ASCII', 'UTF-8', $nombre);
+            $apellido1 = iconv('ASCII', 'UTF-8', $apellido1);
+            $apellido2 = iconv('ASCII', 'UTF-8', $apellido2);
+
+
             $spreadsheet->getActiveSheet()->setCellValue('A' . $pos, $rut);
             $spreadsheet->getActiveSheet()->setCellValue('B' . $pos, $dv);
-            $spreadsheet->getActiveSheet()->setCellValue('C' . $pos, $trabajador->getNombre());
-            $spreadsheet->getActiveSheet()->setCellValue('D' . $pos, $trabajador->getApellido1());
-            $spreadsheet->getActiveSheet()->setCellValue('E' . $pos, $trabajador->getApellido2());
+            $spreadsheet->getActiveSheet()->setCellValue('C' . $pos, $nombre);
+            $spreadsheet->getActiveSheet()->setCellValue('D' . $pos, $apellido1);
+            $spreadsheet->getActiveSheet()->setCellValue('E' . $pos, $apellido2);
             $spreadsheet->getActiveSheet()->setCellValue('F' . $pos, $sexo);
             $spreadsheet->getActiveSheet()->setCellValue('G' . $pos, "S");
             $spreadsheet->getActiveSheet()->setCellValue('H' . $pos, "S");
@@ -65,7 +76,7 @@ if (isset($_GET['cart'])) {
     $fecha = date("dmYHis");
     //Descargar por navegador
     header('Content-Type: application/vnd.ms-excel');
-    header('Content-Disposition: attachment;filename="inscripcionfaena' . $fecha . '.csv"');
+    header('Content-Disposition: attachment;filename="PLANTILLA_TRABAJADORES.csv"');
     header('Cache-Control: max-age=0');
     $writer->save('php://output');
 
