@@ -819,6 +819,7 @@ create table documentos(
     register_at timestamp not null default current_timestamp
 );
 
+
 create table tipoanotacion(
     id int not null auto_increment primary key,
     nombre varchar(200) not null
@@ -1097,3 +1098,5 @@ alter table causalterminocontrato add column articulo varchar(200) not null afte
 alter table causalterminocontrato add column letra varchar(50) not null after articulo;
 ----------Agregar una columna de articulo a codigolre despues de codigo con 200 caracteres
 alter table comunas add column codigox varchar(20) not null default '1' after codigoprevired;
+----------Agregar una columna de contrato a documento despues de empresa con referencia a contratos(id)
+alter table documentos add column contrato int not null references contratos(id) after empresa;

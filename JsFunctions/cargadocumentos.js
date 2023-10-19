@@ -175,3 +175,114 @@ function validarnotificacion(id){
     }
     });
 }
+
+
+function eliminarcontratofirmado(id){
+    swal.fire({
+        title: '¿Estas seguro?',
+        text: "¡No podras revertir esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText:'Si, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if(result.isConfirmed){
+            $.ajax({
+                url: "php/eliminar/contratofirmado.php",
+                type: "POST",
+                data: {id: id},
+                success:function(response){
+                try {
+                    var data = JSON.parse(response);
+                    if(data.status == true){
+                        ToastifySuccess(data.message);
+                        //$("#contratofirmado").DataTable().ajax.reload();
+                        setTimeout(function(){
+                            location.reload();
+                        }, 2000);
+                    }else{
+                        ToastifyError(data.message);
+                    }
+                } catch (error) {
+                    ToastifyError("Error interno".error);
+                }
+            }
+            });
+        }
+    })
+    }
+
+function eliminarfiniquitofirmado(id){
+    swal.fire({
+        title: '¿Estas seguro?',
+        text: "¡No podras revertir esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText:'Si, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if(result.isConfirmed){
+            $.ajax({
+                url: "php/eliminar/finiquitofirmado.php",
+                type: "POST",
+                data: {id: id},
+                success:function(response){
+                try {
+                    var data = JSON.parse(response);
+                    if(data.status == true){
+                        ToastifySuccess(data.message);
+                        setTimeout(function(){
+                            location.reload();
+                        }, 2000);
+                    }else{
+                        ToastifyError(data.message);
+                    }
+                } catch (error) {
+                    ToastifyError("Error interno".error);
+                }
+            }
+            });
+        }
+    })
+    }
+
+    
+function eliminarnotificacionfirmada(id){
+    swal.fire({
+        title: '¿Estas seguro?',
+        text: "¡No podras revertir esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText:'Si, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if(result.isConfirmed){
+            $.ajax({
+                url: "php/eliminar/notificacionfirmada.php",
+                type: "POST",
+                data: {id: id},
+                success:function(response){
+                try {
+                    var data = JSON.parse(response);
+                    if(data.status == true){
+                        ToastifySuccess(data.message);
+                        setTimeout(function(){
+                            location.reload();
+                        }, 2000);
+                    }else{
+                        ToastifyError(data.message);
+                    }
+                } catch (error) {
+                    ToastifyError("Error interno".error);
+                }
+            }
+            });
+        }
+    })
+    }

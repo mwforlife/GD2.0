@@ -123,7 +123,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid'])  && isset($_P
         $carpeta = "../../uploads/documentos/";
         //Generar archivo y guardar en carpeta
         $mpdf->Output($carpeta . $nombre_documento, 'F');
-        $result = $c->registrardocumento($val1, $val2, $val3, $val4, $nombre_documento);
+        $result = $c->registrardocumento($val1, $val2,$contrato->getId(), $val3, $val4, $nombre_documento);
         //Esperar 1 segundo para que se guarde el archivo
         sleep(1);
     }

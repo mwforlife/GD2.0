@@ -598,11 +598,15 @@ foreach ($permiso as $p) {
 											$tipos = $c->listartipodocumentoempresaperiodo(2);
 											foreach ($tipos as $tipo) {
 												$documento = $c->buscardocumentoempresa1($empresas, $tipo->getId());
+												if(count($empresas) == 0){
+													echo "<button class='btn btn-outline-danger mr-2'>" . $tipo->getNombre() . "</button>";
+												}else{
 												if ($documento == false) {
 													echo "<button class='btn btn-outline-danger mr-2'>" . $tipo->getNombre() . "</button>";
 												} else {
 													echo "<a class='btn btn-outline-success mr-2' href='uploads/documento_empresa/" . $documento->getDocumento() . "' target='_blank'><i class='fa fa-download'></i>" . $tipo->getNombre() . " </a>";
 												}
+											}
 											}
 											?>
 
@@ -646,6 +650,9 @@ foreach ($permiso as $p) {
 																			$empresas[] = $cc->getEmpresa();
 																		}
 
+																		if(count($centros) == 0){
+																		}else{
+
 																		$documentos = $c->listardocumentoempresa2($empresas, $centros, $tipo->getId());
 																		$centros = array();
 																		foreach ($documentos as $documento) {
@@ -655,6 +662,7 @@ foreach ($permiso as $p) {
 																			echo "<td><a href='uploads/documento_empresa/" . $documento->getDocumento() . "' target='_blank' class='btn btn-outline-primary btn-sm'><i class='fa fa-download'></i> Descargar</a></td>";
 																			echo "</tr>";
 																		}
+																	}
 
 																		?>
 																	</tbody>

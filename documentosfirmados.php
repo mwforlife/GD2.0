@@ -631,7 +631,7 @@ foreach ($permiso as $p) {
 																				echo "<td>" . $notificacion->getTexto() . "</td>";
 																				echo "<td><a href='uploads/documentosfirmados/" . $notificacion->getCausalhechos() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
 																				echo "<td><a href='uploads/documentosfirmados/" . $notificacion->getFiniquito() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
-																				echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarnotificacion(" . $notificacion->getId() . ")'><i class='fa fa-trash'></i></button></td>";
+																				echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarnotificacionfirmada(" . $notificacion->getId() . ")'><i class='fa fa-trash'></i></button></td>";
 																				echo "</tr>";
 																			}
 																		}
@@ -761,7 +761,7 @@ foreach ($permiso as $p) {
 	<script src="JsFunctions/Alert/sweetalert2.all.min.js"></script>
 	<script src="JsFunctions/Alert/alert.js"></script>
 	<script src="JsFunctions/main.js"></script>
-	<script src="JsFunctions/Trabajadores.js"></script>
+	<script src="JsFunctions/cargadocumentos.js"></script>
 
 	<script>
 		$(document).ready(function(){

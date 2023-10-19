@@ -8,16 +8,15 @@ use PhpOffice\PhpSpreadsheet\Writer\Csv;
 
 session_start();
 
-if (isset($_GET['id'])) {
-    $lista1 = $c->listarlotestext2($_GET['id']);
-    $pdffiles = array();
-
+if (isset($_GET['cart'])) {
+    $cart = $_GET['cart'];
     $spreadsheet = new Spreadsheet();
-    $writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($spreadsheet);
     $spreadsheet->getActiveSheet()->setTitle('Hoja 1');
-    $writer->setDelimiter(',');
+    $writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($spreadsheet);
+    $writer->setDelimiter(';');
     $writer->setEnclosure('"');
     $writer->setLineEnding("\r\n");
+    $spreadsheet->getActiveSheet()->setTitle('Hoja 1');
     $spreadsheet->getActiveSheet()->setTitle('Hoja 1');
     $spreadsheet->getActiveSheet()->setCellValue('A1', 'RUT');
     $spreadsheet->getActiveSheet()->setCellValue('B1', 'DV');
@@ -29,8 +28,9 @@ if (isset($_GET['id'])) {
     $spreadsheet->getActiveSheet()->setCellValue('H1', 'CONTRATADO');
     $spreadsheet->getActiveSheet()->setCellValue('I1', 'NACIONALIDAD');
     $pos = 2;
-    foreach ($lista1 as $object) {
-        $id = $object->getFecha_fin();
+    
+    foreach ($cart as $object) {
+        $id = $object->id;
         $contrato = $c->searchcontrato($id);
         $trabajador = $contrato->getTrabajador();
         $trabajador = $c->buscartrabajador($trabajador);
@@ -59,12 +59,14 @@ if (isset($_GET['id'])) {
         }
 
         $pos++;
-
     }
+
+    //Fin del cuerpo del excel
     $fecha = date("dmYHis");
     //Descargar por navegador
     header('Content-Type: application/vnd.ms-excel');
     header('Content-Disposition: attachment;filename="inscripcionfaena' . $fecha . '.csv"');
     header('Cache-Control: max-age=0');
     $writer->save('php://output');
+
 }

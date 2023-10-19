@@ -50,8 +50,17 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
     header("Location: index.php");
 }
 
-if (isset($_GET['code'])) {
+$id = 0;
+$contrato = 0;
+if (isset($_GET['code']) && isset($_GET['contract'])) {
     $id = $_GET['code'];
+    $contrato = $_GET['contract'];
+
+    if($id <= 0 || $contrato <= 0){
+        header("Location: trabajadoresactivos1.php");
+        return;
+    }
+
     $trabajador = $c->buscartrabajador($id);
 } else {
     header("Location: trabajadoresactivos1.php");
@@ -548,6 +557,7 @@ if (isset($_GET['code'])) {
                                                     <input type="hidden" class="form-control text-dark" id="tipocontratoid" name="tipocontratoid" required="" readonly>
                                                     <input type="hidden" class="form-control text-dark" id="trabajadorid" name="trabajadorid" required="" readonly value="<?php echo $_GET['code']; ?>">
                                                     <input type="hidden" class="form-control text-dark" id="empresa" name="empresa" required="" readonly value="<?php echo $_SESSION['CURRENT_ENTERPRISE']; ?>">
+                                                    <input type="hidden" class="form-control text-dark" id="contrato" name="contrato" required="" readonly value="<?php echo $contrato; ?>">
                                                 </div>
                                             </div>
                                             <div class="col-lg-6 mt-1">

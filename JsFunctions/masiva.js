@@ -39,6 +39,7 @@ function listarobjectos(){
     html += "<div>";
     html += "<button class='btn btn-outline-danger' onclick='cart = []; listarobjectos();'><i class='fa fa-trash'></i>Limpiar lista </button>";
     html += "<button class='ml-2 btn btn-outline-success' onclick='imprimir();'><i class='fa fa-print'></i>Imprimir </button>";
+    html += "<button class='ml-2 btn btn-outline-success' onclick='imprimirfaena()'><i class='fa fa-print'></i>Inscripción Faena </button>";
     html += "</div>";
     html += "</div>";
     html += "<div class='card-body'>";
@@ -81,6 +82,12 @@ function eliminarobjeto(id){
 function imprimir(){
     if(cart.length > 0){
         window.open('php/report/imprimir.php?cart='+JSON.stringify(cart), '_blank');
+    }
+}
+
+function imprimirfaena(){
+    if(cart.length > 0){
+        window.open('php/report/faena2.php?cart='+JSON.stringify(cart), '_blank');
     }
 }
 
@@ -287,6 +294,7 @@ function listarobjectos2(){
     html += "<div>";
     html += "<button class='btn btn-outline-danger' onclick='cartnot = []; listarobjectos2();'><i class='fa fa-trash'></i>Limpiar lista </button>";
     html += "<button class='ml-2 btn btn-outline-success' onclick='imprimir2();'><i class='fa fa-print'></i>Imprimir </button>";
+    html += "<button class='ml-2 btn btn-outline-success' onclick='imprimirretiro();'><i class='fa fa-print'></i>Retiro Previred </button>";
     html += "</div>";
     html += "</div>";
     html += "<div class='card-body'>";
@@ -331,6 +339,12 @@ function eliminarobjeto2(id){
 function imprimir2(){
     if(cartnot.length > 0){
         window.open('php/report/imprimir2.php?cart='+JSON.stringify(cartnot), '_blank');
+    }
+}
+
+function imprimirretiro(){
+    if(cartnot.length > 0){
+        window.open('php/report/retiro.php?cart='+JSON.stringify(cartnot), '_blank');
     }
 }
 

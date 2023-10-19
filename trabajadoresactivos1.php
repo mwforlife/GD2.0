@@ -534,7 +534,7 @@ foreach ($permiso as $p) {
 														echo "</a>";
 														echo "</td>";
 														echo "<td class='text-center'>";
-														echo "<a class='btn btn-outline-info btn-sm rounded-11' href='documentospersonalizados.php?code=".$object->getId()."' data-toggle='tooltip' data-original-title='Generar Finiquito'>";
+														echo "<a class='btn btn-outline-info btn-sm rounded-11' href='documentospersonalizados.php?code=".$object->getId()."&contract=".$object->getRegistrar()."' data-toggle='tooltip' data-original-title='Generar Finiquito'>";
 														echo "<i class='fa fa-plus'>";
 														echo "</i>";
 														echo "</a>";

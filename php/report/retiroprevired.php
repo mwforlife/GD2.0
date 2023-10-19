@@ -72,6 +72,8 @@ if (isset($_GET['id'])) {
             $spreadsheet->getActiveSheet()->setCellValue('J' . $pos, $isapre->getCodigo());
             
             $pagador = str_replace(".", "", $licencia->getRegistro());
+            
+            $pagador = str_replace(" ", "", $pagador);
             $dv = "";
             //dv = el ultimo digito del rut despues del guion
             $dv = substr($pagador, -1);

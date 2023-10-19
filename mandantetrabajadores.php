@@ -10,7 +10,7 @@ unset($_SESSION['TRABAJADOR_ID']);
 if (!isset($_SESSION['USER_ID'])) {
 	header("Location: signin.php");
 } else {
-	$valid  = $c->validarsesion($_SESSION['USER_ID'], $_SESSION['USER_TOKEN']);
+	$valid = $c->validarsesion($_SESSION['USER_ID'], $_SESSION['USER_TOKEN']);
 	if ($valid == false) {
 		header("Location: lockscreen.php");
 	}
@@ -121,13 +121,14 @@ foreach ($permiso as $p) {
 				<a class="main-logo" href="index.php">
 					<img src="assets/img/brand/logo.png" class="header-brand-img desktop-logo" alt="logo">
 					<img src="assets/img/brand/icon.png" class="header-brand-img icon-logo" alt="logo">
-					<img src="assets/img/brand/dark-logo.png" class="header-brand-img desktop-logo theme-logo" alt="logo">
+					<img src="assets/img/brand/dark-logo.png" class="header-brand-img desktop-logo theme-logo"
+						alt="logo">
 					<img src="assets/img/brand/icon.png" class="header-brand-img icon-logo theme-logo" alt="logo">
 				</a>
 			</div>
 			<div class="main-sidebar-body">
-				
-			<?php
+
+				<?php
 				$user = $c->buscarusuario($_SESSION['USER_ID']);
 				if ($user != null) {
 					if ($user->getTipo() != 3) {
@@ -349,22 +350,21 @@ foreach ($permiso as $p) {
 				<?php
 					} else if ($user->getTipo() == 3) {
 						?>
-			<!-----------------------------Mandante--------------------------------->
-			<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span
-										class="sidemenu-label">Mandante</span><i
-										class="angle fe fe-chevron-right"></i></a>
-								<ul class="nav-sub">
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="mandanteempresa.php">Documentos Empresa</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="mandantetrabajadores.php">Documentos Trabajadores
+				<!-----------------------------Mandante--------------------------------->
+				<li class="nav-item">
+					<a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span
+							class="sidemenu-label">Mandante</span><i class="angle fe fe-chevron-right"></i></a>
+					<ul class="nav-sub">
+						<li class="nav-sub-item">
+							<a class="nav-sub-link" href="mandanteempresa.php">Documentos Empresa</a>
+						</li>
+						<li class="nav-sub-item">
+							<a class="nav-sub-link" href="mandantetrabajadores.php">Documentos Trabajadores
 
-										</a>
-									</li>
-								</ul>
-							</li>
+							</a>
+						</li>
+					</ul>
+				</li>
 
 				<?php
 					}
@@ -381,8 +381,10 @@ foreach ($permiso as $p) {
 				</div>
 				<div class="main-header-center">
 					<div class="responsive-logo">
-						<a href="index.php"><img src="assets/img/brand/dark-logo.png" class="mobile-logo" alt="logo"></a>
-						<a href="index.php"><img src="assets/img/brand/logo.png" class="mobile-logo-dark" alt="logo"></a>
+						<a href="index.php"><img src="assets/img/brand/dark-logo.png" class="mobile-logo"
+								alt="logo"></a>
+						<a href="index.php"><img src="assets/img/brand/logo.png" class="mobile-logo-dark"
+								alt="logo"></a>
 					</div>
 					<div class="input-group">
 						<div class="d-flex justify-content-center align-items-center">
@@ -394,13 +396,17 @@ foreach ($permiso as $p) {
 				<div class="main-header-right">
 					<div class="dropdown d-md-flex">
 						<a class="nav-link icon full-screen-link fullscreen-button" href="">
-							<i class="fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+							<i class="fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+									viewBox="0 0 24 24" width="24">
 									<path d="M0 0h24v24H0V0z" fill="none" />
-									<path d="M5 15H3v4c0 1.1.9 2 2 2h4v-2H5v-4zM5 5h4V3H5c-1.1 0-2 .9-2 2v4h2V5zm14-2h-4v2h4v4h2V5c0-1.1-.9-2-2-2zm0 16h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4zM12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+									<path
+										d="M5 15H3v4c0 1.1.9 2 2 2h4v-2H5v-4zM5 5h4V3H5c-1.1 0-2 .9-2 2v4h2V5zm14-2h-4v2h4v4h2V5c0-1.1-.9-2-2-2zm0 16h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4zM12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
 								</svg></i>
-							<i class="exit-fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+							<i class="exit-fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+									viewBox="0 0 24 24" width="24">
 									<path d="M0 0h24v24H0V0z" fill="none" />
-									<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
+									<path
+										d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
 								</svg></i>
 						</a>
 					</div>
@@ -412,14 +418,17 @@ foreach ($permiso as $p) {
 							<div class="header-navheading">
 								<h6 class="main-notification-title">
 									<?php echo $_SESSION['USER_NAME'];
-									?></h6>
+									?>
+								</h6>
 							</div>
 							<a class="dropdown-item" href="close.php">
 								<i class="fe fe-power"></i> Cerrar Sesíon
 							</a>
 						</div>
 					</div>
-					<button class="navbar-toggler navresponsive-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4" aria-expanded="false" aria-label="Toggle navigation">
+					<button class="navbar-toggler navresponsive-toggler" type="button" data-toggle="collapse"
+						data-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4"
+						aria-expanded="false" aria-label="Toggle navigation">
 						<i class="fe fe-more-vertical header-icons navbar-toggler-icon"></i>
 					</button><!-- Navresponsive closed -->
 				</div>
@@ -433,13 +442,18 @@ foreach ($permiso as $p) {
 				<div class="collapse navbar-collapse" id="navbarSupportedContent-4">
 					<div class="d-flex order-lg-2 ml-auto">
 						<div class="dropdown">
-							<a class="nav-link icon full-screen-link fullscreen-button" href=""><i class="fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+							<a class="nav-link icon full-screen-link fullscreen-button" href=""><i
+									class="fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+										viewBox="0 0 24 24" width="24">
 										<path d="M0 0h24v24H0V0z" fill="none" />
-										<path d="M5 15H3v4c0 1.1.9 2 2 2h4v-2H5v-4zM5 5h4V3H5c-1.1 0-2 .9-2 2v4h2V5zm14-2h-4v2h4v4h2V5c0-1.1-.9-2-2-2zm0 16h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4zM12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+										<path
+											d="M5 15H3v4c0 1.1.9 2 2 2h4v-2H5v-4zM5 5h4V3H5c-1.1 0-2 .9-2 2v4h2V5zm14-2h-4v2h4v4h2V5c0-1.1-.9-2-2-2zm0 16h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4zM12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
 									</svg></i>
-								<i class="exit-fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+								<i class="exit-fullscreen"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+										viewBox="0 0 24 24" width="24">
 										<path d="M0 0h24v24H0V0z" fill="none" />
-										<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
+										<path
+											d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
 									</svg></i>
 							</a>
 						</div>
@@ -449,7 +463,9 @@ foreach ($permiso as $p) {
 							</a>
 							<div class="dropdown-menu">
 								<div class="header-navheading">
-									<h6 class="main-notification-title"><?php echo $_SESSION['USER_NAME']; ?></h6>
+									<h6 class="main-notification-title">
+										<?php echo $_SESSION['USER_NAME']; ?>
+									</h6>
 								</div>
 
 								<a class="dropdown-item" href="close.php">
@@ -488,10 +504,14 @@ foreach ($permiso as $p) {
 											<div class="border">
 												<div class="bg-light-1 nav-bg">
 													<nav class="nav nav-tabs">
-														<a class="nav-link active" data-toggle="tab" href="#tabCont1">Contratos</a>
-														<a class="nav-link" data-toggle="tab" href="#tabCont2">Finiquitos</a>
-														<a class="nav-link" data-toggle="tab" href="#tabCont3">Notificaciones</a>
-														<a class="nav-link" data-toggle="tab" href="#tabCont4">Otros Documentos</a>
+														<a class="nav-link active" data-toggle="tab"
+															href="#tabCont1">Contratos</a>
+														<a class="nav-link" data-toggle="tab"
+															href="#tabCont2">Finiquitos</a>
+														<a class="nav-link" data-toggle="tab"
+															href="#tabCont3">Notificaciones</a>
+														<a class="nav-link" data-toggle="tab" href="#tabCont4">Otros
+															Documentos</a>
 													</nav>
 												</div>
 												<div class="card-body tab-content">
@@ -509,34 +529,39 @@ foreach ($permiso as $p) {
 																			<td>Fecha Termino</td>
 																			<td>Tipo Contrato</td>
 																			<td class='text-center'>Imprimir</td>
-																			<td class='text-center'>Eliminar</td>
 																		</tr>
 																	</thead>
 																	<tbody>
 																		<?php
-																		$contratos = $c->listarcontratosfirmados($_SESSION['CURRENT_ENTERPRISE']);
-																		if (count($contratos) > 0) {
-																			foreach ($contratos as $contrato) {
-																				echo "<tr>";
-																				echo "<td>" . $contrato->getFecharegistro() . "</td>";
-																				echo "<td>" . $contrato->getTrabajador() . "</td>";
-																				echo "<td>" . $contrato->getCentrocosto() . "</td>";
-																				echo "<td>" . date("d-m-Y", strtotime($contrato->getFechaInicio())) . "</td>";
-																				if (strlen($contrato->getFechaTermino()) == 0 || $contrato->getFechaTermino() == "31-12-1969") {
-																					echo "<td>Sin Fecha de termino </td>";
-																				} else {
-																					echo "<td>" . date("d-m-Y", strtotime($contrato->getFechaTermino())) . "</td>";
-																				}
-																				echo "<td>" . $contrato->getTipoContrato() . "</td>";
-																				echo "<td  class='text-center'> 
+																		$centrocosto = $c->listarcentrocostomandate($_SESSION['USER_ID']);
+																		$centros = array();
+																		$empresas = array();
+																		foreach ($centrocosto as $cc) {
+																			$centros[] = $cc->getId();
+																			$empresas[] = $cc->getEmpresa();
+																		}
+
+																		if (count($centros) > 0) {
+																			$contratos = $c->listarcontratosfirmados1($centros);
+																			if (count($contratos) > 0) {
+																				foreach ($contratos as $contrato) {
+																					echo "<tr>";
+																					echo "<td>" . $contrato->getFecharegistro() . "</td>";
+																					echo "<td>" . $contrato->getTrabajador() . "</td>";
+																					echo "<td>" . $contrato->getCentrocosto() . "</td>";
+																					echo "<td>" . date("d-m-Y", strtotime($contrato->getFechaInicio())) . "</td>";
+																					if (strlen($contrato->getFechaTermino()) == 0 || $contrato->getFechaTermino() == "31-12-1969") {
+																						echo "<td>Sin Fecha de termino </td>";
+																					} else {
+																						echo "<td>" . date("d-m-Y", strtotime($contrato->getFechaTermino())) . "</td>";
+																					}
+																					echo "<td>" . $contrato->getTipoContrato() . "</td>";
+																					echo "<td  class='text-center'> 
 																						<a class='btn btn-outline-success btn-sm rounded-11' target='_blank' href='uploads/documentosfirmados/" . $contrato->getDocumento() . "'><i class='fa fa-print'></i></a>
 																					</td>";
-																				if ($contrato->getEstado() == 1) {
-																					echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarcontratofirmado(" . $contrato->getId() . ")'><i class='fa fa-trash'></i></button></td>";
-																				} else {
-																					echo "<td class='text-center'>-</td>";
+
+																					echo "</tr>";
 																				}
-																				echo "</tr>";
 																			}
 																		}
 																		?>
@@ -561,29 +586,33 @@ foreach ($permiso as $p) {
 																			<td>Fecha Finiquito</td>
 																			<td>Causal Termino de Contrato</td>
 																			<td class='text-center'>Imprimir</td>
-																			<td class='text-center'>Eliminar</td>
 																		</tr>
 																	</thead>
 																	<tbody class="tablecontratos">
 																		<?php
-																		$finiquitos = $c->listarfiniquitofirmados($_SESSION['CURRENT_ENTERPRISE']);
-																		if (count($finiquitos) > 0) {
-																			foreach ($finiquitos as $finiquito) {
-																				echo "<tr>";
-																				//Convertir fecha en formato dd-mm-YYYY
-																				$fecha_inicio = date("d-m-Y", strtotime($finiquito->getFechaInicio()));
-																				$fecha_termino = date("d-m-Y", strtotime($finiquito->getFechaTermino()));
-																				$fecha_finiquito = date("d-m-Y", strtotime($finiquito->getFechafiniquito()));
-																				echo "<td>" . $finiquito->getEmpresa() . "</td>";
-																				echo "<td>" . $finiquito->getTrabajador() . "</td>";
-																				echo "<td>" . $finiquito->getFecha() . "</td>";
-																				echo "<td>" . $fecha_termino . "</td>";
-																				echo "<td>" . $fecha_termino . "</td>";
-																				echo "<td>" . $fecha_finiquito . "</td>";
-																				echo "<td>" . $finiquito->getCausal() . "</td>";
-																				echo "<td class='text-center'><a href='uploads/documentosfirmados/" . $finiquito->getContrato() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
-																				echo "<td class='text-center'><button class='text-center btn btn-outline-danger btn-sm rounded-11' onclick='eliminarfiniquitofirmado(" . $finiquito->getId() . ")'><i class='fa fa-trash'></i></button></td>";
-																				echo "</tr>";
+																		foreach ($centrocosto as $cc) {
+																			$centros[] = $cc->getId();
+																			$empresas[] = $cc->getEmpresa();
+																		}
+																		if (count($centros) > 0) {
+																			$finiquitos = $c->listarfiniquitofirmados1($centros);
+																			if (count($finiquitos) > 0) {
+																				foreach ($finiquitos as $finiquito) {
+																					echo "<tr>";
+																					//Convertir fecha en formato dd-mm-YYYY
+																					$fecha_inicio = date("d-m-Y", strtotime($finiquito->getFechaInicio()));
+																					$fecha_termino = date("d-m-Y", strtotime($finiquito->getFechaTermino()));
+																					$fecha_finiquito = date("d-m-Y", strtotime($finiquito->getFechafiniquito()));
+																					echo "<td>" . $finiquito->getEmpresa() . "</td>";
+																					echo "<td>" . $finiquito->getTrabajador() . "</td>";
+																					echo "<td>" . $finiquito->getFecha() . "</td>";
+																					echo "<td>" . $fecha_termino . "</td>";
+																					echo "<td>" . $fecha_termino . "</td>";
+																					echo "<td>" . $fecha_finiquito . "</td>";
+																					echo "<td>" . $finiquito->getCausal() . "</td>";
+																					echo "<td class='text-center'><a href='uploads/documentosfirmados/" . $finiquito->getContrato() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
+																					echo "</tr>";
+																				}
 																			}
 																		}
 																		?>
@@ -605,29 +634,35 @@ foreach ($permiso as $p) {
 																		<tr>
 																			<td>RUT</td>
 																			<td>Trabajador</td>
+																			<td>Centro Costo</td>
 																			<td>Fecha Notificación</td>
 																			<td>Causal</td>
 																			<td>Comunicacion</td>
 																			<td>Documento</td>
 																			<td>Carta</td>
-																			<td class='text-center'>Eliminar</td>
 																		</tr>
 																	</thead>
 																	<tbody class="tablenotificacion">
 																		<?php
-																		$notifi = $c->listarnotificacionesfirmadas($_SESSION['CURRENT_ENTERPRISE']);
-																		if ($notifi != null) {
-																			foreach ($notifi as $notificacion) {
-																				echo "<tr>";
-																				echo "<td>" . $notificacion->getAcrediacion() . "</td>";
-																				echo "<td>" . $notificacion->getComunicacion() . "</td>";
-																				echo "<td>" . $notificacion->getFechanotificacion() . "</td>";
-																				echo "<td>" . $notificacion->getCausal() . "</td>";
-																				echo "<td>" . $notificacion->getTexto() . "</td>";
-																				echo "<td><a href='uploads/documentosfirmados/" . $notificacion->getCausalhechos() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
-																				echo "<td><a href='uploads/documentosfirmados/" . $notificacion->getFiniquito() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
-																				echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarnotificacion(" . $notificacion->getId() . ")'><i class='fa fa-trash'></i></button></td>";
-																				echo "</tr>";
+																		foreach ($centrocosto as $cc) {
+																			$centros[] = $cc->getId();
+																			$empresas[] = $cc->getEmpresa();
+																		}
+																		if (count($centros) > 0) {
+																			$notifi = $c->listarnotificacionesfirmadas1($centros);
+																			if ($notifi != null) {
+																				foreach ($notifi as $notificacion) {
+																					echo "<tr>";
+																					echo "<td>" . $notificacion->getAcrediacion() . "</td>";
+																					echo "<td>" . $notificacion->getComunicacion() . "</td>";
+																					echo "<td>" . $notificacion->getRegistro() . "</td>";
+																					echo "<td>" . $notificacion->getFechanotificacion() . "</td>";
+																					echo "<td>" . $notificacion->getCausal() . "</td>";
+																					echo "<td>" . $notificacion->getTexto() . "</td>";
+																					echo "<td><a href='uploads/documentosfirmados/" . $notificacion->getCausalhechos() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
+																					echo "<td><a href='uploads/documentosfirmados/" . $notificacion->getFiniquito() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
+																					echo "</tr>";
+																				}
 																			}
 																		}
 																		?>
@@ -650,7 +685,6 @@ foreach ($permiso as $p) {
 																			<td>Fecha de Generación</td>
 																			<td>Tipo de Documento</td>
 																			<td>Documento</td>
-																			<td class='text-center'>Eliminar</td>
 																		</tr>
 																	</thead>
 																	<tbody>
@@ -664,7 +698,6 @@ foreach ($permiso as $p) {
 																				echo "<td>" . $notificacion->getFechageneracion() . "</td>";
 																				echo "<td>" . $notificacion->getTipodocumento() . "</td>";
 																				echo "<td><a href='uploads/documentos/" . $notificacion->getDocumento() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
-																				echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminardocumento(" . $notificacion->getId() . ")'><i class='fa fa-trash'></i></button></td>";
 																				echo "</tr>";
 																			}
 																		}
@@ -759,7 +792,7 @@ foreach ($permiso as $p) {
 	<script src="JsFunctions/Trabajadores.js"></script>
 
 	<script>
-		$(document).ready(function(){
+		$(document).ready(function () {
 			mostrarEmpresa();
 		});
 	</script>
@@ -772,7 +805,7 @@ foreach ($permiso as $p) {
 				data: {
 					id: id
 				},
-				success: function(data) {
+				success: function (data) {
 					window.location.href = "menuinfo.php";
 				}
 			});
