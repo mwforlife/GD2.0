@@ -424,7 +424,7 @@ function eliminarnotificacionfirmada(id) {
 
 
     
-function eliminarnotificacionfirmada(id){
+function eliminardocumentofirmado(id){
     swal.fire({
         title: '¿Estas seguro?',
         text: "¡No podras revertir esto!",
@@ -437,7 +437,7 @@ function eliminarnotificacionfirmada(id){
     }).then((result) => {
         if(result.isConfirmed){
             $.ajax({
-                url: "php/eliminar/notificacionfirmada.php",
+                url: "php/eliminar/documentofirmado.php",
                 type: "POST",
                 data: {id: id},
                 success:function(response){

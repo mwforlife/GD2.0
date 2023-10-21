@@ -652,6 +652,7 @@ foreach ($permiso as $p) {
 																		<tr>
 																			<td>RUT</td>
 																			<td>Trabajador</td>
+																			<td>Centro de Costo</td>
 																			<td>Fecha de Generación</td>
 																			<td>Tipo de Documento</td>
 																			<td>Documento</td>
@@ -660,16 +661,17 @@ foreach ($permiso as $p) {
 																	</thead>
 																	<tbody>
 																		<?php
-																		$notifi = $c->listardocumentostextempresa($_SESSION['CURRENT_ENTERPRISE']);
+																		$notifi = $c->listardocumentostextempresa2($_SESSION['CURRENT_ENTERPRISE']);
 																		if ($notifi != null) {
 																			foreach ($notifi as $notificacion) {
 																				echo "<tr>";
 																				echo "<td>" . $notificacion->getEmpresa() . "</td>";
 																				echo "<td>" . $notificacion->getTrabajador() . "</td>";
+																				echo "<td>" . $notificacion->getRegistro() . "</td>";
 																				echo "<td>" . $notificacion->getFechageneracion() . "</td>";
 																				echo "<td>" . $notificacion->getTipodocumento() . "</td>";
-																				echo "<td><a href='uploads/documentos/" . $notificacion->getDocumento() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
-																				echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminardocumento(" . $notificacion->getId() . ")'><i class='fa fa-trash'></i></button></td>";
+																				echo "<td><a href='uploads/documentosfirmados/" . $notificacion->getDocumento() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
+																				echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminardocumentofirmado(" . $notificacion->getId() . ")'><i class='fa fa-trash'></i></button></td>";
 																				echo "</tr>";
 																			}
 																		}

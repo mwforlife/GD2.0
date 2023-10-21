@@ -5,8 +5,6 @@ $c = new Controller();
 <?php
 session_start();
 unset($_SESSION['TRABJADOR_CONTRATO']);
-$_SESSION['TRABJADOR_ID'] = 0;
-unset($_SESSION['TRABAJADOR_ID']);
 if (!isset($_SESSION['USER_ID'])) {
 	header("Location: signin.php");
 } else {
@@ -14,11 +12,6 @@ if (!isset($_SESSION['USER_ID'])) {
 	if ($valid == false) {
 		header("Location: lockscreen.php");
 	}
-}
-if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-	$empresa = $_SESSION['CURRENT_ENTERPRISE'];
-} else {
-	header("Location: index.php");
 }
 $permiso = $c->listarPermisosUsuario1($_SESSION['USER_ID']);
 $gestion = false;
@@ -65,7 +58,7 @@ foreach ($permiso as $p) {
 	<link rel="icon" href="assets/img/brand/favicon.ico" type="image/x-icon" />
 
 	<!-- Title -->
-	<title>Gestor de Documentos</title>
+	<title>Gestor de Documentos | Formulas</title>
 
 	<!-- Bootstrap css-->
 	<link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
@@ -131,12 +124,12 @@ foreach ($permiso as $p) {
 				</a>
 			</div>
 			<div class="main-sidebar-body">
-				
-			<?php
+
+				<?php
 				$user = $c->buscarusuario($_SESSION['USER_ID']);
 				if ($user != null) {
 					if ($user->getTipo() != 3) {
-						?>
+				?>
 						<ul class="nav">
 							<li class="nav-header"><span class="nav-label">Dashboard</span></li>
 
@@ -145,10 +138,9 @@ foreach ($permiso as $p) {
 							if (isset($_SESSION['GESTION_PERMISO']) || isset($_SESSION['LECTURA_PERMISO']) || isset($_SESSION['ESCRITURA_PERMISO']) || isset($_SESSION['ACTUALIZACION_PERMISO']) || isset($_SESSION['ELIMINACION_PERMISO'])) {
 								if ($_SESSION['GESTION_PERMISO'] == true) {
 
-									?>
+							?>
 									<li class="nav-item">
-										<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span
-												class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
+										<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
 										<ul class="nav-sub">
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="isapres.php">Institución de Salud</a>
@@ -197,23 +189,22 @@ foreach ($permiso as $p) {
 											</li>
 										</ul>
 									</li>
-									<?php
+								<?php
 								}
 								?>
 								<li class="nav-header"><span class="nav-label">FUNCIONES</span></li>
 
 
 								<li class="nav-item">
-									<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span
-											class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
+									<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
 									<ul class="nav-sub">
 										<?php
 										if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
-											?>
+										?>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="empresas.php">Empresas</a>
 											</li>
-											<?php
+										<?php
 										}
 										?>
 										<li class="nav-sub-item">
@@ -228,11 +219,11 @@ foreach ($permiso as $p) {
 
 										<?php
 										if ($_SESSION['GESTION_PERMISO'] == true) {
-											?>
+										?>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="tipodocumento.php">Escritos</a>
 											</li>
-											<?php
+										<?php
 										}
 										?>
 
@@ -240,24 +231,23 @@ foreach ($permiso as $p) {
 										if (isset($_SESSION['GESTION_PERMISO'])) {
 											if ($_SESSION['GESTION_PERMISO'] == true) {
 
-												?>
+										?>
 												<li class="nav-sub-item">
 													<a class="nav-sub-link" href="usuarios.php">Usuarios</a>
 												</li>
-												<?php
+										<?php
 											}
 										}
 										?>
 									</ul>
 								</li>
-								<?php
+							<?php
 							}
 
 							if ($_SESSION['GESTION_PERMISO'] == true) {
-								?>
+							?>
 								<li class="nav-item">
-									<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span
-											class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
+									<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
 									<ul class="nav-sub">
 										<li class="nav-sub-item">
 											<a class="nav-sub-link" href="auditoriatrabajadores.php">Auditoria de trabajadores</a>
@@ -268,13 +258,12 @@ foreach ($permiso as $p) {
 
 									</ul>
 								</li>
-								<?php
+							<?php
 							}
 							?>
 							<!--------------------Generarion de documentos------------------>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
-										class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="contratoindividual.php">Contrato Individual</a>
@@ -306,11 +295,9 @@ foreach ($permiso as $p) {
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->
-					<!--------------------Remuneraciones------------------>
+							<!--------------------Remuneraciones------------------>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-dollar-sign sidemenu-icon"></i><span
-										class="sidemenu-label">Remuneraciones</span><i
-										class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-dollar-sign sidemenu-icon"></i><span class="sidemenu-label">Remuneraciones</span><i class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="habmaster.php">Haberes y Descuentos</a>
@@ -318,11 +305,9 @@ foreach ($permiso as $p) {
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->
-					<!--------------------Carga de documentos------------------>
+							<!--------------------Carga de documentos------------------>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-upload sidemenu-icon"></i><span
-										class="sidemenu-label">Carga de Documentos</span><i
-										class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-upload sidemenu-icon"></i><span class="sidemenu-label">Carga de Documentos</span><i class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="cargatrabajador.php">Trabajadores</a>
@@ -334,8 +319,7 @@ foreach ($permiso as $p) {
 							</li>
 							<!--------------------Reportes------------------>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
-										class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="impresiondocumentos.php">Impresión Documentos</a>
@@ -350,26 +334,24 @@ foreach ($permiso as $p) {
 							</li>
 							<!--------------------------------------------------------------->
 
-				</ul>
-				<?php
+						</ul>
+					<?php
 					} else if ($user->getTipo() == 3) {
-						?>
-			<!-----------------------------Mandante--------------------------------->
-			<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span
-										class="sidemenu-label">Mandante</span><i
-										class="angle fe fe-chevron-right"></i></a>
-								<ul class="nav-sub">
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="mandanteempresa.php">Documentos Empresa</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="mandantetrabajadores.php">Documentos Trabajadores
+					?>
+						<!-----------------------------Mandante--------------------------------->
+						<li class="nav-item">
+							<a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span class="sidemenu-label">Mandante</span><i class="angle fe fe-chevron-right"></i></a>
+							<ul class="nav-sub">
+								<li class="nav-sub-item">
+									<a class="nav-sub-link" href="mandanteempresa.php">Documentos Empresa</a>
+								</li>
+								<li class="nav-sub-item">
+									<a class="nav-sub-link" href="mandantetrabajadores.php">Documentos Trabajadores
 
-										</a>
-									</li>
-								</ul>
-							</li>
+									</a>
+								</li>
+							</ul>
+						</li>
 
 				<?php
 					}
@@ -378,6 +360,7 @@ foreach ($permiso as $p) {
 			</div>
 		</div>
 		<!-- End Sidemenu -->
+
 		<!-- Main Header-->
 		<div class="main-header side-header sticky">
 			<div class="container-fluid">
@@ -474,144 +457,146 @@ foreach ($permiso as $p) {
 			<div class="container-fluid">
 				<div class="inner-body">
 
+
 					<!-- Page Header -->
 					<div class="page-header">
 						<div class="page-header-1">
-							<h1 class="main-content-title tx-30">Trabajadores</h1>
+							<h1 class="main-content-title tx-30">Formulas</h1>
 							<ol class="breadcrumb">
 								<li class="breadcrumb-item"><a href="index.php">Inicio</a></li>
 							</ol>
 						</div>
 					</div>
-
+					<!-- End Page Header -->
 					<div class="row">
-						<div class="col-md-6 text-left mb-2">
-							<a href="buscartrabajador.php" class="btn btn-md btn-info">Contratos Individual <i class="fa fa-file"></i> </a>
-							<a href="generarlote.php" class="btn btn-md btn-warning">Contratos Masivos <i class="fa fa-file"></i> </a>
-						</div>
-						<div class="col-md-6 text-right mb-2">
-							<a href="registrartrabajador.php" class="btn btn-md btn-success">Nuevo Trabajador <i class="fa fa-arrow-right"></i> </a>
-						</div>
-					</div>
-					<!-- ROW- opened -->
-					<div class="row">
-						<div class="col-xl-12 col-lg-12 col-md-12">
-							<div class="card transcation-crypto1" id="transcation-crypto1">
-								<div class="card-header bd-b-0">
-									<h4 class="card-title font-weight-semibold mb-0">Listado de Trabajadores Activos</h4>
-								</div>
-								<div class="card-body p-4">
-									<div class="">
-										<div class="table-responsive">
-											<table class="table text-nowrap w-100" id="example1">
-												<thead class="border-top">
-													<tr>
-														<th class="bg-transparent">RUT</th>
-														<th class="bg-transparent">Nombre</th>
-														<th class="bg-transparent">Fecha de Nacimiento</th>
-														<th class="bg-transparent">Ficha</th>
-														<th class="bg-transparent text-center">Generar Contrato</th>
-													</tr>
-												</thead>
-												<tbody>
-													<?php
-													$lista = $c->listartrabajadoresactivos($_SESSION['CURRENT_ENTERPRISE']);
-
-													$lista1 = $c->listartrabajadores($_SESSION['CURRENT_ENTERPRISE']);
-													foreach ($lista as $object) {
-														echo "<tr class='border-bottom-0'>";
-														echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
-														echo $object->getRut();
-														echo "</td>";
-														echo "<td class='text-muted fs-15 font-weight-semibold'>";
-														echo $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2();
-														echo "</td>";
-														echo "<td class='text-muted fs-15 font-weight-semibold'>";
-														echo date("d-m-Y", strtotime($object->getNacimiento()));
-														echo "</td>";
-														echo "<td class='text-muted fs-15 font-weight-semibold'>";
-
-														echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='mas(" . $object->getId() . ")' data-toggle='tooltip' data-original-title='Ver Ficha'>";
-														echo "<i class='fa fa-file'>";
-														echo "</i>";
-														echo "</a>";
-														echo "</td>";
-														echo "<td class='text-center'>";
-														echo "<a class='btn btn-outline-info btn-sm rounded-11' href='contratoindividual.php?code=".$object->getId()."' data-toggle='tooltip' data-original-title='Generar Contrato'>";
-														echo "<i class='fa fa-plus'>";
-														echo "</i>";
-														echo "</a>";
-														echo "</td>";
-														echo "</tr>";
-													}
-													?>
-												</tbody>
-											</table>
-										</div>
+						<div class="col-lg-12">
+							<div class="card orverflow-hidden">
+								<div class="card-body">
+									<div>
+										<h6 class="main-content-label mb-1">Creación de Formulas</h6>
+										<p class="text-mutted card-sub-title"></p>
 									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- ROW-4 END -->
-					<!-- ROW- opened -->
-					<div class="row">
-						<div class="col-xl-12 col-lg-12 col-md-12">
-							<div class="card transcation-crypto1" id="transcation-crypto1">
-								<div class="card-header bd-b-0">
-									<h4 class="card-title font-weight-semibold mb-0">Listado de Trabajadores Inactivos</h4>
-								</div>
-								<div class="card-body p-4">
-									<div class="">
-										<div class="table-responsive">
-											<table class="table text-nowrap w-100" id="example2">
-												<thead class="border-top">
-													<tr>
-														<th class="bg-transparent">RUT</th>
-														<th class="bg-transparent">Nombre</th>
-														<th class="bg-transparent">Fecha de Nacimiento</th>
-														<th class="bg-transparent">Ficha</th>
-														<th class="bg-transparent text-center">Generar Contrato</th>
-													</tr>
-												</thead>
-												<tbody>
-													<?php
-													foreach ($lista1 as $object) {
-														$exite = false;
-														foreach ($lista as $object1) {
-
-															if ($object->getId() == $object1->getId()) {
-																$exite = true;
+									<form id="codigolreform" name="codigolreform" class="needs-validation was-validated">
+										<div class="row">
+											<div class="col-md-6">
+												<div class="row">
+													<div class="col-md-6">
+														<label for="">Codigo</label>
+														<input type="text" id="codigo" name="codigo" class="form-control" placeholder="Ingrese el Codigo">
+													</div>
+													<div class="col-md-6">
+														<label for="">Nombre</label>
+														<input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ingrese el Nombre" onkeyup="representacion(this)">
+													</div>
+													<div class="col-md-12">
+														<label for="">Representacion</label>
+														<input type="text" disabled id="represent" name="represent" class="form-control">
+													</div>
+													<div class="col-md-12">
+														<label for="">Formula</label>
+														<textarea name="formula" id="formula" cols="30" rows="10" class="form-control"></textarea>
+													</div>
+													<div class="col-md-12">
+														<label for="">Acción</label><br>
+														<button type="button" class="btn btn-outline-primary btn-sm" onclick="sumar()"><i class="fa fa-plus"></i>Sumar</button>
+														<button type="button" class="btn btn-outline-danger btn-sm" onclick="restar()"> <i class="fa fa-minus"></i>Restar</button>
+														<button type="button" class="btn btn-outline-success btn-sm" onclick="multiplicar()"><i class="fa fa-times"></i>Multiplicar</button>
+														<button type="button" class="btn btn-outline-warning btn-sm" onclick="dividir()"><i class="fa fa-divide"></i>Dividir</button>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="table-responsive">
+													<table class="table w-100 text-nowrap" id="example1">
+														<thead class="border-top text-center">
+															<tr>
+																<th class="bg-transparent">Codigo</th>
+																<th class="bg-transparent">Descripción</th>
+																<th class="bg-transparent">Tipo</th>
+																<th class="bg-transparent">Imponible</th>
+																<th class="bg-transparent">Tributable</th>
+																<th class="bg-transparent">Gratificación</th>
+																<th class="bg-transparent">Reservado</th>
+																<th class="bg-transparent">Codigo LRE</th>
+																<th class="bg-transparent">Agregar</th>
+															</tr>
+														</thead>
+														<tbody class="text-center">
+															<?php
+															$haberes = array();
+															if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
+																$haberes = $c->listarhaberesydescuentosempresa($_SESSION['CURRENT_ENTERPRISE']);
+															} else {
+																$haberes = $c->listarhaberesydescuentos();
 															}
-														}
-														if ($exite == false) {
-															echo "<tr class='border-bottom-0'>";
-															echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
-															echo $object->getRut();
-															echo "</td>";
-															echo "<td class='text-muted fs-15 font-weight-semibold'>";
-															echo $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2();
-															echo "</td>";
-															echo "<td class='text-muted fs-15 font-weight-semibold'>";
-															//Imprimir fecha en formato dd-mm-aaaa
-															echo date("d-m-Y", strtotime($object->getNacimiento()));
-															echo "</td>";
-															echo "<td class='text-muted fs-15 font-weight-semibold'>";
+															foreach ($haberes as $haber) {
+																echo "<tr>";
+																echo "<td>" . $haber->getCodigo() . "</td>";
+																echo "<td>" . $haber->getDescripcion() . "</td>";
+																if ($haber->getTipo() == 1) {
+																	echo "<td>Haber</td>";
+																} else {
+																	echo "<td>Descuento</td>";
+																}
+																if ($haber->getImponible() == 1) {
+																	echo "<td>Si</td>";
+																} else {
+																	echo "<td>No</td>";
+																}
+																if ($haber->getTributable() == 1) {
+																	echo "<td>Si</td>";
+																} else {
+																	echo "<td>No</td>";
+																}
+																if ($haber->getGratificacion() == 1) {
+																	echo "<td>Si</td>";
+																} else {
+																	echo "<td>No</td>";
+																}
+																if ($haber->getReservado() == 1) {
+																	echo "<td>Si</td>";
+																} else {
+																	echo "<td>No</td>";
+																}
+																echo "<td>" . $haber->getLre() . "</td>";
+																echo "<td>";
+																echo "<button type='button' class='btn btn-outline-primary btn-sm' onclick='agregar(" . $haber->getId() . ",\"" . $haber->getDescripcion() . "\")'><i class='fa fa-plus'></i></button>";
+																echo "</td>";
+																echo "</tr>";
+															}
+															?>
+														</tbody>
+													</table>
+												</div>
+											</div>
 
-															echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='mas(" . $object->getId() . ")' data-toggle='tooltip' data-original-title='Ver Ficha'>";
-															echo "<i class='fa fa-file'>";
-															echo "</i>";
-															echo "</a>";
-															echo "</td>";
-															echo "<td class='text-center'>";
-															echo "<a class='btn btn-outline-info btn-sm rounded-11' href='contratoindividual.php?code=".$object->getId()."' data-toggle='tooltip' data-original-title='Generar Contrato'>";
-															echo "<i class='fa fa-plus'>";
-															echo "</i>";
-															echo "</a>";
-															echo "</td>";
-															echo "</tr>";
-														}
-													}
+											<div class="col-md-12 mt-3 text-right">
+												<button type="submit" href="#" class="btn btn-primary btn-md"> <i class="fa fa-save"></i> Registrar</button>
+											</div>
+										</div>
+
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- ROW-4 opened -->
+					<div class="row">
+						<div class="col-xl-12 col-lg-12 col-md-12">
+							<div class="card transcation-crypto1" id="transcation-crypto1">
+								<div class="card-header bd-b-0">
+									<h4 class="card-title font-weight-semibold mb-0">Listado de Formulas</h4>
+								</div>
+								<div class="card-body">
+									<div class="">
+										<div class="table-responsive">
+											<table class="table w-100 text-nowrap" id="example1">
+												<thead class="border-top text-center">
+													<tr>
+													</tr>
+												</thead>
+												<tbody class="text-center">
+													<?php
 													?>
 												</tbody>
 											</table>
@@ -622,6 +607,7 @@ foreach ($permiso as $p) {
 						</div>
 					</div>
 					<!-- ROW-4 END -->
+
 
 				</div>
 			</div>
@@ -641,6 +627,25 @@ foreach ($permiso as $p) {
 		<!--End Footer-->
 
 
+
+		<!-- Edit Modal -->
+		<div class="modal fade" id="modaledit" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="staticBackdropLabel">Edición</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="content">
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 	<!-- End Page -->
 
@@ -685,25 +690,25 @@ foreach ($permiso as $p) {
 	<!-- Sidebar js -->
 	<script src="assets/plugins/sidebar/sidebar.js"></script>
 
-	<!-- INTERNAL INDEX js -->
-	<script src="assets/js/index.js"></script>
 
 	<!-- Sticky js -->
 	<script src="assets/js/sticky.js"></script>
 
 	<!-- Custom js -->
+	<!-- Custom js -->
 	<script src="assets/js/custom.js"></script>
-	<script src="JsFunctions/validation.js"></script>
 	<script src="JsFunctions/Alert/toastify.js"></script>
 	<script src="JsFunctions/Alert/sweetalert2.all.min.js"></script>
 	<script src="JsFunctions/Alert/alert.js"></script>
 	<script src="JsFunctions/main.js"></script>
+	<script src="JsFunctions/formulas.js"></script>
 
 	<script>
-		$(document).ready(function(){
+		$(document).ready(function() {
 			mostrarEmpresa();
 		});
 	</script>
+
 
 </body>
 
