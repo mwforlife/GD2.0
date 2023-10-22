@@ -881,6 +881,105 @@ create table clausulasanexos(
     register_at timestamp not null default current_timestamp
 );
 
+--Documentos Firmados
+create table contratosfirmados(
+    id int not null auto_increment primary key,
+    empresa int not null references empresa(id),
+    centrocosto int not null references centrocosto(id),
+    contrato int not null references contratos(id),
+    documento varchar(200) not null,
+    register_at timestamp not null default current_timestamp
+);
+
+create table finiquitosfirmados(
+    id int not null auto_increment primary key,
+    empresa int not null references empresa(id),
+    centrocosto int not null references centrocosto(id),
+    finiquito int not null references finiquito(id),
+    documento varchar(200) not null,
+    register_at timestamp not null default current_timestamp
+);
+
+create table notificacionesfirmadas(
+    id int not null auto_increment primary key,
+    empresa int not null references empresa(id),
+    centrocosto int not null references centrocosto(id),
+    notificacion int not null references notificaciones(id),
+    documento varchar(200) not null,
+    carta varchar(200) not null,
+    register_at timestamp not null default current_timestamp
+);
+
+create table otrosdocumentosfirmados(
+    id int not null auto_increment primary key,
+    empresa int not null references empresa(id),
+    centrocosto int not null references centrocosto(id),
+    id_doc int not null references documentos(id),
+    documento varchar(200) not null,
+    register_at timestamp not null default current_timestamp
+);
+
+--Documentos EMPRESA
+create table periododocumento(
+    id int not null auto_increment primary key,
+    nombre varchar(200) not null
+);
+
+insert into periododocumento values(1, 'Mensual');
+insert into periododocumento values(2, 'Unico');
+
+create table tipo_documento_empresa(
+    id int not null auto_increment primary key,
+    nombre varchar(500) not null,
+    periodo int not null references periododocumento(id)
+);
+
+insert into tipo_documento_empresa values(1, 'Certificado de Inicio actividad SII', 2);
+insert into tipo_documento_empresa values(2, 'Certificado de adhesión a mutualidad', 1);
+insert into tipo_documento_empresa values(3, 'Certificado de tasa de accidentabilidad', 1);
+insert into tipo_documento_empresa values(4, 'Inscripción de Faena (DT)', 1);
+insert into tipo_documento_empresa values(5, 'Inscripción de RIOHS (DT)', 2);
+insert into tipo_documento_empresa values(6, 'Inscripción de RIOHS (Seremi de Salud)', 2);
+insert into tipo_documento_empresa values(7, 'F30', 1);
+insert into tipo_documento_empresa values(8, 'F30-1', 1);
+insert into tipo_documento_empresa values(9, 'Planilla de Pagos Obligaciones Laborales', 1);
+insert into tipo_documento_empresa values(10, 'Copia Libro de Asistencia', 1);
+
+create table documentos_empresa(
+    id int not null auto_increment primary key,
+    tipo int not null references tipo_documento_empresa(id),
+    centrocosto int not null references centrocosto(id),
+    documento varchar(200) not null,
+    periodo date null,
+    empresa int not null references empresa(id),
+    register_at timestamp not null default current_timestamp
+);
+
+
+------Modificaciones
+
+--------Agregar tipo de usuario a tabla users con valor por defecto 1 a referencia tipousuario(id)
+alter table users add column tipousuario int not null references tipousuario(id) default 2 after token;
+----------Cambiar cantidad de caracteres nombre causales de termino de contrato de 50 a 500
+alter table causalterminocontrato modify column nombre varchar(500) not null;
+----------Agregar una columna de articulo a causalterminocontrato despues de codigoprevired con 200 caracteres
+alter table causalterminocontrato add column articulo varchar(200) not null after codigoprevired;
+----------Agregar una columna de letra a causalterminocontrato despues de articulo con 50 caracteres
+alter table causalterminocontrato add column letra varchar(50) not null after articulo;
+----------Agregar una columna de articulo a codigolre despues de codigo con 200 caracteres
+alter table comunas add column codigox varchar(20) not null default '1' after codigoprevired;
+----------Agregar una columna de contrato a documento despues de empresa con referencia a contratos(id)
+alter table documentos add column contrato int not null references contratos(id) after empresa;
+
+
+create table mandante(
+    id int not null auto_increment primary key,
+    usuario int not null references users(id_usu),
+    centrocosto int not null references centrocosto(id),
+    register_at timestamp not null default current_timestamp
+);
+
+
 /***************Sistema de REmuneraciones*************************/
 create table tipohaberes(
     id int not null auto_increment primary key,
@@ -1004,100 +1103,11 @@ create table haberes_descuentos_trabajador(
     register_at timestamp not null default current_timestamp
 );
 
-create table mandante(
+create table formulas(
     id int not null auto_increment primary key,
-    usuario int not null references users(id_usu),
-    centrocosto int not null references centrocosto(id),
+    codigo varchar(200) not null,
+    nombre text not null,
+    representacion text not null,
+    formula text not null,
     register_at timestamp not null default current_timestamp
 );
-
-
---Documentos Firmados
-create table contratosfirmados(
-    id int not null auto_increment primary key,
-    empresa int not null references empresa(id),
-    centrocosto int not null references centrocosto(id),
-    contrato int not null references contratos(id),
-    documento varchar(200) not null,
-    register_at timestamp not null default current_timestamp
-);
-
-create table finiquitosfirmados(
-    id int not null auto_increment primary key,
-    empresa int not null references empresa(id),
-    centrocosto int not null references centrocosto(id),
-    finiquito int not null references finiquito(id),
-    documento varchar(200) not null,
-    register_at timestamp not null default current_timestamp
-);
-
-create table notificacionesfirmadas(
-    id int not null auto_increment primary key,
-    empresa int not null references empresa(id),
-    centrocosto int not null references centrocosto(id),
-    notificacion int not null references notificaciones(id),
-    documento varchar(200) not null,
-    carta varchar(200) not null,
-    register_at timestamp not null default current_timestamp
-);
-
-create table otrosdocumentosfirmados(
-    id int not null auto_increment primary key,
-    empresa int not null references empresa(id),
-    centrocosto int not null references centrocosto(id),
-    id_doc int not null references documentos(id),
-    documento varchar(200) not null,
-    register_at timestamp not null default current_timestamp
-);
-
---Documentos EMPRESA
-create table periododocumento(
-    id int not null auto_increment primary key,
-    nombre varchar(200) not null
-);
-
-insert into periododocumento values(1, 'Mensual');
-insert into periododocumento values(2, 'Unico');
-
-create table tipo_documento_empresa(
-    id int not null auto_increment primary key,
-    nombre varchar(500) not null,
-    periodo int not null references periododocumento(id)
-);
-
-insert into tipo_documento_empresa values(1, 'Certificado de Inicio actividad SII', 2);
-insert into tipo_documento_empresa values(2, 'Certificado de adhesión a mutualidad', 1);
-insert into tipo_documento_empresa values(3, 'Certificado de tasa de accidentabilidad', 1);
-insert into tipo_documento_empresa values(4, 'Inscripción de Faena (DT)', 1);
-insert into tipo_documento_empresa values(5, 'Inscripción de RIOHS (DT)', 2);
-insert into tipo_documento_empresa values(6, 'Inscripción de RIOHS (Seremi de Salud)', 2);
-insert into tipo_documento_empresa values(7, 'F30', 1);
-insert into tipo_documento_empresa values(8, 'F30-1', 1);
-insert into tipo_documento_empresa values(9, 'Planilla de Pagos Obligaciones Laborales', 1);
-insert into tipo_documento_empresa values(10, 'Copia Libro de Asistencia', 1);
-
-create table documentos_empresa(
-    id int not null auto_increment primary key,
-    tipo int not null references tipo_documento_empresa(id),
-    centrocosto int not null references centrocosto(id),
-    documento varchar(200) not null,
-    periodo date null,
-    empresa int not null references empresa(id),
-    register_at timestamp not null default current_timestamp
-);
-
-
-------Modificaciones
-
---------Agregar tipo de usuario a tabla users con valor por defecto 1 a referencia tipousuario(id)
-alter table users add column tipousuario int not null references tipousuario(id) default 2 after token;
-----------Cambiar cantidad de caracteres nombre causales de termino de contrato de 50 a 500
-alter table causalterminocontrato modify column nombre varchar(500) not null;
-----------Agregar una columna de articulo a causalterminocontrato despues de codigoprevired con 200 caracteres
-alter table causalterminocontrato add column articulo varchar(200) not null after codigoprevired;
-----------Agregar una columna de letra a causalterminocontrato despues de articulo con 50 caracteres
-alter table causalterminocontrato add column letra varchar(50) not null after articulo;
-----------Agregar una columna de articulo a codigolre despues de codigo con 200 caracteres
-alter table comunas add column codigox varchar(20) not null default '1' after codigoprevired;
-----------Agregar una columna de contrato a documento despues de empresa con referencia a contratos(id)
-alter table documentos add column contrato int not null references contratos(id) after empresa;

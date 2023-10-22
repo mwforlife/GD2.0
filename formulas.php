@@ -476,25 +476,25 @@ foreach ($permiso as $p) {
 										<h6 class="main-content-label mb-1">Creación de Formulas</h6>
 										<p class="text-mutted card-sub-title"></p>
 									</div>
-									<form id="codigolreform" name="codigolreform" class="needs-validation was-validated">
+									<form id="formulaform" name="formulaform" class="needs-validation was-validated">
 										<div class="row">
 											<div class="col-md-6">
 												<div class="row">
 													<div class="col-md-6">
 														<label for="">Codigo</label>
-														<input type="text" id="codigo" name="codigo" class="form-control" placeholder="Ingrese el Codigo">
+														<input type="text" id="codigo" name="codigo" class="form-control" placeholder="Ingrese el Codigo" required>
 													</div>
 													<div class="col-md-6">
 														<label for="">Nombre</label>
-														<input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ingrese el Nombre" onkeyup="representacion(this)">
+														<input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ingrese el Nombre" onkeyup="representacion(this)" required>
 													</div>
 													<div class="col-md-12">
 														<label for="">Representacion</label>
-														<input type="text" disabled id="represent" name="represent" class="form-control">
+														<input type="text" id="represent" name="represent" class="form-control" required>
 													</div>
 													<div class="col-md-12">
 														<label for="">Formula</label>
-														<textarea name="formula" id="formula" cols="30" rows="10" class="form-control"></textarea>
+														<textarea name="formula" id="formula" cols="30" rows="10" class="form-control" required></textarea>
 													</div>
 													<div class="col-md-12">
 														<label for="">Acción</label><br>
@@ -503,11 +503,19 @@ foreach ($permiso as $p) {
 														<button type="button" class="btn btn-outline-success btn-sm" onclick="multiplicar()"><i class="fa fa-times"></i>Multiplicar</button>
 														<button type="button" class="btn btn-outline-warning btn-sm" onclick="dividir()"><i class="fa fa-divide"></i>Dividir</button>
 													</div>
+													<div class="col-md-12">
+														<label for="">Atributos</label><br/>
+														<button type="button" class="btn btn-outline-primary btn-sm" onclick="agregaratributo('{TASA_AFP}')"></i>Tasa AFP</button>
+														<button type="button" class="btn btn-outline-primary btn-sm" onclick="agregaratributo('{TASA_SALUD}')"></i>Tasa Salud</button>
+														<button type="button" class="btn btn-outline-primary btn-sm" onclick="agregaratributo('{DIAS_TRABAJADOS}')"></i>Dias Trabajados</button>
+														<button type="button" class="btn btn-outline-primary btn-sm" onclick="agregaratributo('{DIAS_CON_INASISTENCIA}')"></i>Dias con Inasistencia</button>
+														<button type="button" class="btn btn-outline-primary btn-sm" onclick="agregaratributo('{DIAS_CON_LICENCIA}')"></i>Dias con Licencia</button>
+													</div>
 												</div>
 											</div>
 											<div class="col-md-6">
 												<div class="table-responsive">
-													<table class="table w-100 text-nowrap" id="example1">
+													<table class="table w-100 text-nowrap" id="example2">
 														<thead class="border-top text-center">
 															<tr>
 																<th class="bg-transparent">Codigo</th>
@@ -593,10 +601,29 @@ foreach ($permiso as $p) {
 											<table class="table w-100 text-nowrap" id="example1">
 												<thead class="border-top text-center">
 													<tr>
+														<th class="bg-transparent">Codigo</th>
+														<th class="bg-transparent">Nombre</th>
+														<th class="bg-transparent">Representacion</th>
+														<th class="bg-transparent">Formula</th>
+														<th class="bg-transparent">Utilizar</th>
+														<th class="bg-transparent">Eliminar</th>
 													</tr>
 												</thead>
 												<tbody class="text-center">
 													<?php
+													$formulas = $c->listarformulas();
+													foreach ($formulas as $formula) {
+														echo "<tr>";
+														echo "<td>" . $formula->getCodigo() . "</td>";
+														echo "<td>" . $formula->getNombre() . "</td>";
+														echo "<td>" . $formula->getRepresentacion() . "</td>";
+														echo "<td>" . $formula->getFormula() . "</td>";
+														echo "<td><button type='button' class='btn btn-outline-primary btn-sm' onclick='utilizar(\"" . $formula->getRepresentacion() . "\")'><i class='fa fa-plus'></i></button></td>";
+														echo "<td>";
+														echo "<button type='button' class='btn btn-outline-danger btn-sm' onclick='eliminar(" . $formula->getId() . ")'><i class='fa fa-trash'></i></button>";
+														echo "</td>";
+														echo "</tr>";
+													}
 													?>
 												</tbody>
 											</table>

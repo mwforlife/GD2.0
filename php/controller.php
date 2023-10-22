@@ -57,18 +57,19 @@ require 'Class/Documentofirmado.php';
 require 'Class/Notificacionfirmado.php';
 require 'Class/Documentoempresa.php';
 require 'Class/mandante.php';
+require 'Class/Formula.php';
 
 //Class definition
 class Controller
 {
     private $host = "localhost";
-    /*Variables
+    /*Variables*/
     private $user = "root";
     private $pass = "";
     private $bd = "gestordocumentos";
 
 
-    /*Variables BD Remota*/
+    /*Variables BD Remota
     private $user = 'kaiserte_admin';
     private $pass = 'Kaiser2022$';
     private $bd = 'kaiserte_gd';
@@ -8756,6 +8757,93 @@ class Controller
         $this->desconectar();
         return $lista;
     }
+
+    /***********************Formulas*********************************** */
+    //registrar formula
+    function registrarformula($codigo, $nombre, $representacion, $formula){
+        $this->conexion();
+        $sql = "insert into formulas values(null,'$codigo','$nombre','$representacion','$formula',now())";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //listar formulas
+    function listarformulas(){
+        $this->conexion();
+        $sql = "select * from formulas";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id=$rs['id'];
+            $codigo=$rs['codigo'];
+            $nombre=$rs['nombre'];
+            $representacion=$rs['representacion'];
+            $formula=$rs['formula'];
+            $registro=$rs['register_at'];
+            $formula = new Formula($id,$codigo,$nombre,$representacion,$formula,$registro);
+            $lista[] = $formula;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //buscar formula
+    function buscarformula($id){
+        $this->conexion();
+        $sql = "select * from formulas where id=$id";
+        $result = $this->mi->query($sql);
+        $formula = false;
+        while($rs = mysqli_fetch_array($result)){
+            $id=$rs['id'];
+            $codigo=$rs['codigo'];
+            $nombre=$rs['nombre'];
+            $representacion=$rs['representacion'];
+            $formula=$rs['formula'];
+            $registro=$rs['register_at'];
+            $formula = new Formula($id,$codigo,$nombre,$representacion,$formula,$registro);
+        }
+        $this->desconectar();
+        return $formula;
+    }
+
+    //Buscar formula por representacion
+    function buscarformularepresentacion($representacion){
+        $this->conexion();
+        $sql = "select * from formulas where representacion='$representacion'";
+        $result = $this->mi->query($sql);
+        $formula = false;
+        while($rs = mysqli_fetch_array($result)){
+            $id=$rs['id'];
+            $codigo=$rs['codigo'];
+            $nombre=$rs['nombre'];
+            $representacion=$rs['representacion'];
+            $formula=$rs['formula'];
+            $registro=$rs['register_at'];
+            $formula = new Formula($id,$codigo,$nombre,$representacion,$formula,$registro);
+        }
+        $this->desconectar();
+        return $formula;
+    }
+
+    //Actualizar formula
+    function actualizarformula($id, $codigo, $nombre, $representacion, $formula){
+        $this->conexion();
+        $sql = "update formulas set codigo='$codigo', nombre='$nombre', representacion='$representacion', formula='$formula' where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Eliminar formula
+    function eliminarformula($id){
+        $this->conexion();
+        $sql = "delete from formulas where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+    
 
 
     
