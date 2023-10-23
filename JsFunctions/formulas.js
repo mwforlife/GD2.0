@@ -1,7 +1,7 @@
 function agregar(id, descripcion) {
     descripcion = descripcion.replace(" ", "_");
     var iddent = "{";
-    iddent += descripcion + "}";
+    iddent += descripcion + ";id:" + id + "}";
     //pasar a mayusculas
     iddent = iddent.toUpperCase();
     $("#formula").val($("#formula").val() + iddent);

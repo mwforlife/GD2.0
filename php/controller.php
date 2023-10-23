@@ -7729,6 +7729,57 @@ class Controller
         return $lista;
     }
 
+    //Listar todo Haberes Y Descuentos
+    function listarhaberesdescuentos1($empresa){
+        $this->conexion();
+        $sql = "select * from haberes_descuentos_trabajador where empresa=$empresa order by periodo_inicio asc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id=$rs['id'];
+            $codigo=$rs['codigo'];
+            $periodo_inicio=$rs['periodo_inicio'];
+            $periodo_termino=$rs['periodo_termino'];
+            $monto=$rs['monto'];
+            $dias=$rs['dias'];
+            $horas=$rs['horas'];
+            $modalidad=$rs['modalidad'];
+            $trabajador=$rs['trabajador'];
+            $empresa=$rs['empresa'];
+            $tipo = 0;
+            $registro=$rs['register_at'];
+            $haber = new haberes_trabajador($id,$codigo,$periodo_inicio,$periodo_termino,$monto,$dias,$horas,$modalidad,$trabajador,$empresa,$tipo,$registro);
+            $lista[] = $haber;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    function obtenerValorHaberPorID($id, $trabajador,$empresa){
+        $this->conexion();
+        $sql = "select * from haberes_descuentos_trabajador where empresa=$empresa and trabajador=$trabajador and codigo=$id";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id=$rs['id'];
+            $codigo=$rs['codigo'];
+            $periodo_inicio=$rs['periodo_inicio'];
+            $periodo_termino=$rs['periodo_termino'];
+            $monto=$rs['monto'];
+            $dias=$rs['dias'];
+            $horas=$rs['horas'];
+            $modalidad=$rs['modalidad'];
+            $trabajador=$rs['trabajador'];
+            $empresa=$rs['empresa'];
+            $tipo = 0;
+            $registro=$rs['register_at'];
+            $haber = new haberes_trabajador($id,$codigo,$periodo_inicio,$periodo_termino,$monto,$dias,$horas,$modalidad,$trabajador,$empresa,$tipo,$registro);
+            $lista[] = $haber;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+    
     //Listar Haberes y Descuentos del Mes actual
     function listarhaberesdescuentosactual($empresa){
         $this->conexion();
