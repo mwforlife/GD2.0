@@ -1,7 +1,7 @@
 <?php
 require '../controller.php';
 $c = new Controller();
-if(isset($_POST['codigo']) && isset($_POST['descripcion']) && isset($_POST['tipo']) && isset($_POST['imponible']) && isset($_POST['tributable']) && isset($_POST['gratificacion']) && isset($_POST['reservado']) && isset($_POST['lre']) && isset($_POST['agrupacion']) && isset($_POST['categoria'])){
+if(isset($_POST['codigo']) && isset($_POST['descripcion']) && isset($_POST['tipo']) && isset($_POST['imponible']) && isset($_POST['tributable']) && isset($_POST['gratificacion']) && isset($_POST['reservado']) && isset($_POST['lre']) && isset($_POST['aplicaformula']) && isset($_POST['formula']) && isset($_POST['agrupacion']) && isset($_POST['categoria'])){
     $codigo = $_POST['codigo'];
     $nombre = $_POST['descripcion'];
     $tipo = $_POST['tipo'];
@@ -11,6 +11,8 @@ if(isset($_POST['codigo']) && isset($_POST['descripcion']) && isset($_POST['tipo
     $reservado = $_POST['reservado'];
     $agrupacion = $_POST['agrupacion'];
     $lre = $_POST['lre'];
+    $aplicaformula = $_POST['aplicaformula'];
+    $formula = $_POST['formula'];
     $categoria = $_POST['categoria'];
     $empresa = 0;
     if($categoria == 2){
@@ -28,7 +30,7 @@ if(isset($_POST['codigo']) && isset($_POST['descripcion']) && isset($_POST['tipo
         return;
     }
 
-    $result = $c->registrarhaberesydescuentos($codigo, $nombre, $tipo, $imponible, $tributable, $gratificacion, $reservado, $lre, $agrupacion,$categoria, $empresa);
+    $result = $c->registrarhaberesydescuentos($codigo, $nombre, $tipo, $imponible, $tributable, $gratificacion, $reservado, $lre, $agrupacion,$aplicaformula,$formula,$categoria, $empresa);
     if($result==true){
         if($tipo == 1){
             echo json_encode(array("status"=>true, "message"=>"Haber registrado correctamente"));

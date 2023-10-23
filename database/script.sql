@@ -1076,6 +1076,8 @@ create table habres_descuentos(
     reservado int not null references reservado(id),    
     codigolre int not null references codigolre(id),
     agrupacion int not null references agrupacionhaber(id),
+    aplicaformula int not null,
+    formula text,
     tipohaber int not null references tipohaber(id),
     empresa int not null,
     register_at timestamp not null default current_timestamp

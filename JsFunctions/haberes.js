@@ -165,3 +165,18 @@ function actualizarhaber(id){
         }
     });
 }
+
+
+function addformula(atributo){
+    $("#formula").val($("#formula").val()+atributo);
+    $("#formula").focus();
+}
+
+function formul(valor){
+    if(valor==1){
+        $("#formula").attr("readonly", false);
+    }else{
+        $("#formula").attr("readonly", true);
+        $("#formula").val("");
+    }
+}

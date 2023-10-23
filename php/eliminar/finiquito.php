@@ -8,7 +8,11 @@ if(isset($_POST['id'])){
     if($contrato!=false){
         $c->query("update contratos set estado = 1, fechatermino='' where id = $contrato;");
         $c->eliminardetallefiniquito($id);
-        $c->eliminarfiniquito($id);
+        $result = $c->eliminarfiniquito($id);
+        if($result==true){
         echo 1;
+        }else{
+            echo 0;
+        }
     }
 }

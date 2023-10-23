@@ -685,9 +685,6 @@ foreach ($permiso as $p) {
 	<!-- Sidebar js -->
 	<script src="assets/plugins/sidebar/sidebar.js"></script>
 
-	<!-- INTERNAL INDEX js -->
-	<script src="assets/js/index.js"></script>
-
 	<!-- Sticky js -->
 	<script src="assets/js/sticky.js"></script>
 
@@ -704,7 +701,32 @@ foreach ($permiso as $p) {
 			mostrarEmpresa();
 		});
 	</script>
-
+<script>
+		function mas(id) {
+			$.ajax({
+				type: "POST",
+				url: "php/cargar/mas.php",
+				data: {
+					id: id
+				},
+				success: function(data) {
+					window.location.href = "menuinfo.php";
+				}
+			});
+		}
+		function mas1(id) {
+			$.ajax({
+				type: "POST",
+				url: "php/cargar/mas.php",
+				data: {
+					id: id
+				},
+				success: function(data) {
+					window.location.href = "finiquitoindividual.php";
+				}
+			});
+		}
+	</script>
 </body>
 
 </html>

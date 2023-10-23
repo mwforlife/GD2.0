@@ -7,7 +7,10 @@ if(isset($_POST['id'])){
     $contrato = $c->buscarcontratoid($id);
     if($contrato!=null){
         $c->eliminarcontrato($id);
-        unlink("../../uploads/Contratos/".$contrato->getDocumento());
+        //Eliminar el archivo si existe
+        if(file_exists("../../uploads/Contratos/".$contrato->getDocumento())){
+            unlink("../../uploads/Contratos/".$contrato->getDocumento());
+        }
     }
     $result = $c->eliminarcontrato($id);
     if($result==true){

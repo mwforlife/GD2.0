@@ -580,6 +580,19 @@ if(isset($_SESSION['GESTION_PERMISO'])){
 											</div>
 											<div class="col-lg-6">
 												<div class="form-group has-success mg-b-0">
+													<label for="">¿Aplica Formula?</label><br/>
+													<input type="radio" name="aplicaformula" id="aplicaformula" value="2" checked onclick="formul(2)"> <span>No</span>
+													<input type="radio" name="aplicaformula" id="aplicaformula" value="1" onclick="formul(1)"> <span>Si</span>
+												</div>
+											</div>
+											<div class="col-lg-6">
+												<div class="form-group has-success mg-b-0">
+													<label for="">Formula</label>
+													<input class="form-control" readonly id="formula" name="formula" placeholder="Ingrese la Formula" required="" type="text" value="">
+												</div>
+											</div>
+											<div class="col-lg-6">
+												<div class="form-group has-success mg-b-0">
 													<label for="">Agrupación</label>
 													<select name="agrupacion" id="agrupacion" class="form-control select2">
 														<option value="1">Valor</option>
@@ -588,6 +601,7 @@ if(isset($_SESSION['GESTION_PERMISO'])){
 													</select>
 												</div>
 											</div>
+											
 											<?php
 											if(isset($_SESSION['GESTION_PERMISO'])){
 												if($_SESSION['GESTION_PERMISO']==true){
@@ -620,6 +634,29 @@ if(isset($_SESSION['GESTION_PERMISO'])){
 							</div>
 						</div>
 					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">
+										Variables Formula
+									</h4>
+									<div class="row">
+										<div class="col-md-12">
+											<button class='btn btn-outline-primary' onclick='addformula("{SUELDO_BASE}")'>Sueldo Base</button>
+											<button class='btn btn-outline-primary' onclick='addformula("{DIAS_TRABAJADOS}")'>Dias Trabajados</button>
+											<button class='btn btn-outline-primary' onclick='addformula("{HORAS_TRABAJADAS}")'>Horas Trabajadas</button>
+											<button class='btn btn-outline-primary' onclick='addformula("{VALOR_AGREGADO}")'>Valor Agregado</button>										
+											<button class='btn btn-outline-primary' onclick='addformula("{VALOR_HORA}")'>Valor Hora</button>
+											<button class='btn btn-outline-primary' onclick='addformula("{VALOR_DIA}")'>Valor Dia</button>
+											<button class='btn btn-outline-primary' onclick='addformula("{AFP}")'>AFP</button>
+											<button class='btn btn-outline-primary' onclick='addformula("{SALUD}")'>Salud</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 					<!-- ROW-4 opened -->
 					<div class="row">
 						<div class="col-xl-12 col-lg-12 col-md-12">
@@ -641,6 +678,8 @@ if(isset($_SESSION['GESTION_PERMISO'])){
 														<th class="bg-transparent">Gratificación</th>
 														<th class="bg-transparent">Reservado</th>
 														<th class="bg-transparent">Codigo LRE</th>
+														<th class="bg-transparent">Aplica Formula</th>
+														<th class="bg-transparent">Formula</th>
 														<th class="bg-transparent">Acciones</th>
 													</tr>
 												</thead>
@@ -682,6 +721,12 @@ if(isset($_SESSION['GESTION_PERMISO'])){
 															echo "<td>No</td>";
 														}
 														echo "<td>".$haber->getLre()."</td>";
+														if($haber->getAplicaformula()==1){
+															echo "<td>Si</td>";
+														}else{
+															echo "<td>No</td>";
+														}
+														echo "<td>".$haber->getFormula()."</td>";
 														echo "<td>";
 														if($haber->getTipohaber()==1){
 															if(isset($_SESSION['GESTION_PERMISO'])){

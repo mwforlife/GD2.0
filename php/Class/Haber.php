@@ -9,11 +9,13 @@ class Haber{
     private $gratificacion;
     private $reservado;
     private $lre;
+    private $aplicaformula;
+    private $formula;
     private $agrupacion;
     private $tipohaber;
     private $registro;
 
-    public function __construct($id, $codigo, $descripcion, $tipo, $imponible, $tributable, $gratificacion, $reservado, $lre, $agrupacion,$tipohaber, $registro){
+    public function __construct($id, $codigo, $descripcion, $tipo, $imponible, $tributable, $gratificacion, $reservado, $lre,$aplicaformula,$formula, $agrupacion,$tipohaber, $registro){
         $this->id = $id;
         $this->codigo = $codigo;
         $this->descripcion = $descripcion;
@@ -23,6 +25,8 @@ class Haber{
         $this->gratificacion = $gratificacion;
         $this->reservado = $reservado;
         $this->lre = $lre;
+        $this->aplicaformula = $aplicaformula;
+        $this->formula = $formula;
         $this->agrupacion = $agrupacion;
         $this->tipohaber = $tipohaber;
         $this->registro = $registro;
@@ -62,6 +66,14 @@ class Haber{
 
     public function getLre(){
         return $this->lre;
+    }
+
+    public function getAplicaformula(){
+        return $this->aplicaformula;
+    }
+
+    public function getFormula(){
+        return $this->formula;
     }
 
     public function getAgrupacion(){

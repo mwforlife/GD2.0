@@ -809,6 +809,97 @@ class Controller
         return $lista;
     }
 
+    //buscar tasa afp
+    public function buscartasaafp($afp, $mes, $ano)
+    {
+        $this->conexion();
+        $sql = "select id, month(fecha) as mes, year(fecha) as ano, tasa from tasaafp where afp = $afp and month(fecha) = $mes and year(fecha) = $ano";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $mes = "";
+            if ($rs['mes'] == 1) {
+                $mes = "Enero";
+            } else if ($rs['mes'] == 2) {
+                $mes = "Febrero";
+            } else if ($rs['mes'] == 3) {
+                $mes = "Marzo";
+            } else if ($rs['mes'] == 4) {
+                $mes = "Abril";
+            } else if ($rs['mes'] == 5) {
+                $mes = "Mayo";
+            } else if ($rs['mes'] == 6) {
+                $mes = "Junio";
+            } else if ($rs['mes'] == 7) {
+                $mes = "Julio";
+            } else if ($rs['mes'] == 8) {
+                $mes = "Agosto";
+            } else if ($rs['mes'] == 9) {
+                $mes = "Septiembre";
+            } else if ($rs['mes'] == 10) {
+                $mes = "Octubre";
+            } else if ($rs['mes'] == 11) {
+                $mes = "Noviembre";
+            } else if ($rs['mes'] == 12) {
+                $mes = "Diciembre";
+            }
+            $periodo = $mes . " " . $rs['ano'];
+            $tasa = $rs['tasa'];
+            $T = new Tasa($id, $afp, $periodo, $tasa);
+            $this->desconectar();
+            return $T;
+        }
+        $this->desconectar();
+        return null;
+    }
+
+    //Buscar ultima tasa afp
+    
+    public function buscarultimatasaafp($afp)
+    {
+        $this->conexion();
+        $sql = "select id, month(fecha) as mes, year(fecha) as ano, tasa from tasaafp where afp = $afp order by fecha desc limit 1";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $mes = "";
+            if ($rs['mes'] == 1) {
+                $mes = "Enero";
+            } else if ($rs['mes'] == 2) {
+                $mes = "Febrero";
+            } else if ($rs['mes'] == 3) {
+                $mes = "Marzo";
+            } else if ($rs['mes'] == 4) {
+                $mes = "Abril";
+            } else if ($rs['mes'] == 5) {
+                $mes = "Mayo";
+            } else if ($rs['mes'] == 6) {
+                $mes = "Junio";
+            } else if ($rs['mes'] == 7) {
+                $mes = "Julio";
+            } else if ($rs['mes'] == 8) {
+                $mes = "Agosto";
+            } else if ($rs['mes'] == 9) {
+                $mes = "Septiembre";
+            } else if ($rs['mes'] == 10) {
+                $mes = "Octubre";
+            } else if ($rs['mes'] == 11) {
+                $mes = "Noviembre";
+            } else if ($rs['mes'] == 12) {
+                $mes = "Diciembre";
+            }
+            $periodo = $mes . " " . $rs['ano'];
+            $tasa = $rs['tasa'];
+            $T = new Tasa($id, $afp, $periodo, $tasa);
+            $this->desconectar();
+            return $T;
+        }
+        $this->desconectar();
+        return null;
+    }
+
     //Listar Tasa Mutual
     public function listartasamutual()
     {
@@ -4829,6 +4920,33 @@ class Controller
         return $lista;
     }
 
+    function buscarcontrato($trabajador)
+    {
+        $this->conexion();
+        $sql = "select contratos.id as id, trabajadores.nombre as nombre, trabajadores.primerapellido as primerapellido, contratos.centrocosto as centrocosto, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.trabajador = $trabajador and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and contratos.estado=1";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $nombre = $rs['nombre'] . " " . $rs['primerapellido'] . " " . $rs['segundoapellido'];
+            $razonsocial = $rs['razonsocial'];
+            $tipocontrato = $rs['tipocontrato'];
+            $centrocosto = $rs['centrocosto'];
+            $cargo = $rs['cargo'];
+            $sueldo = $rs['sueldo'];
+            $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $documento = $rs['documento'];
+            $estado = $rs['estado'];
+            $register_at = $rs['register_at'];
+            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $this->desconectar();
+            return $contrato;
+        }
+        $this->desconectar();
+        return false;
+    }
+
     //listar contratos activos por empresa
     function listarcontratosactivosempresa($empresa)
     {
@@ -7506,10 +7624,12 @@ class Controller
             $gratificacion = $rs['gratificacion'];
             $reservado = $rs['reservado'];
             $codigolre = $rs['codigolre'];
+            $aplicaformula = $rs['aplicaformula'];
+            $formula = $rs['formula'];
             $agrupacion = $rs['agrupacion'];
             $tipohaber = $rs['tipohaber'];
             $registro = $rs['register_at'];
-            $haber = new Haber($id,$codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion, $tipohaber,$registro);
+            $haber = new Haber($id,$codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion,$aplicaformula,$formula,$tipohaber,$registro);
             $lista[] = $haber;
         }
         $this->desconectar();
@@ -7519,7 +7639,7 @@ class Controller
     //Listar Descuentos relacional
     function listarhaberesydescuentostext(){
         $this->conexion();
-        $sql = "select habres_descuentos.id as id, habres_descuentos.codigo as codigo, habres_descuentos.descripcion as descripcion, habres_descuentos.tipo as tipo, habres_descuentos.imponible as imponible, habres_descuentos.tributable as tributable, habres_descuentos.gratificacion as gratificacion, habres_descuentos.reservado as reservado, habres_descuentos.codigolre as codigolre, habres_descuentos.agrupacion as agrupacion, habres_descuentos.tipohaber as tipohaber, habres_descuentos.register_at as register_at, codigolre.articulo as articulo, codigolre.codigo as codigolre, codigolre.codigoprevired as codigoprevired, codigolre.nombre as nombre from habres_descuentos, codigolre where habres_descuentos.codigolre=codigolre.id order by habres_descuentos.codigo asc";
+        $sql = "select habres_descuentos.id as id, habres_descuentos.codigo as codigo, habres_descuentos.descripcion as descripcion, habres_descuentos.tipo as tipo, habres_descuentos.imponible as imponible, habres_descuentos.tributable as tributable, habres_descuentos.gratificacion as gratificacion, habres_descuentos.reservado as reservado, habres_descuentos.codigolre as codigolre, habres_descuentos.agrupacion as agrupacion,habres_descuentos.aplicaformula as aplicaformula, habres_descuentos.formula as formula, habres_descuentos.tipohaber as tipohaber, habres_descuentos.register_at as register_at, codigolre.articulo as articulo, codigolre.codigo as codigolre, codigolre.codigoprevired as codigoprevired, codigolre.nombre as nombre from habres_descuentos, codigolre where habres_descuentos.codigolre=codigolre.id order by habres_descuentos.codigo asc";
         $result = $this->mi->query($sql);
         $lista = array();
         while($rs = mysqli_fetch_array($result)){
@@ -7536,10 +7656,12 @@ class Controller
             $registro = $rs['register_at'];
             $articulo = $rs['articulo'];
             $codigolre = $rs['nombre'] . " (" . $rs['codigolre'] . ")";
+            $aplicaformula = $rs['aplicaformula'];
+            $formula = $rs['formula'];
             $agrupacion = $rs['agrupacion'];
             $tipohaber = $rs['tipohaber'];
             $registro = $rs['register_at'];
-            $haber = new Haber($id,$codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion,$tipohaber,$registro);
+            $haber = new Haber($id,$codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion,$aplicaformula,$formula,$tipohaber,$registro);
             $lista[] = $haber;
         }
         $this->desconectar();
@@ -7562,10 +7684,12 @@ class Controller
             $gratificacion = $rs['gratificacion'];
             $reservado = $rs['reservado'];
             $codigolre = $rs['codigolre'];
+            $aplicaformula = $rs['aplicaformula'];
+            $formula = $rs['formula'];
             $agrupacion = $rs['agrupacion'];
             $tipohaber = $rs['tipohaber'];
             $registro = $rs['register_at'];
-            $haber = new Haber($id,$codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion,$tipohaber,$registro);
+            $haber = new Haber($id,$codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion,$aplicaformula,$formula,$tipohaber,$registro);
             $lista[] = $haber;
         }
         $this->desconectar();
@@ -7588,19 +7712,21 @@ class Controller
             $gratificacion = $rs['gratificacion'];
             $reservado = $rs['reservado'];
             $codigolre = $rs['codigolre'];
+            $aplicaformula = $rs['aplicaformula'];
+            $formula = $rs['formula'];
             $agrupacion = $rs['agrupacion'];
             $tipohaber = $rs['tipohaber'];
             $registro = $rs['register_at'];
-            $haber = new Haber($id,$codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion,$tipohaber,$registro);
+            $haber = new Haber($id,$codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion,$aplicaformula,$formula,$tipohaber,$registro);
         }
         $this->desconectar();
         return $haber;
     }
 
     //Registrar Haberes y descuentos
-    function registrarhaberesydescuentos($codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion,$tipohaber, $empresa){
+    function registrarhaberesydescuentos($codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion,$aplicaformula,$formula,$tipohaber, $empresa){
         $this->conexion();
-        $sql = "insert into habres_descuentos values(null,'$codigo','$descripcion',$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion,$tipohaber, $empresa, now())";
+        $sql = "insert into habres_descuentos values(null,'$codigo','$descripcion',$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion,$aplicaformula,'$formula',$tipohaber, $empresa, now())";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return $result;
@@ -7634,9 +7760,9 @@ class Controller
     }
 
     //Editar Haberes y descuentos
-    function editarhaberesydescuentos($id,$codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion){
+    function editarhaberesydescuentos($id,$codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$aplicaformula, $formula,$agrupacion){
         $this->conexion();
-        $sql = "update habres_descuentos set codigo='$codigo', descripcion='$descripcion', tipo=$tipo, imponible=$imponible, tributable=$tributable, gratificacion=$gratificacion, reservado=$reservado, codigolre=$codigolre, agrupacion=$agrupacion where id=$id";
+        $sql = "update habres_descuentos set codigo='$codigo', descripcion='$descripcion', tipo=$tipo, imponible=$imponible, tributable=$tributable, gratificacion=$gratificacion, reservado=$reservado, codigolre=$codigolre, aplicaformula=$aplicaformula, formula='$formula', agrupacion=$agrupacion where id=$id";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return $result;
@@ -7679,6 +7805,33 @@ class Controller
 
     //Listar Haberes Y Descuentos por periodo
     function listarhaberes_descuentotrababajador($periodo_ini, $periodo_ter, $empresa,$trabajador){
+        $this->conexion();
+        $sql = "select haberes_descuentos_trabajador.id as id, habres_descuentos.descripcion as codigo,habres_descuentos.tipo as tipo, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, empresa.razonsocial as empresa, haberes_descuentos_trabajador.register_at as register_at from haberes_descuentos_trabajador, habres_descuentos, trabajadores, empresa where haberes_descuentos_trabajador.codigo=habres_descuentos.id and haberes_descuentos_trabajador.trabajador=trabajadores.id and haberes_descuentos_trabajador.empresa=empresa.id and haberes_descuentos_trabajador.periodo_inicio between  '$periodo_ini' and '$periodo_ter' and haberes_descuentos_trabajador.empresa=$empresa and haberes_descuentos_trabajador.trabajador=$trabajador order by haberes_descuentos_trabajador.periodo_inicio asc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id=$rs['id'];
+            $codigo=$rs['codigo'];
+            $periodo_inicio=$rs['periodo_inicio'];
+            $periodo_termino=$rs['periodo_termino'];
+            $monto=$rs['monto'];
+            $dias=$rs['dias'];
+            $horas=$rs['horas'];
+            $modalidad=$rs['modalidad'];
+            $trabajador=$rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
+            $empresa=$rs['empresa'];
+            $tipo = $rs['tipo'];
+            $registro=$rs['register_at'];
+            $haber = new haberes_trabajador($id,$codigo,$periodo_inicio,$periodo_termino,$monto,$dias,$horas,$modalidad,$trabajador,$empresa,$tipo,$registro);
+            $lista[] = $haber;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    
+    //Listar Haberes Y Descuentos por periodo
+    function buscarhaberes_descuentotrababajador($periodo_ini, $periodo_ter, $empresa,$trabajador,$tipo){
         $this->conexion();
         $sql = "select haberes_descuentos_trabajador.id as id, habres_descuentos.descripcion as codigo,habres_descuentos.tipo as tipo, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, empresa.razonsocial as empresa, haberes_descuentos_trabajador.register_at as register_at from haberes_descuentos_trabajador, habres_descuentos, trabajadores, empresa where haberes_descuentos_trabajador.codigo=habres_descuentos.id and haberes_descuentos_trabajador.trabajador=trabajadores.id and haberes_descuentos_trabajador.empresa=empresa.id and haberes_descuentos_trabajador.periodo_inicio between  '$periodo_ini' and '$periodo_ter' and haberes_descuentos_trabajador.empresa=$empresa and haberes_descuentos_trabajador.trabajador=$trabajador order by haberes_descuentos_trabajador.periodo_inicio asc";
         $result = $this->mi->query($sql);
