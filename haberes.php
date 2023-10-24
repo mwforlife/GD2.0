@@ -651,6 +651,11 @@ if(isset($_SESSION['GESTION_PERMISO'])){
 											<button class='btn btn-outline-primary' onclick='addformula("{VALOR_DIA}")'>Valor Dia</button>
 											<button class='btn btn-outline-primary' onclick='addformula("{AFP}")'>AFP</button>
 											<button class='btn btn-outline-primary' onclick='addformula("{SALUD}")'>Salud</button>
+											<button class='btn btn-outline-primary' onclick='addformula("{CESANTIA}")'>Cesantia</button>
+											<button class='btn btn-outline-primary' onclick='addformula("{TOTAL_IMPONIBLE}")'>Total Imponible</button>
+											<button class='btn btn-outline-primary' onclick='addformula("{TOTAL_NO_IMPONIBLE}")'>Total No Imponible</button>
+											<button class='btn btn-outline-primary' onclick='addformula("{TOTAL_TRIBUTABLE}")'>Total Tributable</button>
+											<button class='btn btn-outline-primary' onclick='addformula("{TOTAL_HABERES}")'>Total Haberes</button>
 										</div>
 									</div>
 								</div>
@@ -723,10 +728,11 @@ if(isset($_SESSION['GESTION_PERMISO'])){
 														echo "<td>".$haber->getLre()."</td>";
 														if($haber->getAplicaformula()==1){
 															echo "<td>Si</td>";
+															echo "<td>".$haber->getFormula()."</td>";
 														}else{
 															echo "<td>No</td>";
+															echo "<td>No Aplica</td>";
 														}
-														echo "<td>".$haber->getFormula()."</td>";
 														echo "<td>";
 														if($haber->getTipohaber()==1){
 															if(isset($_SESSION['GESTION_PERMISO'])){

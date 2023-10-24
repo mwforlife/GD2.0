@@ -3,7 +3,11 @@ require '../controller.php';
 $c = new Controller();
 if(isset($_POST['codigo']) && isset($_POST['descripcion']) && isset($_POST['tipo']) && isset($_POST['imponible']) && isset($_POST['tributable']) && isset($_POST['gratificacion']) && isset($_POST['reservado']) && isset($_POST['lre']) && isset($_POST['aplicaformula']) && isset($_POST['formula']) && isset($_POST['agrupacion']) && isset($_POST['categoria'])){
     $codigo = $_POST['codigo'];
+    $codigo = strtoupper($codigo);
+    $codigo = $c->escapeString($codigo);
     $nombre = $_POST['descripcion'];
+    $nombre = strtoupper($nombre);
+    $nombre = $c->escapeString($nombre);
     $tipo = $_POST['tipo'];
     $imponible = $_POST['imponible'];
     $tributable = $_POST['tributable'];

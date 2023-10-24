@@ -508,7 +508,7 @@ foreach ($permiso as $p) {
 										<div class="row">
                                         <div class="col-md-12">
                                             <label>Periodo:</label>
-                                            <input type="month" class="form-control" id="fecha" >
+                                            <input type="month" class="form-control" id="fecha" value="<?php echo date('Y-m');?>">
                                         </div>
                                         <div class="col-md-12">
                                             <label>Tasa:</label>

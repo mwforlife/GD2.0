@@ -214,9 +214,6 @@ foreach ($permiso as $p) {
 										<li class="nav-sub-item">
 											<a class="nav-sub-link" href="haberes.php">Haberes y Descuentos</a>
 										</li>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="formulas.php">Formulas</a>
-										</li>
 
 										<?php
 										if ($_SESSION['GESTION_PERMISO'] == true) {
@@ -307,6 +304,9 @@ foreach ($permiso as $p) {
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="habmaster.php">Haberes y Descuentos</a>
 									</li>
+										<li class="nav-sub-item">
+											<a class="nav-sub-link" href="procesar.php">Procesar Trabajadores</a>
+										</li>
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->
