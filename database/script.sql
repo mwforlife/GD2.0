@@ -1113,3 +1113,10 @@ create table formulas(
     formula text not null,
     register_at timestamp not null default current_timestamp
 );
+
+create table horaspactadas(){
+    id int not null auto_increment primary key,
+    horas int not null,
+    contrato int not null references contratos(id),
+    register_at timestamp not null default current_timestamp
+}

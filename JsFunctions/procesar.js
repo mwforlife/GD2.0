@@ -85,3 +85,34 @@ function procesartodo(){
         ToastifyError("No hay trabajadores para procesar");
     }
 }
+
+function filtrartrabajadores(){
+    var centrocosto = $("#centrocosto").val();
+    $.ajax({
+        url: "php/cargar/trabajadorescentro.php",
+        data: {centrocosto:centrocosto},
+        type: "POST",
+        success: function (response) {
+            location.reload();
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.log(xhr.status);
+            console.log(thrownError);
+        },
+    });
+}
+
+function limpiarfiltro(){
+    var centrocosto = $("#centrocosto").val();
+    $.ajax({
+        url: "php/eliminar/trabajadorescentro.php",
+        type: "POST",
+        success: function (response) {
+            location.reload();
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.log(xhr.status);
+            console.log(thrownError);
+        },
+    });
+}

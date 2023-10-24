@@ -164,10 +164,10 @@
                                     if ($tasa == null) {
                                         echo 0;
                                     } else {
-                                        echo $tasa->getTasa();
+                                        echo $tasa->getTasa()."%";
                                     }
                                 } else {
-                                    echo $tasa->getTasa();
+                                    echo $tasa->getTasa()."%";
                                 }
                                 ?>
                             </p>

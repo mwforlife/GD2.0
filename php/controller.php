@@ -121,6 +121,16 @@ class Controller
         return json_encode($result);
     }
 
+    //Query return ID
+    public function query_id($sql)
+    {
+        $this->conexion();
+        $result = $this->mi->query($sql);
+        $id = $this->mi->insert_id;
+        $this->desconectar();
+        return $id;
+    }
+
     //validar usuario
     public function validarusuario($correo, $rut)
     {
@@ -1298,7 +1308,7 @@ class Controller
     public function listartrabajadoresactivos($empresa)
     {
         $this->conexion();
-        $sql = "select distinct trabajadores.id as id, contratos.id as contrato, rut, dni, nombre, primerapellido,segundoapellido,fechanacimiento, fechainicio as fechanacimiento, sexo, estadocivil, nacionalidad, discapacidad, pension, trabajadores.empresa as empresa from trabajadores,contratos where trabajadores.id=contratos.trabajador and trabajadores.empresa = $empresa and estado=1 group by trabajadores.id;";
+        $sql = "select distinct trabajadores.id as id, contratos.id as contrato, rut, dni, trabajadores.nombre as nombre, primerapellido,segundoapellido,fechanacimiento, fechainicio as fechanacimiento, sexo, centrocosto.nombre as centrocosto, estadocivil, nacionalidad, discapacidad, pension, trabajadores.empresa as empresa from centrocosto,trabajadores,contratos where trabajadores.id=contratos.trabajador and trabajadores.empresa = $empresa and contratos.estado=1 and centrocosto.id=contratos.centrocosto group by trabajadores.id;";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -1312,7 +1322,37 @@ class Controller
             $sexo = $rs['sexo'];
             $estadocivil = $rs['estadocivil'];
             $nacionalidad = $rs['nacionalidad'];
-            $discapacidad = $rs['discapacidad'];
+            $discapacidad = $rs['centrocosto'];
+            $pension = $rs['pension'];
+            $empresa = $rs['empresa'];
+            $registrar = $rs["contrato"];
+            $T = new Trabajadores($id, $rut, $dni, $nombre, $apellido1, $apellido2, $nacimiento, $sexo, $estadocivil, $nacionalidad, $discapacidad, $pension, $empresa, $registrar);
+            $lista[] = $T;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    
+    //Listar Trabajadores Activos
+    public function listartrabajadoresactivoscenter($empresa,$centrocosto)
+    {
+        $this->conexion();
+        $sql = "select distinct trabajadores.id as id, contratos.id as contrato, rut, dni, trabajadores.nombre as nombre, primerapellido,segundoapellido,fechanacimiento, fechainicio as fechanacimiento, sexo, centrocosto.nombre as centrocosto, estadocivil, nacionalidad, discapacidad, pension, trabajadores.empresa as empresa from centrocosto,trabajadores,contratos where trabajadores.id=contratos.trabajador and trabajadores.empresa = $empresa and contratos.estado=1 and centrocosto.id=contratos.centrocosto and centrocosto.id=$centrocosto group by trabajadores.id;";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $rut = $rs['rut'];
+            $dni = $rs['dni'];
+            $nombre = $rs['nombre'];
+            $apellido1 = $rs['primerapellido'];
+            $apellido2 = $rs['segundoapellido'];
+            $nacimiento = $rs['fechanacimiento'];
+            $sexo = $rs['sexo'];
+            $estadocivil = $rs['estadocivil'];
+            $nacionalidad = $rs['nacionalidad'];
+            $discapacidad = $rs['centrocosto'];
             $pension = $rs['pension'];
             $empresa = $rs['empresa'];
             $registrar = $rs["contrato"];

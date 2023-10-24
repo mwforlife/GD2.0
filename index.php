@@ -305,6 +305,9 @@ foreach ($permiso as $p) {
 										<a class="nav-sub-link" href="habmaster.php">Haberes y Descuentos</a>
 									</li>
 										<li class="nav-sub-item">
+											<a class="nav-sub-link" href="asistencia.php">Asistencia</a>
+										</li>
+										<li class="nav-sub-item">
 											<a class="nav-sub-link" href="procesar.php">Procesar Trabajadores</a>
 										</li>
 								</ul>

@@ -352,22 +352,21 @@ foreach ($permiso as $p) {
 				<?php
 					} else if ($user->getTipo() == 3) {
 						?>
-			<!-----------------------------Mandante--------------------------------->
-			<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span
-										class="sidemenu-label">Mandante</span><i
-										class="angle fe fe-chevron-right"></i></a>
-								<ul class="nav-sub">
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="mandanteempresa.php">Documentos Empresa</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="mandantetrabajadores.php">Documentos Trabajadores
+				<!-----------------------------Mandante--------------------------------->
+				<li class="nav-item">
+					<a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span
+							class="sidemenu-label">Mandante</span><i class="angle fe fe-chevron-right"></i></a>
+					<ul class="nav-sub">
+						<li class="nav-sub-item">
+							<a class="nav-sub-link" href="mandanteempresa.php">Documentos Empresa</a>
+						</li>
+						<li class="nav-sub-item">
+							<a class="nav-sub-link" href="mandantetrabajadores.php">Documentos Trabajadores
 
-										</a>
-									</li>
-								</ul>
-							</li>
+							</a>
+						</li>
+					</ul>
+				</li>
 
 				<?php
 					}
@@ -502,12 +501,58 @@ foreach ($permiso as $p) {
 
 					<!-- ROW- opened -->
 					<div class="row">
+						<div class="col-md-12">
+							<div class="card">
+								<div class="card-body">
+									<div class="row">
+										<div class="col-lg-4">
+											<label for="">Centro de Costo</label>
+											<select name="centrocosto" id="centrocosto" class="form-control select2">
+												<?php
+												$centrocostos = $c->listarcentrocosto($_SESSION['CURRENT_ENTERPRISE']);
+												foreach ($centrocostos as $centrocosto) {
+													if (isset($_SESSION['COST_CENTER'])) {
+														if ($centrocosto->getId() == $_SESSION['COST_CENTER']) {
+															echo "<option value='" . $centrocosto->getId() . "' selected>" . $centrocosto->getNombre() . "</option>";
+														} else {
+															echo "<option value='" . $centrocosto->getId() . "'>" . $centrocosto->getNombre() . "</option>";
+														}
+													} else {
+														echo "<option value='" . $centrocosto->getId() . "'>" . $centrocosto->getNombre() . "</option>";
+													}
+												}
+												?>
+											</select>
+										</div>
+										<div class="col-lg-5">
+											<button type="button" class="btn btn-outline-primary mt-4 mb-0 mr-2"
+												onclick="filtrartrabajadores()">FILTRAR <i
+													class="fa fa-filter"></i></button>
+													<?php
+													if (isset($_SESSION['COST_CENTER'])) {?>
+											<button type="button" class="btn btn-outline-danger mt-4 mb-0 mr-2"
+												onclick="limpiarfiltro()">LIMPIAR FILTRAR <i
+													class="fa fa-trash"></i></button>
+													<?php
+												}?>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
 						<div class="col-xl-12 col-lg-12 col-md-12">
 							<div class="card transcation-crypto1" id="transcation-crypto1">
 								<div class="card-header bd-b-0 d-flex justify-content-between">
 									<h4 class="card-title font-weight-semibold mb-0">Listado de Trabajadores</h4>
 									<?php
-									$lista = $c->listartrabajadoresactivos($_SESSION['CURRENT_ENTERPRISE']);
+									$lista = array();
+									if (isset($_SESSION['COST_CENTER'])) {
+										$lista = $c->listartrabajadoresactivoscenter($_SESSION['CURRENT_ENTERPRISE'], $_SESSION['COST_CENTER']);
+									} else {
+										$lista = $c->listartrabajadoresactivos($_SESSION['CURRENT_ENTERPRISE']);
+									}
 									?>
 									<button onclick="allwork()" class="btn btn-success"><i class="fa fa-plus"></i>
 										Todo</button>
@@ -520,6 +565,7 @@ foreach ($permiso as $p) {
 													<tr>
 														<th class="bg-transparent">RUT</th>
 														<th class="bg-transparent">Nombre</th>
+														<th class="bg-transparent">Centro Costo</th>
 														<th class="bg-transparent text-center">Agregar Al Lote</th>
 													</tr>
 												</thead>
@@ -532,6 +578,9 @@ foreach ($permiso as $p) {
 														echo "</td>";
 														echo "<td class='text-muted fs-15 font-weight-semibold'>";
 														echo $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2();
+														echo "</td>";
+														echo "<td class='text-muted fs-15 font-weight-semibold'>";
+														echo $object->getDiscapacidad();
 														echo "</td>";
 														echo "<td class='text-center'>";
 														echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='agregartrabajador(" . $object->getId() . ",\"" . $object->getRut() . "\",\"" . $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2() . "\")'>";
@@ -554,12 +603,14 @@ foreach ($permiso as $p) {
 							<div class="card transcation-crypto1" id="transcation-crypto1">
 								<div class="card-header bd-b-0 d-flex justify-content-between">
 									<h4 class="card-title font-weight-semibold mb-0">Trabajadores a Procesar</h4>
-                                    <div class="div">
-									<button onclick="procesartodo()" class="btn btn-outline-success"><i class="fa fa-trash"></i>
-										Procesar</button>
-									<button onclick="Eliminartodo()" class="btn btn-outline-danger"><i class="fa fa-trash"></i>
-										Todo</button>
-                                    </div>
+									<div class="div">
+										<button onclick="procesartodo()" class="btn btn-outline-success"><i
+												class="fa fa-trash"></i>
+											Procesar</button>
+										<button onclick="Eliminartodo()" class="btn btn-outline-danger"><i
+												class="fa fa-trash"></i>
+											Todo</button>
+									</div>
 								</div>
 								<div class="card-body p-4">
 									<div class="">

@@ -332,145 +332,192 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
     $colacion = $_POST['colacion'];
     $colacionimp = $_POST['colacionimp'];
     $duracionjor = $_POST['duracionjor'];
+    $horaspac = 0;
     $colaimpu = $_POST['colaimpu'];
     switch ($duracionjor) {
         case '1':
             $duracionjor = "45 Horas";
+            $horaspac = 45;
             break;
         case '2':
             $duracionjor = "44 Horas";
+            $horaspac = 44;
             break;
         case '3':
             $duracionjor = "43 Horas";
+            $horaspac = 43;
             break;
         case '4':
             $duracionjor = "42 Horas";
+            $horaspac = 42;
             break;
         case '5':
             $duracionjor = "41 Horas";
+            $horaspac = 41;
             break;
         case '6':
             $duracionjor = "40 Horas";
+            $horaspac = 40;
             break;
         case '7':
             $duracionjor = "39 Horas";
+            $horaspac = 39;
             break;
         case '8':
             $duracionjor = "38 Horas";
+            $horaspac = 38;
             break;
         case '9':
             $duracionjor = "37 Horas";
+            $horaspac = 37;
             break;
         case '10':
             $duracionjor = "36 Horas";
+            $horaspac = 36;
             break;
         case '11':
             $duracionjor = "35 Horas";
+            $horaspac = 35;
             break;
         case '12':
             $duracionjor = "34 Horas";
+            $horaspac = 34;
             break;
         case '13':
             $duracionjor = "33 Horas";
+            $horaspac = 33;
             break;
         case '14':
             $duracionjor = "32 Horas";
+            $horaspac = 32;
             break;
         case '15':
             $duracionjor = "31 Horas";
+            $horaspac = 31;
             break;
         case '16':
             $duracionjor = "30 Horas";
+            $horaspac = 30;
             break;
         case '17':
             $duracionjor = "29 Horas";
+            $horaspac = 29;
             break;
         case '18':
             $duracionjor = "28 Horas";
+            $horaspac = 28;
             break;
         case '19':
             $duracionjor = "27 Horas";
+            $horaspac = 27;
             break;
         case '20':
             $duracionjor = "26 Horas";
+            $horaspac = 26;
             break;
         case '21':
             $duracionjor = "25 Horas";
+            $horaspac = 25;
             break;
         case '22':
             $duracionjor = "24 Horas";
+            $horaspac = 24;
             break;
         case '23':
             $duracionjor = "23 Horas";
+            $horaspac = 23;
             break;
         case '24':
             $duracionjor = "22 Horas";
+            $horaspac = 22;
             break;
         case '25':
             $duracionjor = "21 Horas";
+            $horaspac = 21;
             break;
         case '26':
             $duracionjor = "20 Horas";
+            $horaspac = 20;
             break;
         case '27':
             $duracionjor = "19 Horas";
+            $horaspac = 19;
             break;
         case '28':
             $duracionjor = "18 Horas";
+            $horaspac = 18;
             break;
         case '29':
             $duracionjor = "17 Horas";
+            $horaspac = 17;
             break;
         case '30':
             $duracionjor = "16 Horas";
+            $horaspac = 16;
             break;
         case '31':
             $duracionjor = "15 Horas";
+            $horaspac = 15;
             break;
         case '32':
             $duracionjor = "14 Horas";
+            $horaspac = 14;
             break;
         case '33':
             $duracionjor = "13 Horas";
+            $horaspac = 13;
             break;
         case '34':
             $duracionjor = "12 Horas";
+            $horaspac = 12;
             break;
         case '35':
             $duracionjor = "11 Horas";
+            $horaspac = 11;
             break;
         case '36':
             $duracionjor = "10 Horas";
+            $horaspac = 10;
             break;
         case '37':
             $duracionjor = "9 Horas";
+            $horaspac = 9;
             break;
         case '38':
             $duracionjor = "8 Horas";
+            $horaspac = 8;
             break;
         case '39':
             $duracionjor = "7 Horas";
+            $horaspac = 7;
             break;
         case '40':
             $duracionjor = "6 Horas";
+            $horaspac = 6;
             break;
         case '41':
             $duracionjor = "5 Horas";
+            $horaspac = 5;
             break;
         case '42':
             $duracionjor = "4 Horas";
+            $horaspac = 4;
             break;
         case '43':
             $duracionjor = "3 Horas";
+            $horaspac = 3;
             break;
         case '44':
             $duracionjor = "2 Horas";
+            $horaspac = 2;
             break;
         case '45':
             $duracionjor = "1 Hora";
+            $horaspac = 1;
             break;
         case '46':
             $duracionjor = "30 Minutos";
+            $horaspac = 0.5;
             break;
     }
 
