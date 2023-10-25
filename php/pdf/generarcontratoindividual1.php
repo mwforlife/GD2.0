@@ -2086,7 +2086,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
     }
     
     //Guardar en la base de datos
-    $result = $c->query_id("insert into contratos values(null, $trabajador, $empresa,$centrocostoid, '$typecontract','$Charge',$sueldo, '$fechainicioregistro', '$fechatermino1', '$nombre_documento',1,now())");
+    $result = $c->query_id("insert into contratos values(null, $trabajador, $empresa,$centrocostoid, '$typecontract','$Charge',$sueldo1, '$fechainicioregistro', '$fechatermino1', '$nombre_documento',1,now())");
     if ($result>0) {
         $c->query("insert into horaspactadas values(null,$horaspac,$result,now())");
         echo 1;

@@ -1114,9 +1114,28 @@ create table formulas(
     register_at timestamp not null default current_timestamp
 );
 
-create table horaspactadas(){
+create table horaspactadas(
     id int not null auto_increment primary key,
     horas int not null,
     contrato int not null references contratos(id),
     register_at timestamp not null default current_timestamp
-}
+);
+
+create table estadoasistencia(
+    id int not null auto_increment primary key,
+    nombre varchar(200) not null
+);
+
+insert into estadoasistencia values(null, 'Presente');
+insert into estadoasistencia values(null, 'Media Jornada');
+insert into estadoasistencia values(null, 'Ausente');
+insert into estadoasistencia values(null, 'Con licencia');
+
+create table asistencia(
+    id int not null auto_increment primary key,
+    fecha date not null,
+    estado int not null references estadoasistencia(id),
+    trabajador int not null references trabajadores(id),
+    empresa int not null references empresa(id),
+    register_at timestamp not null default current_timestamp
+);

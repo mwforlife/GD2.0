@@ -64,7 +64,7 @@ foreach ($permiso as $p) {
 	<link rel="icon" href="assets/img/brand/favicon.ico" type="image/x-icon" />
 
 	<!-- Title -->
-	<title>Gestor de Documentos | Procesar Trabajadores</title>
+	<title>Gestor de Documentos | Asistencia</title>
 
 	<!-- Bootstrap css-->
 	<link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
@@ -490,7 +490,7 @@ foreach ($permiso as $p) {
 					<!-- Page Header -->
 					<div class="page-header">
 						<div class="page-header-1">
-							<h1 class="main-content-title tx-30">Habres y Descuentos</h1>
+							<h1 class="main-content-title tx-30">Asistencia Trabajadores</h1>
 							<ol class="breadcrumb">
 								<li class="breadcrumb-item"><a href="index.php">Inicio</a></li>
 							</ol>
@@ -528,13 +528,25 @@ foreach ($permiso as $p) {
 											<button type="button" class="btn btn-outline-primary mt-4 mb-0 mr-2"
 												onclick="filtrartrabajadores()">FILTRAR <i
 													class="fa fa-filter"></i></button>
-													<?php
-													if (isset($_SESSION['COST_CENTER'])) {?>
-											<button type="button" class="btn btn-outline-danger mt-4 mb-0 mr-2"
-												onclick="limpiarfiltro()">LIMPIAR FILTRAR <i
-													class="fa fa-trash"></i></button>
-													<?php
-												}?>
+											<?php
+											if (isset($_SESSION['COST_CENTER'])) { ?>
+												<button type="button" class="btn btn-outline-danger mt-4 mb-0 mr-2"
+													onclick="limpiarfiltro()">LIMPIAR FILTRAR <i
+														class="fa fa-trash"></i></button>
+												<?php
+											} ?>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-lg-3">
+											<label for="">Periodo de Inicio</label>
+											<input type="month" name="inicio" id="inicio"
+												value="<?php echo date("Y-m"); ?>" class="form-control">
+										</div>
+										<div class="col-lg-3">
+											<label for="">Periodo de Termino</label>
+											<input type="month" name="termino" id="termino"
+												value="<?php echo date("Y-m"); ?>" class="form-control">
 										</div>
 									</div>
 								</div>
@@ -566,7 +578,7 @@ foreach ($permiso as $p) {
 														<th class="bg-transparent">RUT</th>
 														<th class="bg-transparent">Nombre</th>
 														<th class="bg-transparent">Centro Costo</th>
-														<th class="bg-transparent text-center">Agregar Al Lote</th>
+														<th class="bg-transparent text-center">Asistencia</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -583,48 +595,14 @@ foreach ($permiso as $p) {
 														echo $object->getDiscapacidad();
 														echo "</td>";
 														echo "<td class='text-center'>";
-														echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='agregartrabajador(" . $object->getId() . ",\"" . $object->getRut() . "\",\"" . $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2() . "\")'>";
-														echo "<i class='fa fa-plus'>";
+														echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='asistencia(" . $object->getId() . ",\"" . $object->getRut() . "\",\"" . $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2() . "\",\"" . $object->getDiscapacidad() . "\")'>";
+														echo "<i class='fa fa-check'>";
 														echo "</i>";
 														echo "</a>";
 														echo "</td>";
 														echo "</tr>";
 													}
 													?>
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-xl-12 col-lg-12 col-md-12">
-							<div class="card transcation-crypto1" id="transcation-crypto1">
-								<div class="card-header bd-b-0 d-flex justify-content-between">
-									<h4 class="card-title font-weight-semibold mb-0">Trabajadores a Procesar</h4>
-									<div class="div">
-										<button onclick="procesartodo()" class="btn btn-outline-success"><i
-												class="fa fa-trash"></i>
-											Procesar</button>
-										<button onclick="Eliminartodo()" class="btn btn-outline-danger"><i
-												class="fa fa-trash"></i>
-											Todo</button>
-									</div>
-								</div>
-								<div class="card-body p-4">
-									<div class="">
-										<div class="table-responsive">
-											<table class="table text-nowrap">
-												<thead class="border-top">
-													<tr>
-														<th class="bg-transparent">RUT</th>
-														<th class="bg-transparent">Nombre</th>
-														<th class="bg-transparent text-center">Eliminar</th>
-													</tr>
-												</thead>
-												<tbody id="lotes">
-
 												</tbody>
 											</table>
 										</div>
@@ -639,6 +617,41 @@ foreach ($permiso as $p) {
 			</div>
 		</div>
 		<!-- End Main Content-->
+
+		<!-- Edit Modal -->
+		<div class="modal fade" id="modalasistencia" data-backdrop="static" data-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog modal-xl">
+				<div class="modal-content">
+					<div class="modal-header">
+						<p class="modal-title" id="staticBackdropLabel"></p>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="content">
+							<input type="hidden" name="idtrabajador" id="idtrabajador">
+							<div class="table-responsive">
+							<table class='table table-bordered w-100'>
+								<tr>
+									<th>Periodo</th>
+									<?php
+									for ($i = 1; $i <= 31; $i++) {
+										echo "<th>$i</th>";
+									}
+									?>
+								</tr>
+							</table>
+
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 
 		<!-- Main Footer-->
 		<div class="main-footer text-center">
@@ -712,6 +725,7 @@ foreach ($permiso as $p) {
 	<script src="JsFunctions/Alert/alert.js"></script>
 	<script src="JsFunctions/main.js"></script>
 	<script src="JsFunctions/procesar.js"></script>
+	<script src="JsFunctions/asistencia.js"></script>
 	<script src="JsFunctions/precargado.js"></script>
 
 	<script>

@@ -2004,7 +2004,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             $fecha_termino = date('Y-m-d', strtotime($fecha_termino));
         }
         //Guardar en la base de datos
-        $result = $c->query_id("insert into contratos values(null, " . $tra->getEmpresa() . ", $empresa,$centrocostoid, '$typecontract','$Charge',$sueldo, '$fechainicioregistro', '$fecha_termino', '$nombre_documento',1,now())");
+        $result = $c->query_id("insert into contratos values(null, " . $tra->getEmpresa() . ", $empresa,$centrocostoid, '$typecontract','$Charge',$sueldo1, '$fechainicioregistro', '$fecha_termino', '$nombre_documento',1,now())");
         if ($result>0) {
             $c->query("insert into horaspactadas values(null,$horaspac,$result,now())");
             $c->eliminartrabajadorlote($tra->getEmpresa(), $_SESSION['USER_ID']);
