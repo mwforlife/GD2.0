@@ -68,7 +68,8 @@
             $id = $object->id;
             $rut = $object->rut;
             $nombre = $object->nombre;
-            $contrato = $c->buscarcontrato($id);
+            $contratoid = $object->contrato;
+            $contrato = $c->buscarcontratobyID($contratoid);
             $trabajador = $c->buscartrabajador($id);
             $centrocosto = $c->buscarcentrcosto($contrato->getCentroCosto());
             $prevision = $c->buscarprevisiontrabajador($id);

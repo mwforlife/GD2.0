@@ -1136,6 +1136,6 @@ create table asistencia(
     fecha date not null,
     estado int not null references estadoasistencia(id),
     trabajador int not null references trabajadores(id),
-    empresa int not null references empresa(id),
+    contrato int not null references contratos(id),
     register_at timestamp not null default current_timestamp
 );

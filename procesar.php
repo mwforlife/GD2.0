@@ -583,7 +583,7 @@ foreach ($permiso as $p) {
 														echo $object->getDiscapacidad();
 														echo "</td>";
 														echo "<td class='text-center'>";
-														echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='agregartrabajador(" . $object->getId() . ",\"" . $object->getRut() . "\",\"" . $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2() . "\")'>";
+														echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='agregartrabajador(" . $object->getId() . ",\"" . $object->getRut() . "\",\"" . $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2() . "\",".$object->getNacionalidad().")'>";
 														echo "<i class='fa fa-plus'>";
 														echo "</i>";
 														echo "</a>";

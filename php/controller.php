@@ -1308,7 +1308,7 @@ class Controller
     public function listartrabajadoresactivos($empresa)
     {
         $this->conexion();
-        $sql = "select distinct trabajadores.id as id, contratos.id as contrato, rut, dni, trabajadores.nombre as nombre, primerapellido,segundoapellido,fechanacimiento, fechainicio as fechanacimiento, sexo, centrocosto.nombre as centrocosto, estadocivil, nacionalidad, discapacidad, pension, trabajadores.empresa as empresa from centrocosto,trabajadores,contratos where trabajadores.id=contratos.trabajador and trabajadores.empresa = $empresa and contratos.estado=1 and centrocosto.id=contratos.centrocosto group by trabajadores.id;";
+        $sql = "select trabajadores.id as id, contratos.id as contrato, rut, dni, trabajadores.nombre as nombre, primerapellido,segundoapellido,fechanacimiento, fechainicio as fechanacimiento, sexo, centrocosto.nombre as centrocosto, estadocivil, nacionalidad, discapacidad,contratos.id as centroid, pension, trabajadores.empresa as empresa from centrocosto,trabajadores,contratos where trabajadores.id=contratos.trabajador and trabajadores.empresa = $empresa and contratos.estado=1 and centrocosto.id=contratos.centrocosto group by trabajadores.id;";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -1321,7 +1321,7 @@ class Controller
             $nacimiento = $rs['fechanacimiento'];
             $sexo = $rs['sexo'];
             $estadocivil = $rs['estadocivil'];
-            $nacionalidad = $rs['nacionalidad'];
+            $nacionalidad = $rs['centroid'];
             $discapacidad = $rs['centrocosto'];
             $pension = $rs['pension'];
             $empresa = $rs['empresa'];
@@ -1338,7 +1338,7 @@ class Controller
     public function listartrabajadoresactivoscenter($empresa,$centrocosto)
     {
         $this->conexion();
-        $sql = "select distinct trabajadores.id as id, contratos.id as contrato, rut, dni, trabajadores.nombre as nombre, primerapellido,segundoapellido,fechanacimiento, fechainicio as fechanacimiento, sexo, centrocosto.nombre as centrocosto, estadocivil, nacionalidad, discapacidad, pension, trabajadores.empresa as empresa from centrocosto,trabajadores,contratos where trabajadores.id=contratos.trabajador and trabajadores.empresa = $empresa and contratos.estado=1 and centrocosto.id=contratos.centrocosto and centrocosto.id=$centrocosto group by trabajadores.id;";
+        $sql = "select trabajadores.id as id, contratos.id as contrato, rut, dni, trabajadores.nombre as nombre, primerapellido,segundoapellido,fechanacimiento, fechainicio as fechanacimiento, sexo, centrocosto.nombre as centrocosto, estadocivil, nacionalidad, contratos.id as centroid, discapacidad, pension, trabajadores.empresa as empresa from centrocosto,trabajadores,contratos where trabajadores.id=contratos.trabajador and trabajadores.empresa = $empresa and contratos.estado=1 and centrocosto.id=contratos.centrocosto and centrocosto.id=$centrocosto group by trabajadores.id;";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -1351,7 +1351,7 @@ class Controller
             $nacimiento = $rs['fechanacimiento'];
             $sexo = $rs['sexo'];
             $estadocivil = $rs['estadocivil'];
-            $nacionalidad = $rs['nacionalidad'];
+            $nacionalidad = $rs['centroid'];
             $discapacidad = $rs['centrocosto'];
             $pension = $rs['pension'];
             $empresa = $rs['empresa'];
@@ -4333,6 +4333,32 @@ class Controller
         return $lista;
     }
 
+    //Buscar licencia medicas por trabajador y fecha
+    public function buscarlicencias($trabajador, $inicio, $fin)
+    {
+        $this->conexion();
+        $sql = "select licenciamedica.id as id,folio, tipolicencia.nombre as tipolicencia, fechainicio, fechatermino,pagadoressubsidio.codigoprevired as rut, pagadoressubsidio.nombre as pagado, comentario, documentolicencia,comprobantetramite, trabajador, register_at from licenciamedica,tipolicencia, pagadoressubsidio where tipolicencia.id=licenciamedica.tipolicencia and licenciamedica.pagadora = pagadoressubsidio.id and trabajador = $trabajador and fechainicio between '$inicio' and '$fin'";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $folio = $rs['folio'];
+            $tipolicencia = $rs['tipolicencia'];
+            $inicio = $rs['fechainicio'];
+            $fin = $rs['fechatermino'];
+            $pagadora = $rs['pagado'];
+            $comentario = $rs['comentario'];
+            $documentolicencia = $rs['documentolicencia'];
+            $comprobantetramite = $rs['comprobantetramite'];
+            $trabajador = $rs['trabajador'];
+            $registro = $rs['rut'];
+            $licencia = new Licencias($id, $folio, $tipolicencia, $inicio, $fin, $pagadora, $comentario, $documentolicencia, $comprobantetramite, $trabajador, $registro);
+            $this->desconectar();
+            return $licencia;
+        }
+        $this->desconectar();
+        return null;
+    }
+
     //Ultima Licencia Medica mostrando RUT pagador subsidio
     public function ultimalicencia($trabajador)
     {
@@ -4964,6 +4990,33 @@ class Controller
     {
         $this->conexion();
         $sql = "select contratos.id as id, trabajadores.nombre as nombre, trabajadores.primerapellido as primerapellido, contratos.centrocosto as centrocosto, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.trabajador = $trabajador and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and contratos.estado=1";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $nombre = $rs['nombre'] . " " . $rs['primerapellido'] . " " . $rs['segundoapellido'];
+            $razonsocial = $rs['razonsocial'];
+            $tipocontrato = $rs['tipocontrato'];
+            $centrocosto = $rs['centrocosto'];
+            $cargo = $rs['cargo'];
+            $sueldo = $rs['sueldo'];
+            $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $documento = $rs['documento'];
+            $estado = $rs['estado'];
+            $register_at = $rs['register_at'];
+            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $this->desconectar();
+            return $contrato;
+        }
+        $this->desconectar();
+        return false;
+    }
+
+    function buscarcontratobyID($id)
+    {
+        $this->conexion();
+        $sql = "select contratos.id as id, trabajadores.nombre as nombre, trabajadores.primerapellido as primerapellido, contratos.centrocosto as centrocosto, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.id=$id and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and contratos.estado=1";
         $result = $this->mi->query($sql);
         $lista = array();
         if ($rs = mysqli_fetch_array($result)) {
@@ -9087,7 +9140,54 @@ class Controller
         $this->desconectar();
         return $result;
     }
+
+    //Comprobar asistencia
+    function comprobarasistencia($trabajador, $contrato, $fecha){
+        $this->conexion();
+        $sql = "select * from asistencia where trabajador=$trabajador and fecha='$fecha' and contrato=$contrato";
+        $result = $this->mi->query($sql);
+        $asistencia = false;
+        if($rs = mysqli_fetch_array($result)){
+            $estado = $rs['estado'];
+            $this->desconectar();
+            return $estado;
+        }
+        $this->desconectar();
+        return false;
+    }
     
+    //Validar asistencia
+    function validarasistencia($trabajador, $contrato, $fecha){
+        $this->conexion();
+        $sql = "select * from asistencia where trabajador=$trabajador and fecha='$fecha' and contrato=$contrato";
+        $result = $this->mi->query($sql);
+        $asistencia = false;
+        if($rs = mysqli_fetch_array($result)){
+            $id = $rs['id'];
+            $this->desconectar();
+            return $id;
+        }
+        $this->desconectar();
+        return $asistencia;
+    }
+
+    //Registrar asistencia
+    function registrarasistencia($trabajador, $contrato, $fecha, $estado){
+        $this->conexion();
+        $sql = "insert into asistencia values(null,'$fecha',$estado,$trabajador,$contrato,now())";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Actualizar asistencia
+    function actualizarasistencia($id, $estado){
+        $this->conexion();
+        $sql = "update asistencia set estado=$estado where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
 
 
     

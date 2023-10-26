@@ -1,6 +1,6 @@
  var trabajadores = new Array();
 
-function agregartrabajador(id, rut, nombre) {
+function agregartrabajador(id, rut, nombre,contrato) {
     if(!validatrabajador(id)){
         ToastifyError("Ya existe un trabajador con ese id");
         return false;
@@ -9,6 +9,7 @@ function agregartrabajador(id, rut, nombre) {
     trabajador.id = id;
     trabajador.rut = rut;
     trabajador.nombre = nombre;
+    trabajador.contrato = contrato;
     trabajadores.push(trabajador);
     gettrabajadores();
 }
@@ -20,7 +21,7 @@ function allwork(){
             try {
                 var json = JSON.parse(response);
                 json.forEach(element => {
-                    agregartrabajador(element.id, element.rut, element.nombre);
+                    agregartrabajador(element.id, element.rut, element.nombre,element.contrato);
                 });
             } catch (error) {
                 console.log(error);

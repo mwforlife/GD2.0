@@ -892,7 +892,7 @@ foreach ($permiso as $p) {
 								<div class="card-body p-3">
 									<div class="">
 										<div class="table-responsive">
-											<table class="table w-100 table-data text-nowrap" id="example1">
+											<table class="table w-100 table-data text-wrap" id="example1">
 												<thead class="border-top">
 													<tr>
 														<th class="bg-transparent">Trabajador</th>
@@ -1086,6 +1086,8 @@ foreach ($permiso as $p) {
 							</div>
 						</div>
 					</div>
+
+					
 					<!-- ROW-4 END -->
 
 				</div>
