@@ -76,6 +76,24 @@
             $mes = date('m');
             $mes1 = date('m');
             $anio = date('Y');
+            $ausencias = $c->cantidadausencias($id, $contratoid, $mes1, $anio);
+            $mediodia = $c->cantidadmediodiaausencias($id, $contratoid, $mes1, $anio);
+            $licencias = $c->buscarlicencias($id, date("Y-m-01"), date("Y-m-t"));
+            $fechosa = "";
+            $fechoter = "";
+            $contardias = 0;
+            if ($licencias != null) {
+                $fechosa = $licencias->getFechainicio();
+                $fechoter = $licencias->getFechafin();
+                $fechosa = new DateTime($fechosa);
+                $fechoter = new DateTime($fechoter);
+                $contardias = 0;
+                while ($fechosa <= $fechoter) {
+                    $contardias++;
+                    $fechosa->modify('+1 day');
+                }
+            }
+
             switch ($mes) {
                 case 1:
                     $mes = "Enero";
@@ -114,7 +132,7 @@
                     $mes = "Diciembre";
                     break;
             }
-    ?>
+            ?>
             <div class="row">
                 <div class="col-md-12">
                     <h5 class="text-center">LIQUIDACION DE SUELDO</h5>
@@ -165,10 +183,10 @@
                                     if ($tasa == null) {
                                         echo 0;
                                     } else {
-                                        echo $tasa->getTasa()."%";
+                                        echo $tasa->getTasa() . "%";
                                     }
                                 } else {
-                                    echo $tasa->getTasa()."%";
+                                    echo $tasa->getTasa() . "%";
                                 }
                                 ?>
                             </p>
@@ -203,7 +221,7 @@
                                 <tr>
                                     <td>
                                         <?php
-                                        $dias = 27;
+                                        $dias = 30 - $ausencias - $mediodia - $contardias;
                                         echo $dias;
                                         $periodo = date($anio . "-" . $mes1 . "-01");
 
@@ -273,6 +291,7 @@
                                                     $formula = str_replace(" ", "", $formula);
                                                     //echo "<td>" . $formula . "</td>";
                                                     $resultado = eval("return $formula;");
+                                                    $resultado = round($resultado, 2, PHP_ROUND_HALF_UP);
                                                     echo "<td>" . $resultado . "</td>";
                                                     $total_imponible = $total_imponible + $resultado;
                                                 } else {
@@ -300,17 +319,18 @@
                                                     $formula = str_replace("{HORAS_EXTRAS}", $haber->gethoras(), $formula);
                                                     $formula = str_replace("{VALOR_HORA}", 12000, $formula);
 
-                                                    if ($$haber->getMonto() >0) {
+                                                    if ($$haber->getMonto() > 0) {
                                                         $formula = str_replace("{VALOR_AGREGADO}", $haber->getMonto(), $formula);
-                                                    } else if ($$haber->getDias() >0) {
+                                                    } else if ($$haber->getDias() > 0) {
                                                         $formula = str_replace("{VALOR_AGREGADO}", $haber->getDias(), $formula);
-                                                    } else if($$haber->getHoras() >0){
+                                                    } else if ($$haber->getHoras() > 0) {
                                                         $formula = str_replace("{VALOR_AGREGADO}", $haber->gethoras(), $formula);
                                                     }
                                                     //EVALUAMOS LA FORMULA
                                                     $formula = str_replace(" ", "", $formula);
                                                     echo "<td>" . $formula . "</td>";
                                                     $resultado = eval("return $formula;");
+                                                    $resultado = round($resultado, 2, PHP_ROUND_HALF_UP);
                                                     echo "<td>" . $resultado . "</td>";
                                                     $total_no_imponible = intval($total_no_imponible) + intval($resultado);
                                                 } else {
@@ -345,15 +365,15 @@
                                                 $formula = str_replace("{HORAS_EXTRAS}", $haber->gethoras(), $formula);
                                                 $formula = str_replace("{VALOR_HORA}", 12000, $formula);
                                                 $formula = str_replace("{TOTAL_IMPONIBLE}", $total_imponible, $formula);
-                                                $formula = str_replace("{AFP}", $tasa->getTasa()."%", $formula);
+                                                $formula = str_replace("{AFP}", $tasa->getTasa() . "%", $formula);
                                                 $formula = str_replace("{SALUD}", "7%", $formula);
                                                 $formula = str_replace("{CESANTIA}", "0%", $formula);
 
-                                                if ($haber->getMonto() >0) {
+                                                if ($haber->getMonto() > 0) {
                                                     $formula = str_replace("{VALOR_AGREGADO}", $haber->getMonto(), $formula);
-                                                } else if ($haber->getDias() >0) {
+                                                } else if ($haber->getDias() > 0) {
                                                     $formula = str_replace("{VALOR_AGREGADO}", $haber->getDias(), $formula);
-                                                } else if($haber->getHoras() >0){
+                                                } else if ($haber->getHoras() > 0) {
                                                     $formula = str_replace("{VALOR_AGREGADO}", $haber->gethoras(), $formula);
                                                 }
                                                 //EVALUAMOS LA FORMULA
@@ -361,6 +381,7 @@
                                                 $formula = str_replace("%", "/100", $formula);
                                                 //echo "<td>" . $formula . "</td>";
                                                 $resultado = eval("return $formula;");
+                                                $resultado = round($resultado, 2, PHP_ROUND_HALF_UP);
                                                 echo "<td>" . $resultado . "</td>";
                                                 $total_Descuentos = $total_Descuentos + $resultado;
                                             } else {
@@ -384,21 +405,32 @@
                             <table class="table">
                                 <tr>
                                     <td>TOTAL HABERES</td>
-                                    <td><?php echo $total_imponible + $total_no_imponible; ?></td>
+                                    <td>
+                                        <?php echo $total_imponible + $total_no_imponible; ?>
+                                    </td>
                                     <td>TOTAL DESCUENTOS</td>
-                                    <td><?php echo $total_Descuentos; ?></td>
+                                    <td>
+                                        <?php echo $total_Descuentos; ?>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>FECHA:</td>
-                                    <td><?php echo date("d/m/Y"); ?></td>
+                                    <td>
+                                        <?php echo date("d/m/Y"); ?>
+                                    </td>
                                     <td>LÍQUIDO A PAGAR</td>
-                                    <td><?php $liquido = $total_imponible + $total_no_imponible - $total_Descuentos;echo $liquido; ?></td>
+                                    <td>
+                                        <?php $liquido = $total_imponible + $total_no_imponible - $total_Descuentos;
+                                        echo $liquido; ?>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <?php
-                                        $liqudoenletras = $c->convertirNumeroLetras(intval($liquido));
-                                        ?>
-                                    <td>Son: <?php echo $liqudoenletras; ?></td>
+                                    $liqudoenletras = $c->convertirNumeroLetras(intval($liquido));
+                                    ?>
+                                    <td>Son:
+                                        <?php echo $liqudoenletras; ?>
+                                    </td>
                                 </tr>
 
                             </table>
@@ -407,7 +439,7 @@
                 </div>
             </div>
 
-    <?php
+            <?php
             echo "<br/> <br/> <hr>";
         }
     }
@@ -469,12 +501,12 @@
     <script src="JsFunctions/precargado.js"></script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             mostrarEmpresa();
         });
     </script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             //Add Datatable
             $('#e2').DataTable({
                 "language": {

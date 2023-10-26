@@ -9189,6 +9189,37 @@ class Controller
         return $result;
     }
 
+    //Cantidad de dias de ausencia en un mes
+    function cantidadausencias($trabajador, $contrato, $mes, $anio){
+        $this->conexion();
+        $sql = "select count(estado) as cantidad from asistencia where trabajador=$trabajador and contrato=$contrato and month(fecha)=$mes and year(fecha)=$anio and estado=3";
+        $result = $this->mi->query($sql);
+        if($rs = mysqli_fetch_array($result)){
+            $cantidad = $rs['cantidad'];
+            $this->desconectar();
+            return $cantidad;
+
+        }
+        $this->desconectar();
+        return 0;
+    }
+
+    //Cantidad de medio dias de ausencia en un mes
+    function cantidadmediodiaausencias($trabajador, $contrato, $mes, $anio){
+        $this->conexion();
+        $sql = "select count(estado) as cantidad from asistencia where trabajador=$trabajador and contrato=$contrato and month(fecha)=$mes and year(fecha)=$anio and estado=2";
+        $result = $this->mi->query($sql);
+        if($rs = mysqli_fetch_array($result)){
+            $cantidad = $rs['cantidad'];
+            $cantidad = $cantidad*0.5;
+            $this->desconectar();
+            return $cantidad;
+
+        }
+        $this->desconectar();
+        return 0;
+    }
+
 
     
 }

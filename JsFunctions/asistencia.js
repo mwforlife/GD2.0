@@ -74,9 +74,9 @@ function cargarasistencia(id, empresa, contrato, dia, estado, elemento) {
         data: { id: id, empresa: empresa, contrato: contrato, dia: dia, estado: estado },
         success: function () {
             switch (estado) {
-                case 1: $(elemento).removeClass("btn-success"); $(elemento).addClass("btn-info"); $(elemento).attr("onclick", "cargarasistencia(" + id + "," + empresa + "," + contrato + ",'" + dia + "',2,"+valor+")"); $(elemento).attr("title", "Medio día"); break;
-                case 2: $(elemento).removeClass("btn-info"); $(elemento).addClass("btn-danger"); $(elemento).attr("onclick", "cargarasistencia(" + id + "," + empresa + "," + contrato + ",'" + dia + "',3,"+valor+")"); $(elemento).attr("title", "Ausente"); break;
-                case 3: $(elemento).removeClass("btn-danger"); $(elemento).addClass("btn-success"); $(elemento).attr("onclick", "cargarasistencia(" + id + "," + empresa + "," + contrato + ",'" + dia + "',1,"+valor+")"); $(elemento).attr("title", "Presente"); break;
+                case 1: $(elemento).removeClass("btn-success"); $(elemento).addClass("btn-info"); $(elemento).attr("onclick", "cargarasistencia(" + id + "," + empresa + "," + contrato + ",'" + dia + "',2,"+valor+")"); $(elemento).attr("title", "Medio día");  $(elemento).html("<i class='fas fa-sun'></i>"); $(elemento).html('<i class="fas fa-sun"></i>'); break;
+                case 2: $(elemento).removeClass("btn-info"); $(elemento).addClass("btn-danger"); $(elemento).attr("onclick", "cargarasistencia(" + id + "," + empresa + "," + contrato + ",'" + dia + "',3,"+valor+")"); $(elemento).attr("title", "Ausente"); $(elemento).html("<i class='fas fa-times'></i>"); break;
+                case 3: $(elemento).removeClass("btn-danger"); $(elemento).addClass("btn-success"); $(elemento).attr("onclick", "cargarasistencia(" + id + "," + empresa + "," + contrato + ",'" + dia + "',1,"+valor+")"); $(elemento).attr("title", "Presente"); $(elemento).html("<i class='fas fa-check'></i>"); break;
                 default: console.log("Error"); break;
             }
             ToastifySuccess("Asistencia actualizada");

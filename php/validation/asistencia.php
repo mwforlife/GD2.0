@@ -34,10 +34,10 @@ if(isset($_POST['id']) && isset($_POST['inicio']) && isset($_POST['termino']) &&
     //Generar los dias de cada mes
     $dias = array();
     echo "<div class='w-100 text-center'>";
-    echo "<button class='btn btn-success btn-sm mr-2' ><i class='fa fa-check'></i> Presente</button>";
-    echo "<button class='btn btn-info btn-sm mr-2' title='Medio Dia'><i class='fa fa-check'></i> Medio Dia</button>";
-    echo "<button class='btn btn-danger btn-sm mr-2' ><i class='fa fa-times'></i> Ausente</button>";
-    echo "<button class='btn btn-secondary btn-sm mr-2' ><i class='fa fa-calendar'></i> Licencia</button>";
+    echo "<button class='btn btn-success btn-sm mr-2' title='Presente'><i class='fa fa-check'></i> Presente</button>";
+    echo "<button class='btn btn-info btn-sm mr-2' title='Medio Dia'><i class='fa fa-sun'></i> Medio Dia</button>";
+    echo "<button class='btn btn-danger btn-sm mr-2' title='Ausente'><i class='fa fa-times'></i> Ausente</button>";
+    echo "<button class='btn btn-secondary btn-sm mr-2' title='Licencia'><i class='fa fa-calendar'></i> Licencia</button>";
     echo "</div>";
     echo "<table class='table table-bordered table-hover table-striped'>";
     echo "<thead>";
@@ -138,13 +138,13 @@ if(isset($_POST['id']) && isset($_POST['inicio']) && isset($_POST['termino']) &&
             if($asistencia == 1){
                 echo "<td><button class='btn btn-success btn-sm' id='$elemento' title='Presente' onclick='cargarasistencia(".$id.",$empresa,$contrato,\"".$dia."\",1,$i)'><i class='fa fa-check'></i></button></td>";
             }else if($asistencia == 2){
-                echo "<td><button class='btn btn-info btn-sm' id='$elemento'  title='Medio Dia' onclick='cargarasistencia(".$id.",$empresa,$contrato,\"".$dia."\",2,$i)'><i class='fa fa-check'></i></button></td>";
+                echo "<td><button class='btn btn-info btn-sm' id='$elemento'  title='Medio Dia' onclick='cargarasistencia(".$id.",$empresa,$contrato,\"".$dia."\",2,$i)'><i class='fa fa-sun'></i></button></td>";
             }else if($asistencia == 3){
                 echo "<td><button class='btn btn-danger btn-sm' id='$elemento'  title='Ausente' onclick='cargarasistencia(".$id.",$empresa,$contrato,\"".$dia."\",3,$i)'><i class='fa fa-times'></i></button></td>";
             }else if($asistencia == 4){
                 echo "<td><button class='btn btn-secondary btn-sm' title='Licencia'><i class='fa fa-calendar'></i></button></td>";
             }else if($asistencia==false){
-                echo "<td><button class='btn btn-success btn-sm' id='$elemento'  title='Presente' onclick='cargarasistencia(".$id.",$empresa,$contrato,\"".$dia."\",2,$i)'><i class='fa fa-check'></i></button></td>";
+                echo "<td><button class='btn btn-success btn-sm' id='$elemento'  title='Presente' onclick='cargarasistencia(".$id.",$empresa,$contrato,\"".$dia."\",1,$i)'><i class='fa fa-check'></i></button></td>";
             }
             $i++;
         }
@@ -171,7 +171,7 @@ if(isset($_POST['id']) && isset($_POST['inicio']) && isset($_POST['termino']) &&
     }
     $asistencia = $c->validarasistencia($id,$contrato,$dia);
     if($asistencia == false){
-        $c->registrarasistencia($id,$contrato,$dia,$estado);
+        $c->registrarasistencia($id,$contrato,$dia,2);
         echo "OK";
     }else{
         $c->actualizarasistencia($asistencia,$estado);
