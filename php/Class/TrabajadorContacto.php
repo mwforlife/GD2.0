@@ -6,7 +6,7 @@ class TrabajadorContacto
     private $correo;
     private $registro;
 
-    public function TrabajadorContacto($id, $telefono, $correo, $registro)
+    public function __construct($id, $telefono, $correo, $registro)
     {
         $this->id = $id;
         $this->telefono = $telefono;

@@ -7,7 +7,7 @@ class CausalTermino{
     private $letra;
     private $nombre;
 
-    public function CausalTermino($id, $codigo, $codigoPrevired,$articulo, $letra, $nombre){
+    public function __construct($id, $codigo, $codigoPrevired,$articulo, $letra, $nombre){
         $this->id = $id;
         $this->codigo = $codigo;
         $this->codigoPrevired = $codigoPrevired;

@@ -7,7 +7,7 @@ class Ciudades
     private $nombre;
     private $region;
 
-    public function Ciudades($id, $codigo, $codigoPrevired, $nombre, $region)
+    public function __construct($id, $codigo, $codigoPrevired, $nombre, $region)
     {
         $this->id = $id;
         $this->codigo = $codigo;

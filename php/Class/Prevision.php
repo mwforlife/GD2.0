@@ -19,7 +19,7 @@ class Prevision
     private $documentosalud;
     private $documentojubilacion;
 
-    public function Prevision($id, $trabajador, $periodo, $afp, $jubilado, $cesantia, $seguro, $periodocesantia, $isapre, $monedapacto, $monto, $tipoges, $ges, $comentario, $documentoafp, $documentosalud, $documentojubilacion)
+    public function __construct($id, $trabajador, $periodo, $afp, $jubilado, $cesantia, $seguro, $periodocesantia, $isapre, $monedapacto, $monto, $tipoges, $ges, $comentario, $documentoafp, $documentosalud, $documentojubilacion)
     {
         $this->id = $id;
         $this->trabajador = $trabajador;

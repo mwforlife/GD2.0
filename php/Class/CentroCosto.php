@@ -7,7 +7,7 @@ class CentroCosto
     private $nombre;
     private $empresa;
 
-    public function CentroCosto($id, $codigo, $codigoPrevired, $nombre, $empresa)
+    public function __construct($id, $codigo, $codigoPrevired, $nombre, $empresa)
     {
         $this->id = $id;
         $this->codigo = $codigo;

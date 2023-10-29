@@ -341,6 +341,9 @@ foreach ($permiso as $p) {
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="documentosfirmados.php">Documentos Firmados</a>
 									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="liquidaciones.php">Reporte Liquidaciones</a>
+									</li>
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->

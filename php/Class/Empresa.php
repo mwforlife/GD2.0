@@ -21,7 +21,7 @@ class Empresa{
     private $registro;
     private $update;
 
-    public function Empresa($id, $rut, $razonsocial, $calle,$villa,$numero,$departamento, $region, $comuna, $ciudad, $telefono, $email,$giro, $cajascompensacion, $mutuales, $cotizacionbasica, $cotizacionleysanna, $cotizacionadicional, $registro, $update){
+    public function __construct($id, $rut, $razonsocial, $calle,$villa,$numero,$departamento, $region, $comuna, $ciudad, $telefono, $email,$giro, $cajascompensacion, $mutuales, $cotizacionbasica, $cotizacionleysanna, $cotizacionadicional, $registro, $update){
         $this->id = $id;
         $this->rut = $rut;
         $this->razonsocial = $razonsocial;

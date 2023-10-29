@@ -575,19 +575,11 @@ foreach ($permiso as $p) {
                                                                 </thead>
                                                                 <tbody id="haberesfijos">
                                                                     <?php
-                                                                    $lista = $c->listarhaberesdescuentos($_SESSION['CURRENT_ENTERPRISE']);
-                                                                    if(isset($_SESSION['periodoinico']) && isset($_SESSION['periodofin'])){
-                                                                        $periodoinicio = $_SESSION['periodoinico'];
-                                                                        $periodofin = $_SESSION['periodofin'];
-                                                                        if(isset($_SESSION['funcionario'])){
-                                                                            $funcionario = $_SESSION['funcionario'];
-                                                                            if($funcionario <= 0){
-                                                                                $lista = $c->listarhaberes_descuento($periodoinicio, $periodofin, $_SESSION['CURRENT_ENTERPRISE']);
-                                                                            }else{
-                                                                                $lista = $c->listarhaberes_descuentotrababajador($periodoinicio, $periodofin, $_SESSION['CURRENT_ENTERPRISE'], $funcionario);
-                                                                            }
-                                                                        }else{
-                                                                            $lista = $c->listarhaberes_descuento($periodoinicio, $periodofin, $_SESSION['CURRENT_ENTERPRISE']);
+                                                                    $lista = $c->listarhaberesdescuentosactual($_SESSION['CURRENT_ENTERPRISE']);
+                                                                    if(isset($_SESSION['funcionario'])){
+                                                                        $funcionario = $_SESSION['funcionario'];
+                                                                        if($funcionario>0){
+                                                                            $lista = $c->listarhaberesdescuentosactualtrabajador($_SESSION['CURRENT_ENTERPRISE'], $funcionario);
                                                                         }
                                                                     }
 
@@ -727,11 +719,19 @@ foreach ($permiso as $p) {
                                                                 </thead>
                                                                 <tbody id="haberesfijos">
                                                                     <?php
-                                                                    $lista = $c->listarhaberesdescuentosactual($_SESSION['CURRENT_ENTERPRISE']);
-                                                                    if(isset($_SESSION['funcionario'])){
-                                                                        $funcionario = $_SESSION['funcionario'];
-                                                                        if($funcionario>0){
-                                                                            $lista = $c->listarhaberesdescuentosactualtrabajador($_SESSION['CURRENT_ENTERPRISE'], $funcionario);
+                                                                    $lista = $c->listarhaberesdescuentos($_SESSION['CURRENT_ENTERPRISE']);
+                                                                    if(isset($_SESSION['periodoinico']) && isset($_SESSION['periodofin'])){
+                                                                        $periodoinicio = $_SESSION['periodoinico'];
+                                                                        $periodofin = $_SESSION['periodofin'];
+                                                                        if(isset($_SESSION['funcionario'])){
+                                                                            $funcionario = $_SESSION['funcionario'];
+                                                                            if($funcionario <= 0){
+                                                                                $lista = $c->listarhaberes_descuento($periodoinicio, $periodofin, $_SESSION['CURRENT_ENTERPRISE']);
+                                                                            }else{
+                                                                                $lista = $c->listarhaberes_descuentotrababajador($periodoinicio, $periodofin, $_SESSION['CURRENT_ENTERPRISE'], $funcionario,1);
+                                                                            }
+                                                                        }else{
+                                                                            $lista = $c->listarhaberes_descuento($periodoinicio, $periodofin, $_SESSION['CURRENT_ENTERPRISE']);
                                                                         }
                                                                     }
                                                                     foreach ($lista as $object) {

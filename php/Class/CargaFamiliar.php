@@ -18,7 +18,7 @@ class CargaFamiliar{
     private $trabajador;
     private $comentario;
 
-    public function CargaFamiliar($id, $rut, $nombre, $apellido1, $apellido2, $fechaNacimiento, $estadoCivil, $fechaReconocimiento, $fechaPago, $vigencia, $tipoCausante, $sexo, $tipoCarga, $documento, $fechaRegistro, $trabajador, $comentario){
+    public function __construct($id, $rut, $nombre, $apellido1, $apellido2, $fechaNacimiento, $estadoCivil, $fechaReconocimiento, $fechaPago, $vigencia, $tipoCausante, $sexo, $tipoCarga, $documento, $fechaRegistro, $trabajador, $comentario){
         $this->id = $id;
         $this->rut = $rut;
         $this->nombre = $nombre;

@@ -6,7 +6,7 @@ class ISAPRES{
     private $nombre;
     private $tipo;
 
-    public function ISAPRES($id, $codigo, $codigoPrevired, $nombre, $tipo){
+    public function __construct($id, $codigo, $codigoPrevired, $nombre, $tipo){
         $this->id = $id;
         $this->codigo = $codigo;
         $this->codigoPrevired = $codigoPrevired;

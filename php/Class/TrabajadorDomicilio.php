@@ -10,7 +10,7 @@ class TrabajadorDomicilio{
     private $ciudad;
     private $registro;
 
-    public function TrabajadorDomicilio($id, $calle,$villa, $numero, $departamento, $region, $comuna, $ciudad, $registro){
+    public function __construct($id, $calle,$villa, $numero, $departamento, $region, $comuna, $ciudad, $registro){
         $this->id = $id;
         $this->calle = $calle;
         $this->villa = $villa;

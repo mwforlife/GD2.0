@@ -16,7 +16,7 @@ class Trabajadores
     private $empresa;
     private $registrar;
 
-    public function Trabajadores($id, $rut, $dni, $nombre, $apellido1, $apellido2, $nacimiento, $sexo, $civil, $nacionalidad, $discapacidad, $pension, $empresa, $registrar)
+    public function __construct($id, $rut, $dni, $nombre, $apellido1, $apellido2, $nacimiento, $sexo, $civil, $nacionalidad, $discapacidad, $pension, $empresa, $registrar)
     {
         $this->id = $id;
         $this->rut = $rut;

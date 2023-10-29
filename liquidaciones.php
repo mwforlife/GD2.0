@@ -1,13 +1,12 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 require 'php/controller.php';
 $c = new Controller();
 ?>
 <?php
 session_start();
 unset($_SESSION['TRABJADOR_CONTRATO']);
+$_SESSION['TRABJADOR_ID'] = 0;
+unset($_SESSION['TRABAJADOR_ID']);
 if (!isset($_SESSION['USER_ID'])) {
 	header("Location: signin.php");
 } else {
@@ -16,12 +15,10 @@ if (!isset($_SESSION['USER_ID'])) {
 		header("Location: lockscreen.php");
 	}
 }
-
-if (isset($_SESSION['TRABAJADOR_ID'])) {
-	$id = $_SESSION['TRABAJADOR_ID'];
-	$trabajador = $c->buscartrabajador($id);
+if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
+	$empresa = $_SESSION['CURRENT_ENTERPRISE'];
 } else {
-	header("Location: trabajadores.php");
+	header("Location: index.php");
 }
 $permiso = $c->listarPermisosUsuario1($_SESSION['USER_ID']);
 $gestion = false;
@@ -53,7 +50,6 @@ foreach ($permiso as $p) {
 	}
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -69,7 +65,7 @@ foreach ($permiso as $p) {
 	<link rel="icon" href="assets/img/brand/favicon.ico" type="image/x-icon" />
 
 	<!-- Title -->
-	<title>Gestor de Documentos | Empresas</title>
+	<title>Gestor de Documentos</title>
 
 	<!-- Bootstrap css-->
 	<link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
@@ -90,17 +86,6 @@ foreach ($permiso as $p) {
 
 	<!-- Select2 css -->
 	<link href="assets/plugins/select2/css/select2.min.css" rel="stylesheet">
-	<!-- Internal Daterangepicker css-->
-	<link href="assets/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
-
-	<!-- InternalFileupload css-->
-	<link href="assets/plugins/fileuploads/css/fileupload.css" rel="stylesheet" type="text/css" />
-
-	<!-- InternalFancy uploader css-->
-	<link href="assets/plugins/fancyuploder/fancy_fileupload.css" rel="stylesheet" />
-
-	<!-- Internal TelephoneInput css-->
-	<link rel="stylesheet" href="assets/plugins/telephoneinput/telephoneinput.css">
 
 	<!-- Internal DataTables css-->
 	<link href="assets/plugins/datatable/dataTables.bootstrap4.min.css" rel="stylesheet" />
@@ -109,6 +94,7 @@ foreach ($permiso as $p) {
 
 	<!-- Sidemenu css-->
 	<link href="assets/css/sidemenu/sidemenu.css" rel="stylesheet">
+
 	<link rel="stylesheet" href="JsFunctions/Alert/loader.css">
 	<script src="JsFunctions/Alert/loader.js"></script>
 
@@ -145,12 +131,12 @@ foreach ($permiso as $p) {
 				</a>
 			</div>
 			<div class="main-sidebar-body">
-				
-			<?php
+
+				<?php
 				$user = $c->buscarusuario($_SESSION['USER_ID']);
 				if ($user != null) {
 					if ($user->getTipo() != 3) {
-						?>
+				?>
 						<ul class="nav">
 							<li class="nav-header"><span class="nav-label">Dashboard</span></li>
 
@@ -159,10 +145,9 @@ foreach ($permiso as $p) {
 							if (isset($_SESSION['GESTION_PERMISO']) || isset($_SESSION['LECTURA_PERMISO']) || isset($_SESSION['ESCRITURA_PERMISO']) || isset($_SESSION['ACTUALIZACION_PERMISO']) || isset($_SESSION['ELIMINACION_PERMISO'])) {
 								if ($_SESSION['GESTION_PERMISO'] == true) {
 
-									?>
+							?>
 									<li class="nav-item">
-										<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span
-												class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
+										<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
 										<ul class="nav-sub">
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="isapres.php">Institución de Salud</a>
@@ -211,23 +196,22 @@ foreach ($permiso as $p) {
 											</li>
 										</ul>
 									</li>
-									<?php
+								<?php
 								}
 								?>
 								<li class="nav-header"><span class="nav-label">FUNCIONES</span></li>
 
 
 								<li class="nav-item">
-									<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span
-											class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
+									<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
 									<ul class="nav-sub">
 										<?php
 										if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
-											?>
+										?>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="empresas.php">Empresas</a>
 											</li>
-											<?php
+										<?php
 										}
 										?>
 										<li class="nav-sub-item">
@@ -242,11 +226,11 @@ foreach ($permiso as $p) {
 
 										<?php
 										if ($_SESSION['GESTION_PERMISO'] == true) {
-											?>
+										?>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="tipodocumento.php">Escritos</a>
 											</li>
-											<?php
+										<?php
 										}
 										?>
 
@@ -254,24 +238,23 @@ foreach ($permiso as $p) {
 										if (isset($_SESSION['GESTION_PERMISO'])) {
 											if ($_SESSION['GESTION_PERMISO'] == true) {
 
-												?>
+										?>
 												<li class="nav-sub-item">
 													<a class="nav-sub-link" href="usuarios.php">Usuarios</a>
 												</li>
-												<?php
+										<?php
 											}
 										}
 										?>
 									</ul>
 								</li>
-								<?php
+							<?php
 							}
 
 							if ($_SESSION['GESTION_PERMISO'] == true) {
-								?>
+							?>
 								<li class="nav-item">
-									<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span
-											class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
+									<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
 									<ul class="nav-sub">
 										<li class="nav-sub-item">
 											<a class="nav-sub-link" href="auditoriatrabajadores.php">Auditoria de trabajadores</a>
@@ -282,13 +265,12 @@ foreach ($permiso as $p) {
 
 									</ul>
 								</li>
-								<?php
+							<?php
 							}
 							?>
 							<!--------------------Generarion de documentos------------------>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
-										class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="contratoindividual.php">Contrato Individual</a>
@@ -320,11 +302,9 @@ foreach ($permiso as $p) {
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->
-					<!--------------------Remuneraciones------------------>
+							<!--------------------Remuneraciones------------------>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-dollar-sign sidemenu-icon"></i><span
-										class="sidemenu-label">Remuneraciones</span><i
-										class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-dollar-sign sidemenu-icon"></i><span class="sidemenu-label">Remuneraciones</span><i class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="habmaster.php">Haberes y Descuentos</a>
@@ -332,11 +312,9 @@ foreach ($permiso as $p) {
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->
-					<!--------------------Carga de documentos------------------>
+							<!--------------------Carga de documentos------------------>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-upload sidemenu-icon"></i><span
-										class="sidemenu-label">Carga de Documentos</span><i
-										class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-upload sidemenu-icon"></i><span class="sidemenu-label">Carga de Documentos</span><i class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="cargatrabajador.php">Trabajadores</a>
@@ -348,8 +326,7 @@ foreach ($permiso as $p) {
 							</li>
 							<!--------------------Reportes------------------>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
-										class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="impresiondocumentos.php">Impresión Documentos</a>
@@ -364,26 +341,24 @@ foreach ($permiso as $p) {
 							</li>
 							<!--------------------------------------------------------------->
 
-				</ul>
-				<?php
+						</ul>
+					<?php
 					} else if ($user->getTipo() == 3) {
-						?>
-			<!-----------------------------Mandante--------------------------------->
-			<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span
-										class="sidemenu-label">Mandante</span><i
-										class="angle fe fe-chevron-right"></i></a>
-								<ul class="nav-sub">
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="mandanteempresa.php">Documentos Empresa</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="mandantetrabajadores.php">Documentos Trabajadores
+					?>
+						<!-----------------------------Mandante--------------------------------->
+						<li class="nav-item">
+							<a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span class="sidemenu-label">Mandante</span><i class="angle fe fe-chevron-right"></i></a>
+							<ul class="nav-sub">
+								<li class="nav-sub-item">
+									<a class="nav-sub-link" href="mandanteempresa.php">Documentos Empresa</a>
+								</li>
+								<li class="nav-sub-item">
+									<a class="nav-sub-link" href="mandantetrabajadores.php">Documentos Trabajadores
 
-										</a>
-									</li>
-								</ul>
-							</li>
+									</a>
+								</li>
+							</ul>
+						</li>
 
 				<?php
 					}
@@ -482,7 +457,6 @@ foreach ($permiso as $p) {
 		</div>
 		<!-- Mobile-header closed -->
 
-
 		<!-- Main Content-->
 		<div class="main-content side-content pt-0">
 
@@ -492,207 +466,217 @@ foreach ($permiso as $p) {
 					<!-- Page Header -->
 					<div class="page-header">
 						<div class="page-header-1">
-							<h1 class="main-content-title tx-30">Cuenta Bancaria</h1>
+							<h1 class="main-content-title tx-30">Liquidaciones De Sueldo</h1>
 							<ol class="breadcrumb">
 								<li class="breadcrumb-item"><a href="index.php">Inicio</a></li>
 							</ol>
 						</div>
 					</div>
-					<!-- End Page Header -->
-
-
-					<!-- Row -->
-					<div class="row ">
-						<div class="col-lg-12">
+					<div class="row">
+						<div class="col-md-12">
 							<div class="card">
 								<div class="card-body">
+									<div class="row">
+										<div class="col-md-3">
+											<label for="">Periodo</label>
+											<input type="month" name="periodo" id="periodo" class="form-control" value="<?php echo date("Y-m"); ?>">
+										</div>
 
-									<form id="cuentabancariaform" name="cuentabancariaform">
+										<div class="col-md-3">
+											<label for="">Centro de Costo</label>
+											<select name="centrocosto" id="centrocosto" class="form-control">
+												<option value="0">Seleccione un Funcionario</option>
+												<?php
+												$lista = $c->listarcentrocosto($_SESSION['CURRENT_ENTERPRISE']);
+												foreach ($lista as $object) {
+														echo "<option value='" . $object->getId() . "'>" . $object->getNombre() . "</option>";
+												}
+												?>
+											</select>
+										</div>
+										<div class="col-md-2">
+											<button class="btn btn-outline-primary mt-4" onclick="filtrarhaberesdescuentos()"> <i class="fa fa-filter"></i> Filtrar</button>
+											<button class="btn btn-outline-danger mt-4 d-none" onclick="limpiarfiltro()"><i class="fa fa-close"></i> Limpiar Filtro </button>
+										</div>
+									</div>
 
-										<div class="row">
-											<div class="col-md-6">
-												<label>Banco</label>
-												<select class="form-control text-dark" required id="banco" name="banco">
+									<div class="row mt-4">
+										<div class="col-md-12 text-right mb-3">
+											<button class="btn btn-outline-success" onclick="generarliquidacion()"> <i class="fa fa-file"></i> Imprimir Todo</button>
+										</div>
+										<div class="col-md-12">
+											<table class="table w-100 table-hover" id="example1">
+												<thead>
+													<tr>
+														<th>Trabajador</th>
+														<th>Centro de Costo</th>
+														<th>Periodo</th>
+														<th>Liquidacion</th>
+														<th>Agregar</th>
+														<th>Eliminar</th>
+													</tr>
+												</thead>
+												<tbody id="listado">
 													<?php
-													$afps = $c->listarbancos();
-													if (count($afps) > 0) {
-														foreach ($afps as $l) {
-															echo "<option value='" . $l->getId() . "'>" . $l->getNombre() . "</option>";
+													$liquidaciones = $c->listarliquidaciones($_SESSION['CURRENT_ENTERPRISE']);
+													foreach ($liquidaciones as $object) {
+
+														$periodo = $object->getPeriodo();
+														$mes = date("m", strtotime($periodo));
+														$anio = date("Y", strtotime($periodo));
+
+														switch($mes){
+															case 1:
+																$mes = "Enero";
+																break;
+															case 2:
+																$mes = "Febrero";
+																break;
+															case 3:
+																$mes = "Marzo";
+																break;
+															case 4:
+																$mes = "Abril";
+																break;
+															case 5:
+																$mes = "Mayo";
+																break;
+															case 6:
+																$mes = "Junio";
+																break;
+															case 7:
+																$mes = "Julio";
+																break;
+															case 8:
+																$mes = "Agosto";
+																break;
+															case 9:
+																$mes = "Septiembre";
+																break;
+															case 10:
+																$mes = "Octubre";
+																break;
+															case 11:
+																$mes = "Noviembre";
+																break;
+															case 12:
+																$mes = "Diciembre";
+																break;
 														}
-													} else {
-														echo "<option value='0'>No hay Banco Registrado</option>";
+
+														echo "<tr>";
+														echo "<td>" . $object->getTrabajador(). "</td>";
+														echo "<td>" . $object->getEmpresa(). "</td>";
+														echo "<td>" . $mes." ".$anio. "</td>";
+														echo "<td><a target='_blank' href='php/report/liquidacion.php?id=".$object->getId()."'><button class='btn btn-outline-primary'><i class='fa fa-file'></i></button></a></td>";
+														echo "<td><button class='btn btn-outline-success' onclick='agregar(".$object->getId().")'><i class='fa fa-plus'></i></button></td>";
+														echo "<td><button class='btn btn-outline-danger' onclick='eliminar(".$object->getId().")'><i class='fa fa-trash'></i></button></td>";
+														echo "</tr>";
 													}
 													?>
-												</select>
-											</div>
-											<div class="col-md-6">
-												<label>Tipo de Cuenta</label>
-												<select class="form-control text-dark" required id="tipocuenta" name="tipocuenta">
-													<?php
-													$afps = $c->listartipocuenta();
-													if (count($afps) > 0) {
-														foreach ($afps as $l) {
-															echo "<option value='" . $l->getId() . "'>" . $l->getNombre() . "</option>";
-														}
-													} else {
-														echo "<option value='0'>No hay Tipo de Cuenta Registrada</option>";
-													}
-													?>
-												</select>
-											</div>
-											<input type="hidden" id="trabajador" name="trabajador" value="<?php echo $_SESSION['TRABAJADOR_ID']; ?>">
-
+												</tbody>
+											</table>
 										</div>
-										<div class="row">
-
-											<div class="col-lg-12 col-md-12 mt-4">
-												<div class="card">
-													<div class="card-body">
-														<div>
-															<h6 class="main-content-label mb-1">Numero de Cuenta</h6>
-														</div>
-														<div class="row">
-															<div class="col-sm-12 col-md-12">
-																<input class="form-control" maxlength="200" type="text" name="numerocuenta" id="numerocuenta" placeholder="Numero de Cuenta" />
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-
-
-										</div>
-										<div class="col-md-12 mt-3 text-right">
-											<a href="menuinfo.php" class="btn btn-danger"> <i class="fa fa-arrow-left"></i> Volver</a>
-											<button type="submit" class="btn btn-success"> <i class="fa fa-save"></i> Registrar</button>
-										</div>
-
-
+									</div>
 								</div>
-								</form>
 							</div>
 						</div>
 					</div>
+					<!-- ROW-4 END -->
+
 				</div>
-
-
 			</div>
-			<!-- End Main Content-->
+		</div>
+		<!-- End Main Content-->
 
-			<!-- Main Footer-->
-			<div class="main-footer text-center">
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<span>Copyright © 2022 - KaiserTech Todos los derechos reservados.</span>
-						</div>
+		<!-- Main Footer-->
+		<div class="main-footer text-center">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<span>Copyright © 2022 - KaiserTech Todos los derechos reservados.</span>
 					</div>
 				</div>
 			</div>
-			<!--End Footer-->
-
-			<!-- Sidebar -->
-			<div class="sidebar sidebar-right sidebar-animate">
-				<div class="sidebar-icon">
-					<a href="#" class="text-right float-right text-dark fs-20" data-toggle="sidebar-right" data-target=".sidebar-right"><i class="fe fe-x"></i></a>
-				</div>
-			</div>
-			<!-- End Sidebar -->
-
 		</div>
-		<!-- End Page -->
-
-		<!-- Back-to-top -->
-		<a href="#top" id="back-to-top"><i class="fe fe-arrow-up"></i></a>
-
-		<!-- Jquery js-->
-		<script src="assets/plugins/jquery/jquery.min.js"></script>
-
-		<!-- Bootstrap js-->
-		<script src="assets/plugins/bootstrap/js/popper.min.js"></script>
-		<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-
-		<!-- Internal Chart.Bundle js-->
-		<script src="assets/plugins/chart.js/Chart.bundle.min.js"></script>
-
-		<!-- Peity js-->
-		<script src="assets/plugins/peity/jquery.peity.min.js"></script>
-
-		<!--Internal Apexchart js-->
-		<script src="assets/js/apexcharts.js"></script>
-
-		<!-- Internal Fileuploads js-->
-		<script src="assets/plugins/fileuploads/js/fileupload.js"></script>
-		<script src="assets/plugins/fileuploads/js/file-upload.js"></script>
-
-		<!-- InternalFancy uploader js-->
-		<script src="assets/plugins/fancyuploder/jquery.ui.widget.js"></script>
-		<script src="assets/plugins/fancyuploder/jquery.fileupload.js"></script>
-		<script src="assets/plugins/fancyuploder/jquery.iframe-transport.js"></script>
-		<script src="assets/plugins/fancyuploder/jquery.fancy-fileupload.js"></script>
-		<script src="assets/plugins/fancyuploder/fancy-uploader.js"></script>
-
-		<!-- Internal Form-elements js-->
-		<script src="assets/js/advanced-form-elements.js"></script>
-		<script src="assets/js/select2.js"></script>
-
-		<!-- Internal TelephoneInput js-->
-		<script src="assets/plugins/telephoneinput/telephoneinput.js"></script>
-		<script src="assets/plugins/telephoneinput/inttelephoneinput.js"></script>
-
-		<!-- Internal Data Table js -->
-		<script src="assets/plugins/datatable/jquery.dataTables.min.js"></script>
-		<script src="assets/plugins/datatable/dataTables.bootstrap4.min.js"></script>
-		<script src="assets/js/table-data.js"></script>
-		<script src="assets/plugins/datatable/dataTables.responsive.min.js"></script>
-		<script src="assets/plugins/datatable/fileexport/dataTables.buttons.min.js"></script>
-		<script src="assets/plugins/datatable/fileexport/buttons.bootstrap4.min.js"></script>
+		<!--End Footer-->
 
 
-		<!-- Perfect-scrollbar js -->
-		<script src="assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+	</div>
+	<!-- End Page -->
 
-		<!-- Select2 js-->
-		<script src="assets/plugins/select2/js/select2.min.js"></script>
-		<script src="assets/js/select2.js"></script>
+	<!-- Back-to-top -->
+	<a href="#top" id="back-to-top"><i class="fe fe-arrow-up"></i></a>
+	<script src="assets/plugins/jquery/jquery.min.js"></script>
 
-		<!-- Sidemenu js -->
-		<script src="assets/plugins/sidemenu/sidemenu.js"></script>
+	<!-- Bootstrap js-->
+	<script src="assets/plugins/bootstrap/js/popper.min.js"></script>
+	<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
 
-		<!-- Sidebar js -->
-		<script src="assets/plugins/sidebar/sidebar.js"></script>
+	<!-- Internal Chart.Bundle js-->
+	<script src="assets/plugins/chart.js/Chart.bundle.min.js"></script>
+
+	<!-- Peity js-->
+	<script src="assets/plugins/peity/jquery.peity.min.js"></script>
+
+	<!--Internal Apexchart js-->
+	<script src="assets/js/apexcharts.js"></script>
+
+	<!-- Internal Data Table js -->
+	<script src="assets/plugins/datatable/jquery.dataTables.min.js"></script>
+	<script src="assets/plugins/datatable/dataTables.bootstrap4.min.js"></script>
+	<script src="assets/js/table-data.js"></script>
+	<script src="assets/plugins/datatable/dataTables.responsive.min.js"></script>
+	<script src="assets/plugins/datatable/fileexport/dataTables.buttons.min.js"></script>
+	<script src="assets/plugins/datatable/fileexport/buttons.bootstrap4.min.js"></script>
 
 
-		<!-- Sticky js -->
-		<script src="assets/js/sticky.js"></script>
+	<!-- Perfect-scrollbar js -->
+	<script src="assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 
-		<!-- Custom js -->
-		<script src="assets/js/custom.js"></script>
-		<script src="JsFunctions/validation.js"></script>
-		<script src="JsFunctions/Alert/toastify.js"></script>
-		<script src="JsFunctions/Alert/sweetalert2.all.min.js"></script>
-		<script src="JsFunctions/Alert/alert.js"></script>
-		<script src="JsFunctions/main.js"></script>
-		<script src="JsFunctions/Comunas.js"></script>
-		<script src="JsFunctions/precargado.js"></script>
+	<!-- Select2 js-->
+	<script src="assets/plugins/select2/js/select2.min.js"></script>
+	<script src="assets/js/select2.js"></script>
 
-		<?php
-		if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-			$id = $_SESSION['CURRENT_ENTERPRISE'];
-			echo "<script>";
-			echo "window.onload = function(){
-		mostrarEmpresa(" . $id . ");
-		calcular();
-	}";
-			echo "</script>";
+	<!-- Sidemenu js -->
+	<script src="assets/plugins/sidemenu/sidemenu.js"></script>
+
+	<!-- Sidebar js -->
+	<script src="assets/plugins/sidebar/sidebar.js"></script>
+
+
+	<!-- Sticky js -->
+	<script src="assets/js/sticky.js"></script>
+
+	<!-- Custom js -->
+	<script src="assets/js/custom.js"></script>
+	<script src="JsFunctions/validation.js"></script>
+	<script src="JsFunctions/Alert/toastify.js"></script>
+	<script src="JsFunctions/Alert/sweetalert2.all.min.js"></script>
+	<script src="JsFunctions/Alert/alert.js"></script>
+	<script src="JsFunctions/main.js"></script>
+	<script src="JsFunctions/Trabajadores.js"></script>
+
+	<script>
+		$(document).ready(function() {
+			mostrarEmpresa();
+		});
+	</script>
+
+	<script>
+		function mas(id) {
+			$.ajax({
+				type: "POST",
+				url: "php/cargar/mas.php",
+				data: {
+					id: id
+				},
+				success: function(data) {
+					window.location.href = "menuinfo.php";
+				}
+			});
 		}
-
-		?>
-
-		<script src="JsFunctions/Trabajadores.js"></script>
-
-
-
+	</script>
 </body>
 
 </html>

@@ -58,6 +58,8 @@ require 'Class/Notificacionfirmado.php';
 require 'Class/Documentoempresa.php';
 require 'Class/mandante.php';
 require 'Class/Formula.php';
+require 'Class/Liquidacion.php';
+require 'Class/Detalle_liquidacion.php';
 
 //Class definition
 class Controller
@@ -9218,6 +9220,170 @@ class Controller
         }
         $this->desconectar();
         return 0;
+    }
+
+
+    //********************************************************************Liquidaciones********************************** */
+    //Ultimo folio liquidacion
+    function ultimofolioliquidacion($empresa){
+        $this->conexion();
+        $sql = "select * from liquidaciones where empresa=$empresa order by folio desc limit 1";
+        $result = $this->mi->query($sql);
+        $folio = 0;
+        if($rs = mysqli_fetch_array($result)){
+            $folio = $rs['folio'];
+        }
+        $this->desconectar();
+        return $folio;
+    }
+
+    //Registrar liquidacion
+    /*
+    id int not null auto_increment primary key,
+    folio int not null,
+    contrato int not null references contratos(id),
+    periodo date not null,
+    empresa int not null references empresa(id),
+    trabajador int not null references trabajadores(id),
+    diastrabajados int not null,
+    sueldobase int not null,
+    horasfalladas int not null,
+    horasextras1 int not null,
+    horasextras2 int not null,
+    horasextras3 int not null,
+    afp varchar(200) not null,
+    porafp varchar(200) not null,
+    salud varchar(200) not null,
+    porsalud varchar(200) not null,    
+    totalimponible int not null,
+    totalnoimponible int not null,
+    totaltributable int not null,
+    totaldeslegales int not null,
+    totaldesnolegales int not null,
+    fecha_liquidacion date not null,
+    register_at timestamp not null default current_timestamp*/
+    
+    function registrarliquidacion($folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajaos, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp, $salud, $porsalud, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion){
+        $this->conexion();
+        $sql = "insert into liquidaciones values(null,$folio,$contrato,'$periodo',$empresa,$trabajador,$diastrabajaos,$sueldobase,$horasfalladas,$horasextras1,$horasextras2,$horasextras3,'$afp','$porafp','$salud','$porsalud',$totalimponible,$totalnoimponible,$totaltributable,$totaldeslegales,$totaldesnolegales,'$fecha_liquidacion',now())";
+        $result = $this->mi->query($sql);
+        //Id liquidacion
+        $id = mysqli_insert_id($this->mi);
+        $this->desconectar();
+        return $id;
+    }
+
+    //Registrar detalle liquidacion
+    function registrardetalleliquidacion($liquidacion, $codigo, $monto, $tipo){
+        $this->conexion();
+        $sql = "insert into detalle_liquidacion values(null,$liquidacion,'$codigo',$monto,$tipo,now())";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Listar liquidaciones
+    function listarliquidaciones($empresa){
+        $this->conexion();
+        $sql = "select liquidaciones.id as id, liquidaciones.folio as folio, liquidaciones.contrato as contrato, liquidaciones.periodo as periodo, centrocosto.nombre as empresa, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, liquidaciones.diastrabajados as diastrabajados, liquidaciones.sueldobase as sueldobase, liquidaciones.horasfalladas as horasfalladas, liquidaciones.horasextras1 as horasextras1, liquidaciones.horasextras2 as horasextras2, liquidaciones.horasextras3 as horasextras3, liquidaciones.afp as afp, liquidaciones.porafp as porafp, liquidaciones.salud as salud, liquidaciones.porsalud as porsalud, liquidaciones.totalimponible as totalimponible, liquidaciones.totalnoimponible as totalnoimponible, liquidaciones.totaltributable as totaltributable, liquidaciones.totaldeslegales as totaldeslegales, liquidaciones.totaldesnolegales as totaldesnolegales, liquidaciones.fecha_liquidacion as fecha_liquidacion, liquidaciones.register_at as register_at from liquidaciones, centrocosto, trabajadores where liquidaciones.empresa=centrocosto.id and liquidaciones.trabajador=trabajadores.id and liquidaciones.empresa=$empresa order by liquidaciones.register_at desc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id=$rs['id'];
+            $folio=$rs['folio'];
+            $contrato=$rs['contrato'];
+            $periodo=$rs['periodo'];
+            $empresa=$rs['empresa'];
+            $trabajador=$rs['nombre']." ".$rs['apellido1']." ".$rs['apellido2'];
+            $diastrabajados=$rs['diastrabajados'];
+            $sueldobase=$rs['sueldobase'];
+            $horasfalladas=$rs['horasfalladas'];
+            $horasextras1=$rs['horasextras1'];
+            $horasextras2=$rs['horasextras2'];
+            $horasextras3=$rs['horasextras3'];
+            $afp=$rs['afp'];
+            $porafp=$rs['porafp'];
+            $salud=$rs['salud'];
+            $porsalud=$rs['porsalud'];
+            $totalimponible=$rs['totalimponible'];
+            $totalnoimponible=$rs['totalnoimponible'];
+            $totaltributable=$rs['totaltributable'];
+            $totaldeslegales=$rs['totaldeslegales'];
+            $totaldesnolegales=$rs['totaldesnolegales'];
+            $fecha_liquidacion=$rs['fecha_liquidacion'];
+            $registro=$rs['register_at'];
+            $liquidacion = new Liquidacion($id,$folio,$contrato,$periodo,$empresa,$trabajador,$diastrabajados,$sueldobase,$horasfalladas,$horasextras1,$horasextras2,$horasextras3,$afp,$porafp,$salud,$porsalud,$totalimponible,$totalnoimponible,$totaltributable,$totaldeslegales,$totaldesnolegales,$fecha_liquidacion,$registro);
+            $lista[] = $liquidacion;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    function buscardetallesliquidacion($liquidacion){
+        $this->conexion();
+        $sql = "select * from detalle_liquidacion where liquidacion=$liquidacion";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while($rs = mysqli_fetch_array($result)){
+            $id=$rs['id'];
+            $liquidacion=$rs['liquidacion'];
+            $codigo=$rs['codigo'];
+            $monto=$rs['monto'];
+            $tipo=$rs['tipo'];
+            $registro=$rs['register_at'];
+            $detalle = new Detalle_liquidacion($id,$liquidacion,$codigo,$monto,$tipo,$registro);
+            $lista[] = $detalle;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //buscarhoras pactadas
+    function buscarhoraspactadas($contrato){
+        $this->conexion();
+        $sql = "select * from horaspactadas where  contrato=$contrato";
+        $result = $this->mi->query($sql);
+        $horas = 45;
+        if($rs = mysqli_fetch_array($result)){
+            $horas = $rs['horas'];
+        }
+        $this->desconectar();
+        return $horas;
+    }
+
+    function buscarliquidacion($id){
+        $this->conexion();
+        $sql = "select * from liquidaciones where id=$id";
+        $result = $this->mi->query($sql);
+        if($rs = mysqli_fetch_array($result)){
+            $id=$rs['id'];
+            $folio=$rs['folio'];
+            $contrato=$rs['contrato'];
+            $periodo=$rs['periodo'];
+            $empresa=$rs['empresa'];
+            $trabajador=$rs['trabajador'];
+            $diastrabajados=$rs['diastrabajados'];
+            $sueldobase=$rs['sueldobase'];
+            $horasfalladas=$rs['horasfalladas'];
+            $horasextras1=$rs['horasextras1'];
+            $horasextras2=$rs['horasextras2'];
+            $horasextras3=$rs['horasextras3'];
+            $afp=$rs['afp'];
+            $porafp=$rs['porafp'];
+            $salud=$rs['salud'];
+            $porsalud=$rs['porsalud'];
+            $totalimponible=$rs['totalimponible'];
+            $totalnoimponible=$rs['totalnoimponible'];
+            $totaltributable=$rs['totaltributable'];
+            $totaldeslegales=$rs['totaldeslegales'];
+            $totaldesnolegales=$rs['totaldesnolegales'];
+            $fecha_liquidacion=$rs['fecha_liquidacion'];
+            $registro=$rs['register_at'];
+            $liquidacion = new Liquidacion($id,$folio,$contrato,$periodo,$empresa,$trabajador,$diastrabajados,$sueldobase,$horasfalladas,$horasextras1,$horasextras2,$horasextras3,$afp,$porafp,$salud,$porsalud,$totalimponible,$totalnoimponible,$totaltributable,$totaldeslegales,$totaldesnolegales,$fecha_liquidacion,$registro);
+            $this->desconectar();
+            return $liquidacion;
+        }
+        return null;
     }
 
 

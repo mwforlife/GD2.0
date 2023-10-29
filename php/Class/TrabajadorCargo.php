@@ -13,7 +13,7 @@ class TrabajadorCargo
     private $horaspactadas;
     private $registro;
 
-    public function TrabajadorCargo($id, $contrato, $centrocosto, $cargo, $cargodescripcion, $tipocontrato, $desde, $hasta, $jornada, $horaspactadas, $registro)
+    public function __construct($id, $contrato, $centrocosto, $cargo, $cargodescripcion, $tipocontrato, $desde, $hasta, $jornada, $horaspactadas, $registro)
     {
         $this->id = $id;
         $this->contrato = $contrato;

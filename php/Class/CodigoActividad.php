@@ -4,7 +4,7 @@ class CodigoActividad{
     private $codigoSii;
     private $nombre;
 
-    public function CodigoActividad($id, $codigoSii, $nombre){
+    public function __construct($id, $codigoSii, $nombre){
         $this->id = $id;
         $this->codigoSii = $codigoSii;
         $this->nombre = $nombre;

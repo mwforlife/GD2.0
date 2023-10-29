@@ -7,7 +7,7 @@ class TrabajadorRemuneracion{
     private $asignacion;
     private $registro;
 
-    public function TrabajadorRemuneracion($id, $contrato, $tiposueldo, $sueldo, $asignacion, $registro){
+    public function __construct($id, $contrato, $tiposueldo, $sueldo, $asignacion, $registro){
         $this->id = $id;
         $this->contrato = $contrato;
         $this->tiposueldo = $tiposueldo;

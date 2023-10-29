@@ -5,7 +5,7 @@ class TipoDocumento{
     private $codigoPrevired;
     private $nombre;
 
-    public function TipoDocumento($id, $codigo, $codigoPrevired, $nombre){
+    public function __construct($id, $codigo, $codigoPrevired, $nombre){
         $this->id = $id;
         $this->codigo = $codigo;
         $this->codigoPrevired = $codigoPrevired;

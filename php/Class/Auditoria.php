@@ -5,7 +5,7 @@ class Auditoria{
     private $fecha;
     private $accion;
 
-    public function Auditoria($id, $usuario, $fecha, $accion){
+    public function __construct($id, $usuario, $fecha, $accion){
         $this->id = $id;
         $this->usuario = $usuario;
         $this->fecha = $fecha;

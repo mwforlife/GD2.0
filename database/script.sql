@@ -1139,3 +1139,48 @@ create table asistencia(
     contrato int not null references contratos(id),
     register_at timestamp not null default current_timestamp
 );
+
+create table liquidaciones(
+    id int not null auto_increment primary key,
+    folio int not null,
+    contrato int not null references contratos(id),
+    periodo date not null,
+    empresa int not null references empresa(id),
+    trabajador int not null references trabajadores(id),
+    diastrabajados int not null,
+    sueldobase int not null,
+    horasfalladas int not null,
+    horasextras1 int not null,
+    horasextras2 int not null,
+    horasextras3 int not null,
+    afp varchar(200) not null,
+    porafp varchar(200) not null,
+    salud varchar(200) not null,
+    porsalud varchar(200) not null,    
+    totalimponible int not null,
+    totalnoimponible int not null,
+    totaltributable int not null,
+    totaldeslegales int not null,
+    totaldesnolegales int not null,
+    fecha_liquidacion date not null,
+    register_at timestamp not null default current_timestamp
+);
+
+create table tipohaberesliquidacion(
+    id int not null auto_increment primary key,
+    nombre varchar(200) not null
+);
+
+insert into tipohaberesliquidacion values(null, 'Haberes imponibles');
+insert into tipohaberesliquidacion values(null, 'Haberes no imponibles');
+insert into tipohaberesliquidacion values(null, 'Descuentos legales');
+insert into tipohaberesliquidacion values(null, 'Descuentos no legales');
+
+create table detalle_liquidacion(
+    id int not null auto_increment primary key,
+    liquidacion int not null references liquidaciones(id),
+    codigo text not null,
+    monto int not null,
+    tipo int not null references tipohaberesliquidacion(id),
+    register_at timestamp not null default current_timestamp
+);

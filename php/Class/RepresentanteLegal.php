@@ -7,7 +7,7 @@ class RepresentanteLegal{
     private $apellido2;
     private $empresa;
 
-    public function RepresentanteLegal($id, $rut, $nombre, $apellido1, $apellido2, $empresa){
+    public function __construct($id, $rut, $nombre, $apellido1, $apellido2, $empresa){
         $this->id = $id;
         $this->rut = $rut;
         $this->nombre = $nombre;

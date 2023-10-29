@@ -16,7 +16,7 @@ class Users{
     private $registro;
     private $update;
 
-    public function Users($id, $rut, $nombre, $apellido, $correo, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $tipo, $registro, $update){
+    public function __construct($id, $rut, $nombre, $apellido, $correo, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $tipo, $registro, $update){
         $this->id = $id;
         $this->rut = $rut;
         $this->nombre = $nombre;

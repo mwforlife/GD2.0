@@ -5,7 +5,7 @@ class Tasa{
     private $fecha;
     private $tasa;
 
-    public function Tasa($id, $institucion, $fecha, $tasa) {
+    public function __construct($id, $institucion, $fecha, $tasa) {
         $this->id = $id;
         $this->institucion = $institucion;
         $this->fecha = $fecha;

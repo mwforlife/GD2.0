@@ -13,7 +13,7 @@ class Licencias
     private $trabajador;
     private $registro;
 
-    public function Licencias($id, $folio, $tipolicencia, $fechainicio, $fechafin, $pagadora, $comentario, $documentolicencia, $comprobantetramite, $trabajador, $registro)
+    public function __construct($id, $folio, $tipolicencia, $fechainicio, $fechafin, $pagadora, $comentario, $documentolicencia, $comprobantetramite, $trabajador, $registro)
     {
         $this->id = $id;
         $this->folio = $folio;

@@ -646,12 +646,7 @@ if(isset($_SESSION['GESTION_PERMISO'])){
 											<button class='btn btn-outline-primary' onclick='addformula("{SUELDO_BASE}")'>Sueldo Base</button>
 											<button class='btn btn-outline-primary' onclick='addformula("{DIAS_TRABAJADOS}")'>Dias Trabajados</button>
 											<button class='btn btn-outline-primary' onclick='addformula("{HORAS_TRABAJADAS}")'>Horas Trabajadas</button>
-											<button class='btn btn-outline-primary' onclick='addformula("{VALOR_AGREGADO}")'>Valor Agregado</button>										
-											<button class='btn btn-outline-primary' onclick='addformula("{VALOR_HORA}")'>Valor Hora</button>
-											<button class='btn btn-outline-primary' onclick='addformula("{VALOR_DIA}")'>Valor Dia</button>
-											<button class='btn btn-outline-primary' onclick='addformula("{AFP}")'>AFP</button>
-											<button class='btn btn-outline-primary' onclick='addformula("{SALUD}")'>Salud</button>
-											<button class='btn btn-outline-primary' onclick='addformula("{CESANTIA}")'>Cesantia</button>
+											<button class='btn btn-outline-primary' onclick='addformula("{VALOR_AGREGADO}")'>Valor Agregado</button>	
 											<button class='btn btn-outline-primary' onclick='addformula("{TOTAL_IMPONIBLE}")'>Total Imponible</button>
 											<button class='btn btn-outline-primary' onclick='addformula("{TOTAL_NO_IMPONIBLE}")'>Total No Imponible</button>
 											<button class='btn btn-outline-primary' onclick='addformula("{TOTAL_TRIBUTABLE}")'>Total Tributable</button>
