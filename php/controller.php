@@ -184,7 +184,7 @@ class Controller
             $tipo = $rs['tipousuario'];
             $registro = $rs['created_at'];
             $update = $rs['updated_at'];
-            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token,$tipo, $registro, $update);
+            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $tipo, $registro, $update);
             $this->desconectar();
             return $user;
         }
@@ -317,7 +317,7 @@ class Controller
     }
 
     //Registar Comunas
-    public function registrarcomunas($codigo, $codigoPrevired,$codigox, $nombre, $region, $provincia)
+    public function registrarcomunas($codigo, $codigoPrevired, $codigox, $nombre, $region, $provincia)
     {
         $this->conexion();
         $sql = "insert into comunas values (null, '$codigo', '$codigoPrevired','$codigox', '$nombre', $region, $provincia)";
@@ -450,7 +450,7 @@ class Controller
     }
 
     //Registrar Causal Termino Contrato
-    public function registrarcausaltermino($codigo, $codigoPrevired, $articulo,$letra,$nombre)
+    public function registrarcausaltermino($codigo, $codigoPrevired, $articulo, $letra, $nombre)
     {
         $this->conexion();
         $sql = "insert into causalterminocontrato values (null, '$codigo', '$codigoPrevired', '$articulo','$letra','$nombre')";
@@ -470,12 +470,13 @@ class Controller
     }
 
     //Listar Tipo Usuario
-    function listartipousuario(){
+    function listartipousuario()
+    {
         $this->conexion();
         $sql = "select * from tipousuario";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $nombre = $rs['nombre'];
             $tipousuario = new TipoUsuario($id, $nombre);
@@ -486,7 +487,7 @@ class Controller
     }
 
     //Registrar Usuarios
-    public function registrarusuario($rut, $nombre, $apellido, $correo, $direccion, $region, $comuna, $telefono, $pass,$tipo)
+    public function registrarusuario($rut, $nombre, $apellido, $correo, $direccion, $region, $comuna, $telefono, $pass, $tipo)
     {
         $this->conexion();
         $sql = "insert into users values(null, '$rut', '$nombre', '$apellido', '$correo', '$direccion', $region, $comuna, '$telefono', sha1('$pass'), 1,$tipo, sha1('$correo'), now(), now());";
@@ -748,10 +749,10 @@ class Controller
     }
 
     //Registrar Tasa AFP
-    public function registrartasaafp($id, $periodo, $tasa)
+    public function registrartasaafp($id, $periodo,$tasasis, $tasa)
     {
         $this->conexion();
-        $sql = "insert into tasaafp values(null, $id, '$periodo', $tasa)";
+        $sql = "insert into tasaafp values(null, $id, '$periodo',$tasasis, $tasa)";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return json_encode($result);
@@ -781,7 +782,7 @@ class Controller
     public function listartasaafp($idins)
     {
         $this->conexion();
-        $sql = "select id, month(fecha) as mes, year(fecha) as ano, tasa from tasaafp where afp = $idins order by fecha desc";
+        $sql = "select id, month(fecha) as mes, year(fecha) as ano,tasasis, tasa from tasaafp where afp = $idins order by fecha desc";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -814,7 +815,8 @@ class Controller
             }
             $periodo = $mes . " " . $rs['ano'];
             $tasa = $rs['tasa'];
-            $T = new Tasa($id, $idins, $periodo, $tasa);
+            $tasasis = $rs['tasasis'];
+            $T = new Tasa($id, $tasasis, $periodo, $tasa);
             $lista[] = $T;
         }
         $this->desconectar();
@@ -825,7 +827,7 @@ class Controller
     public function buscartasaafp($afp, $mes, $ano)
     {
         $this->conexion();
-        $sql = "select id, month(fecha) as mes, year(fecha) as ano, tasa from tasaafp where afp = $afp and month(fecha) = $mes and year(fecha) = $ano";
+        $sql = "select id, month(fecha) as mes, year(fecha) as ano, tasasis,tasa, from tasaafp where afp = $afp and month(fecha) = $mes and year(fecha) = $ano";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -857,8 +859,9 @@ class Controller
                 $mes = "Diciembre";
             }
             $periodo = $mes . " " . $rs['ano'];
+            $tasasis = $rs['tasasis'];
             $tasa = $rs['tasa'];
-            $T = new Tasa($id, $afp, $periodo, $tasa);
+            $T = new Tasa($id, $tasasis, $periodo, $tasa);
             $this->desconectar();
             return $T;
         }
@@ -867,11 +870,11 @@ class Controller
     }
 
     //Buscar ultima tasa afp
-    
+
     public function buscarultimatasaafp($afp)
     {
         $this->conexion();
-        $sql = "select id, month(fecha) as mes, year(fecha) as ano, tasa from tasaafp where afp = $afp order by fecha desc limit 1";
+        $sql = "select id, month(fecha) as mes, year(fecha) as ano,tasasis, tasa from tasaafp where afp = $afp order by fecha desc limit 1";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -903,8 +906,9 @@ class Controller
                 $mes = "Diciembre";
             }
             $periodo = $mes . " " . $rs['ano'];
+            $tasasis = $rs['tasasis'];
             $tasa = $rs['tasa'];
-            $T = new Tasa($id, $afp, $periodo, $tasa);
+            $T = new Tasa($id, $tasasis, $periodo, $tasa);
             $this->desconectar();
             return $T;
         }
@@ -1124,11 +1128,12 @@ class Controller
     }
 
     //Buscar estado Civil
-    public function buscarestadocivil($id){
+    public function buscarestadocivil($id)
+    {
         $this->conexion();
         $sql = "select * from estadocivil where id = $id";
         $result = $this->mi->query($sql);
-        if($rs = mysqli_fetch_array($result)){
+        if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $nombre = $rs['nombre'];
             $this->desconectar();
@@ -1335,9 +1340,9 @@ class Controller
         return $lista;
     }
 
-    
+
     //Listar Trabajadores Activos
-    public function listartrabajadoresactivoscenter($empresa,$centrocosto)
+    public function listartrabajadoresactivoscenter($empresa, $centrocosto)
     {
         $this->conexion();
         $sql = "select trabajadores.id as id, contratos.id as contrato, rut, dni, trabajadores.nombre as nombre, primerapellido,segundoapellido,fechanacimiento, fechainicio as fechanacimiento, sexo, centrocosto.nombre as centrocosto, estadocivil, nacionalidad, contratos.id as centroid, discapacidad, pension, trabajadores.empresa as empresa from centrocosto,trabajadores,contratos where trabajadores.id=contratos.trabajador and trabajadores.empresa = $empresa and contratos.estado=1 and centrocosto.id=contratos.centrocosto and centrocosto.id=$centrocosto group by trabajadores.id;";
@@ -1944,7 +1949,7 @@ class Controller
             $codigox = $rs['codigox'];
             $nombre = $rs['nombre'];
             $provincia = $rs['provincia'];
-            $comuna = new Comunas($id, $codigo, $codigoPrevired,$codigox, $nombre, $id, $provincia);
+            $comuna = new Comunas($id, $codigo, $codigoPrevired, $codigox, $nombre, $id, $provincia);
             $lista[] = $comuna;
         }
         $this->desconectar();
@@ -1965,7 +1970,7 @@ class Controller
             $codigox = $rs['codigox'];
             $nombre = $rs['nombre'];
             $provincia = $rs['provincia'];
-            $comuna = new Comunas($id, $codigo, $codigoPrevired,$codigox, $nombre, $id, $provincia);
+            $comuna = new Comunas($id, $codigo, $codigoPrevired, $codigox, $nombre, $id, $provincia);
             $lista[] = $comuna;
         }
         $this->desconectar();
@@ -1986,7 +1991,7 @@ class Controller
             $codigox = $rs['codigox'];
             $nombre = $rs['nombre'];
             $provincia = $rs['provincia'];
-            $comuna = new Comunas($id, $codigo, $codigoPrevired,$codigox, $nombre, $id, $provincia);
+            $comuna = new Comunas($id, $codigo, $codigoPrevired, $codigox, $nombre, $id, $provincia);
             $lista[] = $comuna;
         }
         $this->desconectar();
@@ -2007,7 +2012,7 @@ class Controller
             $codigox = $rs['codigox'];
             $nombre = $rs['nombre'];
             $provincia = $rs['provincia'];
-            $comuna = new Comunas($id, $codigo, $codigoPrevired,$codigox, $nombre, $id, $provincia);
+            $comuna = new Comunas($id, $codigo, $codigoPrevired, $codigox, $nombre, $id, $provincia);
             $lista[] = $comuna;
         }
         $this->desconectar();
@@ -2340,7 +2345,7 @@ class Controller
         return $lista;
     }
 
-    
+
     //Listar Tipo Documento
     public function listartipodocumento1($empresa)
     {
@@ -2417,13 +2422,13 @@ class Controller
             $tipo = $rs['tipousuario'];
             $registro = $rs['created_at'];
             $update = $rs['updated_at'];
-            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token,$tipo, $registro, $update);
+            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $tipo, $registro, $update);
             $lista[] = $user;
         }
         $this->desconectar();
         return $lista;
     }
-    
+
     //Listar Usuarios
     public function listarusuariostipo($tipo)
     {
@@ -2447,16 +2452,17 @@ class Controller
             $tipo = $rs['tipousuario'];
             $registro = $rs['created_at'];
             $update = $rs['updated_at'];
-            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token,$tipo, $registro, $update);
+            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $tipo, $registro, $update);
             $lista[] = $user;
         }
         $this->desconectar();
         return $lista;
     }
-    
+
 
     //Buscar Usuario
-    public function buscarusuario($id){
+    public function buscarusuario($id)
+    {
         $this->conexion();
         $sql = "select * from users where id_usu = $id;";
         $result = $this->mi->query($sql);
@@ -2476,7 +2482,7 @@ class Controller
             $tipo = $rs['tipousuario'];
             $registro = $rs['created_at'];
             $update = $rs['updated_at'];
-            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token,$tipo, $registro, $update);
+            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $tipo, $registro, $update);
             $this->desconectar();
             return $user;
         }
@@ -2580,8 +2586,7 @@ class Controller
         $sql = "select * from plan";
         $result = $this->mi->query($sql);
         $lista = array();
-        while ($rs = mysqli_fetch_array($result))
-        {
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $nombre = $rs['nombre'];
             $plan = new Banco($id, $nombre);
@@ -2617,15 +2622,14 @@ class Controller
         $this->conexion();
         $sql = "select plan from planempresa where empresa = $empresa";
         $result = $this->mi->query($sql);
-        if ($rs = mysqli_fetch_array($result))
-        {
+        if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['plan'];
             $this->desconectar();
             return $id;
         }
         $this->desconectar();
         return null;
-    }       
+    }
 
     public function listarCodigoActividad()
     {
@@ -2694,7 +2698,7 @@ class Controller
     }
 
     //Actualizar Comuna
-    public function actualizarcomuna($id, $codigo, $codigoPrevired,$codigox, $nombre, $provincia)
+    public function actualizarcomuna($id, $codigo, $codigoPrevired, $codigox, $nombre, $provincia)
     {
         $this->conexion();
         $sql = "update comunas set codigo='$codigo', codigoprevired='$codigoPrevired', codigox='$codigox', nombre='$nombre', provincia=$provincia where id=$id";
@@ -2824,7 +2828,7 @@ class Controller
     }
 
     //Actualizar Causal Termino Contrato
-    public function actualizarcausalterminocontrato($id, $codigo, $codigoPrevired, $articulo,$letra, $nombre)
+    public function actualizarcausalterminocontrato($id, $codigo, $codigoPrevired, $articulo, $letra, $nombre)
     {
         $this->conexion();
         $sql = "update causalterminocontrato set codigo='$codigo', codigoprevired='$codigoPrevired', articulo='$articulo', letra='$letra', nombre='$nombre' where id=$id";
@@ -3108,7 +3112,7 @@ class Controller
 
     //Eliminar Causal Termino Contrato
     public function eliminarcausalterminocontrato($id)
-    {   
+    {
         //Verificar si existe en la tabla de finiquitos o notificaciones
         $this->conexion();
         $sql = "select * from finiquito where causalterminocontrato = $id";
@@ -3130,7 +3134,7 @@ class Controller
         return json_encode($result);
     }
 
-    
+
 
     //Eliminar Tipo Documento
     public function eliminartipodocumento($id)
@@ -3558,7 +3562,7 @@ class Controller
             $tipo = $rs['tipousuario'];
             $registro = $rs['created_at'];
             $update = $rs['updated_at'];
-            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token,$tipo, $registro, $update);
+            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $tipo, $registro, $update);
             $this->desconectar();
             return $user;
         }
@@ -3639,7 +3643,7 @@ class Controller
         return null;
     }
 
-    
+
     //Buscar Empresa
     public function buscarEmpresavalor1($id)
     {
@@ -3837,7 +3841,7 @@ class Controller
             $tipo = $rs['tipousuario'];
             $registro = $rs['created_at'];
             $update = $rs['updated_at'];
-            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token,$tipo, $registro, $update);
+            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $tipo, $registro, $update);
             $this->desconectar();
             return $user;
         }
@@ -3868,7 +3872,7 @@ class Controller
             $tipo = $rs['tipousuario'];
             $registro = $rs['created_at'];
             $update = $rs['updated_at'];
-            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token,$tipo, $registro, $update);
+            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $tipo, $registro, $update);
             $lista[] = $user;
         }
         $this->desconectar();
@@ -3992,12 +3996,13 @@ class Controller
         return $lista;
     }
 
-    public function buscarprevisiones($trabajador){
+    public function buscarprevisiones($trabajador)
+    {
         $this->conexion();
         $sql = "select * from previsiontrabajador where trabajador = $trabajador";
         $result = $this->mi->query($sql);
         $lista = array();
-        if($rs = mysqli_fetch_array($result)){
+        if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $trabajador = $rs['trabajador'];
             $periodo = $rs['periodo'];
@@ -4630,7 +4635,7 @@ class Controller
             $observacion = $rs['observacion'];
             $comprobantefirmado = $rs['comprobantetramitefirmado'];
             $registro = $rs['register_at'];
-            $V = new Vacaciones($id, $trabajador, $periodoinicio, $periodotermino, $diasacumulados,$anoacumulados, $diasprograsivas, $tipodocumento, $fechainicio, $fechatermino, $diashabiles, $diasinhabiles, $diasferiados, $totales, $diasrestantes, $observacion, $comprobantefirmado,$registro);
+            $V = new Vacaciones($id, $trabajador, $periodoinicio, $periodotermino, $diasacumulados, $anoacumulados, $diasprograsivas, $tipodocumento, $fechainicio, $fechatermino, $diashabiles, $diasinhabiles, $diasferiados, $totales, $diasrestantes, $observacion, $comprobantefirmado, $registro);
             $lista[] = $V;
         }
         $this->desconectar();
@@ -4663,7 +4668,7 @@ class Controller
             $observacion = $rs['observacion'];
             $comprobantefirmado = $rs['comprobantetramitefirmado'];
             $registro = $rs['register_at'];
-            $V = new Vacaciones($id, $trabajador, $periodoinicio, $periodotermino, $diasacumulados,$anoacumulados, $diasprograsivas, $tipodocumento, $fechainicio, $fechatermino, $diashabiles, $diasinhabiles, $diasferiados, $totales, $diasrestantes, $observacion, $comprobantefirmado,$registro);
+            $V = new Vacaciones($id, $trabajador, $periodoinicio, $periodotermino, $diasacumulados, $anoacumulados, $diasprograsivas, $tipodocumento, $fechainicio, $fechatermino, $diashabiles, $diasinhabiles, $diasferiados, $totales, $diasrestantes, $observacion, $comprobantefirmado, $registro);
             $this->desconectar();
             return $V;
         }
@@ -4936,7 +4941,7 @@ class Controller
             $codigo = $rs['codigo'];
             $codigoPrevired = $rs['codigoprevired'];
             $nombre = $rs['nombre'];
-            $comuna = new Comunas($id, $codigo, $codigoPrevired,$id, $nombre, $id, $id);
+            $comuna = new Comunas($id, $codigo, $codigoPrevired, $id, $nombre, $id, $id);
             $lista[] = $comuna;
         }
         $this->desconectar();
@@ -4954,7 +4959,7 @@ class Controller
             $id = $rs['id'];
             $comunaid = $rs['comunaid'];
             $comuna = $rs['comuna'];
-            $comuna = new Comunas($id, $comunaid, $comunaid,$comunaid, $comuna, $id, $id);
+            $comuna = new Comunas($id, $comunaid, $comunaid, $comunaid, $comuna, $id, $id);
             $lista[] = $comuna;
         }
         $this->desconectar();
@@ -4981,7 +4986,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['register_at'];
-            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $lista[] = $contrato;
         }
         $this->desconectar();
@@ -5007,7 +5012,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['register_at'];
-            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $this->desconectar();
             return $contrato;
         }
@@ -5034,7 +5039,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['register_at'];
-            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $this->desconectar();
             return $contrato;
         }
@@ -5063,7 +5068,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['rut'];
-            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $lista[] = $contrato;
         }
         $this->desconectar();
@@ -5090,7 +5095,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['traid'];
-            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $this->desconectar();
             return $contrato;
         }
@@ -5099,11 +5104,12 @@ class Controller
     }
 
     //Search COntrato
-    function searchcontrato($id){
+    function searchcontrato($id)
+    {
         $this->conexion();
         $sql = "select * from contratos where id = $id";
         $result = $this->mi->query($sql);
-        if($rs = mysqli_fetch_array($result)){
+        if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $trabajador = $rs['trabajador'];
             $empresa = $rs['empresa'];
@@ -5116,7 +5122,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['register_at'];
-            $contrato = new Contrato($id,$trabajador,$empresa,$centrocosto,$tipocontrato,$cargo,$sueldo,$fechainicio,$fechatermino,$documento,$estado,$register_at);
+            $contrato = new Contrato($id, $trabajador, $empresa, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $this->desconectar();
             return $contrato;
         }
@@ -5143,7 +5149,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['traid'];
-            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $this->desconectar();
             return $contrato;
         }
@@ -5170,7 +5176,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['traid'];
-            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $this->desconectar();
             return $contrato;
         }
@@ -5706,7 +5712,7 @@ class Controller
             $trabajador = $rs['nombre'] . " " . $rs['apellido'];
             $empresa = $rs['rut'];
             $register_at = $rs['centrocosto'];
-            $finiquito = new Finiquito($id, $contrato, $tipodocumento, $fechafiniquito, $fechainicio, $fechatermino, $causalterminocontrato, $trabajador, $empresa,$register_at);
+            $finiquito = new Finiquito($id, $contrato, $tipodocumento, $fechafiniquito, $fechainicio, $fechatermino, $causalterminocontrato, $trabajador, $empresa, $register_at);
             $lista[] = $finiquito;
         }
         $this->desconectar();
@@ -5714,7 +5720,8 @@ class Controller
     }
 
     //Buscar Finiquito valores por id
-    function buscarfiniquito1($id){
+    function buscarfiniquito1($id)
+    {
         $this->conexion();
         $sql = "select finiquito.id as id, centrocosto.id as centrocosto, finiquito.contrato as contrato, finiquito.tipodocumento as tipodocumento, finiquito.fechafiniqito as fechafiniqito, finiquito.fechainicio as fechainicio, finiquito.fechatermino as fechatermino, causalterminocontrato.nombre as causalterminocontrato, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, finiquito.empresa as empresa, finiquito.register_at as register_at from contratos,centrocosto, finiquito,trabajadores, causalterminocontrato where finiquito.causalterminocontrato = causalterminocontrato.id  and finiquito.trabajador = trabajadores.id and finiquito.contrato = contratos.id and contratos.centrocosto = centrocosto.id and finiquito.id = $id";
         $result = $this->mi->query($sql);
@@ -5730,7 +5737,7 @@ class Controller
             $trabajador = $rs['nombre'] . " " . $rs['apellido'];
             $empresa = $rs['rut'];
             $register_at = $rs['centrocosto'];
-            $finiquito = new Finiquito($id, $contrato, $tipodocumento, $fechafiniquito, $fechainicio, $fechatermino, $causalterminocontrato, $trabajador, $empresa,$register_at);
+            $finiquito = new Finiquito($id, $contrato, $tipodocumento, $fechafiniquito, $fechainicio, $fechatermino, $causalterminocontrato, $trabajador, $empresa, $register_at);
         }
         $this->desconectar();
         return $finiquito;
@@ -5909,15 +5916,15 @@ class Controller
         return $lista;
     }
 
-    
-     //Listar Lotes con contratos Inactivos
-     function listarlotestext4($lote)
-     {
-         $this->conexion();
-         $sql = "select distinct detallelotes.contrato, detallelotes.id as id, finiquito.id as nombre, contratos.tipocontrato as tipocontrato, finiquito.fechainicio as fechainicio,finiquito.fechatermino as fechatermino, trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, notificaciones.id as notifid, fechanotificacion, finiquito, notificaciones.tipodocumento as tipodocumento, causal, causalhechos, cotizacionprevisional, comunicacion.nombre as comunicacion, acreditacion, comuna,texto from comunicacion, detallelotes, lotes, contratos, finiquito,trabajadores, notificaciones where detallelotes.lotes = lotes.id and detallelotes.contrato = contratos.id and finiquito.contrato=contratos.id and notificaciones.finiquito=finiquito.id and contratos.trabajador = trabajadores.id and contratos.estado = 2 and lotes=$lote and comunicacion.id = notificaciones.comunicacion order by lotes.nombre asc";
-         $result = $this->mi->query($sql);
-         $lista = array();
-         while ($rs = mysqli_fetch_array($result)) {
+
+    //Listar Lotes con contratos Inactivos
+    function listarlotestext4($lote)
+    {
+        $this->conexion();
+        $sql = "select distinct detallelotes.contrato, detallelotes.id as id, finiquito.id as nombre, contratos.tipocontrato as tipocontrato, finiquito.fechainicio as fechainicio,finiquito.fechatermino as fechatermino, trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, notificaciones.id as notifid, fechanotificacion, finiquito, notificaciones.tipodocumento as tipodocumento, causal, causalhechos, cotizacionprevisional, comunicacion.nombre as comunicacion, acreditacion, comuna,texto from comunicacion, detallelotes, lotes, contratos, finiquito,trabajadores, notificaciones where detallelotes.lotes = lotes.id and detallelotes.contrato = contratos.id and finiquito.contrato=contratos.id and notificaciones.finiquito=finiquito.id and contratos.trabajador = trabajadores.id and contratos.estado = 2 and lotes=$lote and comunicacion.id = notificaciones.comunicacion order by lotes.nombre asc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['notifid'];
             $fechanotificacion = $rs['fechanotificacion'];
             $finiquito = $rs['finiquito'];
@@ -5932,10 +5939,10 @@ class Controller
             $register_at = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
             $n = new Notificacion($id, $fechanotificacion, $finiquito, $tipodocumento, $causal, $causalhechos, $cotizacionprevisional, $comunicacion, $acreditacion, $comuna, $texto, $register_at);
             $lista[] = $n;
-         }
-         $this->desconectar();
-         return $lista;
-     }
+        }
+        $this->desconectar();
+        return $lista;
+    }
 
     //Listar Notificaciones
     function listarnotificacionestext($trabajador)
@@ -6025,7 +6032,7 @@ class Controller
         $parte1 = explode('(', $texto);
         $parte2 = explode(')', $parte1[1]);
 
-       $parentesis = $parte2[0];
+        $parentesis = $parte2[0];
 
         return $parentesis;
     }
@@ -6080,13 +6087,13 @@ class Controller
         while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $contrato = $rs['tipocontrato'];
-            if($contrato=="Contrato a Plazo Fijo"){
+            if ($contrato == "Contrato a Plazo Fijo") {
                 $contrato = "Plazo Fijo";
-            }else if($contrato=="Contrato Indefinido"){
+            } else if ($contrato == "Contrato Indefinido") {
                 $contrato = "Indefinido";
             }
             $lote = $rs['nombre'];
-            $nombre = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'] ;
+            $nombre = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
             $fechainicio = $rs['fechainicio'];
             $fechatermino = $rs['fechatermino'];
             $l = new Lotes_contrato($id, $contrato, $nombre, $lote, $fechainicio, $fechatermino);
@@ -6096,7 +6103,7 @@ class Controller
         return $lista;
     }
 
-    
+
     //Listar Lotes con contratos activos
     function listarlotestext2($empresa)
     {
@@ -6107,14 +6114,14 @@ class Controller
         while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $contrato = $rs['tipocontrato'];
-            if($contrato=="Contrato a Plazo Fijo"){
+            if ($contrato == "Contrato a Plazo Fijo") {
                 $contrato = "Plazo Fijo";
-            }else if($contrato=="Contrato Indefinido"){
+            } else if ($contrato == "Contrato Indefinido") {
                 $contrato = "Indefinido";
             }
             $contrato = $contrato . " - " . date("d-m-Y", strtotime($rs['fechainicio']));
             $lote = $rs['nombre'];
-            $nombre = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'] ;
+            $nombre = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
             $fechainicio = $rs['documento'];
             $fechatermino = $rs['idcont'];
             $l = new Lotes_contrato($id, $contrato, $nombre, $lote, $fechainicio, $fechatermino);
@@ -6135,7 +6142,7 @@ class Controller
             $id = $rs['id'];
             $contrato = $rs['idcontrato'];
             $lote = $rs['nombre'];
-            $nombre = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'] ;
+            $nombre = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
             $fechainicio = $rs['documento'];
             $fechatermino = $rs['fechatermino'];
             $l = new Lotes_contrato($id, $contrato, $nombre, $lote, $fechainicio, $fechatermino);
@@ -6146,46 +6153,47 @@ class Controller
     }
 
 
-        //Eliminar lote
-        function eliminarlotecontrato($id)
-        {
-            $this->conexion();
-            $sql = "delete from lotes where id = $id";
-            $result = $this->mi->query($sql);
-            $sql = "delete from detallelotes where lotes = $id";
-            $result = $this->mi->query($sql);
-            $this->desconectar();
-            return $result;
+    //Eliminar lote
+    function eliminarlotecontrato($id)
+    {
+        $this->conexion();
+        $sql = "delete from lotes where id = $id";
+        $result = $this->mi->query($sql);
+        $sql = "delete from detallelotes where lotes = $id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Listar Lotes con contratos Inactivos
+    function listarlotestext1($lote)
+    {
+        $this->conexion();
+        $sql = "select distinct detallelotes.contrato, detallelotes.id as id, finiquito.id as nombre, contratos.tipocontrato as tipocontrato, finiquito.fechainicio as fechainicio,finiquito.fechatermino as fechatermino, trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2 from detallelotes, lotes, contratos, finiquito,trabajadores where detallelotes.lotes = lotes.id and detallelotes.contrato = contratos.id and finiquito.contrato=contratos.id and contratos.trabajador = trabajadores.id and contratos.estado = 2 and lotes=$lote order by lotes.nombre asc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $contrato = $rs['tipocontrato'];
+            if ($contrato == "Contrato a Plazo Fijo") {
+                $contrato = "Plazo Fijo";
+            } else if ($contrato == "Contrato Indefinido") {
+                $contrato = "Indefinido";
+            }
+            $lote = $rs['nombre'];
+            $nombre = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
+            $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $l = new Lotes_contrato($id, $contrato, $nombre, $lote, $fechainicio, $fechatermino);
+            $lista[] = $l;
         }
-
-     //Listar Lotes con contratos Inactivos
-     function listarlotestext1($lote)
-     {
-         $this->conexion();
-         $sql = "select distinct detallelotes.contrato, detallelotes.id as id, finiquito.id as nombre, contratos.tipocontrato as tipocontrato, finiquito.fechainicio as fechainicio,finiquito.fechatermino as fechatermino, trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2 from detallelotes, lotes, contratos, finiquito,trabajadores where detallelotes.lotes = lotes.id and detallelotes.contrato = contratos.id and finiquito.contrato=contratos.id and contratos.trabajador = trabajadores.id and contratos.estado = 2 and lotes=$lote order by lotes.nombre asc";
-         $result = $this->mi->query($sql);
-         $lista = array();
-         while ($rs = mysqli_fetch_array($result)) {
-             $id = $rs['id'];
-             $contrato = $rs['tipocontrato'];
-             if($contrato=="Contrato a Plazo Fijo"){
-                 $contrato = "Plazo Fijo";
-             }else if($contrato=="Contrato Indefinido"){
-                 $contrato = "Indefinido";
-             }
-             $lote = $rs['nombre'];
-             $nombre = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'] ;
-             $fechainicio = $rs['fechainicio'];
-             $fechatermino = $rs['fechatermino'];
-             $l = new Lotes_contrato($id, $contrato, $nombre, $lote, $fechainicio, $fechatermino);
-             $lista[] = $l;
-         }
-         $this->desconectar();
-         return $lista;
-     }
+        $this->desconectar();
+        return $lista;
+    }
 
 
-    function validarloteids($id, $contrato){
+    function validarloteids($id, $contrato)
+    {
         $this->conexion();
         $sql = "select * from detallelotes where contrato = $contrato and lotes = $id";
         $result = $this->mi->query($sql);
@@ -6299,7 +6307,7 @@ class Controller
         return json_encode($result);
     }
     //Registrar lote Anexo
-    function registrarloteanexo($contrato, $usuario,$empresa)
+    function registrarloteanexo($contrato, $usuario, $empresa)
     {
         $this->conexion();
         $sql = "insert into lote4 values(null,$contrato,$usuario,$empresa,now())";
@@ -6323,7 +6331,7 @@ class Controller
     }
 
     //Validar lote Anexo
-    function validarloteanexo($contrato, $usuario,$empresa)
+    function validarloteanexo($contrato, $usuario, $empresa)
     {
         $this->conexion();
         $sql = "select * from lote4 where contrato=$contrato and usuario=$usuario and empresa=$empresa";
@@ -6356,7 +6364,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $registro = $rs['registro'];
-            $l = new Contrato($id, $trabajador, $lote,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $registro);
+            $l = new Contrato($id, $trabajador, $lote, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $registro);
             $lista[] = $l;
         }
         $this->desconectar();
@@ -6364,12 +6372,13 @@ class Controller
     }
 
     //Buscar Lote Anexo
-    function buscarloteanexo($usuario,$empresa){
+    function buscarloteanexo($usuario, $empresa)
+    {
         $this->conexion();
         $sql = "select lote4.id as id, lote4.contrato as contrato, contratos.centrocosto as centrocosto, tipocontrato, cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as registro,trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2 from lote4, contratos, trabajadores where lote4.contrato = contratos.id and contratos.trabajador = trabajadores.id and usuario=$usuario and lote4.empresa=$empresa";
         $result = $this->mi->query($sql);
         $lista = array();
-        while ($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['contrato'];
             $trabajador = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
             $lote = $rs['id'];
@@ -6382,7 +6391,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $registro = $rs['registro'];
-            $l = new Contrato($id, $trabajador, $lote,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $registro);
+            $l = new Contrato($id, $trabajador, $lote, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $registro);
             $lista[] = $l;
         }
         $this->desconectar();
@@ -6417,7 +6426,7 @@ class Controller
     }
 
     //Eliminar todo el lote Anexo
-    function eliminartodoloteanexo($usuario,$empresa)
+    function eliminartodoloteanexo($usuario, $empresa)
     {
         $this->conexion();
         $sql = "delete from lote4 where usuario=$usuario and empresa=$empresa";
@@ -6426,7 +6435,8 @@ class Controller
     }
 
     //Registrar Axexo
-    function registraraenxo($contrato, $fechageneracion, $base, $sueldo_base, $estado){
+    function registraraenxo($contrato, $fechageneracion, $base, $sueldo_base, $estado)
+    {
         $this->conexion();
         $sql = "insert into anexoscontrato values(null, $contrato, '$fechageneracion', $base, $sueldo_base, $estado, now())";
         $result = $this->mi->query($sql);
@@ -6436,12 +6446,13 @@ class Controller
     }
 
     //Listar Anexo
-    function listaranexo($contrato){
+    function listaranexo($contrato)
+    {
         $this->conexion();
         $sql = "select * from anexoscontrato where contrato=$contrato";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $contrato = $rs['contrato'];
             $fechageneracion = $rs['fechageneracion'];
@@ -6457,11 +6468,12 @@ class Controller
     }
 
     //Buscar Anexo
-    function buscaranexo($id){
+    function buscaranexo($id)
+    {
         $this->conexion();
         $sql = "select * from anexoscontrato where id=$id";
         $result = $this->mi->query($sql);
-        if($rs = mysqli_fetch_array($result)){
+        if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $contrato = $rs['contrato'];
             $fechageneracion = $rs['fechageneracion'];
@@ -6478,7 +6490,8 @@ class Controller
     }
 
     //Eliminar anexo
-    function eliminaranexo($id){
+    function eliminaranexo($id)
+    {
         $this->conexion();
         $sql = "delete from anexoscontrato where id=$id";
         $result = $this->mi->query($sql);
@@ -6487,18 +6500,19 @@ class Controller
     }
 
     //Buscar Clausula Anexo
-    function buscarclausulaanexo($anexo){
+    function buscarclausulaanexo($anexo)
+    {
         $this->conexion();
         $sql = "select * from clausulasanexos where anexo=$anexo";
         $result = $this->mi->query($sql);
         $lista = array();
-        if($rs = mysqli_fetch_array($result)){
+        if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $anexo = $rs['anexo'];
             $clausula = $rs['clausula'];
             $tipodocumento = $rs['tipodocumento'];
             $registro = $rs['register_at'];
-            $a = new ClausulaAnexo($id, $anexo, $clausula,$tipodocumento, $registro);
+            $a = new ClausulaAnexo($id, $anexo, $clausula, $tipodocumento, $registro);
             $lista[] = $a;
         }
         $this->desconectar();
@@ -6506,7 +6520,8 @@ class Controller
     }
 
     //Eliminar Clausula Anexo
-    function eliminarclausulaanexo($id){
+    function eliminarclausulaanexo($id)
+    {
         $this->conexion();
         $sql = "delete from clausulasanexos where anexo=$id";
         $result = $this->mi->query($sql);
@@ -6601,7 +6616,7 @@ class Controller
     }
 
     //Registrar Documento
-    function registrardocumento($trabajador, $empresa,$contrato, $tipodocumento, $fechageneracion, $documento)
+    function registrardocumento($trabajador, $empresa, $contrato, $tipodocumento, $fechageneracion, $documento)
     {
         $this->conexion();
         $sql = "insert into documentos values(null, $trabajador, $empresa,$contrato, $tipodocumento, '$fechageneracion','$documento',now())";
@@ -6668,85 +6683,86 @@ class Controller
         return $lista;
     }
 
-     //Listar documentos text empresa
-     function listardocumentostextempresa($empresa)
-     {
-         $this->conexion();
-         $sql = "select documentos.id as id, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, centrocosto.nombre as centrocosto, documentos.empresa as empresa, tipodocumento.nombre as tipodocumento, fechageneracion, documentos.documento as documento, documentos.register_at as register_at from centrocosto,contratos, trabajadores,documentos, tipodocumento where documentos.tipodocumento = tipodocumento.id and documentos.empresa=$empresa and trabajadores.id = documentos.trabajador and documentos.contrato=contratos.id and contratos.centrocosto = centrocosto.id";
-         $result = $this->mi->query($sql);
-         $lista = array();
-         while ($rs = mysqli_fetch_array($result)) {
-             $id = $rs['id'];
-             $trabajador = $rs['nombre'] . " " . $rs['apellido'];
-             $empresa = $rs['rut'];
-             $tipodocumento = $rs['tipodocumento'];
-             $fechageneracion = $rs['fechageneracion'];
-             //cambiar formato de fecha a dd/mm/yyyy
-             $fechageneracion = date("d/m/Y", strtotime($fechageneracion));
-             $documento = $rs['documento'];
-             $register_at = $rs['centrocosto'];
-             $l = new Documento($id, $trabajador, $empresa, $tipodocumento, $fechageneracion, $documento, $register_at);
-             $lista[] = $l;
-         }
-         $this->desconectar();
-         return $lista;
-     }
+    //Listar documentos text empresa
+    function listardocumentostextempresa($empresa)
+    {
+        $this->conexion();
+        $sql = "select documentos.id as id, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, centrocosto.nombre as centrocosto, documentos.empresa as empresa, tipodocumento.nombre as tipodocumento, fechageneracion, documentos.documento as documento, documentos.register_at as register_at from centrocosto,contratos, trabajadores,documentos, tipodocumento where documentos.tipodocumento = tipodocumento.id and documentos.empresa=$empresa and trabajadores.id = documentos.trabajador and documentos.contrato=contratos.id and contratos.centrocosto = centrocosto.id";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $trabajador = $rs['nombre'] . " " . $rs['apellido'];
+            $empresa = $rs['rut'];
+            $tipodocumento = $rs['tipodocumento'];
+            $fechageneracion = $rs['fechageneracion'];
+            //cambiar formato de fecha a dd/mm/yyyy
+            $fechageneracion = date("d/m/Y", strtotime($fechageneracion));
+            $documento = $rs['documento'];
+            $register_at = $rs['centrocosto'];
+            $l = new Documento($id, $trabajador, $empresa, $tipodocumento, $fechageneracion, $documento, $register_at);
+            $lista[] = $l;
+        }
+        $this->desconectar();
+        return $lista;
+    }
 
-     //Listar documentos text empresa
-     function listardocumentostextempresa2($empresa)
-     {
-         $this->conexion();
-         $sql = "select otrosdocumentosfirmados.id as id, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, centrocosto.nombre as centrocosto, documentos.empresa as empresa, tipodocumento.nombre as tipodocumento, fechageneracion, otrosdocumentosfirmados.documento as documento, documentos.register_at as register_at from centrocosto, trabajadores,documentos,otrosdocumentosfirmados, tipodocumento where documentos.tipodocumento = tipodocumento.id and otrosdocumentosfirmados.empresa=$empresa and trabajadores.id = documentos.trabajador and otrosdocumentosfirmados.centrocosto = centrocosto.id and otrosdocumentosfirmados.id_doc=documentos.id";
-         $result = $this->mi->query($sql);
-         $lista = array();
-         while ($rs = mysqli_fetch_array($result)) {
-             $id = $rs['id'];
-             $trabajador = $rs['nombre'] . " " . $rs['apellido'];
-             $empresa = $rs['rut'];
-             $tipodocumento = $rs['tipodocumento'];
-             $fechageneracion = $rs['fechageneracion'];
-             //cambiar formato de fecha a dd/mm/yyyy
-             $fechageneracion = date("d/m/Y", strtotime($fechageneracion));
-             $documento = $rs['documento'];
-             $register_at = $rs['centrocosto'];
-             $l = new Documento($id, $trabajador, $empresa, $tipodocumento, $fechageneracion, $documento, $register_at);
-             $lista[] = $l;
-         }
-         $this->desconectar();
-         return $lista;
-     }
+    //Listar documentos text empresa
+    function listardocumentostextempresa2($empresa)
+    {
+        $this->conexion();
+        $sql = "select otrosdocumentosfirmados.id as id, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, centrocosto.nombre as centrocosto, documentos.empresa as empresa, tipodocumento.nombre as tipodocumento, fechageneracion, otrosdocumentosfirmados.documento as documento, documentos.register_at as register_at from centrocosto, trabajadores,documentos,otrosdocumentosfirmados, tipodocumento where documentos.tipodocumento = tipodocumento.id and otrosdocumentosfirmados.empresa=$empresa and trabajadores.id = documentos.trabajador and otrosdocumentosfirmados.centrocosto = centrocosto.id and otrosdocumentosfirmados.id_doc=documentos.id";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $trabajador = $rs['nombre'] . " " . $rs['apellido'];
+            $empresa = $rs['rut'];
+            $tipodocumento = $rs['tipodocumento'];
+            $fechageneracion = $rs['fechageneracion'];
+            //cambiar formato de fecha a dd/mm/yyyy
+            $fechageneracion = date("d/m/Y", strtotime($fechageneracion));
+            $documento = $rs['documento'];
+            $register_at = $rs['centrocosto'];
+            $l = new Documento($id, $trabajador, $empresa, $tipodocumento, $fechageneracion, $documento, $register_at);
+            $lista[] = $l;
+        }
+        $this->desconectar();
+        return $lista;
+    }
 
 
-     
-     function listardocumentostextempresa1($empresa)
-     {
-         $this->conexion();
-         $sql = "select documentos.id as id, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, centrocosto.id as centrocosto, documentos.empresa as empresa, tipodocumento.nombre as tipodocumento, fechageneracion, documentos.documento as documento, documentos.register_at as register_at from centrocosto,contratos, trabajadores,documentos, tipodocumento where documentos.tipodocumento = tipodocumento.id and documentos.empresa=$empresa and trabajadores.id = documentos.trabajador and documentos.contrato=contratos.id and contratos.centrocosto = centrocosto.id";
-         $result = $this->mi->query($sql);
-         $lista = array();
-         while ($rs = mysqli_fetch_array($result)) {
-             $id = $rs['id'];
-             $trabajador = $rs['nombre'] . " " . $rs['apellido'];
-             $empresa = $rs['rut'];
-             $tipodocumento = $rs['tipodocumento'];
-             $fechageneracion = $rs['fechageneracion'];
-             //cambiar formato de fecha a dd/mm/yyyy
-             $fechageneracion = date("d/m/Y", strtotime($fechageneracion));
-             $documento = $rs['documento'];
-             $register_at = $rs['centrocosto'];
-             $l = new Documento($id, $trabajador, $empresa, $tipodocumento, $fechageneracion, $documento, $register_at);
-             $lista[] = $l;
-         }
-         $this->desconectar();
-         return $lista;
-     }
 
-     //Buscar Documento por id
-     function buscardocumentoporid($id){
+    function listardocumentostextempresa1($empresa)
+    {
+        $this->conexion();
+        $sql = "select documentos.id as id, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, centrocosto.id as centrocosto, documentos.empresa as empresa, tipodocumento.nombre as tipodocumento, fechageneracion, documentos.documento as documento, documentos.register_at as register_at from centrocosto,contratos, trabajadores,documentos, tipodocumento where documentos.tipodocumento = tipodocumento.id and documentos.empresa=$empresa and trabajadores.id = documentos.trabajador and documentos.contrato=contratos.id and contratos.centrocosto = centrocosto.id";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $trabajador = $rs['nombre'] . " " . $rs['apellido'];
+            $empresa = $rs['rut'];
+            $tipodocumento = $rs['tipodocumento'];
+            $fechageneracion = $rs['fechageneracion'];
+            //cambiar formato de fecha a dd/mm/yyyy
+            $fechageneracion = date("d/m/Y", strtotime($fechageneracion));
+            $documento = $rs['documento'];
+            $register_at = $rs['centrocosto'];
+            $l = new Documento($id, $trabajador, $empresa, $tipodocumento, $fechageneracion, $documento, $register_at);
+            $lista[] = $l;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Buscar Documento por id
+    function buscardocumentoporid($id)
+    {
         $this->conexion();
         $sql = "select documentos.id as id, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, centrocosto.id as centrocosto, documentos.empresa as empresa, tipodocumento.nombre as tipodocumento, fechageneracion, documentos.documento as documento, documentos.register_at as register_at from centrocosto,contratos, trabajadores,documentos, tipodocumento where documentos.tipodocumento = tipodocumento.id and documentos.id=$id and trabajadores.id = documentos.trabajador and documentos.contrato=contratos.id and contratos.centrocosto = centrocosto.id";
         $result = $this->mi->query($sql);
-        if($rs = mysqli_fetch_array($result)){
+        if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $trabajador = $rs['nombre'] . " " . $rs['apellido'];
             $empresa = $rs['rut'];
@@ -6762,16 +6778,16 @@ class Controller
         }
         $this->desconectar();
         return null;
-     }
+    }
 
-      //Listar Lotes con contratos Inactivos
-      function listarlotestext5($lote)
-      {
-          $this->conexion();
-          $sql = "select distinct detallelotes.contrato, detallelotes.id as id, documentos.id as id, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, documentos.empresa as empresa, tipodocumento.nombre as tipodocumento, fechageneracion, documentos.documento as documento, documentos.register_at as register_at from detallelotes, trabajadores,documentos, tipodocumento, contratos where documentos.tipodocumento = tipodocumento.id and lotes=$lote and trabajadores.id = documentos.trabajador and contratos.trabajador = trabajadores.id and contratos.estado = 1 and detallelotes.contrato = contratos.id";
-          $result = $this->mi->query($sql);
-          $lista = array();
-          while ($rs = mysqli_fetch_array($result)) {
+    //Listar Lotes con contratos Inactivos
+    function listarlotestext5($lote)
+    {
+        $this->conexion();
+        $sql = "select distinct detallelotes.contrato, detallelotes.id as id, documentos.id as id, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, documentos.empresa as empresa, tipodocumento.nombre as tipodocumento, fechageneracion, documentos.documento as documento, documentos.register_at as register_at from detallelotes, trabajadores,documentos, tipodocumento, contratos where documentos.tipodocumento = tipodocumento.id and lotes=$lote and trabajadores.id = documentos.trabajador and contratos.trabajador = trabajadores.id and contratos.estado = 1 and detallelotes.contrato = contratos.id";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $trabajador = $rs['nombre'] . " " . $rs['apellido'];
             $empresa = $rs['rut'];
@@ -6783,10 +6799,10 @@ class Controller
             $register_at = $rs['register_at'];
             $l = new Documento($id, $trabajador, $empresa, $tipodocumento, $fechageneracion, $documento, $register_at);
             $lista[] = $l;
-          }
-          $this->desconectar();
-          return $lista;
-      }
+        }
+        $this->desconectar();
+        return $lista;
+    }
 
     //Registrar Anotacion
     public function registraranotacion($trabajador, $empresa, $tipo, $anotacion)
@@ -6916,7 +6932,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['register_at'];
-            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $lista[] = $contrato;
         }
         $this->desconectar();
@@ -6942,7 +6958,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['register_at'];
-            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $lista[] = $contrato;
         }
         $this->desconectar();
@@ -6968,7 +6984,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['register_at'];
-            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $lista[] = $contrato;
         }
         $this->desconectar();
@@ -6995,7 +7011,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['register_at'];
-            $contrato = new Contrato($id, $nombre, $razonsocial, $centrocosto,$tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $lista[] = $contrato;
         }
         $this->desconectar();
@@ -7022,7 +7038,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['register_at'];
-            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $lista[] = $contrato;
         }
         $this->desconectar();
@@ -7049,7 +7065,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['register_at'];
-            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $lista[] = $contrato;
         }
         $this->desconectar();
@@ -7589,36 +7605,37 @@ class Controller
         return $result;
     }
 
-    function calcularDias($fechaInicio, $fechaFin) {
+    function calcularDias($fechaInicio, $fechaFin)
+    {
         $diasHabiles = 0;
         $diasFinSemana = 0;
-        
+
         $fechaInicio = strtotime($fechaInicio);
         $fechaFin = strtotime($fechaFin);
-        $diasferiados =0;
+        $diasferiados = 0;
         while ($fechaInicio <= $fechaFin) {
             $diaSemana = date('N', $fechaInicio);
-            
+
             if ($diaSemana >= 1 && $diaSemana <= 5) {
                 // Día hábil
                 $diasHabiles++;
                 $feriado = $this->buscarferiadoporfecha(date('Y-m-d', $fechaInicio));
-                if($feriado != false){
+                if ($feriado != false) {
                     $diasferiados++;
                 }
             } else {
                 // Día fin de semana
                 $diasFinSemana++;
             }
-            
+
             $fechaInicio = strtotime('+1 day', $fechaInicio);
         }
-        
+
         //$diasFeriados = count(array_intersect($feriados, obtenerFechas($fechaInicio, $fechaFin)));
-        
+
         $diasHabiles -= $diasferiados;
         $totales = $diasHabiles + $diasFinSemana + $diasferiados;
-        
+
         return [
             'diasHabiles' => $diasHabiles,
             'diasFinSemana' => $diasFinSemana,
@@ -7627,7 +7644,8 @@ class Controller
         ];
     }
 
-    function obtenerFechas($fechaInicio, $fechaFin) {
+    function obtenerFechas($fechaInicio, $fechaFin)
+    {
         $fechas = array();
         while ($fechaInicio <= $fechaFin) {
             $fechas[] = date('Y-m-d', $fechaInicio);
@@ -7638,19 +7656,20 @@ class Controller
 
     /*****************************************************Sistema de Remunereaciones********************************************************************* */
     //Listar Codigo lre
-    function listarcodigoslre(){
+    function listarcodigoslre()
+    {
         $this->conexion();
         $sql = "select * from codigolre order by codigo asc";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $articulo = $rs['articulo'];
             $codigo = $rs['codigo'];
             $codigoprevired = $rs['codigoprevired'];
             $descripcion = $rs['nombre'];
             $registro = $rs['register_at'];
-            $codigolre = new Codigolre($id,$articulo,$codigo,$codigoprevired,$descripcion,$registro);
+            $codigolre = new Codigolre($id, $articulo, $codigo, $codigoprevired, $descripcion, $registro);
             $lista[] = $codigolre;
         }
         $this->desconectar();
@@ -7658,7 +7677,8 @@ class Controller
     }
 
     //Registrar Codigo lre
-    function registrarcodigolre($articulo,$codigo,$codigoprevired,$descripcion){
+    function registrarcodigolre($articulo, $codigo, $codigoprevired, $descripcion)
+    {
         $this->conexion();
         $sql = "insert into codigolre(articulo,codigo,codigoprevired,nombre) values('$articulo','$codigo','$codigoprevired','$descripcion')";
         $result = $this->mi->query($sql);
@@ -7667,7 +7687,8 @@ class Controller
     }
 
     //Eliminar Codigo lre
-    function eliminarcodigolre($id){
+    function eliminarcodigolre($id)
+    {
         $this->conexion();
         $sql = "delete from codigolre where id=$id";
         $result = $this->mi->query($sql);
@@ -7676,7 +7697,8 @@ class Controller
     }
 
     //Editar Codigo lre
-    function editarcodigolre($id,$articulo,$codigo,$codigoprevired,$descripcion){
+    function editarcodigolre($id, $articulo, $codigo, $codigoprevired, $descripcion)
+    {
         $this->conexion();
         $sql = "update codigolre set articulo='$articulo', codigo='$codigo', codigoprevired='$codigoprevired', nombre='$descripcion' where id=$id";
         $result = $this->mi->query($sql);
@@ -7685,31 +7707,33 @@ class Controller
     }
 
     //Buscar Codigo lre
-    function buscarcodigolre($id){
+    function buscarcodigolre($id)
+    {
         $this->conexion();
         $sql = "select * from codigolre where id=$id";
         $result = $this->mi->query($sql);
         $codigolre = false;
-        while($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $articulo = $rs['articulo'];
             $codigo = $rs['codigo'];
             $codigoprevired = $rs['codigoprevired'];
             $descripcion = $rs['nombre'];
             $registro = $rs['register_at'];
-            $codigolre = new Codigolre($id,$articulo,$codigo,$codigoprevired,$descripcion,$registro);
+            $codigolre = new Codigolre($id, $articulo, $codigo, $codigoprevired, $descripcion, $registro);
         }
         $this->desconectar();
         return $codigolre;
     }
 
     //Listar Haberes y descuentos
-    function listarhaberesydescuentos(){
+    function listarhaberesydescuentos()
+    {
         $this->conexion();
         $sql = "select * from habres_descuentos order by codigo asc";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $codigo = $rs['codigo'];
             $descripcion = $rs['descripcion'];
@@ -7724,7 +7748,7 @@ class Controller
             $agrupacion = $rs['agrupacion'];
             $tipohaber = $rs['tipohaber'];
             $registro = $rs['register_at'];
-            $haber = new Haber($id,$codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$aplicaformula,$formula,$agrupacion,$tipohaber,$registro);
+            $haber = new Haber($id, $codigo, $descripcion, $tipo, $imponible, $tributable, $gratificacion, $reservado, $codigolre, $aplicaformula, $formula, $agrupacion, $tipohaber, $registro);
             $lista[] = $haber;
         }
         $this->desconectar();
@@ -7732,12 +7756,13 @@ class Controller
     }
 
     //Listar Descuentos relacional
-    function listarhaberesydescuentostext(){
+    function listarhaberesydescuentostext()
+    {
         $this->conexion();
         $sql = "select habres_descuentos.id as id, habres_descuentos.codigo as codigo, habres_descuentos.descripcion as descripcion, habres_descuentos.tipo as tipo, habres_descuentos.imponible as imponible, habres_descuentos.tributable as tributable, habres_descuentos.gratificacion as gratificacion, habres_descuentos.reservado as reservado, habres_descuentos.codigolre as codigolre, habres_descuentos.agrupacion as agrupacion,habres_descuentos.aplicaformula as aplicaformula, habres_descuentos.formula as formula, habres_descuentos.tipohaber as tipohaber, habres_descuentos.register_at as register_at, codigolre.articulo as articulo, codigolre.codigo as codigolre, codigolre.codigoprevired as codigoprevired, codigolre.nombre as nombre from habres_descuentos, codigolre where habres_descuentos.codigolre=codigolre.id order by habres_descuentos.codigo asc";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $codigo = $rs['codigo'];
             $descripcion = $rs['descripcion'];
@@ -7756,7 +7781,7 @@ class Controller
             $agrupacion = $rs['agrupacion'];
             $tipohaber = $rs['tipohaber'];
             $registro = $rs['register_at'];
-            $haber = new Haber($id,$codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$aplicaformula,$formula,$agrupacion,$tipohaber,$registro);
+            $haber = new Haber($id, $codigo, $descripcion, $tipo, $imponible, $tributable, $gratificacion, $reservado, $codigolre, $aplicaformula, $formula, $agrupacion, $tipohaber, $registro);
             $lista[] = $haber;
         }
         $this->desconectar();
@@ -7764,12 +7789,13 @@ class Controller
     }
 
     //Listar Haberes y descuentos por empresa
-    function listarhaberesydescuentosempresa($empresa){
+    function listarhaberesydescuentosempresa($empresa)
+    {
         $this->conexion();
         $sql = "select * from habres_descuentos where empresa=$empresa or tipohaber=1 order by codigo asc";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $codigo = $rs['codigo'];
             $descripcion = $rs['descripcion'];
@@ -7784,7 +7810,7 @@ class Controller
             $agrupacion = $rs['agrupacion'];
             $tipohaber = $rs['tipohaber'];
             $registro = $rs['register_at'];
-            $haber = new Haber($id,$codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$aplicaformula,$formula,$agrupacion,$tipohaber,$registro);
+            $haber = new Haber($id, $codigo, $descripcion, $tipo, $imponible, $tributable, $gratificacion, $reservado, $codigolre, $aplicaformula, $formula, $agrupacion, $tipohaber, $registro);
             $lista[] = $haber;
         }
         $this->desconectar();
@@ -7792,12 +7818,13 @@ class Controller
     }
 
     //Buscar Haberes y descuentos
-    function buscarhaberesydescuentos($id){
+    function buscarhaberesydescuentos($id)
+    {
         $this->conexion();
         $sql = "select * from habres_descuentos where id=$id";
         $result = $this->mi->query($sql);
         $haber = false;
-        while($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $codigo = $rs['codigo'];
             $descripcion = $rs['descripcion'];
@@ -7812,14 +7839,15 @@ class Controller
             $agrupacion = $rs['agrupacion'];
             $tipohaber = $rs['tipohaber'];
             $registro = $rs['register_at'];
-            $haber = new Haber($id,$codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$aplicaformula,$formula,$agrupacion,$tipohaber,$registro);
+            $haber = new Haber($id, $codigo, $descripcion, $tipo, $imponible, $tributable, $gratificacion, $reservado, $codigolre, $aplicaformula, $formula, $agrupacion, $tipohaber, $registro);
         }
         $this->desconectar();
         return $haber;
     }
 
     //Registrar Haberes y descuentos
-    function registrarhaberesydescuentos($codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion,$aplicaformula,$formula,$tipohaber, $empresa){
+    function registrarhaberesydescuentos($codigo, $descripcion, $tipo, $imponible, $tributable, $gratificacion, $reservado, $codigolre, $agrupacion, $aplicaformula, $formula, $tipohaber, $empresa)
+    {
         $this->conexion();
         $sql = "insert into habres_descuentos values(null,'$codigo','$descripcion',$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$agrupacion,$aplicaformula,'$formula',$tipohaber, $empresa, now())";
         $result = $this->mi->query($sql);
@@ -7828,16 +7856,17 @@ class Controller
     }
 
     //Verificar si existe el codigo
-    function validarcodigohaberes($tipohaber, $empresa, $codigo){
+    function validarcodigohaberes($tipohaber, $empresa, $codigo)
+    {
         $this->conexion();
-        $sql ="";
-        if($tipohaber==1){
+        $sql = "";
+        if ($tipohaber == 1) {
             $sql = "select * from habres_descuentos where (tipohaber=1 or tipohaber=2) and codigo='$codigo'";
-        }else if($tipohaber==2){
+        } else if ($tipohaber == 2) {
             $sql = "select * from habres_descuentos where codigo='$codigo' and (empresa=$empresa or empresa=0)";
         }
         $result = $this->mi->query($sql);
-        if($rs = mysqli_fetch_array($result)){
+        if ($rs = mysqli_fetch_array($result)) {
             $this->desconectar();
             return true;
         }
@@ -7846,7 +7875,8 @@ class Controller
     }
 
     //Eliminar Haberes y descuentos
-    function eliminarhaberesydescuentos($id){
+    function eliminarhaberesydescuentos($id)
+    {
         $this->conexion();
         $sql = "delete from habres_descuentos where id=$id";
         $result = $this->mi->query($sql);
@@ -7855,7 +7885,8 @@ class Controller
     }
 
     //Editar Haberes y descuentos
-    function editarhaberesydescuentos($id,$codigo,$descripcion,$tipo,$imponible,$tributable,$gratificacion,$reservado,$codigolre,$aplicaformula, $formula,$agrupacion){
+    function editarhaberesydescuentos($id, $codigo, $descripcion, $tipo, $imponible, $tributable, $gratificacion, $reservado, $codigolre, $aplicaformula, $formula, $agrupacion)
+    {
         $this->conexion();
         $sql = "update habres_descuentos set codigo='$codigo', descripcion='$descripcion', tipo=$tipo, imponible=$imponible, tributable=$tributable, gratificacion=$gratificacion, reservado=$reservado, codigolre=$codigolre, aplicaformula=$aplicaformula, formula='$formula', agrupacion=$agrupacion where id=$id";
         $result = $this->mi->query($sql);
@@ -7864,7 +7895,8 @@ class Controller
     }
 
     //Registrar Haberes Y Descuentos
-    function registrarhaberes_descuentos_trabajador($codigo, $periodo_inicio, $periodo_termino, $monto, $dias, $horas, $modalidad, $trabajador, $empresa){
+    function registrarhaberes_descuentos_trabajador($codigo, $periodo_inicio, $periodo_termino, $monto, $dias, $horas, $modalidad, $trabajador, $empresa)
+    {
         $this->conexion();
         $sql = "insert into haberes_descuentos_trabajador values(null,$codigo,'$periodo_inicio','$periodo_termino',$monto,$dias,$horas,$modalidad,$trabajador,$empresa,now())";
         $result = $this->mi->query($sql);
@@ -7873,25 +7905,26 @@ class Controller
     }
 
     //Listar Haberes Y Descuentos por periodo
-    function listarhaberes_descuento($periodo_ini, $periodo_ter, $empresa){
+    function listarhaberes_descuento($periodo_ini, $periodo_ter, $empresa)
+    {
         $this->conexion();
         $sql = "select haberes_descuentos_trabajador.id as id, habres_descuentos.descripcion as codigo,habres_descuentos.tipo as tipo, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, empresa.razonsocial as empresa, haberes_descuentos_trabajador.register_at as register_at from haberes_descuentos_trabajador, habres_descuentos, trabajadores, empresa where haberes_descuentos_trabajador.codigo=habres_descuentos.id and haberes_descuentos_trabajador.trabajador=trabajadores.id and haberes_descuentos_trabajador.empresa=empresa.id and haberes_descuentos_trabajador.periodo_inicio between '$periodo_ini' and '$periodo_ter' and haberes_descuentos_trabajador.empresa=$empresa order by haberes_descuentos_trabajador.periodo_inicio asc";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
-            $id=$rs['id'];
-            $codigo=$rs['codigo'];
-            $periodo_inicio=$rs['periodo_inicio'];
-            $periodo_termino=$rs['periodo_termino'];
-            $monto=$rs['monto'];
-            $dias=$rs['dias'];
-            $horas=$rs['horas'];
-            $modalidad=$rs['modalidad'];
-            $trabajador=$rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
-            $empresa=$rs['empresa'];
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $periodo_inicio = $rs['periodo_inicio'];
+            $periodo_termino = $rs['periodo_termino'];
+            $monto = $rs['monto'];
+            $dias = $rs['dias'];
+            $horas = $rs['horas'];
+            $modalidad = $rs['modalidad'];
+            $trabajador = $rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
+            $empresa = $rs['empresa'];
             $tipo = $rs['tipo'];
-            $registro=$rs['register_at'];
-            $haber = new haberes_trabajador($id,$codigo,$periodo_inicio,$periodo_termino,$monto,$dias,$horas,$modalidad,$trabajador,$empresa,$tipo,$registro);
+            $registro = $rs['register_at'];
+            $haber = new haberes_trabajador($id, $codigo, $periodo_inicio, $periodo_termino, $monto, $dias, $horas, $modalidad, $trabajador, $empresa, $tipo, $registro);
             $lista[] = $haber;
         }
         $this->desconectar();
@@ -7899,52 +7932,110 @@ class Controller
     }
 
     //Listar Haberes Y Descuentos por periodo
-    function listarhaberes_descuentotrababajador($periodo_ini, $periodo_ter, $empresa,$trabajador,$tipohaber){
+    function listarhaberes_descuentotrababajador($periodo_ini, $periodo_ter, $empresa, $trabajador)
+    {
         $this->conexion();
-        $sql = "select haberes_descuentos_trabajador.id as id,habres_descuentos.id as habid, habres_descuentos.descripcion as codigo,habres_descuentos.aplicaformula as tipo, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, empresa.razonsocial as empresa, habres_descuentos.imponible as register_at from haberes_descuentos_trabajador, habres_descuentos, trabajadores, empresa where haberes_descuentos_trabajador.codigo=habres_descuentos.id and haberes_descuentos_trabajador.trabajador=trabajadores.id and haberes_descuentos_trabajador.empresa=empresa.id and haberes_descuentos_trabajador.periodo_inicio between  '$periodo_ini' and '$periodo_ter' and haberes_descuentos_trabajador.empresa=$empresa and haberes_descuentos_trabajador.trabajador=$trabajador and habres_descuentos.tipo=$tipohaber order by haberes_descuentos_trabajador.periodo_inicio asc";
+        $sql = "select haberes_descuentos_trabajador.id as id,habres_descuentos.id as habid, habres_descuentos.descripcion as codigo,habres_descuentos.aplicaformula as tipo, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, empresa.razonsocial as empresa, habres_descuentos.imponible as register_at from haberes_descuentos_trabajador, habres_descuentos, trabajadores, empresa where haberes_descuentos_trabajador.codigo=habres_descuentos.id and haberes_descuentos_trabajador.trabajador=trabajadores.id and haberes_descuentos_trabajador.empresa=empresa.id and haberes_descuentos_trabajador.periodo_inicio between  '$periodo_ini' and '$periodo_ter' and haberes_descuentos_trabajador.empresa=$empresa and haberes_descuentos_trabajador.trabajador=$trabajador order by haberes_descuentos_trabajador.periodo_inicio asc";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
-            $id=$rs['id'];
-            $codigo=$rs['codigo'];
-            $periodo_inicio=$rs['periodo_inicio'];
-            $periodo_termino=$rs['periodo_termino'];
-            $monto=$rs['monto'];
-            $dias=$rs['dias'];
-            $horas=$rs['horas'];
-            $modalidad=$rs['modalidad'];
-            $trabajador=$rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
-            $empresa=$rs['habid'];
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $periodo_inicio = $rs['periodo_inicio'];
+            $periodo_termino = $rs['periodo_termino'];
+            $monto = $rs['monto'];
+            $dias = $rs['dias'];
+            $horas = $rs['horas'];
+            $modalidad = $rs['modalidad'];
+            $trabajador = $rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
+            $empresa = $rs['habid'];
             $tipo = $rs['tipo'];
-            $registro=$rs['register_at'];
-            $haber = new haberes_trabajador($id,$codigo,$periodo_inicio,$periodo_termino,$monto,$dias,$horas,$modalidad,$trabajador,$empresa,$tipo,$registro);
+            $registro = $rs['register_at'];
+            $haber = new haberes_trabajador($id, $codigo, $periodo_inicio, $periodo_termino, $monto, $dias, $horas, $modalidad, $trabajador, $empresa, $tipo, $registro);
             $lista[] = $haber;
         }
         $this->desconectar();
         return $lista;
     }
 
-    
     //Listar Haberes Y Descuentos por periodo
-    function buscarhaberes_descuentotrababajador($periodo_ini, $periodo_ter, $empresa,$trabajador,$tipo){
+    function listarhaberes_descuentotipo($periodo_ini, $periodo_ter, $empresa, $tipo)
+    {
+        $this->conexion();
+        $sql = "select haberes_descuentos_trabajador.id as id,habres_descuentos.id as habid, habres_descuentos.descripcion as codigo,habres_descuentos.aplicaformula as tipo, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, empresa.razonsocial as empresa, habres_descuentos.imponible as register_at from haberes_descuentos_trabajador, habres_descuentos, trabajadores, empresa where haberes_descuentos_trabajador.codigo=habres_descuentos.id and haberes_descuentos_trabajador.trabajador=trabajadores.id and haberes_descuentos_trabajador.empresa=empresa.id and haberes_descuentos_trabajador.periodo_inicio between  '$periodo_ini' and '$periodo_ter' and haberes_descuentos_trabajador.empresa=$empresa and habres_descuentos.tipo=$tipo  order by haberes_descuentos_trabajador.periodo_inicio asc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $periodo_inicio = $rs['periodo_inicio'];
+            $periodo_termino = $rs['periodo_termino'];
+            $monto = $rs['monto'];
+            $dias = $rs['dias'];
+            $horas = $rs['horas'];
+            $modalidad = $rs['modalidad'];
+            $trabajador = $rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
+            $empresa = $rs['habid'];
+            $tipo = $rs['tipo'];
+            $registro = $rs['register_at'];
+            $haber = new haberes_trabajador($id, $codigo, $periodo_inicio, $periodo_termino, $monto, $dias, $horas, $modalidad, $trabajador, $empresa, $tipo, $registro);
+            $lista[] = $haber;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+
+    //Listar Haberes Y Descuentos por periodo
+    function buscarhaberes_descuentotrababajadortipo($periodo_ini, $periodo_ter, $empresa, $trabajador, $tipo)
+    {
+        $this->conexion();
+        $sql = "select haberes_descuentos_trabajador.id as id, habres_descuentos.descripcion as codigo,habres_descuentos.tipo as tipo, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, empresa.razonsocial as empresa, haberes_descuentos_trabajador.register_at as register_at from haberes_descuentos_trabajador, habres_descuentos, trabajadores, empresa where haberes_descuentos_trabajador.codigo=habres_descuentos.id and haberes_descuentos_trabajador.trabajador=trabajadores.id and haberes_descuentos_trabajador.empresa=empresa.id and haberes_descuentos_trabajador.periodo_inicio between  '$periodo_ini' and '$periodo_ter' and haberes_descuentos_trabajador.empresa=$empresa and haberes_descuentos_trabajador.trabajador=$trabajador and habres_descuentos.tipo=$tipo order by haberes_descuentos_trabajador.periodo_inicio asc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $periodo_inicio = $rs['periodo_inicio'];
+            $periodo_termino = $rs['periodo_termino'];
+            $monto = $rs['monto'];
+            $dias = $rs['dias'];
+            $horas = $rs['horas'];
+            $modalidad = $rs['modalidad'];
+            $trabajador = $rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
+            $empresa = $rs['empresa'];
+            $tipo = $rs['tipo'];
+            $registro = $rs['register_at'];
+            $haber = new haberes_trabajador($id, $codigo, $periodo_inicio, $periodo_termino, $monto, $dias, $horas, $modalidad, $trabajador, $empresa, $tipo, $registro);
+            $lista[] = $haber;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+
+
+    //Listar Haberes Y Descuentos por periodo
+    function buscarhaberes_descuentotrababajador($periodo_ini, $periodo_ter, $empresa, $trabajador, $tipo)
+    {
         $this->conexion();
         $sql = "select haberes_descuentos_trabajador.id as id, habres_descuentos.descripcion as codigo,habres_descuentos.tipo as tipo, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, empresa.razonsocial as empresa, haberes_descuentos_trabajador.register_at as register_at from haberes_descuentos_trabajador, habres_descuentos, trabajadores, empresa where haberes_descuentos_trabajador.codigo=habres_descuentos.id and haberes_descuentos_trabajador.trabajador=trabajadores.id and haberes_descuentos_trabajador.empresa=empresa.id and haberes_descuentos_trabajador.periodo_inicio between  '$periodo_ini' and '$periodo_ter' and haberes_descuentos_trabajador.empresa=$empresa and haberes_descuentos_trabajador.trabajador=$trabajador order by haberes_descuentos_trabajador.periodo_inicio asc";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
-            $id=$rs['id'];
-            $codigo=$rs['codigo'];
-            $periodo_inicio=$rs['periodo_inicio'];
-            $periodo_termino=$rs['periodo_termino'];
-            $monto=$rs['monto'];
-            $dias=$rs['dias'];
-            $horas=$rs['horas'];
-            $modalidad=$rs['modalidad'];
-            $trabajador=$rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
-            $empresa=$rs['empresa'];
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $periodo_inicio = $rs['periodo_inicio'];
+            $periodo_termino = $rs['periodo_termino'];
+            $monto = $rs['monto'];
+            $dias = $rs['dias'];
+            $horas = $rs['horas'];
+            $modalidad = $rs['modalidad'];
+            $trabajador = $rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
+            $empresa = $rs['empresa'];
             $tipo = $rs['tipo'];
-            $registro=$rs['register_at'];
-            $haber = new haberes_trabajador($id,$codigo,$periodo_inicio,$periodo_termino,$monto,$dias,$horas,$modalidad,$trabajador,$empresa,$tipo,$registro);
+            $registro = $rs['register_at'];
+            $haber = new haberes_trabajador($id, $codigo, $periodo_inicio, $periodo_termino, $monto, $dias, $horas, $modalidad, $trabajador, $empresa, $tipo, $registro);
             $lista[] = $haber;
         }
         $this->desconectar();
@@ -7952,25 +8043,26 @@ class Controller
     }
 
     //Listar todo Haberes Y Descuentos
-    function listarhaberesdescuentos($empresa){
+    function listarhaberesdescuentos($empresa)
+    {
         $this->conexion();
         $sql = "select haberes_descuentos_trabajador.id as id, habres_descuentos.descripcion as codigo,habres_descuentos.tipo as tipo, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, empresa.razonsocial as empresa, haberes_descuentos_trabajador.register_at as register_at from haberes_descuentos_trabajador, habres_descuentos, trabajadores, empresa where haberes_descuentos_trabajador.codigo=habres_descuentos.id and haberes_descuentos_trabajador.trabajador=trabajadores.id and haberes_descuentos_trabajador.empresa=empresa.id and haberes_descuentos_trabajador.empresa=$empresa order by haberes_descuentos_trabajador.periodo_inicio asc";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
-            $id=$rs['id'];
-            $codigo=$rs['codigo'];
-            $periodo_inicio=$rs['periodo_inicio'];
-            $periodo_termino=$rs['periodo_termino'];
-            $monto=$rs['monto'];
-            $dias=$rs['dias'];
-            $horas=$rs['horas'];
-            $modalidad=$rs['modalidad'];
-            $trabajador=$rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
-            $empresa=$rs['empresa'];
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $periodo_inicio = $rs['periodo_inicio'];
+            $periodo_termino = $rs['periodo_termino'];
+            $monto = $rs['monto'];
+            $dias = $rs['dias'];
+            $horas = $rs['horas'];
+            $modalidad = $rs['modalidad'];
+            $trabajador = $rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
+            $empresa = $rs['empresa'];
             $tipo = $rs['tipo'];
-            $registro=$rs['register_at'];
-            $haber = new haberes_trabajador($id,$codigo,$periodo_inicio,$periodo_termino,$monto,$dias,$horas,$modalidad,$trabajador,$empresa,$tipo,$registro);
+            $registro = $rs['register_at'];
+            $haber = new haberes_trabajador($id, $codigo, $periodo_inicio, $periodo_termino, $monto, $dias, $horas, $modalidad, $trabajador, $empresa, $tipo, $registro);
             $lista[] = $haber;
         }
         $this->desconectar();
@@ -7978,76 +8070,79 @@ class Controller
     }
 
     //Listar todo Haberes Y Descuentos
-    function listarhaberesdescuentos1($empresa){
+    function listarhaberesdescuentos1($empresa)
+    {
         $this->conexion();
         $sql = "select * from haberes_descuentos_trabajador where empresa=$empresa order by periodo_inicio asc";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
-            $id=$rs['id'];
-            $codigo=$rs['codigo'];
-            $periodo_inicio=$rs['periodo_inicio'];
-            $periodo_termino=$rs['periodo_termino'];
-            $monto=$rs['monto'];
-            $dias=$rs['dias'];
-            $horas=$rs['horas'];
-            $modalidad=$rs['modalidad'];
-            $trabajador=$rs['trabajador'];
-            $empresa=$rs['empresa'];
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $periodo_inicio = $rs['periodo_inicio'];
+            $periodo_termino = $rs['periodo_termino'];
+            $monto = $rs['monto'];
+            $dias = $rs['dias'];
+            $horas = $rs['horas'];
+            $modalidad = $rs['modalidad'];
+            $trabajador = $rs['trabajador'];
+            $empresa = $rs['empresa'];
             $tipo = 0;
-            $registro=$rs['register_at'];
-            $haber = new haberes_trabajador($id,$codigo,$periodo_inicio,$periodo_termino,$monto,$dias,$horas,$modalidad,$trabajador,$empresa,$tipo,$registro);
+            $registro = $rs['register_at'];
+            $haber = new haberes_trabajador($id, $codigo, $periodo_inicio, $periodo_termino, $monto, $dias, $horas, $modalidad, $trabajador, $empresa, $tipo, $registro);
             $lista[] = $haber;
         }
         $this->desconectar();
         return $lista;
     }
 
-    function obtenerValorHaberPorID($id, $trabajador,$empresa){
+    function obtenerValorHaberPorID($id, $trabajador, $empresa)
+    {
         $this->conexion();
         $sql = "select * from haberes_descuentos_trabajador where empresa=$empresa and trabajador=$trabajador and codigo=$id";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
-            $id=$rs['id'];
-            $codigo=$rs['codigo'];
-            $periodo_inicio=$rs['periodo_inicio'];
-            $periodo_termino=$rs['periodo_termino'];
-            $monto=$rs['monto'];
-            $dias=$rs['dias'];
-            $horas=$rs['horas'];
-            $modalidad=$rs['modalidad'];
-            $trabajador=$rs['trabajador'];
-            $empresa=$rs['empresa'];
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $periodo_inicio = $rs['periodo_inicio'];
+            $periodo_termino = $rs['periodo_termino'];
+            $monto = $rs['monto'];
+            $dias = $rs['dias'];
+            $horas = $rs['horas'];
+            $modalidad = $rs['modalidad'];
+            $trabajador = $rs['trabajador'];
+            $empresa = $rs['empresa'];
             $tipo = 0;
-            $registro=$rs['register_at'];
-            $haber = new haberes_trabajador($id,$codigo,$periodo_inicio,$periodo_termino,$monto,$dias,$horas,$modalidad,$trabajador,$empresa,$tipo,$registro);
+            $registro = $rs['register_at'];
+            $haber = new haberes_trabajador($id, $codigo, $periodo_inicio, $periodo_termino, $monto, $dias, $horas, $modalidad, $trabajador, $empresa, $tipo, $registro);
             $lista[] = $haber;
         }
         $this->desconectar();
         return $lista;
     }
-    
+
     //Listar Haberes y Descuentos del Mes actual
-    function listarhaberesdescuentosactual($empresa){
+    function listarhaberesdescuentosactual($empresa)
+    {
         $this->conexion();
         $sql = "select haberes_descuentos_trabajador.id as id, habres_descuentos.descripcion as codigo,habres_descuentos.tipo as tipo, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, empresa.razonsocial as empresa, haberes_descuentos_trabajador.register_at as register_at from haberes_descuentos_trabajador, habres_descuentos, trabajadores, empresa where haberes_descuentos_trabajador.codigo=habres_descuentos.id and haberes_descuentos_trabajador.trabajador=trabajadores.id and haberes_descuentos_trabajador.empresa=empresa.id and haberes_descuentos_trabajador.empresa=$empresa and month(haberes_descuentos_trabajador.periodo_inicio)=month(curdate()) and year(haberes_descuentos_trabajador.periodo_inicio)=year(curdate()) and month(haberes_descuentos_trabajador.periodo_termino)=month(curdate()) and year(haberes_descuentos_trabajador.periodo_termino)=year(curdate()) order by haberes_descuentos_trabajador.periodo_inicio asc";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
-            $id=$rs['id'];
-            $codigo=$rs['codigo'];
-            $periodo_inicio=$rs['periodo_inicio'];
-            $periodo_termino=$rs['periodo_termino'];
-            $monto=$rs['monto'];
-            $dias=$rs['dias'];
-            $horas=$rs['horas'];
-            $modalidad=$rs['modalidad'];
-            $trabajador=$rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
-            $empresa=$rs['empresa'];
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $periodo_inicio = $rs['periodo_inicio'];
+            $periodo_termino = $rs['periodo_termino'];
+            $monto = $rs['monto'];
+            $dias = $rs['dias'];
+            $horas = $rs['horas'];
+            $modalidad = $rs['modalidad'];
+            $trabajador = $rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
+            $empresa = $rs['empresa'];
             $tipo = $rs['tipo'];
-            $registro=$rs['register_at'];
-            $haber = new haberes_trabajador($id,$codigo,$periodo_inicio,$periodo_termino,$monto,$dias,$horas,$modalidad,$trabajador,$empresa,$tipo,$registro);
+            $registro = $rs['register_at'];
+            $haber = new haberes_trabajador($id, $codigo, $periodo_inicio, $periodo_termino, $monto, $dias, $horas, $modalidad, $trabajador, $empresa, $tipo, $registro);
             $lista[] = $haber;
         }
         $this->desconectar();
@@ -8055,32 +8150,86 @@ class Controller
     }
 
     //Listar Haberes y Descuentos del Mes actual
-    function listarhaberesdescuentosactualtrabajador($empresa,$trabajador){
+    function listarhaberesdescuentosactualtrabajador($empresa, $trabajador)
+    {
         $this->conexion();
         $sql = "select haberes_descuentos_trabajador.id as id, habres_descuentos.descripcion as codigo,habres_descuentos.tipo as tipo, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, empresa.razonsocial as empresa, haberes_descuentos_trabajador.register_at as register_at from haberes_descuentos_trabajador, habres_descuentos, trabajadores, empresa where haberes_descuentos_trabajador.codigo=habres_descuentos.id and haberes_descuentos_trabajador.trabajador=trabajadores.id and haberes_descuentos_trabajador.empresa=empresa.id and haberes_descuentos_trabajador.empresa=$empresa and month(haberes_descuentos_trabajador.periodo_inicio)=month(curdate()) and year(haberes_descuentos_trabajador.periodo_inicio)=year(curdate()) and month(haberes_descuentos_trabajador.periodo_termino)=month(curdate()) and year(haberes_descuentos_trabajador.periodo_termino)=year(curdate()) and trabajadores.id=$trabajador order by haberes_descuentos_trabajador.periodo_inicio asc";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
-            $id=$rs['id'];
-            $codigo=$rs['codigo'];
-            $periodo_inicio=$rs['periodo_inicio'];
-            $periodo_termino=$rs['periodo_termino'];
-            $monto=$rs['monto'];
-            $dias=$rs['dias'];
-            $horas=$rs['horas'];
-            $modalidad=$rs['modalidad'];
-            $trabajador=$rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
-            $empresa=$rs['empresa'];
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $periodo_inicio = $rs['periodo_inicio'];
+            $periodo_termino = $rs['periodo_termino'];
+            $monto = $rs['monto'];
+            $dias = $rs['dias'];
+            $horas = $rs['horas'];
+            $modalidad = $rs['modalidad'];
+            $trabajador = $rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
+            $empresa = $rs['empresa'];
             $tipo = $rs['tipo'];
-            $registro=$rs['register_at'];
-            $haber = new haberes_trabajador($id,$codigo,$periodo_inicio,$periodo_termino,$monto,$dias,$horas,$modalidad,$trabajador,$empresa,$tipo,$registro);
+            $registro = $rs['register_at'];
+            $haber = new haberes_trabajador($id, $codigo, $periodo_inicio, $periodo_termino, $monto, $dias, $horas, $modalidad, $trabajador, $empresa, $tipo, $registro);
+            $lista[] = $haber;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+    //Listar Haberes y Descuentos del Mes actual
+    function listarhaberesdescuentosactualtrabajadorhaber($empresa, $trabajador, $tipo)
+    {
+        $this->conexion();
+        $sql = "select haberes_descuentos_trabajador.id as id, habres_descuentos.descripcion as codigo,habres_descuentos.tipo as tipo, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, empresa.razonsocial as empresa, haberes_descuentos_trabajador.register_at as register_at from haberes_descuentos_trabajador, habres_descuentos, trabajadores, empresa where haberes_descuentos_trabajador.codigo=habres_descuentos.id and haberes_descuentos_trabajador.trabajador=trabajadores.id and haberes_descuentos_trabajador.empresa=empresa.id and haberes_descuentos_trabajador.empresa=$empresa and month(haberes_descuentos_trabajador.periodo_inicio)=month(curdate()) and year(haberes_descuentos_trabajador.periodo_inicio)=year(curdate()) and month(haberes_descuentos_trabajador.periodo_termino)=month(curdate()) and year(haberes_descuentos_trabajador.periodo_termino)=year(curdate()) and trabajadores.id=$trabajador and habres_descuentos.tipo=$tipo order by haberes_descuentos_trabajador.periodo_inicio asc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $periodo_inicio = $rs['periodo_inicio'];
+            $periodo_termino = $rs['periodo_termino'];
+            $monto = $rs['monto'];
+            $dias = $rs['dias'];
+            $horas = $rs['horas'];
+            $modalidad = $rs['modalidad'];
+            $trabajador = $rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
+            $empresa = $rs['empresa'];
+            $tipo = $rs['tipo'];
+            $registro = $rs['register_at'];
+            $haber = new haberes_trabajador($id, $codigo, $periodo_inicio, $periodo_termino, $monto, $dias, $horas, $modalidad, $trabajador, $empresa, $tipo, $registro);
+            $lista[] = $haber;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+    //Listar Haberes y Descuentos del Mes actual
+    function listarhaberesdescuentosactualhaber($empresa, $tipo)
+    {
+        $this->conexion();
+        $sql = "select haberes_descuentos_trabajador.id as id, habres_descuentos.descripcion as codigo,habres_descuentos.tipo as tipo, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, empresa.razonsocial as empresa, haberes_descuentos_trabajador.register_at as register_at from haberes_descuentos_trabajador, habres_descuentos, trabajadores, empresa where haberes_descuentos_trabajador.codigo=habres_descuentos.id and haberes_descuentos_trabajador.trabajador=trabajadores.id and haberes_descuentos_trabajador.empresa=empresa.id and haberes_descuentos_trabajador.empresa=$empresa and month(haberes_descuentos_trabajador.periodo_inicio)=month(curdate()) and year(haberes_descuentos_trabajador.periodo_inicio)=year(curdate()) and month(haberes_descuentos_trabajador.periodo_termino)=month(curdate()) and year(haberes_descuentos_trabajador.periodo_termino)=year(curdate())  and habres_descuentos.tipo=$tipo order by haberes_descuentos_trabajador.periodo_inicio asc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $periodo_inicio = $rs['periodo_inicio'];
+            $periodo_termino = $rs['periodo_termino'];
+            $monto = $rs['monto'];
+            $dias = $rs['dias'];
+            $horas = $rs['horas'];
+            $modalidad = $rs['modalidad'];
+            $trabajador = $rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
+            $empresa = $rs['empresa'];
+            $tipo = $rs['tipo'];
+            $registro = $rs['register_at'];
+            $haber = new haberes_trabajador($id, $codigo, $periodo_inicio, $periodo_termino, $monto, $dias, $horas, $modalidad, $trabajador, $empresa, $tipo, $registro);
             $lista[] = $haber;
         }
         $this->desconectar();
         return $lista;
     }
 
-    function eliminarhaberesdescuentos($id){
+    function eliminarhaberesdescuentos($id)
+    {
         $this->conexion();
         $sql = "delete from haberes_descuentos_trabajador where id=$id";
         $result = $this->mi->query($sql);
@@ -8092,7 +8241,8 @@ class Controller
     /******************Documento Firmado *****************************************/
     /******************Contrato Firmado *****************************************/
     //Registrar Contrato Firmado
-    function registrarcontratofirmado($empresa,$centrocosto,$contrato,$documento){
+    function registrarcontratofirmado($empresa, $centrocosto, $contrato, $documento)
+    {
         $this->conexion();
         $sql = "insert into contratosfirmados values(null,$empresa,$centrocosto,$contrato,'$documento',now())";
         $result = $this->mi->query($sql);
@@ -8101,44 +8251,47 @@ class Controller
     }
 
     //Buscar Contrato Firmado
-    function buscarcontratofirmado($contrato){
+    function buscarcontratofirmado($contrato)
+    {
         $this->conexion();
         $sql = "select * from contratosfirmados where contrato=$contrato";
         $result = $this->mi->query($sql);
         $contrato = false;
-        while($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $empresa = $rs['empresa'];
             $centrocosto = $rs['centrocosto'];
             $contrato = $rs['contrato'];
             $documento = $rs['documento'];
             $registro = $rs['register_at'];
-            $contrato = new DocumentoFirmado($id,$empresa,$centrocosto,$contrato,$documento,$registro);
+            $contrato = new DocumentoFirmado($id, $empresa, $centrocosto, $contrato, $documento, $registro);
         }
         $this->desconectar();
         return $contrato;
     }
     //Buscar Contrato Firmado
-    function buscarcontratofirmado1($contrato){
+    function buscarcontratofirmado1($contrato)
+    {
         $this->conexion();
         $sql = "select * from contratosfirmados where id=$contrato";
         $result = $this->mi->query($sql);
         $contrato = false;
-        while($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $empresa = $rs['empresa'];
             $centrocosto = $rs['centrocosto'];
             $contrato = $rs['contrato'];
             $documento = $rs['documento'];
             $registro = $rs['register_at'];
-            $contrato = new DocumentoFirmado($id,$empresa,$centrocosto,$contrato,$documento,$registro);
+            $contrato = new DocumentoFirmado($id, $empresa, $centrocosto, $contrato, $documento, $registro);
         }
         $this->desconectar();
         return $contrato;
     }
 
     //actualizar Contrato Firmado
-    function actualizarcontratofirmado($id,$documento){
+    function actualizarcontratofirmado($id, $documento)
+    {
         $this->conexion();
         $sql = "update contratosfirmados set documento='$documento' where id=$id";
         $result = $this->mi->query($sql);
@@ -8147,7 +8300,8 @@ class Controller
     }
 
     //Eliminar Contrato Firmado
-    function eliminarcontratofirmado($id){
+    function eliminarcontratofirmado($id)
+    {
         $this->conexion();
         $sql = "delete from contratosfirmados where id=$id";
         $result = $this->mi->query($sql);
@@ -8176,7 +8330,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['rut'];
-            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $lista[] = $contrato;
         }
         $this->desconectar();
@@ -8190,9 +8344,9 @@ class Controller
         $sql = "select contratos.id as id, trabajadores.rut as rut,trabajadores.nombre as nombre, centrocosto.nombre as centrocosto, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, contratosfirmados.documento as documento, estado, contratos.register_at as register_at from contratosfirmados,contratos,centrocosto, trabajadores, empresa where trabajadores.id = contratos.trabajador and contratos.centrocosto=centrocosto.id and empresa.id = contratos.empresa and contratos.estado=1 and contratosfirmados.contrato=contratos.id";
         $i = 0;
         foreach ($centros as $centro) {
-            if($i==0){
+            if ($i == 0) {
                 $sql = $sql . " and (contratosfirmados.centrocosto=$centro";
-            }else{
+            } else {
                 $sql = $sql . " or contratosfirmados.centrocosto=$centro";
             }
             $i++;
@@ -8216,7 +8370,7 @@ class Controller
             $documento = $rs['documento'];
             $estado = $rs['estado'];
             $register_at = $rs['rut'];
-            $contrato = new Contrato($id, $nombre, $razonsocial,$centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato = new Contrato($id, $nombre, $razonsocial, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
             $lista[] = $contrato;
         }
         $this->desconectar();
@@ -8226,7 +8380,8 @@ class Controller
     /**************************************************Finiquito Firmado*************************************************** */
 
     //Registrar Finiquito Firmado
-    function registrarfiniquitofirmado($empresa,$centrocosto,$finiquito,$documento){
+    function registrarfiniquitofirmado($empresa, $centrocosto, $finiquito, $documento)
+    {
         $this->conexion();
         $sql = "insert into finiquitosfirmados values(null,$empresa,$centrocosto,$finiquito,'$documento',now())";
         $result = $this->mi->query($sql);
@@ -8235,44 +8390,47 @@ class Controller
     }
 
     //Buscar Finiquito Firmado
-    function buscarfiniquitofirmado($finiquito){
+    function buscarfiniquitofirmado($finiquito)
+    {
         $this->conexion();
         $sql = "select * from finiquitosfirmados where finiquito=$finiquito";
         $result = $this->mi->query($sql);
         $finiquito = false;
-        while($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $empresa = $rs['empresa'];
             $centrocosto = $rs['centrocosto'];
             $finiquito = $rs['finiquito'];
             $documento = $rs['documento'];
             $registro = $rs['register_at'];
-            $finiquito = new DocumentoFirmado($id,$empresa,$centrocosto,$finiquito,$documento,$registro);
+            $finiquito = new DocumentoFirmado($id, $empresa, $centrocosto, $finiquito, $documento, $registro);
         }
         $this->desconectar();
         return $finiquito;
     }
     //Buscar Finiquito Firmado
-    function buscarfiniquitofirmado1($finiquito){
+    function buscarfiniquitofirmado1($finiquito)
+    {
         $this->conexion();
         $sql = "select * from finiquitosfirmados where id=$finiquito";
         $result = $this->mi->query($sql);
         $finiquito = false;
-        while($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $empresa = $rs['empresa'];
             $centrocosto = $rs['centrocosto'];
             $finiquito = $rs['finiquito'];
             $documento = $rs['documento'];
             $registro = $rs['register_at'];
-            $finiquito = new DocumentoFirmado($id,$empresa,$centrocosto,$finiquito,$documento,$registro);
+            $finiquito = new DocumentoFirmado($id, $empresa, $centrocosto, $finiquito, $documento, $registro);
         }
         $this->desconectar();
         return $finiquito;
     }
 
     //actualizar Finiquito Firmado
-    function actualizarfiniquitofirmado($id,$documento){
+    function actualizarfiniquitofirmado($id, $documento)
+    {
         $this->conexion();
         $sql = "update finiquitosfirmados set documento='$documento' where id=$id";
         $result = $this->mi->query($sql);
@@ -8281,7 +8439,8 @@ class Controller
     }
 
     //eliminar Finiquito Firmado
-    function eliminarfiniquitofirmado($id){
+    function eliminarfiniquitofirmado($id)
+    {
         $this->conexion();
         $sql = "delete from finiquitosfirmados where id=$id";
         $result = $this->mi->query($sql);
@@ -8290,7 +8449,7 @@ class Controller
     }
 
     //Listar Finiquitos Firmados
-    
+
     function listarfiniquitofirmados($empresa)
     {
         $this->conexion();
@@ -8308,23 +8467,23 @@ class Controller
             $trabajador = $rs['nombre'] . " " . $rs['apellido'];
             $empresa = $rs['rut'];
             $register_at = $rs['centrocosto'];
-            $finiquito = new Finiquito($id, $contrato, $tipodocumento, $fechafiniquito, $fechainicio, $fechatermino, $causalterminocontrato, $trabajador, $empresa,$register_at);
+            $finiquito = new Finiquito($id, $contrato, $tipodocumento, $fechafiniquito, $fechainicio, $fechatermino, $causalterminocontrato, $trabajador, $empresa, $register_at);
             $lista[] = $finiquito;
         }
         $this->desconectar();
         return $lista;
     }
     //Listar Finiquitos Firmados Centro de Costo
-    
+
     function listarfiniquitofirmados1($centros)
     {
         $this->conexion();
         $sql = "select finiquito.id as id, centrocosto.nombre as centrocosto, finiquito.contrato as contrato, finiquito.tipodocumento as tipodocumento, finiquito.fechafiniqito as fechafiniqito, finiquitosfirmados.documento as documento, finiquito.fechainicio as fechainicio, finiquito.fechatermino as fechatermino, causalterminocontrato.nombre as causalterminocontrato, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, finiquito.empresa as empresa, finiquito.register_at as register_at from contratos,centrocosto, finiquito,trabajadores, causalterminocontrato, finiquitosfirmados where finiquito.causalterminocontrato = causalterminocontrato.id and finiquito.trabajador = trabajadores.id and finiquito.contrato = contratos.id and contratos.centrocosto = centrocosto.id and finiquitosfirmados.finiquito=finiquito.id ";
         $i = 0;
         foreach ($centros as $centro) {
-            if($i==0){
+            if ($i == 0) {
                 $sql = $sql . " and (finiquitosfirmados.centrocosto=$centro";
-            }else{
+            } else {
                 $sql = $sql . " or finiquitosfirmados.centrocosto=$centro";
             }
             $i++;
@@ -8344,7 +8503,7 @@ class Controller
             $trabajador = $rs['nombre'] . " " . $rs['apellido'];
             $empresa = $rs['rut'];
             $register_at = $rs['centrocosto'];
-            $finiquito = new Finiquito($id, $contrato, $tipodocumento, $fechafiniquito, $fechainicio, $fechatermino, $causalterminocontrato, $trabajador, $empresa,$register_at);
+            $finiquito = new Finiquito($id, $contrato, $tipodocumento, $fechafiniquito, $fechainicio, $fechatermino, $causalterminocontrato, $trabajador, $empresa, $register_at);
             $lista[] = $finiquito;
         }
         $this->desconectar();
@@ -8354,7 +8513,8 @@ class Controller
     /************************************************************************************************************************ */
     /**************************************************Notificaciones Firmadas*************************************************** */
     //Registrar Notificacion Firmada
-    function registrarnotificacionfirmada($empresa,$centrocosto,$notificacion,$documento,$carta){
+    function registrarnotificacionfirmada($empresa, $centrocosto, $notificacion, $documento, $carta)
+    {
         $this->conexion();
         $sql = "insert into notificacionesfirmadas values(null,$empresa,$centrocosto,$notificacion,'$documento','$carta',now())";
         $result = $this->mi->query($sql);
@@ -8364,7 +8524,8 @@ class Controller
 
 
     //actualizar Notificacion Firmada
-    function actualizarnotificacionfirmada($id,$documento){
+    function actualizarnotificacionfirmada($id, $documento)
+    {
         $this->conexion();
         $sql = "update notificacionesfirmadas set documento='$documento' where id=$id";
         $result = $this->mi->query($sql);
@@ -8373,7 +8534,8 @@ class Controller
     }
 
     //actualizar Notificacion Firmada Carta
-    function actualizarnotificacionfirmadacarta($id,$carta){
+    function actualizarnotificacionfirmadacarta($id, $carta)
+    {
         $this->conexion();
         $sql = "update notificacionesfirmadas set carta='$carta' where id=$id";
         $result = $this->mi->query($sql);
@@ -8382,7 +8544,8 @@ class Controller
     }
 
     //Eliminar Notificacion Firmada
-    function eliminarnotificacionfirmada($id){
+    function eliminarnotificacionfirmada($id)
+    {
         $this->conexion();
         $sql = "delete from notificacionesfirmadas where id=$id";
         $result = $this->mi->query($sql);
@@ -8391,12 +8554,13 @@ class Controller
     }
 
     //Buscar Notificacion Firmada
-    function buscarnotificacionfirmada($notificacion){
+    function buscarnotificacionfirmada($notificacion)
+    {
         $this->conexion();
         $sql = "select * from notificacionesfirmadas where notificacion=$notificacion";
         $result = $this->mi->query($sql);
         $notificacion = false;
-        while($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $empresa = $rs['empresa'];
             $centrocosto = $rs['centrocosto'];
@@ -8404,18 +8568,19 @@ class Controller
             $documento = $rs['documento'];
             $carta = $rs['carta'];
             $registro = $rs['register_at'];
-            $notificacion = new NotificacionFirmada($id,$empresa,$centrocosto,$notificacion,$documento,$carta,$registro);
+            $notificacion = new NotificacionFirmada($id, $empresa, $centrocosto, $notificacion, $documento, $carta, $registro);
         }
         $this->desconectar();
         return $notificacion;
     }
     //Buscar Notificacion Firmada
-    function buscarnotificacionfirmada1($id){
+    function buscarnotificacionfirmada1($id)
+    {
         $this->conexion();
         $sql = "select * from notificacionesfirmadas where id=$id";
         $result = $this->mi->query($sql);
         $notificacion = false;
-        while($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $empresa = $rs['empresa'];
             $centrocosto = $rs['centrocosto'];
@@ -8423,14 +8588,14 @@ class Controller
             $documento = $rs['documento'];
             $carta = $rs['carta'];
             $registro = $rs['register_at'];
-            $notificacion = new NotificacionFirmada($id,$empresa,$centrocosto,$notificacion,$documento,$carta,$registro);
+            $notificacion = new NotificacionFirmada($id, $empresa, $centrocosto, $notificacion, $documento, $carta, $registro);
         }
         $this->desconectar();
         return $notificacion;
     }
-    
+
     //Listar Notificaciones Firmadas
-    
+
     //Listar Notificaciones por empresa
     function listarnotificacionesfirmadas($empresa)
     {
@@ -8464,9 +8629,9 @@ class Controller
         $sql = "select notificacionesfirmadas.id as id, notificacionesfirmadas.documento as documento, notificacionesfirmadas.carta as carta, fechanotificacion, finiquito, notificaciones.tipodocumento as tipodocumento, causalterminocontrato.nombre as causal, causalhechos, cotizacionprevisional, comunicacion.nombre as comunicacion, acreditacion, comuna,texto, notificaciones.register_at as register_at, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, centrocosto.nombre as centrocosto from notificaciones,causalterminocontrato, finiquito,contratos, comunicacion, trabajadores, centrocosto, notificacionesfirmadas where notificaciones.finiquito = finiquito.id and finiquito.contrato = contratos.id and finiquito.trabajador = trabajadores.id and comunicacion.id = notificaciones.comunicacion and contratos.centrocosto = centrocosto.id and causalterminocontrato.id = notificaciones.causal and notificacionesfirmadas.notificacion=notificaciones.id";
         $i = 0;
         foreach ($centros as $centro) {
-            if($i==0){
+            if ($i == 0) {
                 $sql = $sql . " and (notificacionesfirmadas.centrocosto=$centro";
-            }else{
+            } else {
                 $sql = $sql . " or notificacionesfirmadas.centrocosto=$centro";
             }
             $i++;
@@ -8498,7 +8663,8 @@ class Controller
 
 
     //Registrar Otros Documentos Firmados
-    function registrarotrosdocumentosfirmados($empresa,$centrocosto,$id_doc,$documento){
+    function registrarotrosdocumentosfirmados($empresa, $centrocosto, $id_doc, $documento)
+    {
         $this->conexion();
         $sql = "insert into otrosdocumentosfirmados values(null,$empresa,$centrocosto,$id_doc,'$documento',now())";
         $result = $this->mi->query($sql);
@@ -8507,7 +8673,8 @@ class Controller
     }
 
     //Actualizar Otros Documentos Firmados
-    function actualizarotrosdocumentosfirmados($id,$documento){
+    function actualizarotrosdocumentosfirmados($id, $documento)
+    {
         $this->conexion();
         $sql = "update otrosdocumentosfirmados set documento='$documento' where id=$id";
         $result = $this->mi->query($sql);
@@ -8516,36 +8683,38 @@ class Controller
     }
 
     //listar Otros documentos firmados
-    function buscarotrosdocumentosfirmados($id_doc){
+    function buscarotrosdocumentosfirmados($id_doc)
+    {
         $this->conexion();
         $sql = "select * from otrosdocumentosfirmados where id_doc=$id_doc";
         $result = $this->mi->query($sql);
-        if($rs = mysqli_fetch_array($result)){
+        if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $empresa = $rs['empresa'];
             $centrocosto = $rs['centrocosto'];
             $id_doc = $rs['id_doc'];
             $documento = $rs['documento'];
             $registro = $rs['register_at'];
-            $documento = new DocumentoFirmado($id,$empresa,$centrocosto,$id_doc,$documento,$registro);
+            $documento = new DocumentoFirmado($id, $empresa, $centrocosto, $id_doc, $documento, $registro);
             $this->desconectar();
             return $documento;
         }
         $this->desconectar();
         return false;
     }
-    function buscarotrosdocumentosfirmadosid($id){
+    function buscarotrosdocumentosfirmadosid($id)
+    {
         $this->conexion();
         $sql = "select * from otrosdocumentosfirmados where id=$id";
         $result = $this->mi->query($sql);
-        if($rs = mysqli_fetch_array($result)){
+        if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $empresa = $rs['empresa'];
             $centrocosto = $rs['centrocosto'];
             $id_doc = $rs['id_doc'];
             $documento = $rs['documento'];
             $registro = $rs['register_at'];
-            $documento = new DocumentoFirmado($id,$empresa,$centrocosto,$id_doc,$documento,$registro);
+            $documento = new DocumentoFirmado($id, $empresa, $centrocosto, $id_doc, $documento, $registro);
             $this->desconectar();
             return $documento;
         }
@@ -8553,7 +8722,7 @@ class Controller
         return false;
     }
 
-    
+
     //Listar documentos text empresa
     function listardocumentosfirmados($centros)
     {
@@ -8561,9 +8730,9 @@ class Controller
         $sql = "select otrosdocumentosfirmados.id as id, trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, centrocosto.nombre as centrocosto, documentos.empresa as empresa, tipodocumento.nombre as tipodocumento, fechageneracion, otrosdocumentosfirmados.documento as documento, documentos.register_at as register_at from centrocosto, trabajadores,documentos,otrosdocumentosfirmados, tipodocumento where documentos.tipodocumento = tipodocumento.id and trabajadores.id = documentos.trabajador and otrosdocumentosfirmados.centrocosto = centrocosto.id and otrosdocumentosfirmados.id_doc=documentos.id";
         $i = 0;
         foreach ($centros as $centro) {
-            if($i==0){
+            if ($i == 0) {
                 $sql = $sql . " and (otrosdocumentosfirmados.centrocosto=$centro";
-            }else{
+            } else {
                 $sql = $sql . " or otrosdocumentosfirmados.centrocosto=$centro";
             }
             $i++;
@@ -8590,7 +8759,8 @@ class Controller
     }
 
     //Eliminar Otros Documentos Firmados
-    function eliminarotrosdocumentosfirmados($id){
+    function eliminarotrosdocumentosfirmados($id)
+    {
         $this->conexion();
         $sql = "delete from otrosdocumentosfirmados where id=$id";
         $result = $this->mi->query($sql);
@@ -8604,16 +8774,17 @@ class Controller
     /*****************************************************Documentos Empresa*****************************************************/
 
     //Listar tipo_documento_empresa
-    function listartipodocumentoempresa(){
+    function listartipodocumentoempresa()
+    {
         $this->conexion();
         $sql = "select * from tipo_documento_empresa;";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
-            $id=$rs['id'];
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
             $nombre = $rs['nombre'];
             $periodo = $rs['periodo'];
-            $tipo = new Regiones($id,$periodo,$nombre,$nombre);
+            $tipo = new Regiones($id, $periodo, $nombre, $nombre);
             $lista[] = $tipo;
         }
         $this->desconectar();
@@ -8621,16 +8792,17 @@ class Controller
     }
 
     //Listar tipo_documento_empresa del periodo x
-    function listartipodocumentoempresaperiodo($periodo){
+    function listartipodocumentoempresaperiodo($periodo)
+    {
         $this->conexion();
         $sql = "select * from tipo_documento_empresa where periodo=$periodo;";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
-            $id=$rs['id'];
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
             $nombre = $rs['nombre'];
             $periodo = $rs['periodo'];
-            $tipo = new Regiones($id,$periodo,$nombre,$nombre);
+            $tipo = new Regiones($id, $periodo, $nombre, $nombre);
             $lista[] = $tipo;
         }
         $this->desconectar();
@@ -8638,7 +8810,8 @@ class Controller
     }
 
     //Cargar documento empresa
-    function registrardocumentoempresa($tipo,$centrocosto,$documento,$periodo,$empresa){
+    function registrardocumentoempresa($tipo, $centrocosto, $documento, $periodo, $empresa)
+    {
         $this->conexion();
         $sql = "insert into documentos_empresa values(null,$tipo,$centrocosto,'$documento','$periodo',$empresa,now())";
         $result = $this->mi->query($sql);
@@ -8646,12 +8819,13 @@ class Controller
         return $result;
     }
 
-    function listardocumentoempresa($empresa,$centrocosto,$tipo){
+    function listardocumentoempresa($empresa, $centrocosto, $tipo)
+    {
         $this->conexion();
         $sql = "select * from documentos_empresa where empresa=$empresa and centrocosto=$centrocosto and tipo=$tipo order by register_at desc";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $tipo = $rs['tipo'];
             $centrocosto = $rs['centrocosto'];
@@ -8659,7 +8833,7 @@ class Controller
             $periodo = $rs['periodo'];
             $empresa = $rs['empresa'];
             $registro = $rs['register_at'];
-            $documento = new DocumentoEmpresa($id,$tipo,$centrocosto,$documento,$periodo,$empresa,$registro);
+            $documento = new DocumentoEmpresa($id, $tipo, $centrocosto, $documento, $periodo, $empresa, $registro);
             $lista[] = $documento;
         }
         $this->desconectar();
@@ -8667,7 +8841,8 @@ class Controller
     }
 
     //Eliminar Documento empresa
-    function eliminardocumentoempresa($id){
+    function eliminardocumentoempresa($id)
+    {
         $this->conexion();
         $sql = "delete from documentos_empresa where id=$id";
         $result = $this->mi->query($sql);
@@ -8676,12 +8851,13 @@ class Controller
     }
 
     //buscar documento empresa por documento
-    function buscardocumentoempresadocumento($documento){
+    function buscardocumentoempresadocumento($documento)
+    {
         $this->conexion();
         $sql = "select * from documentos_empresa where documento='$documento'";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $tipo = $rs['tipo'];
             $centrocosto = $rs['centrocosto'];
@@ -8689,7 +8865,7 @@ class Controller
             $periodo = $rs['periodo'];
             $empresa = $rs['empresa'];
             $registro = $rs['register_at'];
-            $documento = new DocumentoEmpresa($id,$tipo,$centrocosto,$documento,$periodo,$empresa,$registro);
+            $documento = new DocumentoEmpresa($id, $tipo, $centrocosto, $documento, $periodo, $empresa, $registro);
             $lista[] = $documento;
         }
         $this->desconectar();
@@ -8697,12 +8873,13 @@ class Controller
     }
 
     //buscar documento empresa por id
-    function buscardocumentoempresaid($id){
+    function buscardocumentoempresaid($id)
+    {
         $this->conexion();
         $sql = "select * from documentos_empresa where id=$id";
         $result = $this->mi->query($sql);
         $documento = false;
-        while($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $tipo = $rs['tipo'];
             $centrocosto = $rs['centrocosto'];
@@ -8710,31 +8887,32 @@ class Controller
             $periodo = $rs['periodo'];
             $empresa = $rs['empresa'];
             $registro = $rs['register_at'];
-            $documento = new DocumentoEmpresa($id,$tipo,$centrocosto,$documento,$periodo,$empresa,$registro);
+            $documento = new DocumentoEmpresa($id, $tipo, $centrocosto, $documento, $periodo, $empresa, $registro);
         }
         $this->desconectar();
         return $documento;
     }
 
     //Buscar DOcumento
-    function buscardocumentoempresa($empresa, $tipo){
+    function buscardocumentoempresa($empresa, $tipo)
+    {
         $this->conexion();
         $sql = "select * from documentos_empresa where empresa=$empresa and tipo=$tipo order by register_at desc";
         $result = $this->mi->query($sql);
         $documento = false;
-        while($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $tipo = $rs['tipo'];
             $centrocosto = $rs['centrocosto'];
             $documento = $rs['documento'];
             $periodo = $rs['periodo'];
-            if($periodo=="0000-00-00" || $periodo=="" || $periodo==null){
+            if ($periodo == "0000-00-00" || $periodo == "" || $periodo == null) {
                 $periodo = "Documento Unico";
-            }else{
-                $mes = date("m",strtotime($periodo));
-                $anio = date("Y",strtotime($periodo));
+            } else {
+                $mes = date("m", strtotime($periodo));
+                $anio = date("Y", strtotime($periodo));
 
-                switch($mes){
+                switch ($mes) {
                     case 1:
                         $mes = "Enero";
                         break;
@@ -8772,40 +8950,41 @@ class Controller
                         $mes = "Diciembre";
                         break;
                 }
-                $periodo = $mes ." ".$anio;
+                $periodo = $mes . " " . $anio;
             }
             $empresa = $rs['empresa'];
             $registro = $rs['register_at'];
-            $documento = new DocumentoEmpresa($id,$tipo,$centrocosto,$documento,$periodo,$empresa,$registro);
+            $documento = new DocumentoEmpresa($id, $tipo, $centrocosto, $documento, $periodo, $empresa, $registro);
         }
         $this->desconectar();
         return $documento;
     }
 
-     //Buscar DOcumento
-     function buscardocumentoempresa1($empresas, $tipo){
+    //Buscar DOcumento
+    function buscardocumentoempresa1($empresas, $tipo)
+    {
         $this->conexion();
         $sql = "select * from documentos_empresa where tipo=$tipo ";
         $i = 0;
-        foreach($empresas as $empresa){
+        foreach ($empresas as $empresa) {
             $sql .= " and empresa=$empresa";
         }
         $sql .= " order by register_at desc";
         $result = $this->mi->query($sql);
         $documento = false;
-        while($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $tipo = $rs['tipo'];
             $centrocosto = $rs['centrocosto'];
             $documento = $rs['documento'];
             $periodo = $rs['periodo'];
-            if($periodo=="0000-00-00" || $periodo=="" || $periodo==null){
+            if ($periodo == "0000-00-00" || $periodo == "" || $periodo == null) {
                 $periodo = "Documento Unico";
-            }else{
-                $mes = date("m",strtotime($periodo));
-                $anio = date("Y",strtotime($periodo));
+            } else {
+                $mes = date("m", strtotime($periodo));
+                $anio = date("Y", strtotime($periodo));
 
-                switch($mes){
+                switch ($mes) {
                     case 1:
                         $mes = "Enero";
                         break;
@@ -8843,24 +9022,25 @@ class Controller
                         $mes = "Diciembre";
                         break;
                 }
-                $periodo = $mes ." ".$anio;
+                $periodo = $mes . " " . $anio;
             }
             $empresa = $rs['empresa'];
             $registro = $rs['register_at'];
-            $documento = new DocumentoEmpresa($id,$tipo,$centrocosto,$documento,$periodo,$empresa,$registro);
+            $documento = new DocumentoEmpresa($id, $tipo, $centrocosto, $documento, $periodo, $empresa, $registro);
         }
         $this->desconectar();
         return $documento;
     }
 
-    function listardocumentoempresa1($empresa,$centrocosto,$tipo){
+    function listardocumentoempresa1($empresa, $centrocosto, $tipo)
+    {
         $this->conexion();
         $sql = "select documentos_empresa.id as id, tipo_documento_empresa.nombre as tipo, centrocosto.nombre as centrocosto, documentos_empresa.documento as documento, documentos_empresa.periodo as periodo, empresa.razonsocial as empresa, documentos_empresa.register_at as register_at from documentos_empresa , tipo_documento_empresa, centrocosto, empresa where documentos_empresa.empresa=empresa.id and documentos_empresa.tipo=tipo_documento_empresa.id and documentos_empresa.centrocosto=centrocosto.id and documentos_empresa.empresa=$empresa and documentos_empresa.tipo=$tipo";
         $i = 0;
-        foreach($centrocosto as $cc){
-            if($i==0){
+        foreach ($centrocosto as $cc) {
+            if ($i == 0) {
                 $sql .= " and (documentos_empresa.centrocosto=$cc";
-            }else{
+            } else {
                 $sql .= " or documentos_empresa.centrocosto=$cc";
             }
             $i++;
@@ -8869,19 +9049,19 @@ class Controller
         $sql .= " order by documentos_empresa.register_at desc";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $tipo = $rs['tipo'];
             $centrocosto = $rs['centrocosto'];
             $documento = $rs['documento'];
             $periodo = $rs['periodo'];
-            if($periodo=="0000-00-00" || $periodo=="" || $periodo==null){
+            if ($periodo == "0000-00-00" || $periodo == "" || $periodo == null) {
                 $periodo = "Documento Unico";
-            }else{
-                $mes = date("m",strtotime($periodo));
-                $anio = date("Y",strtotime($periodo));
+            } else {
+                $mes = date("m", strtotime($periodo));
+                $anio = date("Y", strtotime($periodo));
 
-                switch($mes){
+                switch ($mes) {
                     case 1:
                         $mes = "Enero";
                         break;
@@ -8919,25 +9099,26 @@ class Controller
                         $mes = "Diciembre";
                         break;
                 }
-                $periodo = $mes ." ".$anio;
+                $periodo = $mes . " " . $anio;
             }
             $empresa = $rs['empresa'];
             $registro = $rs['register_at'];
-            $documento = new DocumentoEmpresa($id,$tipo,$centrocosto,$documento,$periodo,$empresa,$registro);
+            $documento = new DocumentoEmpresa($id, $tipo, $centrocosto, $documento, $periodo, $empresa, $registro);
             $lista[] = $documento;
         }
         $this->desconectar();
         return $lista;
     }
 
-    function listardocumentoempresa2($empresas,$centrocosto,$tipo){
+    function listardocumentoempresa2($empresas, $centrocosto, $tipo)
+    {
         $this->conexion();
         $sql = "select documentos_empresa.id as id, tipo_documento_empresa.nombre as tipo, centrocosto.nombre as centrocosto, documentos_empresa.documento as documento, documentos_empresa.periodo as periodo, empresa.razonsocial as empresa, documentos_empresa.register_at as register_at from documentos_empresa , tipo_documento_empresa, centrocosto, empresa where documentos_empresa.empresa=empresa.id and documentos_empresa.tipo=tipo_documento_empresa.id and documentos_empresa.centrocosto=centrocosto.id and documentos_empresa.tipo=$tipo";
         $i = 0;
-        foreach($centrocosto as $cc){
-            if($i==0){
+        foreach ($centrocosto as $cc) {
+            if ($i == 0) {
                 $sql .= " and (documentos_empresa.centrocosto=$cc";
-            }else{
+            } else {
                 $sql .= " or documentos_empresa.centrocosto=$cc";
             }
             $i++;
@@ -8946,19 +9127,19 @@ class Controller
         $sql .= " order by documentos_empresa.register_at desc";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $tipo = $rs['tipo'];
             $centrocosto = $rs['centrocosto'];
             $documento = $rs['documento'];
             $periodo = $rs['periodo'];
-            if($periodo=="0000-00-00" || $periodo=="" || $periodo==null){
+            if ($periodo == "0000-00-00" || $periodo == "" || $periodo == null) {
                 $periodo = "Documento Unico";
-            }else{
-                $mes = date("m",strtotime($periodo));
-                $anio = date("Y",strtotime($periodo));
+            } else {
+                $mes = date("m", strtotime($periodo));
+                $anio = date("Y", strtotime($periodo));
 
-                switch($mes){
+                switch ($mes) {
                     case 1:
                         $mes = "Enero";
                         break;
@@ -8996,11 +9177,11 @@ class Controller
                         $mes = "Diciembre";
                         break;
                 }
-                $periodo = $mes ." ".$anio;
+                $periodo = $mes . " " . $anio;
             }
             $empresa = $rs['empresa'];
             $registro = $rs['register_at'];
-            $documento = new DocumentoEmpresa($id,$tipo,$centrocosto,$documento,$periodo,$empresa,$registro);
+            $documento = new DocumentoEmpresa($id, $tipo, $centrocosto, $documento, $periodo, $empresa, $registro);
             $lista[] = $documento;
         }
         $this->desconectar();
@@ -9009,7 +9190,8 @@ class Controller
 
     /*****************************************Mandante************************** */
     //asignar Centro costo
-    function asignarcentrocosto($usuario, $centrocosto){
+    function asignarcentrocosto($usuario, $centrocosto)
+    {
         $this->conexion();
         $sql = "insert into mandante values(null, $usuario, $centrocosto, now())";
         $result = $this->mi->query($sql);
@@ -9017,12 +9199,13 @@ class Controller
         return $result;
     }
 
-    function validarcentrocosto($usuario, $centrocosto){
+    function validarcentrocosto($usuario, $centrocosto)
+    {
         $this->conexion();
         $sql = "select * from mandante where usuario=$usuario and centrocosto=$centrocosto";
         $result = $this->mi->query($sql);
         $mandante = false;
-        if($rs = mysqli_fetch_array($result)){
+        if ($rs = mysqli_fetch_array($result)) {
             $mandante = true;
         }
         $this->desconectar();
@@ -9030,7 +9213,8 @@ class Controller
     }
 
     //Revocar Centro costo
-    function revocarcentrocosto($usuario, $centrocosto){
+    function revocarcentrocosto($usuario, $centrocosto)
+    {
         $this->conexion();
         $sql = "delete from mandante where usuario=$usuario and centrocosto=$centrocosto";
         $result = $this->mi->query($sql);
@@ -9039,18 +9223,19 @@ class Controller
     }
 
     //Listar centro de costo por usuario
-    function listarcentrocostomandate($usuario){
+    function listarcentrocostomandate($usuario)
+    {
         $this->conexion();
         $sql = "select centrocosto.id as id, centrocosto.codigo as codigo, centrocosto.codigoprevired as codigoprevired, centrocosto.nombre as nombre, centrocosto.empresa as empresa from centrocosto, mandante where mandante.usuario=$usuario and mandante.centrocosto=centrocosto.id";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
-            $id=$rs['id'];
-            $codigo=$rs['codigo'];
-            $codigoprevired=$rs['codigoprevired'];
-            $nombre=$rs['nombre'];
-            $empresa=$rs['empresa'];
-            $centrocosto = new CentroCosto($id,$codigo,$codigoprevired,$nombre,$empresa);
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $codigoprevired = $rs['codigoprevired'];
+            $nombre = $rs['nombre'];
+            $empresa = $rs['empresa'];
+            $centrocosto = new CentroCosto($id, $codigo, $codigoprevired, $nombre, $empresa);
             $lista[] = $centrocosto;
         }
         $this->desconectar();
@@ -9059,7 +9244,8 @@ class Controller
 
     /***********************Formulas*********************************** */
     //registrar formula
-    function registrarformula($codigo, $nombre, $representacion, $formula){
+    function registrarformula($codigo, $nombre, $representacion, $formula)
+    {
         $this->conexion();
         $sql = "insert into formulas values(null,'$codigo','$nombre','$representacion','$formula',now())";
         $result = $this->mi->query($sql);
@@ -9068,19 +9254,20 @@ class Controller
     }
 
     //listar formulas
-    function listarformulas(){
+    function listarformulas()
+    {
         $this->conexion();
         $sql = "select * from formulas";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
-            $id=$rs['id'];
-            $codigo=$rs['codigo'];
-            $nombre=$rs['nombre'];
-            $representacion=$rs['representacion'];
-            $formula=$rs['formula'];
-            $registro=$rs['register_at'];
-            $formula = new Formula($id,$codigo,$nombre,$representacion,$formula,$registro);
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $nombre = $rs['nombre'];
+            $representacion = $rs['representacion'];
+            $formula = $rs['formula'];
+            $registro = $rs['register_at'];
+            $formula = new Formula($id, $codigo, $nombre, $representacion, $formula, $registro);
             $lista[] = $formula;
         }
         $this->desconectar();
@@ -9088,45 +9275,48 @@ class Controller
     }
 
     //buscar formula
-    function buscarformula($id){
+    function buscarformula($id)
+    {
         $this->conexion();
         $sql = "select * from formulas where id=$id";
         $result = $this->mi->query($sql);
         $formula = false;
-        while($rs = mysqli_fetch_array($result)){
-            $id=$rs['id'];
-            $codigo=$rs['codigo'];
-            $nombre=$rs['nombre'];
-            $representacion=$rs['representacion'];
-            $formula=$rs['formula'];
-            $registro=$rs['register_at'];
-            $formula = new Formula($id,$codigo,$nombre,$representacion,$formula,$registro);
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $nombre = $rs['nombre'];
+            $representacion = $rs['representacion'];
+            $formula = $rs['formula'];
+            $registro = $rs['register_at'];
+            $formula = new Formula($id, $codigo, $nombre, $representacion, $formula, $registro);
         }
         $this->desconectar();
         return $formula;
     }
 
     //Buscar formula por representacion
-    function buscarformularepresentacion($representacion){
+    function buscarformularepresentacion($representacion)
+    {
         $this->conexion();
         $sql = "select * from formulas where representacion='$representacion'";
         $result = $this->mi->query($sql);
         $formula = false;
-        while($rs = mysqli_fetch_array($result)){
-            $id=$rs['id'];
-            $codigo=$rs['codigo'];
-            $nombre=$rs['nombre'];
-            $representacion=$rs['representacion'];
-            $formula=$rs['formula'];
-            $registro=$rs['register_at'];
-            $formula = new Formula($id,$codigo,$nombre,$representacion,$formula,$registro);
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $nombre = $rs['nombre'];
+            $representacion = $rs['representacion'];
+            $formula = $rs['formula'];
+            $registro = $rs['register_at'];
+            $formula = new Formula($id, $codigo, $nombre, $representacion, $formula, $registro);
         }
         $this->desconectar();
         return $formula;
     }
 
     //Actualizar formula
-    function actualizarformula($id, $codigo, $nombre, $representacion, $formula){
+    function actualizarformula($id, $codigo, $nombre, $representacion, $formula)
+    {
         $this->conexion();
         $sql = "update formulas set codigo='$codigo', nombre='$nombre', representacion='$representacion', formula='$formula' where id=$id";
         $result = $this->mi->query($sql);
@@ -9135,7 +9325,8 @@ class Controller
     }
 
     //Eliminar formula
-    function eliminarformula($id){
+    function eliminarformula($id)
+    {
         $this->conexion();
         $sql = "delete from formulas where id=$id";
         $result = $this->mi->query($sql);
@@ -9144,12 +9335,13 @@ class Controller
     }
 
     //Comprobar asistencia
-    function comprobarasistencia($trabajador, $contrato, $fecha){
+    function comprobarasistencia($trabajador, $contrato, $fecha)
+    {
         $this->conexion();
         $sql = "select * from asistencia where trabajador=$trabajador and fecha='$fecha' and contrato=$contrato";
         $result = $this->mi->query($sql);
         $asistencia = false;
-        if($rs = mysqli_fetch_array($result)){
+        if ($rs = mysqli_fetch_array($result)) {
             $estado = $rs['estado'];
             $this->desconectar();
             return $estado;
@@ -9157,14 +9349,15 @@ class Controller
         $this->desconectar();
         return false;
     }
-    
+
     //Validar asistencia
-    function validarasistencia($trabajador, $contrato, $fecha){
+    function validarasistencia($trabajador, $contrato, $fecha)
+    {
         $this->conexion();
         $sql = "select * from asistencia where trabajador=$trabajador and fecha='$fecha' and contrato=$contrato";
         $result = $this->mi->query($sql);
         $asistencia = false;
-        if($rs = mysqli_fetch_array($result)){
+        if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $this->desconectar();
             return $id;
@@ -9174,7 +9367,8 @@ class Controller
     }
 
     //Registrar asistencia
-    function registrarasistencia($trabajador, $contrato, $fecha, $estado){
+    function registrarasistencia($trabajador, $contrato, $fecha, $estado)
+    {
         $this->conexion();
         $sql = "insert into asistencia values(null,'$fecha',$estado,$trabajador,$contrato,now())";
         $result = $this->mi->query($sql);
@@ -9183,7 +9377,8 @@ class Controller
     }
 
     //Actualizar asistencia
-    function actualizarasistencia($id, $estado){
+    function actualizarasistencia($id, $estado)
+    {
         $this->conexion();
         $sql = "update asistencia set estado=$estado where id=$id";
         $result = $this->mi->query($sql);
@@ -9192,31 +9387,31 @@ class Controller
     }
 
     //Cantidad de dias de ausencia en un mes
-    function cantidadausencias($trabajador, $contrato, $mes, $anio){
+    function cantidadausencias($trabajador, $contrato, $mes, $anio)
+    {
         $this->conexion();
         $sql = "select count(estado) as cantidad from asistencia where trabajador=$trabajador and contrato=$contrato and month(fecha)=$mes and year(fecha)=$anio and estado=3";
         $result = $this->mi->query($sql);
-        if($rs = mysqli_fetch_array($result)){
+        if ($rs = mysqli_fetch_array($result)) {
             $cantidad = $rs['cantidad'];
             $this->desconectar();
             return $cantidad;
-
         }
         $this->desconectar();
         return 0;
     }
 
     //Cantidad de medio dias de ausencia en un mes
-    function cantidadmediodiaausencias($trabajador, $contrato, $mes, $anio){
+    function cantidadmediodiaausencias($trabajador, $contrato, $mes, $anio)
+    {
         $this->conexion();
         $sql = "select count(estado) as cantidad from asistencia where trabajador=$trabajador and contrato=$contrato and month(fecha)=$mes and year(fecha)=$anio and estado=2";
         $result = $this->mi->query($sql);
-        if($rs = mysqli_fetch_array($result)){
+        if ($rs = mysqli_fetch_array($result)) {
             $cantidad = $rs['cantidad'];
-            $cantidad = $cantidad*0.5;
+            $cantidad = $cantidad * 0.5;
             $this->desconectar();
             return $cantidad;
-
         }
         $this->desconectar();
         return 0;
@@ -9225,12 +9420,13 @@ class Controller
 
     //********************************************************************Liquidaciones********************************** */
     //Ultimo folio liquidacion
-    function ultimofolioliquidacion($empresa){
+    function ultimofolioliquidacion($empresa)
+    {
         $this->conexion();
         $sql = "select * from liquidaciones where empresa=$empresa order by folio desc limit 1";
         $result = $this->mi->query($sql);
         $folio = 0;
-        if($rs = mysqli_fetch_array($result)){
+        if ($rs = mysqli_fetch_array($result)) {
             $folio = $rs['folio'];
         }
         $this->desconectar();
@@ -9262,8 +9458,9 @@ class Controller
     totaldesnolegales int not null,
     fecha_liquidacion date not null,
     register_at timestamp not null default current_timestamp*/
-    
-    function registrarliquidacion($folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajaos, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp, $salud, $porsalud, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion){
+
+    function registrarliquidacion($folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajaos, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp, $salud, $porsalud, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion)
+    {
         $this->conexion();
         $sql = "insert into liquidaciones values(null,$folio,$contrato,'$periodo',$empresa,$trabajador,$diastrabajaos,$sueldobase,$horasfalladas,$horasextras1,$horasextras2,$horasextras3,'$afp','$porafp','$salud','$porsalud',$totalimponible,$totalnoimponible,$totaltributable,$totaldeslegales,$totaldesnolegales,'$fecha_liquidacion',now())";
         $result = $this->mi->query($sql);
@@ -9274,7 +9471,8 @@ class Controller
     }
 
     //Registrar detalle liquidacion
-    function registrardetalleliquidacion($liquidacion, $codigo, $monto, $tipo){
+    function registrardetalleliquidacion($liquidacion, $codigo, $monto, $tipo)
+    {
         $this->conexion();
         $sql = "insert into detalle_liquidacion values(null,$liquidacion,'$codigo',$monto,$tipo,now())";
         $result = $this->mi->query($sql);
@@ -9283,55 +9481,57 @@ class Controller
     }
 
     //Listar liquidaciones
-    function listarliquidaciones($empresa){
+    function listarliquidaciones($empresa)
+    {
         $this->conexion();
         $sql = "select liquidaciones.id as id, liquidaciones.folio as folio, liquidaciones.contrato as contrato, liquidaciones.periodo as periodo, centrocosto.nombre as empresa, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, liquidaciones.diastrabajados as diastrabajados, liquidaciones.sueldobase as sueldobase, liquidaciones.horasfalladas as horasfalladas, liquidaciones.horasextras1 as horasextras1, liquidaciones.horasextras2 as horasextras2, liquidaciones.horasextras3 as horasextras3, liquidaciones.afp as afp, liquidaciones.porafp as porafp, liquidaciones.salud as salud, liquidaciones.porsalud as porsalud, liquidaciones.totalimponible as totalimponible, liquidaciones.totalnoimponible as totalnoimponible, liquidaciones.totaltributable as totaltributable, liquidaciones.totaldeslegales as totaldeslegales, liquidaciones.totaldesnolegales as totaldesnolegales, liquidaciones.fecha_liquidacion as fecha_liquidacion, liquidaciones.register_at as register_at from liquidaciones, centrocosto, trabajadores where liquidaciones.empresa=centrocosto.id and liquidaciones.trabajador=trabajadores.id and liquidaciones.empresa=$empresa order by liquidaciones.register_at desc";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
-            $id=$rs['id'];
-            $folio=$rs['folio'];
-            $contrato=$rs['contrato'];
-            $periodo=$rs['periodo'];
-            $empresa=$rs['empresa'];
-            $trabajador=$rs['nombre']." ".$rs['apellido1']." ".$rs['apellido2'];
-            $diastrabajados=$rs['diastrabajados'];
-            $sueldobase=$rs['sueldobase'];
-            $horasfalladas=$rs['horasfalladas'];
-            $horasextras1=$rs['horasextras1'];
-            $horasextras2=$rs['horasextras2'];
-            $horasextras3=$rs['horasextras3'];
-            $afp=$rs['afp'];
-            $porafp=$rs['porafp'];
-            $salud=$rs['salud'];
-            $porsalud=$rs['porsalud'];
-            $totalimponible=$rs['totalimponible'];
-            $totalnoimponible=$rs['totalnoimponible'];
-            $totaltributable=$rs['totaltributable'];
-            $totaldeslegales=$rs['totaldeslegales'];
-            $totaldesnolegales=$rs['totaldesnolegales'];
-            $fecha_liquidacion=$rs['fecha_liquidacion'];
-            $registro=$rs['register_at'];
-            $liquidacion = new Liquidacion($id,$folio,$contrato,$periodo,$empresa,$trabajador,$diastrabajados,$sueldobase,$horasfalladas,$horasextras1,$horasextras2,$horasextras3,$afp,$porafp,$salud,$porsalud,$totalimponible,$totalnoimponible,$totaltributable,$totaldeslegales,$totaldesnolegales,$fecha_liquidacion,$registro);
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $folio = $rs['folio'];
+            $contrato = $rs['contrato'];
+            $periodo = $rs['periodo'];
+            $empresa = $rs['empresa'];
+            $trabajador = $rs['nombre'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
+            $diastrabajados = $rs['diastrabajados'];
+            $sueldobase = $rs['sueldobase'];
+            $horasfalladas = $rs['horasfalladas'];
+            $horasextras1 = $rs['horasextras1'];
+            $horasextras2 = $rs['horasextras2'];
+            $horasextras3 = $rs['horasextras3'];
+            $afp = $rs['afp'];
+            $porafp = $rs['porafp'];
+            $salud = $rs['salud'];
+            $porsalud = $rs['porsalud'];
+            $totalimponible = $rs['totalimponible'];
+            $totalnoimponible = $rs['totalnoimponible'];
+            $totaltributable = $rs['totaltributable'];
+            $totaldeslegales = $rs['totaldeslegales'];
+            $totaldesnolegales = $rs['totaldesnolegales'];
+            $fecha_liquidacion = $rs['fecha_liquidacion'];
+            $registro = $rs['register_at'];
+            $liquidacion = new Liquidacion($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp, $salud, $porsalud, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $registro);
             $lista[] = $liquidacion;
         }
         $this->desconectar();
         return $lista;
     }
 
-    function buscardetallesliquidacion($liquidacion){
+    function buscardetallesliquidacion($liquidacion)
+    {
         $this->conexion();
         $sql = "select * from detalle_liquidacion where liquidacion=$liquidacion";
         $result = $this->mi->query($sql);
         $lista = array();
-        while($rs = mysqli_fetch_array($result)){
-            $id=$rs['id'];
-            $liquidacion=$rs['liquidacion'];
-            $codigo=$rs['codigo'];
-            $monto=$rs['monto'];
-            $tipo=$rs['tipo'];
-            $registro=$rs['register_at'];
-            $detalle = new Detalle_liquidacion($id,$liquidacion,$codigo,$monto,$tipo,$registro);
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $liquidacion = $rs['liquidacion'];
+            $codigo = $rs['codigo'];
+            $monto = $rs['monto'];
+            $tipo = $rs['tipo'];
+            $registro = $rs['register_at'];
+            $detalle = new Detalle_liquidacion($id, $liquidacion, $codigo, $monto, $tipo, $registro);
             $lista[] = $detalle;
         }
         $this->desconectar();
@@ -9339,53 +9539,52 @@ class Controller
     }
 
     //buscarhoras pactadas
-    function buscarhoraspactadas($contrato){
+    function buscarhoraspactadas($contrato)
+    {
         $this->conexion();
         $sql = "select * from horaspactadas where  contrato=$contrato";
         $result = $this->mi->query($sql);
         $horas = 45;
-        if($rs = mysqli_fetch_array($result)){
+        if ($rs = mysqli_fetch_array($result)) {
             $horas = $rs['horas'];
         }
         $this->desconectar();
         return $horas;
     }
 
-    function buscarliquidacion($id){
+    function buscarliquidacion($id)
+    {
         $this->conexion();
         $sql = "select * from liquidaciones where id=$id";
         $result = $this->mi->query($sql);
-        if($rs = mysqli_fetch_array($result)){
-            $id=$rs['id'];
-            $folio=$rs['folio'];
-            $contrato=$rs['contrato'];
-            $periodo=$rs['periodo'];
-            $empresa=$rs['empresa'];
-            $trabajador=$rs['trabajador'];
-            $diastrabajados=$rs['diastrabajados'];
-            $sueldobase=$rs['sueldobase'];
-            $horasfalladas=$rs['horasfalladas'];
-            $horasextras1=$rs['horasextras1'];
-            $horasextras2=$rs['horasextras2'];
-            $horasextras3=$rs['horasextras3'];
-            $afp=$rs['afp'];
-            $porafp=$rs['porafp'];
-            $salud=$rs['salud'];
-            $porsalud=$rs['porsalud'];
-            $totalimponible=$rs['totalimponible'];
-            $totalnoimponible=$rs['totalnoimponible'];
-            $totaltributable=$rs['totaltributable'];
-            $totaldeslegales=$rs['totaldeslegales'];
-            $totaldesnolegales=$rs['totaldesnolegales'];
-            $fecha_liquidacion=$rs['fecha_liquidacion'];
-            $registro=$rs['register_at'];
-            $liquidacion = new Liquidacion($id,$folio,$contrato,$periodo,$empresa,$trabajador,$diastrabajados,$sueldobase,$horasfalladas,$horasextras1,$horasextras2,$horasextras3,$afp,$porafp,$salud,$porsalud,$totalimponible,$totalnoimponible,$totaltributable,$totaldeslegales,$totaldesnolegales,$fecha_liquidacion,$registro);
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $folio = $rs['folio'];
+            $contrato = $rs['contrato'];
+            $periodo = $rs['periodo'];
+            $empresa = $rs['empresa'];
+            $trabajador = $rs['trabajador'];
+            $diastrabajados = $rs['diastrabajados'];
+            $sueldobase = $rs['sueldobase'];
+            $horasfalladas = $rs['horasfalladas'];
+            $horasextras1 = $rs['horasextras1'];
+            $horasextras2 = $rs['horasextras2'];
+            $horasextras3 = $rs['horasextras3'];
+            $afp = $rs['afp'];
+            $porafp = $rs['porafp'];
+            $salud = $rs['salud'];
+            $porsalud = $rs['porsalud'];
+            $totalimponible = $rs['totalimponible'];
+            $totalnoimponible = $rs['totalnoimponible'];
+            $totaltributable = $rs['totaltributable'];
+            $totaldeslegales = $rs['totaldeslegales'];
+            $totaldesnolegales = $rs['totaldesnolegales'];
+            $fecha_liquidacion = $rs['fecha_liquidacion'];
+            $registro = $rs['register_at'];
+            $liquidacion = new Liquidacion($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp, $salud, $porsalud, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $registro);
             $this->desconectar();
             return $liquidacion;
         }
         return null;
     }
-
-
-    
 }

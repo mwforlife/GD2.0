@@ -506,13 +506,17 @@ foreach ($permiso as $p) {
 										<p class="text-mutted card-sub-title"></p>
 									</div>
 										<div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-4">
                                             <label>Periodo:</label>
                                             <input type="month" class="form-control" id="fecha" value="<?php echo date('Y-m');?>">
                                         </div>
-                                        <div class="col-md-12">
-                                            <label>Tasa:</label>
-                                            <input class="form-control" id="tasa" placeholder="Ingrese la Tasa Actual">
+                                        <div class="col-md-4">
+                                            <label>Tasa Seguro Invalidez Sobrevivencia:</label>
+                                            <input class="form-control" id="tasasis" placeholder="Ingrese la Tasa Actual">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Tasa AFP:</label>
+                                            <input class="form-control" id="tasaafp" placeholder="Ingrese la Tasa Actual">
                                         </div>
                                         <input type="hidden" id="idins">
                                         <div class="col-md-12 mt-3 text-right">
@@ -538,7 +542,8 @@ foreach ($permiso as $p) {
                                                 <thead>
                                                     <tr>
                                                         <th>Periodo</th>
-                                                        <th>Tasa</th>
+														<th>Tasa Seguro Invalidez Sobrevivencia</th>
+														<th>Tasa AFP</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="tasas">

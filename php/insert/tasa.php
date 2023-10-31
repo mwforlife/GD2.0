@@ -11,8 +11,9 @@ if (!isset($_SESSION['USER_ID'])) {
 	}
 }
 
-if(isset($_POST['id']) && isset($_POST['tasa']) && isset($_POST['fecha'])){
+if(isset($_POST['id'])&& isset($_POST['tasasis']) && isset($_POST['tasa']) && isset($_POST['fecha'])){
     $id = $_POST['id'];
+    $tasasis = $_POST['tasasis'];
     $tasa = $_POST['tasa'];
     $fecha = $_POST['fecha'];
 
@@ -27,7 +28,7 @@ if(isset($_POST['id']) && isset($_POST['tasa']) && isset($_POST['fecha'])){
     //Validar si existe la tasa
     $tasaid = $c->validartasaafp($id, $fecha);
     if($tasaid == false){
-        $result = $c->registrartasaafp($id, $fecha, $tasa);
+        $result = $c->registrartasaafp($id, $fecha,$tasasis, $tasa);
         if($result == true){
             echo 1;
             $usuario = $_SESSION['USER_ID'];

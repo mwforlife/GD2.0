@@ -119,12 +119,17 @@ function listartasas(id){
 
 function registrartasa(){
     var id = $("#idins").val();
-    var tasa = $("#tasa").val();
+    var tasa = $("#tasaafp").val();
+    var tasasis = $("#tasasis").val();
     var fecha = $("#fecha").val();
+    if(tasa == "" || tasasis == "" || fecha == ""){
+        ToastifyError("Debe completar todos los campos");
+        return false;
+    }
     $.ajax({
         type: "POST",
         url: "php/insert/tasa.php",
-        data: {id: id, tasa: tasa, fecha: fecha},
+        data: {id: id, tasa: tasa, fecha: fecha, tasasis: tasasis},
         success: function(data){
             if(data == 1 || data == "1"){
                 ToastifySuccess("Registro insertado correctamente");

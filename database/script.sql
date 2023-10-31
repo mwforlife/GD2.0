@@ -337,6 +337,8 @@ create table tasaafp(
     tasa decimal(10,2) not null
 );
 
+alter table tasaafp add tasasis decimal(10,2) not null default 0 after fecha;
+
 create table tasamutual(
     id int not null auto_increment primary key,
     fecha date not null,
@@ -1155,8 +1157,13 @@ create table liquidaciones(
     horasextras3 int not null,
     afp varchar(200) not null,
     porafp varchar(200) not null,
+    porsis varchar(200) not null,
     salud varchar(200) not null,
     porsalud varchar(200) not null,    
+    desafp int not null,   
+    dessis int not null,   
+    dessal int not null,
+    gratificacion int not null,   
     totalimponible int not null,
     totalnoimponible int not null,
     totaltributable int not null,

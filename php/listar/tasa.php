@@ -16,6 +16,7 @@ if(isset($_POST['id']) ){
     foreach($lista as $l){
         echo "<tr>";
         echo "<td>" . $l->getFecha() . "</td>";
+        echo "<td>" . $l->getInstitucion() . "%</td>";
         echo "<td>" . $l->getTasa() . "%</td>";
         echo "</tr>";
     }

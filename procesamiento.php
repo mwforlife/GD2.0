@@ -57,10 +57,12 @@
     $empresa = $_SESSION['CURRENT_ENTERPRISE'];
     $empresa = $c->buscarEmpresa($empresa);
 
-    if (isset($_GET['trabajadores'])) {
+    if (isset($_GET['trabajadores']) && isset($_GET['periodo'])) {
         //recibimos el array de trabajadores
         $trabajadores = $_GET['trabajadores'];
         $arrayfinal = $_GET['trabajadores'];
+        $periodo = $_GET['periodo'];
+        $periodo = $periodo . "-01";
         //recorremos el array
         $trabajadores = json_decode($trabajadores);
         foreach ($trabajadores as $object) {
@@ -74,12 +76,12 @@
             $trabajador = $c->buscartrabajador($id);
             $centrocosto = $c->buscarcentrcosto($contrato->getCentroCosto());
             $prevision = $c->buscarprevisiontrabajador($id);
-            $mes = date('m');
-            $mes1 = date('m');
-            $anio = date('Y');
+            $mes = date('m', strtotime($periodo));
+            $mes1 = date('m', strtotime($periodo));
+            $anio = date('Y', strtotime($periodo));
             $ausencias = $c->cantidadausencias($id, $contratoid, $mes1, $anio);
             $mediodia = $c->cantidadmediodiaausencias($id, $contratoid, $mes1, $anio);
-            $licencias = $c->buscarlicencias($id, date("Y-m-01"), date("Y-m-t"));
+            $licencias = $c->buscarlicencias($id, $periodo, date("Y-m-t", strtotime($periodo)));
             $fechosa = "";
             $fechoter = "";
             $contardias = 0;

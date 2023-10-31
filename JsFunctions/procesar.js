@@ -80,8 +80,13 @@ function Eliminartodo(){
 
 function procesartodo(){
     //abrir una ventana nueva enviando el array de trabajadores
+    var periodo = $("#periodo").val();
+    if(periodo.trim().length==0){
+        ToastifyError("Debe seleccionar un periodo");
+        return false;
+    }
     if(validalista()){
-        window.open("procesamiento.php?trabajadores="+JSON.stringify(trabajadores));
+        window.open("procesamiento.php?trabajadores="+JSON.stringify(trabajadores)+"&periodo="+periodo,"_blank");
     }else{
         ToastifyError("No hay trabajadores para procesar");
     }

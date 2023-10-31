@@ -505,6 +505,11 @@ foreach ($permiso as $p) {
 							<div class="card">
 								<div class="card-body">
 									<div class="row">
+										<div class="col-lg-3">
+											<label for="">Periodo</label>
+											<input type="month" name="periodo" id="periodo" class="form-control"
+												value="<?php echo date("Y-m"); ?>">
+										</div>
 										<div class="col-lg-4">
 											<label for="">Centro de Costo</label>
 											<select name="centrocosto" id="centrocosto" class="form-control select2">
@@ -524,7 +529,7 @@ foreach ($permiso as $p) {
 												?>
 											</select>
 										</div>
-										<div class="col-lg-5">
+										<div class="col-lg-3">
 											<button type="button" class="btn btn-outline-primary mt-4 mb-0 mr-2"
 												onclick="filtrartrabajadores()">FILTRAR <i
 													class="fa fa-filter"></i></button>

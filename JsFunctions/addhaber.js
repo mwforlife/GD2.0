@@ -221,6 +221,7 @@ function filtrarhaberesdescuentos(){
     var periodoinico = $("#periodoinico").val();
     var periodofin = $("#periodofin").val();
     var funcionario = $("#funcionario").val();
+    var tipo = $("#tipo").val();
 
     if(periodoinico.trim().length==0){
         ToastifyError("Debe ingresar el periodo inicial");
@@ -245,7 +246,7 @@ function filtrarhaberesdescuentos(){
     $.ajax({
         url: "php/cargar/filtrohaberessession.php",
         type: "POST",
-        data: {periodoinico: periodoinico, periodofin: periodofin, funcionario: funcionario},
+        data: {periodoinico: periodoinico, periodofin: periodofin, funcionario: funcionario, tipo: tipo},
         success: function (response) {
             try {
                 var json = JSON.parse(response);
