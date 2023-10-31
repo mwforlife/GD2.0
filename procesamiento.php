@@ -57,12 +57,13 @@
     $empresa = $_SESSION['CURRENT_ENTERPRISE'];
     $empresa = $c->buscarEmpresa($empresa);
 
-    if (isset($_GET['trabajadores']) && isset($_GET['periodo'])) {
+    if (isset($_GET['trabajadores']) && isset($_GET['periodo']) && isset($_GET['gratificacion'])) {
         //recibimos el array de trabajadores
         $trabajadores = $_GET['trabajadores'];
         $arrayfinal = $_GET['trabajadores'];
         $periodo = $_GET['periodo'];
         $periodo = $periodo . "-01";
+        $gratif = $_GET['gratificacion'];
         //recorremos el array
         $trabajadores = json_decode($trabajadores);
         foreach ($trabajadores as $object) {
@@ -227,6 +228,7 @@
                     $valor_haberes = array();
                     $valor_descuentos_legales = array();
                     $valor_descuentos_no_legales = array();
+                    $gratificacion = 0;
 
                     $horasfalladas =0;
                     $extra1 = 0;
@@ -285,9 +287,21 @@
                                 $resultado = round($resultado, 0, PHP_ROUND_HALF_UP);
                                 $valor_haberes[] = array("codigo" => $haber->getCodigo(), "valor" => $resultado, "tipo" => 1);
                                 $total_imponible = $total_imponible + $resultado;
+                                if($gratif==1){
+                                    if($habere->getGratificacion()==1){
+                                        $gratificacion = $gratificacion + $resultado;
+                                    }
+                                }
                             } else {
+                                $habere = $c->buscarhaberesydescuentos($haber->getEmpresa());
                                 $valor_haberes[] = array("codigo" => $haber->getCodigo(), "valor" => $haber->getMonto(), "tipo" => 1);
                                 $total_imponible = $total_imponible + $haber->getMonto();
+                                if($gratif==1){
+                                    if($habere->getGratificacion()==1){
+                                        $gratificacion = $gratificacion + $haber->getMonto();
+                                    }
+                                }
+
                             }
                         }
                     }
@@ -313,6 +327,7 @@
                                 }
                                 //EVALUAMOS LA FORMULA
                                 $formula = str_replace(" ", "", $formula);
+                                echo $formula;
                                 $resultado = eval("return $formula;");
                                 $resultado = round($resultado, 0, PHP_ROUND_HALF_UP);
                                 $valor_haberes[] = array("codigo" => $haber->getCodigo(), "valor" => $resultado, "tipo" => 2);
@@ -329,6 +344,7 @@
 
                     //********************************************Descuentos************************************************************ */
                     //Prevision
+                    $dessis = $total_imponible * ($tasa->getInstitucion() / 100);
                     $prevision_des = $total_imponible * ($tasa->getTasa() / 100);
                     $valor_descuentos_legales[] = array("codigo" => "PREVISION", "valor" => $prevision_des, "tipo" => 1);
                     $total_descuentos_legales = $total_descuentos_legales + $prevision_des;
@@ -555,7 +571,7 @@
                     <?php
                         /****************************************************SENTENCIAS************************************************ */
                         $ultimofolio = $c->ultimofolioliquidacion($empresa->getId())+1;
-                        $idliquidacion = $c->registrarliquidacion($ultimofolio,$contrato->getId(),$periodo,$empresa->getId(),$trabajador->getId(),$dias,$sueldo,$horasfalladas,$extra1,$extra2,$extra3,$afp->getNombre(),$tasa->getTasa(),$isapre->getNombre(),$desc_salud,$total_imponible,$total_no_imponible,$total_tributable,$total_descuentos_legales,$total_descuentos_no_legales,date("Y-m-d"));
+                        $idliquidacion = $c->registrarliquidacion($ultimofolio,$contrato->getId(),$periodo,$empresa->getId(),$trabajador->getId(),$dias,$sueldo,$horasfalladas,$extra1,$extra2,$extra3,$afp->getNombre(),$tasa->getTasa(),$tasa->getInstitucion(),$isapre->getNombre(),$desc_salud,$total_imponible,$total_no_imponible,$total_tributable,$total_descuentos_legales,$total_descuentos_no_legales,date("Y-m-d"));
                         foreach($valor_haberes as $haber){
                             if($haber['tipo']==1){
                             $c->registrardetalleliquidacion($idliquidacion,$haber['codigo'],$haber['valor'],1);

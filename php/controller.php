@@ -827,10 +827,9 @@ class Controller
     public function buscartasaafp($afp, $mes, $ano)
     {
         $this->conexion();
-        $sql = "select id, month(fecha) as mes, year(fecha) as ano, tasasis,tasa, from tasaafp where afp = $afp and month(fecha) = $mes and year(fecha) = $ano";
+        $sql = "select id, month(fecha) as mes, year(fecha) as ano, tasasis,tasa from tasaafp where afp = $afp and month(fecha) = $mes and year(fecha) = $ano";
         $result = $this->mi->query($sql);
-        $lista = array();
-        while ($rs = mysqli_fetch_array($result)) {
+        if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $mes = "";
             if ($rs['mes'] == 1) {
@@ -6165,6 +6164,14 @@ class Controller
         return $result;
     }
 
+    function eliminarcontratohoraspactadas($contrato){
+        $this->conexion();
+        $sql = "delete from horaspactadas where contrato = $contrato";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
     //Listar Lotes con contratos Inactivos
     function listarlotestext1($lote)
     {
@@ -9449,8 +9456,13 @@ class Controller
     horasextras3 int not null,
     afp varchar(200) not null,
     porafp varchar(200) not null,
+    porsis varchar(200) not null,
     salud varchar(200) not null,
     porsalud varchar(200) not null,    
+    desafp int not null,   
+    dessis int not null,   
+    dessal int not null,
+    gratificacion int not null,   
     totalimponible int not null,
     totalnoimponible int not null,
     totaltributable int not null,
@@ -9459,7 +9471,7 @@ class Controller
     fecha_liquidacion date not null,
     register_at timestamp not null default current_timestamp*/
 
-    function registrarliquidacion($folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajaos, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp, $salud, $porsalud, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion)
+    function registrarliquidacion($folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajaos, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp,$porsis, $salud, $porsalud,$desafp,$desis,$dessal, $gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion)
     {
         $this->conexion();
         $sql = "insert into liquidaciones values(null,$folio,$contrato,'$periodo',$empresa,$trabajador,$diastrabajaos,$sueldobase,$horasfalladas,$horasextras1,$horasextras2,$horasextras3,'$afp','$porafp','$salud','$porsalud',$totalimponible,$totalnoimponible,$totaltributable,$totaldeslegales,$totaldesnolegales,'$fecha_liquidacion',now())";

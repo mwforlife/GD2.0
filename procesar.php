@@ -533,13 +533,13 @@ foreach ($permiso as $p) {
 											<button type="button" class="btn btn-outline-primary mt-4 mb-0 mr-2"
 												onclick="filtrartrabajadores()">FILTRAR <i
 													class="fa fa-filter"></i></button>
-													<?php
-													if (isset($_SESSION['COST_CENTER'])) {?>
-											<button type="button" class="btn btn-outline-danger mt-4 mb-0 mr-2"
-												onclick="limpiarfiltro()">LIMPIAR FILTRAR <i
-													class="fa fa-trash"></i></button>
-													<?php
-												}?>
+											<?php
+											if (isset($_SESSION['COST_CENTER'])) { ?>
+												<button type="button" class="btn btn-outline-danger mt-4 mb-0 mr-2"
+													onclick="limpiarfiltro()">LIMPIAR FILTRAR <i
+														class="fa fa-trash"></i></button>
+												<?php
+											} ?>
 										</div>
 									</div>
 								</div>
@@ -588,7 +588,7 @@ foreach ($permiso as $p) {
 														echo $object->getDiscapacidad();
 														echo "</td>";
 														echo "<td class='text-center'>";
-														echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='agregartrabajador(" . $object->getId() . ",\"" . $object->getRut() . "\",\"" . $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2() . "\",".$object->getNacionalidad().")'>";
+														echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='agregartrabajador(" . $object->getId() . ",\"" . $object->getRut() . "\",\"" . $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2() . "\"," . $object->getNacionalidad() . ")'>";
 														echo "<i class='fa fa-plus'>";
 														echo "</i>";
 														echo "</a>";
@@ -608,7 +608,15 @@ foreach ($permiso as $p) {
 							<div class="card transcation-crypto1" id="transcation-crypto1">
 								<div class="card-header bd-b-0 d-flex justify-content-between">
 									<h4 class="card-title font-weight-semibold mb-0">Trabajadores a Procesar</h4>
-									<div class="div">
+									<div class="div d-flex align-items-center" style="gap:10px;">
+										<div class="d-flex align-items-center">
+												<label class="custom-switch">
+													<input value="1" type="checkbox"
+														id="gratificacion" name="gratificacion" class="custom-switch-input">
+													<span class="custom-switch-indicator"></span>
+													<span class="custom-switch-description">¿Aplica Gratificacion?.</span>
+												</label>
+										</div>
 										<button onclick="procesartodo()" class="btn btn-outline-success"><i
 												class="fa fa-trash"></i>
 											Procesar</button>
