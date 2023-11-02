@@ -206,7 +206,10 @@ foreach ($permiso as $p) {
 												<a class="nav-sub-link" href="topecesantia.php">TOPE SEGURO CESANTÍA</a>
 											</li>
 											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="topeapv.php">TOPE APV</a>
+												<a class="nav-sub-link" href="topeapv.php">TOPE APV MENSUAL</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="topeapvanual.php">TOPE APV ANUAL</a>
 											</li>
 										</ul>
 									</li>
@@ -330,6 +333,9 @@ foreach ($permiso as $p) {
 									</li>
 										<li class="nav-sub-item">
 											<a class="nav-sub-link" href="asistencia.php">Asistencia</a>
+										</li>
+										<li class="nav-sub-item">
+											<a class="nav-sub-link" href="cargaasistencia.php">Cargar Asistencia</a>
 										</li>
 										<li class="nav-sub-item">
 											<a class="nav-sub-link" href="procesar.php">Procesar Trabajadores</a>

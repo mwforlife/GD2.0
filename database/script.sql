@@ -1193,7 +1193,7 @@ create table detalle_liquidacion(
 );
 
 /************************************valores************************************/
-//UF
+--UF
 create table uf(
     id int not null auto_increment primary key,
     periodo date not null,
@@ -1219,7 +1219,7 @@ create table sueldominimo(
     register_at timestamp not null default current_timestamp
 );
 
-//tope imponible
+--tope imponible
 create table topeafp(
     id int not null auto_increment primary key,
     periodo date not null,

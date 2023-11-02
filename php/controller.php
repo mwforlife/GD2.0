@@ -597,7 +597,7 @@ class Controller
             $id = $rs['id'];
             $codigosii = $rs['codigosii'];
             $nombre = $rs['nombre'];
-            $cod  = new CodigoActividad($id, $codigosii, $nombre);
+            $cod = new CodigoActividad($id, $codigosii, $nombre);
             $lista[] = $cod;
         }
         $this->desconectar();
@@ -615,7 +615,7 @@ class Controller
             $id = $rs['id'];
             $codigosii = $rs['codigosii'];
             $nombre = $rs['nombre'];
-            $cod  = new CodigoActividad($id, $codigosii, $nombre);
+            $cod = new CodigoActividad($id, $codigosii, $nombre);
             $lista[] = $cod;
         }
         $this->desconectar();
@@ -750,7 +750,7 @@ class Controller
     }
 
     //Registrar Tasa AFP
-    public function registrartasaafp($id, $periodo,$tasasis, $tasa)
+    public function registrartasaafp($id, $periodo, $tasasis, $tasa)
     {
         $this->conexion();
         $sql = "insert into tasaafp values(null, $id, '$periodo',$tasasis, $tasa)";
@@ -1285,6 +1285,34 @@ class Controller
     {
         $this->conexion();
         $sql = "select * from trabajadores where rut = '$rut'";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $rut = $rs['rut'];
+            $dni = $rs['dni'];
+            $nombre = $rs['nombre'];
+            $apellido1 = $rs['primerapellido'];
+            $apellido2 = $rs['segundoapellido'];
+            $nacimiento = $rs['fechanacimiento'];
+            $sexo = $rs['sexo'];
+            $estadocivil = $rs['estadocivil'];
+            $nacionalidad = $rs['nacionalidad'];
+            $discapacidad = $rs['discapacidad'];
+            $pension = $rs['pension'];
+            $empresa = $rs['empresa'];
+            $registrar = "register_at";
+            $T = new Trabajadores($id, $rut, $dni, $nombre, $apellido1, $apellido2, $nacimiento, $sexo, $estadocivil, $nacionalidad, $discapacidad, $pension, $empresa, $registrar);
+            $this->desconectar();
+            return $T;
+        } else {
+            $this->desconectar();
+            return false;
+        }
+    }  //Buscar Trabajador por Rut
+    public function buscartrabajadorbyRut1($rut,$empresa)
+    {
+        $this->conexion();
+        $sql = "select * from trabajadores where rut = '$rut' and empresa = $empresa";
         $result = $this->mi->query($sql);
         if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
@@ -4279,7 +4307,7 @@ class Controller
     }
 
     //Actualizar Carga1
-    public function actualizarcarga1($id, $rut, $nombre, $apellido1, $apellido2, $nacimiento, $civil, $reconocimiento, $pago, $vigencia, $tipocausante, $sexo, $tipocarga, $trabajador,  $comentario)
+    public function actualizarcarga1($id, $rut, $nombre, $apellido1, $apellido2, $nacimiento, $civil, $reconocimiento, $pago, $vigencia, $tipocausante, $sexo, $tipocarga, $trabajador, $comentario)
     {
         $this->conexion();
         $sql = "update cargastrabajador set rut = '$rut', nombres = '$nombre', primerapellido = '$apellido1', segundoapellido = '$apellido2', fechanacimiento = '$nacimiento', civil = $civil, fechareconocimiento = '$reconocimiento', fechapago = '$pago', vigencia = '$vigencia', tipocausante = $tipocausante, sexo = $sexo, tipocarga = $tipocarga, register_at = now(), trabajador = $trabajador, comentario = '$comentario' where id = $id";
@@ -4997,6 +5025,34 @@ class Controller
     {
         $this->conexion();
         $sql = "select contratos.id as id, trabajadores.nombre as nombre, trabajadores.primerapellido as primerapellido, contratos.centrocosto as centrocosto, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.trabajador = $trabajador and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and contratos.estado=1";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $nombre = $rs['nombre'] . " " . $rs['primerapellido'] . " " . $rs['segundoapellido'];
+            $razonsocial = $rs['razonsocial'];
+            $tipocontrato = $rs['tipocontrato'];
+            $centrocosto = $rs['centrocosto'];
+            $cargo = $rs['cargo'];
+            $sueldo = $rs['sueldo'];
+            $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $documento = $rs['documento'];
+            $estado = $rs['estado'];
+            $register_at = $rs['register_at'];
+            $contrato = new Contrato($id, $nombre, $razonsocial, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $this->desconectar();
+            return $contrato;
+        }
+        $this->desconectar();
+        return false;
+    }
+
+    
+    function buscarcontratotrabajador($trabajador, $empresa)
+    {
+        $this->conexion();
+        $sql = "select contratos.id as id, trabajadores.nombre as nombre, trabajadores.primerapellido as primerapellido, contratos.centrocosto as centrocosto, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.trabajador = $trabajador and contratos.empresa=$empresa and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and contratos.estado=1";
         $result = $this->mi->query($sql);
         $lista = array();
         if ($rs = mysqli_fetch_array($result)) {
@@ -6165,7 +6221,8 @@ class Controller
         return $result;
     }
 
-    function eliminarcontratohoraspactadas($contrato){
+    function eliminarcontratohoraspactadas($contrato)
+    {
         $this->conexion();
         $sql = "delete from horaspactadas where contrato = $contrato";
         $result = $this->mi->query($sql);
@@ -6915,7 +6972,7 @@ class Controller
         if ($diasvacaciones < 0) {
             $diasvacaciones = 0;
         }
-        return (int)($diasvacaciones);
+        return (int) ($diasvacaciones);
     }
 
 
@@ -9394,6 +9451,16 @@ class Controller
         return $result;
     }
 
+    //Eliminar asistencia
+    function eliminarasistencia($id)
+    {
+        $this->conexion();
+        $sql = "delete from asistencia where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
     //Cantidad de dias de ausencia en un mes
     function cantidadausencias($trabajador, $contrato, $mes, $anio)
     {
@@ -9442,7 +9509,7 @@ class Controller
     }
 
     //Registrar liquidacion
-    function registrarliquidacion($folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajaos, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp,$porsis, $salud, $porsalud,$desafp,$desis,$dessal, $gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion)
+    function registrarliquidacion($folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajaos, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp, $porsis, $salud, $porsalud, $desafp, $desis, $dessal, $gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion)
     {
         $this->conexion();
         $sql = "insert into liquidaciones values(null,$folio,$contrato,'$periodo',$empresa,$trabajador,$diastrabajaos,$sueldobase,$horasfalladas,$horasextras1,$horasextras2,$horasextras3,'$afp','$porafp','$porsis','$salud','$porsalud',$desafp,$desis,$dessal,$gratificacion,$totalimponible,$totalnoimponible,$totaltributable,$totaldeslegales,$totaldesnolegales,'$fecha_liquidacion',now())";
@@ -9499,12 +9566,12 @@ class Controller
             $totaldesnolegales = $rs['totaldesnolegales'];
             $fecha_liquidacion = $rs['fecha_liquidacion'];
             $registro = $rs['register_at'];
-            $liquidacion = new Liquidacion($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp,$porsis, $salud, $porsalud,$desafp,$dessis,$dessal,$gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $registro);
+            $liquidacion = new Liquidacion($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp, $porsis, $salud, $porsalud, $desafp, $dessis, $dessal, $gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $registro);
             $lista[] = $liquidacion;
         }
         $this->desconectar();
         return $lista;
-    }//Listar liquidaciones
+    } //Listar liquidaciones
     function listarliquidaciones1($empresa)
     {
         $this->conexion();
@@ -9540,14 +9607,14 @@ class Controller
             $totaldesnolegales = $rs['totaldesnolegales'];
             $fecha_liquidacion = $rs['fecha_liquidacion'];
             $registro = $rs['register_at'];
-            $liquidacion = new Liquidacion($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp,$porsis, $salud, $porsalud,$desafp,$dessis,$dessal,$gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $registro);
+            $liquidacion = new Liquidacion($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp, $porsis, $salud, $porsalud, $desafp, $dessis, $dessal, $gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $registro);
             $lista[] = $liquidacion;
         }
         $this->desconectar();
         return $lista;
     }
-    
-    function listarliquidacionesperiodo($empresa,$periodo)
+
+    function listarliquidacionesperiodo($empresa, $periodo)
     {
         $this->conexion();
         $sql = "select liquidaciones.id as id, liquidaciones.folio as folio, liquidaciones.contrato as contrato, liquidaciones.periodo as periodo, centrocosto.nombre as empresa, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, liquidaciones.diastrabajados as diastrabajados, liquidaciones.sueldobase as sueldobase, liquidaciones.horasfalladas as horasfalladas, liquidaciones.horasextras1 as horasextras1, liquidaciones.horasextras2 as horasextras2, liquidaciones.horasextras3 as horasextras3, liquidaciones.afp as afp, liquidaciones.porafp as porafp, liquidaciones.porsis as porsis, liquidaciones.salud as salud, liquidaciones.porsalud as porsalud,liquidaciones.desafp as desafp,liquidaciones.dessis as dessis,liquidaciones.dessal as dessal,liquidaciones.gratificacion as gratificacion, liquidaciones.totalimponible as totalimponible, liquidaciones.totalnoimponible as totalnoimponible, liquidaciones.totaltributable as totaltributable, liquidaciones.totaldeslegales as totaldeslegales, liquidaciones.totaldesnolegales as totaldesnolegales, liquidaciones.fecha_liquidacion as fecha_liquidacion, liquidaciones.empresa as register_at from liquidaciones, centrocosto,contratos, trabajadores where liquidaciones.contrato=contratos.id and contratos.centrocosto=centrocosto.id and liquidaciones.trabajador=trabajadores.id and liquidaciones.empresa=$empresa and liquidaciones.periodo='$periodo' order by liquidaciones.register_at desc";
@@ -9582,14 +9649,14 @@ class Controller
             $totaldesnolegales = $rs['totaldesnolegales'];
             $fecha_liquidacion = $rs['fecha_liquidacion'];
             $registro = $rs['register_at'];
-            $liquidacion = new Liquidacion($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp,$porsis, $salud, $porsalud,$desafp,$dessis,$dessal,$gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $registro);
+            $liquidacion = new Liquidacion($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp, $porsis, $salud, $porsalud, $desafp, $dessis, $dessal, $gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $registro);
             $lista[] = $liquidacion;
         }
         $this->desconectar();
         return $lista;
     }
 
-    function listarliquidacionesperiodo1($empresa,$periodo)
+    function listarliquidacionesperiodo1($empresa, $periodo)
     {
         $this->conexion();
         $sql = "select liquidaciones.id as id, liquidaciones.folio as folio, liquidaciones.contrato as contrato, liquidaciones.periodo as periodo, centrocosto.nombre as empresa ,liquidaciones.trabajador as trabajador, liquidaciones.diastrabajados as diastrabajados, liquidaciones.sueldobase as sueldobase, liquidaciones.horasfalladas as horasfalladas, liquidaciones.horasextras1 as horasextras1, liquidaciones.horasextras2 as horasextras2, liquidaciones.horasextras3 as horasextras3, liquidaciones.afp as afp, liquidaciones.porafp as porafp, liquidaciones.porsis as porsis, liquidaciones.salud as salud, liquidaciones.porsalud as porsalud,liquidaciones.desafp as desafp,liquidaciones.dessis as dessis,liquidaciones.dessal as dessal,liquidaciones.gratificacion as gratificacion, liquidaciones.totalimponible as totalimponible, liquidaciones.totalnoimponible as totalnoimponible, liquidaciones.totaltributable as totaltributable, liquidaciones.totaldeslegales as totaldeslegales, liquidaciones.totaldesnolegales as totaldesnolegales, liquidaciones.fecha_liquidacion as fecha_liquidacion, liquidaciones.empresa as register_at from liquidaciones, centrocosto,contratos, trabajadores where liquidaciones.contrato=contratos.id and contratos.centrocosto=centrocosto.id and liquidaciones.trabajador=trabajadores.id and liquidaciones.empresa=$empresa and liquidaciones.periodo='$periodo' order by liquidaciones.register_at desc";
@@ -9624,14 +9691,14 @@ class Controller
             $totaldesnolegales = $rs['totaldesnolegales'];
             $fecha_liquidacion = $rs['fecha_liquidacion'];
             $registro = $rs['register_at'];
-            $liquidacion = new Liquidacion($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp,$porsis, $salud, $porsalud,$desafp,$dessis,$dessal,$gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $registro);
+            $liquidacion = new Liquidacion($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp, $porsis, $salud, $porsalud, $desafp, $dessis, $dessal, $gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $registro);
             $lista[] = $liquidacion;
         }
         $this->desconectar();
         return $lista;
     }
 
-    function listarliquidacionescentrocosto($empresa,$centrocosto)
+    function listarliquidacionescentrocosto($empresa, $centrocosto)
     {
         $this->conexion();
         $sql = "select liquidaciones.id as id, liquidaciones.folio as folio, liquidaciones.contrato as contrato, liquidaciones.periodo as periodo, centrocosto.nombre as empresa, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, liquidaciones.diastrabajados as diastrabajados, liquidaciones.sueldobase as sueldobase, liquidaciones.horasfalladas as horasfalladas, liquidaciones.horasextras1 as horasextras1, liquidaciones.horasextras2 as horasextras2, liquidaciones.horasextras3 as horasextras3, liquidaciones.afp as afp, liquidaciones.porafp as porafp, liquidaciones.porsis as porsis, liquidaciones.salud as salud, liquidaciones.porsalud as porsalud,liquidaciones.desafp as desafp,liquidaciones.dessis as dessis,liquidaciones.dessal as dessal,liquidaciones.gratificacion as gratificacion, liquidaciones.totalimponible as totalimponible, liquidaciones.totalnoimponible as totalnoimponible, liquidaciones.totaltributable as totaltributable, liquidaciones.totaldeslegales as totaldeslegales, liquidaciones.totaldesnolegales as totaldesnolegales, liquidaciones.fecha_liquidacion as fecha_liquidacion, liquidaciones.empresa as register_at from liquidaciones, centrocosto,contratos, trabajadores where liquidaciones.contrato=contratos.id and contratos.centrocosto=centrocosto.id and liquidaciones.trabajador=trabajadores.id and liquidaciones.empresa=$empresa and contratos.centrocosto =$centrocosto order by liquidaciones.register_at desc";
@@ -9666,14 +9733,14 @@ class Controller
             $totaldesnolegales = $rs['totaldesnolegales'];
             $fecha_liquidacion = $rs['fecha_liquidacion'];
             $registro = $rs['register_at'];
-            $liquidacion = new Liquidacion($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp,$porsis, $salud, $porsalud,$desafp,$dessis,$dessal,$gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $registro);
+            $liquidacion = new Liquidacion($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp, $porsis, $salud, $porsalud, $desafp, $dessis, $dessal, $gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $registro);
             $lista[] = $liquidacion;
         }
         $this->desconectar();
         return $lista;
     }
 
-    function listarliquidacionescentrocosto1($empresa,$centrocosto)
+    function listarliquidacionescentrocosto1($empresa, $centrocosto)
     {
         $this->conexion();
         $sql = "select liquidaciones.id as id, liquidaciones.folio as folio, liquidaciones.contrato as contrato, liquidaciones.periodo as periodo, centrocosto.nombre as empresa,liquidaciones.trabajador as trabajador, liquidaciones.diastrabajados as diastrabajados, liquidaciones.sueldobase as sueldobase, liquidaciones.horasfalladas as horasfalladas, liquidaciones.horasextras1 as horasextras1, liquidaciones.horasextras2 as horasextras2, liquidaciones.horasextras3 as horasextras3, liquidaciones.afp as afp, liquidaciones.porafp as porafp, liquidaciones.porsis as porsis, liquidaciones.salud as salud, liquidaciones.porsalud as porsalud,liquidaciones.desafp as desafp,liquidaciones.dessis as dessis,liquidaciones.dessal as dessal,liquidaciones.gratificacion as gratificacion, liquidaciones.totalimponible as totalimponible, liquidaciones.totalnoimponible as totalnoimponible, liquidaciones.totaltributable as totaltributable, liquidaciones.totaldeslegales as totaldeslegales, liquidaciones.totaldesnolegales as totaldesnolegales, liquidaciones.fecha_liquidacion as fecha_liquidacion, liquidaciones.empresa as register_at from liquidaciones, centrocosto,contratos, trabajadores where liquidaciones.contrato=contratos.id and contratos.centrocosto=centrocosto.id and liquidaciones.trabajador=trabajadores.id and liquidaciones.empresa=$empresa and contratos.centrocosto =$centrocosto order by liquidaciones.register_at desc";
@@ -9708,15 +9775,15 @@ class Controller
             $totaldesnolegales = $rs['totaldesnolegales'];
             $fecha_liquidacion = $rs['fecha_liquidacion'];
             $registro = $rs['register_at'];
-            $liquidacion = new Liquidacion($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp,$porsis, $salud, $porsalud,$desafp,$dessis,$dessal,$gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $registro);
+            $liquidacion = new Liquidacion($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp, $porsis, $salud, $porsalud, $desafp, $dessis, $dessal, $gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $registro);
             $lista[] = $liquidacion;
         }
         $this->desconectar();
         return $lista;
     }
 
-    
-    function listarliquidacionesperiodocentrocosto($empresa,$periodo, $centrocosto)
+
+    function listarliquidacionesperiodocentrocosto($empresa, $periodo, $centrocosto)
     {
         $this->conexion();
         $sql = "select liquidaciones.id as id, liquidaciones.folio as folio, liquidaciones.contrato as contrato, liquidaciones.periodo as periodo, centrocosto.nombre as empresa, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, liquidaciones.diastrabajados as diastrabajados, liquidaciones.sueldobase as sueldobase, liquidaciones.horasfalladas as horasfalladas, liquidaciones.horasextras1 as horasextras1, liquidaciones.horasextras2 as horasextras2, liquidaciones.horasextras3 as horasextras3, liquidaciones.afp as afp, liquidaciones.porafp as porafp, liquidaciones.porsis as porsis, liquidaciones.salud as salud, liquidaciones.porsalud as porsalud,liquidaciones.desafp as desafp,liquidaciones.dessis as dessis,liquidaciones.dessal as dessal,liquidaciones.gratificacion as gratificacion, liquidaciones.totalimponible as totalimponible, liquidaciones.totalnoimponible as totalnoimponible, liquidaciones.totaltributable as totaltributable, liquidaciones.totaldeslegales as totaldeslegales, liquidaciones.totaldesnolegales as totaldesnolegales, liquidaciones.fecha_liquidacion as fecha_liquidacion, liquidaciones.empresa as register_at from liquidaciones, centrocosto,contratos, trabajadores where liquidaciones.contrato=contratos.id and contratos.centrocosto=centrocosto.id and liquidaciones.trabajador=trabajadores.id and liquidaciones.periodo='$periodo' and liquidaciones.empresa=$empresa and contratos.centrocosto =$centrocosto order by liquidaciones.register_at desc";
@@ -9751,14 +9818,14 @@ class Controller
             $totaldesnolegales = $rs['totaldesnolegales'];
             $fecha_liquidacion = $rs['fecha_liquidacion'];
             $registro = $rs['register_at'];
-            $liquidacion = new Liquidacion($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp,$porsis, $salud, $porsalud,$desafp,$dessis,$dessal,$gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $registro);
+            $liquidacion = new Liquidacion($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp, $porsis, $salud, $porsalud, $desafp, $dessis, $dessal, $gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $registro);
             $lista[] = $liquidacion;
         }
         $this->desconectar();
         return $lista;
     }
 
-    function listarliquidacionesperiodocentrocosto1($empresa,$periodo, $centrocosto)
+    function listarliquidacionesperiodocentrocosto1($empresa, $periodo, $centrocosto)
     {
         $this->conexion();
         $sql = "select liquidaciones.id as id, liquidaciones.folio as folio, liquidaciones.contrato as contrato, liquidaciones.periodo as periodo, centrocosto.nombre as empresa,liquidaciones.trabajador as trabajador, liquidaciones.diastrabajados as diastrabajados, liquidaciones.sueldobase as sueldobase, liquidaciones.horasfalladas as horasfalladas, liquidaciones.horasextras1 as horasextras1, liquidaciones.horasextras2 as horasextras2, liquidaciones.horasextras3 as horasextras3, liquidaciones.afp as afp, liquidaciones.porafp as porafp, liquidaciones.porsis as porsis, liquidaciones.salud as salud, liquidaciones.porsalud as porsalud,liquidaciones.desafp as desafp,liquidaciones.dessis as dessis,liquidaciones.dessal as dessal,liquidaciones.gratificacion as gratificacion, liquidaciones.totalimponible as totalimponible, liquidaciones.totalnoimponible as totalnoimponible, liquidaciones.totaltributable as totaltributable, liquidaciones.totaldeslegales as totaldeslegales, liquidaciones.totaldesnolegales as totaldesnolegales, liquidaciones.fecha_liquidacion as fecha_liquidacion, liquidaciones.empresa as register_at from liquidaciones, centrocosto,contratos, trabajadores where liquidaciones.contrato=contratos.id and contratos.centrocosto=centrocosto.id and liquidaciones.trabajador=trabajadores.id and liquidaciones.periodo='$periodo' and liquidaciones.empresa=$empresa and contratos.centrocosto =$centrocosto order by liquidaciones.register_at desc";
@@ -9793,7 +9860,7 @@ class Controller
             $totaldesnolegales = $rs['totaldesnolegales'];
             $fecha_liquidacion = $rs['fecha_liquidacion'];
             $registro = $rs['register_at'];
-            $liquidacion = new Liquidacion($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp,$porsis, $salud, $porsalud,$desafp,$dessis,$dessal,$gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $registro);
+            $liquidacion = new Liquidacion($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp, $porsis, $salud, $porsalud, $desafp, $dessis, $dessal, $gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $registro);
             $lista[] = $liquidacion;
         }
         $this->desconectar();
@@ -9801,7 +9868,7 @@ class Controller
     }
 
     //Validar liquidacion
-    function validarliquidacion($periodo,$contrato,$empresa)
+    function validarliquidacion($periodo, $contrato, $empresa)
     {
         $this->conexion();
         $sql = "select * from liquidaciones where periodo='$periodo' and contrato=$contrato and empresa=$empresa";
@@ -9894,7 +9961,7 @@ class Controller
             $totaldesnolegales = $rs['totaldesnolegales'];
             $fecha_liquidacion = $rs['fecha_liquidacion'];
             $registro = $rs['register_at'];
-            $liquidacion = new Liquidacion($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp,$porsis, $salud, $porsalud,$desafp,$dessis,$dessal,$gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $registro);
+            $liquidacion = new Liquidacion($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp, $porsis, $salud, $porsalud, $desafp, $dessis, $dessal, $gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $registro);
             $this->desconectar();
             return $liquidacion;
         }
@@ -9904,7 +9971,8 @@ class Controller
     /********************************Valores***************************** */
     /**********************************UF********************************* */
     //Registrar UF
-    function registraruf($periodo, $tasa){
+    function registraruf($periodo, $tasa)
+    {
         $this->conexion();
         $sql = "insert into uf values(null,'$periodo',$tasa,now())";
         $result = $this->mi->query($sql);
@@ -9913,7 +9981,8 @@ class Controller
     }
 
     //Buscar UF
-    function buscaruf($periodo){
+    function buscaruf($periodo)
+    {
         $this->conexion();
         $sql = "select * from uf where periodo='$periodo'";
         $result = $this->mi->query($sql);
@@ -9929,7 +9998,8 @@ class Controller
         return $uf;
     }
 
-    function buscarufbyid($id){
+    function buscarufbyid($id)
+    {
         $this->conexion();
         $sql = "select * from uf where id=$id";
         $result = $this->mi->query($sql);
@@ -9946,12 +10016,13 @@ class Controller
     }
 
     //Listar UF
-    function listaruf(){
+    function listaruf()
+    {
         $this->conexion();
         $sql = "select * from uf order by register_at desc";
         $result = $this->mi->query($sql);
         $lista = array();
-        while ($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $periodo = $rs['periodo'];
             $tasa = $rs['tasa'];
@@ -9964,7 +10035,8 @@ class Controller
     }
 
     //Actualizar UF
-    function actualizaruf($id, $periodo, $tasa){
+    function actualizaruf($id, $periodo, $tasa)
+    {
         $this->conexion();
         $sql = "update uf set periodo='$periodo', tasa=$tasa where id=$id";
         $result = $this->mi->query($sql);
@@ -9973,7 +10045,8 @@ class Controller
     }
 
     //Eliminar UF
-    function eliminaruf($id){
+    function eliminaruf($id)
+    {
         $this->conexion();
         $sql = "delete from uf where id=$id";
         $result = $this->mi->query($sql);
@@ -9982,9 +10055,10 @@ class Controller
     }
 
     /**********************************FIN UF********************************* */
-/**********************************Utm********************************* */
+    /**********************************Utm********************************* */
     //Registrar utm
-    function registrarutm($periodo, $tasa){
+    function registrarutm($periodo, $tasa)
+    {
         $this->conexion();
         $sql = "insert into utm values(null,'$periodo',$tasa,now())";
         $result = $this->mi->query($sql);
@@ -9993,7 +10067,8 @@ class Controller
     }
 
     //Buscar utm
-    function buscarutm($periodo){
+    function buscarutm($periodo)
+    {
         $this->conexion();
         $sql = "select * from utm where periodo='$periodo'";
         $result = $this->mi->query($sql);
@@ -10009,7 +10084,8 @@ class Controller
         return $uf;
     }
 
-    function buscarutmbyid($id){
+    function buscarutmbyid($id)
+    {
         $this->conexion();
         $sql = "select * from utm where id=$id";
         $result = $this->mi->query($sql);
@@ -10026,12 +10102,13 @@ class Controller
     }
 
     //Listar utm
-    function listarutm(){
+    function listarutm()
+    {
         $this->conexion();
         $sql = "select * from utm order by register_at desc";
         $result = $this->mi->query($sql);
         $lista = array();
-        while ($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $periodo = $rs['periodo'];
             $tasa = $rs['tasa'];
@@ -10044,7 +10121,8 @@ class Controller
     }
 
     //Actualizar utm
-    function actualizarutm($id, $periodo, $tasa){
+    function actualizarutm($id, $periodo, $tasa)
+    {
         $this->conexion();
         $sql = "update utm set periodo='$periodo', tasa=$tasa where id=$id";
         $result = $this->mi->query($sql);
@@ -10053,7 +10131,8 @@ class Controller
     }
 
     //Eliminar UF
-    function eliminarutm($id){
+    function eliminarutm($id)
+    {
         $this->conexion();
         $sql = "delete from utm where id=$id";
         $result = $this->mi->query($sql);
@@ -10062,9 +10141,10 @@ class Controller
     }
 
     /**********************************FIN utm********************************* */
-/**********************************UTA********************************* */
+    /**********************************UTA********************************* */
     //Registrar utm
-    function registraruta($periodo, $tasa){
+    function registraruta($periodo, $tasa)
+    {
         $this->conexion();
         $sql = "insert into uta values(null,'$periodo',$tasa,now())";
         $result = $this->mi->query($sql);
@@ -10073,7 +10153,8 @@ class Controller
     }
 
     //Buscar uta
-    function buscaruta($periodo){
+    function buscaruta($periodo)
+    {
         $this->conexion();
         $sql = "select * from uta where periodo='$periodo'";
         $result = $this->mi->query($sql);
@@ -10089,7 +10170,8 @@ class Controller
         return $uf;
     }
 
-    function buscarutabyid($id){
+    function buscarutabyid($id)
+    {
         $this->conexion();
         $sql = "select * from uta where id=$id";
         $result = $this->mi->query($sql);
@@ -10106,12 +10188,13 @@ class Controller
     }
 
     //Listar uta
-    function listaruta(){
+    function listaruta()
+    {
         $this->conexion();
         $sql = "select * from uta order by register_at desc";
         $result = $this->mi->query($sql);
         $lista = array();
-        while ($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $periodo = $rs['periodo'];
             $tasa = $rs['tasa'];
@@ -10124,7 +10207,8 @@ class Controller
     }
 
     //Actualizar uta
-    function actualizaruta($id, $periodo, $tasa){
+    function actualizaruta($id, $periodo, $tasa)
+    {
         $this->conexion();
         $sql = "update uta set periodo='$periodo', tasa=$tasa where id=$id";
         $result = $this->mi->query($sql);
@@ -10133,7 +10217,8 @@ class Controller
     }
 
     //Eliminar UF
-    function eliminaruta($id){
+    function eliminaruta($id)
+    {
         $this->conexion();
         $sql = "delete from uta where id=$id";
         $result = $this->mi->query($sql);
@@ -10142,9 +10227,10 @@ class Controller
     }
 
     /**********************************FIN uta********************************* */
-/**********************************SUELDO MINIMO********************************* */
+    /**********************************SUELDO MINIMO********************************* */
     //Registrar sueldominimo
-    function registrarsueldominimo($periodo, $tasa){
+    function registrarsueldominimo($periodo, $tasa)
+    {
         $this->conexion();
         $sql = "insert into sueldominimo values(null,'$periodo',$tasa,now())";
         $result = $this->mi->query($sql);
@@ -10153,7 +10239,8 @@ class Controller
     }
 
     //Buscar sueldominimo
-    function buscarsueldominimo($periodo){
+    function buscarsueldominimo($periodo)
+    {
         $this->conexion();
         $sql = "select * from sueldominimo where periodo='$periodo'";
         $result = $this->mi->query($sql);
@@ -10169,7 +10256,8 @@ class Controller
         return $uf;
     }
 
-    function buscarsueldominimobyid($id){
+    function buscarsueldominimobyid($id)
+    {
         $this->conexion();
         $sql = "select * from sueldominimo where id=$id";
         $result = $this->mi->query($sql);
@@ -10186,12 +10274,13 @@ class Controller
     }
 
     //Listar sueldominimo
-    function listarsueldominimo(){
+    function listarsueldominimo()
+    {
         $this->conexion();
         $sql = "select * from sueldominimo order by register_at desc";
         $result = $this->mi->query($sql);
         $lista = array();
-        while ($rs = mysqli_fetch_array($result)){
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $periodo = $rs['periodo'];
             $tasa = $rs['tasa'];
@@ -10204,7 +10293,8 @@ class Controller
     }
 
     //Actualizar sueldominimo
-    function actualizarsueldominimo($id, $periodo, $tasa){
+    function actualizarsueldominimo($id, $periodo, $tasa)
+    {
         $this->conexion();
         $sql = "update sueldominimo set periodo='$periodo', tasa=$tasa where id=$id";
         $result = $this->mi->query($sql);
@@ -10213,7 +10303,8 @@ class Controller
     }
 
     //Eliminar UF
-    function eliminarsueldominimo($id){
+    function eliminarsueldominimo($id)
+    {
         $this->conexion();
         $sql = "delete from sueldominimo where id=$id";
         $result = $this->mi->query($sql);
@@ -10222,4 +10313,436 @@ class Controller
     }
 
     /**********************************FIN SUELDO MINIMO********************************* */
+
+    /**********************************TOPE AFP********************************* */
+    //Registrar utm
+    function registrartopeafp($periodo, $valor)
+    {
+        $this->conexion();
+        $sql = "insert into topeafp values(null,'$periodo',$valor,now())";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Buscar topeafp
+    function buscartopeafp($periodo)
+    {
+        $this->conexion();
+        $sql = "select * from topeafp where periodo='$periodo'";
+        $result = $this->mi->query($sql);
+        $uf = false;
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $periodo = $rs['periodo'];
+            $tasa = $rs['valor'];
+            $registro = $rs['register_at'];
+            $uf = new UF($id, $periodo, $tasa, $registro);
+        }
+        $this->desconectar();
+        return $uf;
+    }
+
+    function buscartopeafpbyid($id)
+    {
+        $this->conexion();
+        $sql = "select * from topeafp where id=$id";
+        $result = $this->mi->query($sql);
+        $uf = false;
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $periodo = $rs['periodo'];
+            $tasa = $rs['valor'];
+            $registro = $rs['register_at'];
+            $uf = new UF($id, $periodo, $tasa, $registro);
+        }
+        $this->desconectar();
+        return $uf;
+    }
+
+    //Listar topeafp
+    function listartopeafp()
+    {
+        $this->conexion();
+        $sql = "select * from topeafp order by register_at desc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $periodo = $rs['periodo'];
+            $tasa = $rs['valor'];
+            $registro = $rs['register_at'];
+            $uf = new UF($id, $periodo, $tasa, $registro);
+            $lista[] = $uf;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Actualizar topeafp
+    function actualizartopeafp($id, $periodo, $tasa)
+    {
+        $this->conexion();
+        $sql = "update topeafp set periodo='$periodo', valor=$tasa where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Eliminar UF
+    function eliminartopeafp($id)
+    {
+        $this->conexion();
+        $sql = "delete from topeafp where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    /**********************************FIN TOPE AFP********************************* */
+    
+    /**********************************TOPE IPS********************************* */
+    //Registrar utm
+    function registrartopeips($periodo, $valor)
+    {
+        $this->conexion();
+        $sql = "insert into topeips values(null,'$periodo',$valor,now())";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Buscar topeips
+    function buscartopeips($periodo)
+    {
+        $this->conexion();
+        $sql = "select * from topeips where periodo='$periodo'";
+        $result = $this->mi->query($sql);
+        $uf = false;
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $periodo = $rs['periodo'];
+            $tasa = $rs['valor'];
+            $registro = $rs['register_at'];
+            $uf = new UF($id, $periodo, $tasa, $registro);
+        }
+        $this->desconectar();
+        return $uf;
+    }
+
+    function buscartopeipsbyid($id)
+    {
+        $this->conexion();
+        $sql = "select * from topeips where id=$id";
+        $result = $this->mi->query($sql);
+        $uf = false;
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $periodo = $rs['periodo'];
+            $tasa = $rs['valor'];
+            $registro = $rs['register_at'];
+            $uf = new UF($id, $periodo, $tasa, $registro);
+        }
+        $this->desconectar();
+        return $uf;
+    }
+
+    //Listar topeips
+    function listartopeips()
+    {
+        $this->conexion();
+        $sql = "select * from topeips order by register_at desc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $periodo = $rs['periodo'];
+            $tasa = $rs['valor'];
+            $registro = $rs['register_at'];
+            $uf = new UF($id, $periodo, $tasa, $registro);
+            $lista[] = $uf;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Actualizar topeips
+    function actualizartopeips($id, $periodo, $tasa)
+    {
+        $this->conexion();
+        $sql = "update topeips set periodo='$periodo', valor=$tasa where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Eliminar UF
+    function eliminartopeips($id)
+    {
+        $this->conexion();
+        $sql = "delete from topeips where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    /**********************************FIN TOPE IPS********************************* */
+    /**********************************TOPE CESANTIA********************************* */
+    //Registrar utm
+    function registrartopecesantia($periodo, $valor)
+    {
+        $this->conexion();
+        $sql = "insert into topecesantia values(null,'$periodo',$valor,now())";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Buscar topecesantia
+    function buscartopecesantia($periodo)
+    {
+        $this->conexion();
+        $sql = "select * from topecesantia where periodo='$periodo'";
+        $result = $this->mi->query($sql);
+        $uf = false;
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $periodo = $rs['periodo'];
+            $tasa = $rs['valor'];
+            $registro = $rs['register_at'];
+            $uf = new UF($id, $periodo, $tasa, $registro);
+        }
+        $this->desconectar();
+        return $uf;
+    }
+
+    function buscartopecesantiabyid($id)
+    {
+        $this->conexion();
+        $sql = "select * from topecesantia where id=$id";
+        $result = $this->mi->query($sql);
+        $uf = false;
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $periodo = $rs['periodo'];
+            $tasa = $rs['valor'];
+            $registro = $rs['register_at'];
+            $uf = new UF($id, $periodo, $tasa, $registro);
+        }
+        $this->desconectar();
+        return $uf;
+    }
+
+    //Listar topecesantia
+    function listartopecesantia()
+    {
+        $this->conexion();
+        $sql = "select * from topecesantia order by register_at desc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $periodo = $rs['periodo'];
+            $tasa = $rs['valor'];
+            $registro = $rs['register_at'];
+            $uf = new UF($id, $periodo, $tasa, $registro);
+            $lista[] = $uf;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Actualizar topecesantia
+    function actualizartopecesantia($id, $periodo, $tasa)
+    {
+        $this->conexion();
+        $sql = "update topecesantia set periodo='$periodo', valor=$tasa where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Eliminar UF
+    function eliminartopecesantia($id)
+    {
+        $this->conexion();
+        $sql = "delete from topecesantia where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    /**********************************FIN TOPE CESANTIA********************************* */
+    /**********************************TOPE APV MENSUAL********************************* */
+    //Registrar utm
+    function registrartopeapvmensual($periodo, $valor)
+    {
+        $this->conexion();
+        $sql = "insert into topeapvmensual values(null,'$periodo',$valor,now())";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Buscar topeapvmensual
+    function buscartopeapvmensual($periodo)
+    {
+        $this->conexion();
+        $sql = "select * from topeapvmensual where periodo='$periodo'";
+        $result = $this->mi->query($sql);
+        $uf = false;
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $periodo = $rs['periodo'];
+            $tasa = $rs['valor'];
+            $registro = $rs['register_at'];
+            $uf = new UF($id, $periodo, $tasa, $registro);
+        }
+        $this->desconectar();
+        return $uf;
+    }
+
+    function buscartopeapvmensualbyid($id)
+    {
+        $this->conexion();
+        $sql = "select * from topeapvmensual where id=$id";
+        $result = $this->mi->query($sql);
+        $uf = false;
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $periodo = $rs['periodo'];
+            $tasa = $rs['valor'];
+            $registro = $rs['register_at'];
+            $uf = new UF($id, $periodo, $tasa, $registro);
+        }
+        $this->desconectar();
+        return $uf;
+    }
+
+    //Listar topeapvmensual
+    function listartopeapvmensual()
+    {
+        $this->conexion();
+        $sql = "select * from topeapvmensual order by register_at desc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $periodo = $rs['periodo'];
+            $tasa = $rs['valor'];
+            $registro = $rs['register_at'];
+            $uf = new UF($id, $periodo, $tasa, $registro);
+            $lista[] = $uf;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Actualizar topeapvmensual
+    function actualizartopeapvmensual($id, $periodo, $tasa)
+    {
+        $this->conexion();
+        $sql = "update topeapvmensual set periodo='$periodo', valor=$tasa where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Eliminar UF
+    function eliminartopeapvmensual($id)
+    {
+        $this->conexion();
+        $sql = "delete from topeapvmensual where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    /**********************************FIN TOPE APV MENSUAL********************************* */
+    /**********************************TOPE APV ANUAL********************************* */
+    //Registrar utm
+    function registrartopeapvanual($periodo, $valor)
+    {
+        $this->conexion();
+        $sql = "insert into topeapvanual values(null,'$periodo',$valor,now())";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Buscar topeapvanual
+    function buscartopeapvanual($periodo)
+    {
+        $this->conexion();
+        $sql = "select * from topeapvanual where periodo='$periodo'";
+        $result = $this->mi->query($sql);
+        $uf = false;
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $ano = $rs['ano'];
+            $tasa = $rs['valor'];
+            $registro = $rs['register_at'];
+            $uf = new UF($id, $ano, $tasa, $registro);
+        }
+        $this->desconectar();
+        return $uf;
+    }
+
+    function buscartopeapvanualbyid($id)
+    {
+        $this->conexion();
+        $sql = "select * from topeapvanual where id=$id";
+        $result = $this->mi->query($sql);
+        $uf = false;
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $ano = $rs['ano'];
+            $tasa = $rs['valor'];
+            $registro = $rs['register_at'];
+            $uf = new UF($id, $ano, $tasa, $registro);
+        }
+        $this->desconectar();
+        return $uf;
+    }
+
+    //Listar topeapvanual
+    function listartopeapvanual()
+    {
+        $this->conexion();
+        $sql = "select * from topeapvanual order by register_at desc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $ano = $rs['ano'];
+            $tasa = $rs['valor'];
+            $registro = $rs['register_at'];
+            $uf = new UF($id, $ano, $tasa, $registro);
+            $lista[] = $uf;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Actualizar topeapvanual
+    function actualizartopeapvanual($id, $ano, $tasa)
+    {
+        $this->conexion();
+        $sql = "update topeapvanual set ano='$ano', valor=$tasa where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Eliminar UF
+    function eliminartopeapvanual($id)
+    {
+        $this->conexion();
+        $sql = "delete from topeapvanual where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    /**********************************FIN TOPE APV ANUAL********************************* */
 }

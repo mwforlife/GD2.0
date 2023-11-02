@@ -172,10 +172,11 @@ if(isset($_POST['id']) && isset($_POST['inicio']) && isset($_POST['termino']) &&
     $asistencia = $c->validarasistencia($id,$contrato,$dia);
     if($asistencia == false){
         $c->registrarasistencia($id,$contrato,$dia,2);
-        echo "OK";
     }else{
         $c->actualizarasistencia($asistencia,$estado);
-        echo "OK1";
+        if($estado==1){
+            $c->eliminarasistencia($asistencia);
+        }
     }
 }else{
     echo "Error";

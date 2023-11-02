@@ -277,13 +277,10 @@
                                     $formula = str_replace("{VALOR_AGREGADO}", $haber->gethoras(), $formula);
                                     if($habere->getId()==16){
                                         $extra1 = $haber->gethoras();
-                                        echo $haber->getCodigo()." ".$extra1."<br/>";
                                     }else if($habere->getId()==17){
                                         $extra2 = $haber->gethoras();
-                                        echo $haber->getCodigo()." ".$extra2."<br/>";
                                     }else if($habere->getId()==18){
                                         $extra3 = $haber->gethoras();
-                                        echo $haber->getCodigo()." ".$extra3."<br/>";
                                     }
                                 }
 
@@ -401,7 +398,6 @@
                                 $formula = str_replace("{VALOR_AGREGADO}", $haber->gethoras(), $formula);
                                 if($habere->getId()==19 || $habere->getId()==20){
                                     $horasfalladas= $horasfalladas + $haber->gethoras();
-                                    echo "Horas Falladas: ".$horasfalladas."<br/>";
                                 }
                             }
                             //EVALUAMOS LA FORMULA

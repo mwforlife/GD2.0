@@ -544,8 +544,6 @@ foreach ($permiso as $p) {
 										$lista = $c->listartrabajadoresactivos($_SESSION['CURRENT_ENTERPRISE']);
 									}
 									?>
-									<!--<button onclick="allwork()" class="btn btn-success"><i class="fa fa-plus"></i>
-										Todo</button>-->
 								</div>
 								<div class="card-body p-4">
 									<div class="">

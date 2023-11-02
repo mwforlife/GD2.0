@@ -13,6 +13,18 @@ function asistencia(id, rut, nombre, centrocosto, contrato) {
     var mestermino = termino.substring(5, 7);
     var anotermino = termino.substring(0, 4);
 
+    var mesactual = new Date().getMonth() + 1;
+    var anoactual = new Date().getFullYear();
+
+    //Validar que el periodo de termino no sea mayor al actual
+    var periodoactual = anoactual + "-" + mesactual+"-01";
+    var periodotermino = anotermino + "-" + mestermino+"-01";
+    if(periodotermino > periodoactual){
+        ToastifyError("El periodo de termino no puede ser mayor al actual");
+        return;
+    }
+    
+
     switch (mesinicio) {
         case '01': mesinicio = 'Enero'; break;
         case '02': mesinicio = 'Febrero'; break;
@@ -83,3 +95,42 @@ function cargarasistencia(id, empresa, contrato, dia, estado, elemento) {
         }
     });
 }
+
+$(document).ready(function () {
+    $("#formasistencia").submit(function (e) {
+        e.preventDefault();
+        $(".message").html("<div class='alert alert-info'>Enviando datos...</div>");
+        var dataform = new FormData(this);
+        $.ajax({
+            url: "php/insert/asistencia.php",
+            type: "POST",
+            data: dataform,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                try {
+                    var json = JSON.parse(data);
+                    if (json.status == true) {
+                        $(".message").html("");
+                        if(json.success.trim().length > 0){
+                            $(".message").append("<div class='alert alert-success'>" + json.success + "</div>");
+                        }
+                        if(json.errores.trim().length > 0){
+                            $(".message").append("<div class='alert alert-danger'>" + json.errores + "</div>");
+                        }
+                    } else {
+                        $(".message").html("");
+                        if(json.success.trim().length > 0){
+                            $(".message").append("<div class='alert alert-success'>" + json.success + "</div>");
+                        }
+                        if(json.errores.trim().length > 0){
+                            $(".message").append("<div class='alert alert-danger'>" + json.errores + "</div>");
+                        }
+                    }
+                } catch (error) {
+                    $(".message").html("<div class='alert alert-danger'>" + data + "</div>");
+                }
+            }
+        });
+    });
+});

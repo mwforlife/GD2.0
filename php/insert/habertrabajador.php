@@ -18,6 +18,7 @@ if(isset($_POST['codigo']) && isset($_POST['periodoini']) && isset($_POST['perio
     $trabajadores = json_decode($trabajadores, true);
 
     $monto = str_replace('.', '', $monto);
+    $monto = str_replace(',', '.', $monto);
 
     //Validacion de datos
     if($codigo == "" || $periodoini == "" || $periodofin == "" || $tipo == "" || $modalidad == "" || $trabajadores == ""){
