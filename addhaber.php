@@ -538,8 +538,7 @@ foreach ($permiso as $p) {
 										<div class="col-md-6">
 											<div class="monto">
 												<label for="">Monto</label>
-												<input type="text" name="monto" id="monto" class="form-control" min="0"
-													step="0.01" onkeyup="formatoMiles(this)">
+												<input type="text" name="monto" id="monto" class="form-control" min="0">
 											</div>
 											<div class="dias">
 												<label for="">Dias</label>
@@ -782,6 +781,19 @@ foreach ($permiso as $p) {
 
 		});
 	</script>
+    <script src="JsFunctions/autonumeric@4.5.js"></script>
+
+    <script>
+        let myNumericInput = new AutoNumeric(('#monto'), {
+            decimalPlaces: 3,
+            digitGroupSeparator: '.',
+            decimalCharacter: ',',
+            minimumValue: '0'
+
+        });
+        document.querySelector('#monto').addEventListener('keyup', function(event) {});
+        
+    </script>
 
 
 </body>

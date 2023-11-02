@@ -1191,3 +1191,62 @@ create table detalle_liquidacion(
     tipo int not null references tipohaberesliquidacion(id),
     register_at timestamp not null default current_timestamp
 );
+
+/************************************valores************************************/
+//UF
+create table uf(
+    id int not null auto_increment primary key,
+    periodo date not null,
+    tasa decimal(10,2) not null,
+    register_at timestamp not null default current_timestamp
+);
+create table utm(
+    id int not null auto_increment primary key,
+    periodo date not null,
+    tasa decimal(10,2) not null,
+    register_at timestamp not null default current_timestamp
+);
+create table uta(
+    id int not null auto_increment primary key,
+    periodo date not null,
+    tasa decimal(10,2) not null,
+    register_at timestamp not null default current_timestamp
+);
+create table sueldominimo(
+    id int not null auto_increment primary key,
+    periodo date not null,
+    tasa decimal(10,2) not null,
+    register_at timestamp not null default current_timestamp
+);
+
+//tope imponible
+create table topeafp(
+    id int not null auto_increment primary key,
+    periodo date not null,
+    valor decimal(10,2) not null,
+    register_at timestamp not null default current_timestamp
+);
+create table topeips(
+    id int not null auto_increment primary key,
+    periodo date not null,
+    valor decimal(10,2) not null,
+    register_at timestamp not null default current_timestamp
+);
+create table topecesantia(
+    id int not null auto_increment primary key,
+    periodo date not null,
+    valor decimal(10,2) not null,
+    register_at timestamp not null default current_timestamp
+);
+create table topeapvmensual(
+    id int not null auto_increment primary key,
+    periodo date not null,
+    valor decimal(10,2) not null,
+    register_at timestamp not null default current_timestamp
+);
+create table topeapvanual(
+    id int not null auto_increment primary key,
+    ano int not null,
+    valor decimal(10,2) not null,
+    register_at timestamp not null default current_timestamp
+);

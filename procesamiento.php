@@ -247,6 +247,9 @@
                     $dias = 30 - $ausencias - $mediodia - $contardias;
                     $periodo = date($anio . "-" . $mes1 . "-01");
                     $haberes = $c->listarhaberes_descuentotrababajador($periodo, $periodo, $empresa->getId(), $trabajador->getId(), 1);
+                    if($gratif==1){
+                     $gratificacion = $gratificacion + $sueldo;
+                    }
 
                     $sueldo = $sueldo / 30 * $dias;
                     $valor_haberes[] = array("codigo" => "SUELDO BASE", "valor" => $sueldo, "tipo" => 1);
@@ -306,6 +309,12 @@
                         }
                     }
 
+                    if($gratif==1){
+                        $gratificacion = $gratificacion * 0.25;
+                        $valor_haberes[] = array("codigo" => "GRATIFICACION", "valor" => $gratificacion, "tipo" => 1);
+                        $total_imponible = $total_imponible + $gratificacion;
+                    }
+
                     foreach ($haberes as $haber) {
                         if ($haber->getRegistro() == 2) {
                             if ($haber->getTipo() == 1) {
@@ -346,7 +355,7 @@
                     //Prevision
                     $dessis = $total_imponible * ($tasa->getInstitucion() / 100);
                     $prevision_des = $total_imponible * ($tasa->getTasa() / 100);
-                    $valor_descuentos_legales[] = array("codigo" => "PREVISION", "valor" => $prevision_des, "tipo" => 1);
+                    $valor_descuentos_legales[] = array("codigo" => "PREVISION", "valor" => ($prevision_des + $dessis), "tipo" => 1);
                     $total_descuentos_legales = $total_descuentos_legales + $prevision_des;
 
                     //Salud
@@ -570,8 +579,10 @@
                     </div>
                     <?php
                         /****************************************************SENTENCIAS************************************************ */
+                        $valid = $c->validarliquidacion($periodo,$contrato->getId(),$empresa->getId());
+                        if($valid==false){
                         $ultimofolio = $c->ultimofolioliquidacion($empresa->getId())+1;
-                        $idliquidacion = $c->registrarliquidacion($ultimofolio,$contrato->getId(),$periodo,$empresa->getId(),$trabajador->getId(),$dias,$sueldo,$horasfalladas,$extra1,$extra2,$extra3,$afp->getNombre(),$tasa->getTasa(),$tasa->getInstitucion(),$isapre->getNombre(),$desc_salud,$total_imponible,$total_no_imponible,$total_tributable,$total_descuentos_legales,$total_descuentos_no_legales,date("Y-m-d"));
+                        $idliquidacion = $c->registrarliquidacion($ultimofolio,$contrato->getId(),$periodo,$empresa->getId(),$trabajador->getId(),$dias,$sueldo,$horasfalladas,$extra1,$extra2,$extra3,$afp->getNombre(),$tasa->getTasa(),$tasa->getInstitucion(),$isapre->getNombre(),$desc_salud,$prevision_des,$dessis,$salud_des,$gratificacion,$total_imponible,$total_no_imponible,$total_tributable,$total_descuentos_legales,$total_descuentos_no_legales,date("Y-m-d"));
                         foreach($valor_haberes as $haber){
                             if($haber['tipo']==1){
                             $c->registrardetalleliquidacion($idliquidacion,$haber['codigo'],$haber['valor'],1);
@@ -585,6 +596,9 @@
 
                         foreach($valor_descuentos_no_legales as $descuento){
                             $c->registrardetalleliquidacion($idliquidacion,$descuento['codigo'],$descuento['valor'],4);
+                        }
+                        }else{
+                            echo "<div class='alert alert-danger'>Ya se ha generado la liquidacion de este trabajador para este periodo, si desea generarla nuevamente debe eliminar la liquidacion anterior</div>";
                         }
 
                     ?>

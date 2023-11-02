@@ -184,6 +184,30 @@ foreach ($permiso as $p) {
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="codigolre.php">CODIGOS LRE</a>
 											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="uf.php">UF</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="utm.php">UTM</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="uta.php">UTA</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="sminimo.php">SUELDO MÍNIMO</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="topeafp.php">Tope AFP</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="topeips.php">TOPE IPS</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="topecesantia.php">TOPE SEGURO CESANTÍA</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="topeapv.php">TOPE APV</a>
+											</li>
 										</ul>
 									</li>
 									<?php
