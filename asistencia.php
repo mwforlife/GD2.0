@@ -128,12 +128,11 @@ foreach ($permiso as $p) {
 				</a>
 			</div>
 			<div class="main-sidebar-body">
-
 				<?php
 				$user = $c->buscarusuario($_SESSION['USER_ID']);
 				if ($user != null) {
 					if ($user->getTipo() != 3) {
-				?>
+						?>
 						<ul class="nav">
 							<li class="nav-header"><span class="nav-label">Dashboard</span></li>
 
@@ -142,9 +141,10 @@ foreach ($permiso as $p) {
 							if (isset($_SESSION['GESTION_PERMISO']) || isset($_SESSION['LECTURA_PERMISO']) || isset($_SESSION['ESCRITURA_PERMISO']) || isset($_SESSION['ACTUALIZACION_PERMISO']) || isset($_SESSION['ELIMINACION_PERMISO'])) {
 								if ($_SESSION['GESTION_PERMISO'] == true) {
 
-							?>
+									?>
 									<li class="nav-item">
-										<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
+										<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span
+												class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
 										<ul class="nav-sub">
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="isapres.php">Institución de Salud</a>
@@ -191,24 +191,52 @@ foreach ($permiso as $p) {
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="codigolre.php">CODIGOS LRE</a>
 											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="uf.php">UF</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="utm.php">UTM</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="uta.php">UTA</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="sminimo.php">SUELDO MÍNIMO</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="topeafp.php">Tope AFP</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="topeips.php">TOPE IPS</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="topecesantia.php">TOPE SEGURO CESANTÍA</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="topeapv.php">TOPE APV MENSUAL</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="topeapvanual.php">TOPE APV ANUAL</a>
+											</li>
 										</ul>
 									</li>
-								<?php
+									<?php
 								}
 								?>
 								<li class="nav-header"><span class="nav-label">FUNCIONES</span></li>
 
 
 								<li class="nav-item">
-									<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
+									<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span
+											class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
 									<ul class="nav-sub">
 										<?php
 										if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
-										?>
+											?>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="empresas.php">Empresas</a>
 											</li>
-										<?php
+											<?php
 										}
 										?>
 										<li class="nav-sub-item">
@@ -223,11 +251,11 @@ foreach ($permiso as $p) {
 
 										<?php
 										if ($_SESSION['GESTION_PERMISO'] == true) {
-										?>
+											?>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="tipodocumento.php">Escritos</a>
 											</li>
-										<?php
+											<?php
 										}
 										?>
 
@@ -235,23 +263,24 @@ foreach ($permiso as $p) {
 										if (isset($_SESSION['GESTION_PERMISO'])) {
 											if ($_SESSION['GESTION_PERMISO'] == true) {
 
-										?>
+												?>
 												<li class="nav-sub-item">
 													<a class="nav-sub-link" href="usuarios.php">Usuarios</a>
 												</li>
-										<?php
+												<?php
 											}
 										}
 										?>
 									</ul>
 								</li>
-							<?php
+								<?php
 							}
 
 							if ($_SESSION['GESTION_PERMISO'] == true) {
-							?>
+								?>
 								<li class="nav-item">
-									<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
+									<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span
+											class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
 									<ul class="nav-sub">
 										<li class="nav-sub-item">
 											<a class="nav-sub-link" href="auditoriatrabajadores.php">Auditoria de trabajadores</a>
@@ -262,12 +291,13 @@ foreach ($permiso as $p) {
 
 									</ul>
 								</li>
-							<?php
+								<?php
 							}
 							?>
 							<!--------------------Generarion de documentos------------------>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
+										class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="contratoindividual.php">Contrato Individual</a>
@@ -301,17 +331,30 @@ foreach ($permiso as $p) {
 							<!--------------------------------------------------------------->
 							<!--------------------Remuneraciones------------------>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-dollar-sign sidemenu-icon"></i><span class="sidemenu-label">Remuneraciones</span><i class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-dollar-sign sidemenu-icon"></i><span
+										class="sidemenu-label">Remuneraciones</span><i
+										class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="habmaster.php">Haberes y Descuentos</a>
 									</li>
+										<li class="nav-sub-item">
+											<a class="nav-sub-link" href="asistencia.php">Asistencia</a>
+										</li>
+										<li class="nav-sub-item">
+											<a class="nav-sub-link" href="cargaasistencia.php">Cargar Asistencia</a>
+										</li>
+										<li class="nav-sub-item">
+											<a class="nav-sub-link" href="procesar.php">Procesar Trabajadores</a>
+										</li>
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->
 							<!--------------------Carga de documentos------------------>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-upload sidemenu-icon"></i><span class="sidemenu-label">Carga de Documentos</span><i class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-upload sidemenu-icon"></i><span
+										class="sidemenu-label">Carga de Documentos</span><i
+										class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="cargatrabajador.php">Trabajadores</a>
@@ -323,7 +366,8 @@ foreach ($permiso as $p) {
 							</li>
 							<!--------------------Reportes------------------>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
+										class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="impresiondocumentos.php">Impresión Documentos</a>
@@ -334,33 +378,43 @@ foreach ($permiso as $p) {
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="documentosfirmados.php">Documentos Firmados</a>
 									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="liquidaciones.php">Reporte Liquidaciones</a>
+									</li>
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->
 
 						</ul>
-					<?php
-					} else if ($user->getTipo() == 3) {
-					?>
-						<!-----------------------------Mandante--------------------------------->
-						<li class="nav-item">
-							<a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span class="sidemenu-label">Mandante</span><i class="angle fe fe-chevron-right"></i></a>
-							<ul class="nav-sub">
-								<li class="nav-sub-item">
-									<a class="nav-sub-link" href="mandanteempresa.php">Documentos Empresa</a>
-								</li>
-								<li class="nav-sub-item">
-									<a class="nav-sub-link" href="mandantetrabajadores.php">Documentos Trabajadores
+						<?php
+							} else if ($user->getTipo() == 3) {
+							?>
+							<ul class="nav">
+								<li class="nav-header"><span class="nav-label">Reporte Mandante</span></li>
+							<!-----------------------------Mandante--------------------------------->
+							<li class="nav-item">
+								<a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span
+										class="sidemenu-label">Mandante</span><i
+										class="angle fe fe-chevron-right"></i></a>
+								<ul class="nav-sub">
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="mandanteempresa.php">Documentos Empresa</a>
+									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="mandantetrabajadores.php">Documentos Trabajadores
 
-									</a>
-								</li>
+										</a>
+									</li>
+								</ul>
+							</li>
 							</ul>
-						</li>
 
-				<?php
-					}
-				}
-				?>
+						<?php
+
+							}
+						}
+						?>
+
 			</div>
 		</div>
 		<!-- End Sidemenu -->

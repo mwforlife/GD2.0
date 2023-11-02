@@ -322,7 +322,7 @@ foreach ($permiso as $p) {
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->
-					<!--------------------Remuneraciones------------------>
+							<!--------------------Remuneraciones------------------>
 							<li class="nav-item">
 								<a class="nav-link with-sub" href="#"><i class="fe fe-dollar-sign sidemenu-icon"></i><span
 										class="sidemenu-label">Remuneraciones</span><i
@@ -343,7 +343,7 @@ foreach ($permiso as $p) {
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->
-					<!--------------------Carga de documentos------------------>
+							<!--------------------Carga de documentos------------------>
 							<li class="nav-item">
 								<a class="nav-link with-sub" href="#"><i class="fe fe-upload sidemenu-icon"></i><span
 										class="sidemenu-label">Carga de Documentos</span><i
@@ -378,12 +378,14 @@ foreach ($permiso as $p) {
 							</li>
 							<!--------------------------------------------------------------->
 
-				</ul>
-				<?php
-					} else if ($user->getTipo() == 3) {
-						?>
-			<!-----------------------------Mandante--------------------------------->
-			<li class="nav-item">
+						</ul>
+						<?php
+							} else if ($user->getTipo() == 3) {
+							?>
+							<ul class="nav">
+								<li class="nav-header"><span class="nav-label">Reporte Mandante</span></li>
+							<!-----------------------------Mandante--------------------------------->
+							<li class="nav-item">
 								<a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span
 										class="sidemenu-label">Mandante</span><i
 										class="angle fe fe-chevron-right"></i></a>
@@ -398,11 +400,13 @@ foreach ($permiso as $p) {
 									</li>
 								</ul>
 							</li>
+							</ul>
 
-				<?php
-					}
-				}
-				?>
+						<?php
+
+							}
+						}
+						?>
 
 			</div>
 		</div>

@@ -57,7 +57,6 @@ if (isset($_POST['periodo']) && isset($_FILES['asistencia'])) {
             continue;
         }
         $rut = $data[0];
-        echo $rut;
         $trabajador = $c->buscartrabajadorbyRut1($rut, $empresa);
         if ($trabajador == false) {
             $errores .= "El Trabajador con rut $rut no esta registrado en la empresa <br>";
@@ -109,7 +108,7 @@ if (isset($_POST['periodo']) && isset($_FILES['asistencia'])) {
                     $c->registrarasistencia($trabajador->getId(), $contrato->getId(), $fecha, $data[$j]);
                 }
                 
-                $success .= "Asistencia del trabajador " . $trabajador->getNombre() . " " . $trabajador->getApellido1() . " " . $trabajador->getApellido2() . " de dia $fecha Cargado con exito <br>";
+                //$success .= "Asistencia del trabajador " . $trabajador->getNombre() . " " . $trabajador->getApellido1() . " " . $trabajador->getApellido2() . " de dia $fecha Cargado con exito <br>";
             } else {
                 if (intval($data[$j]) == 1) {
                     $c->eliminarasistencia($asistencia);

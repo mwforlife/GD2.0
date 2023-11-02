@@ -152,8 +152,7 @@ foreach ($permiso as $p) {
 				</a>
 			</div>
 			<div class="main-sidebar-body">
-				
-			<?php
+				<?php
 				$user = $c->buscarusuario($_SESSION['USER_ID']);
 				if ($user != null) {
 					if ($user->getTipo() != 3) {
@@ -215,6 +214,33 @@ foreach ($permiso as $p) {
 											</li>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="codigolre.php">CODIGOS LRE</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="uf.php">UF</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="utm.php">UTM</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="uta.php">UTA</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="sminimo.php">SUELDO MÍNIMO</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="topeafp.php">Tope AFP</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="topeips.php">TOPE IPS</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="topecesantia.php">TOPE SEGURO CESANTÍA</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="topeapv.php">TOPE APV MENSUAL</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="topeapvanual.php">TOPE APV ANUAL</a>
 											</li>
 										</ul>
 									</li>
@@ -327,7 +353,7 @@ foreach ($permiso as $p) {
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->
-					<!--------------------Remuneraciones------------------>
+							<!--------------------Remuneraciones------------------>
 							<li class="nav-item">
 								<a class="nav-link with-sub" href="#"><i class="fe fe-dollar-sign sidemenu-icon"></i><span
 										class="sidemenu-label">Remuneraciones</span><i
@@ -336,10 +362,19 @@ foreach ($permiso as $p) {
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="habmaster.php">Haberes y Descuentos</a>
 									</li>
+										<li class="nav-sub-item">
+											<a class="nav-sub-link" href="asistencia.php">Asistencia</a>
+										</li>
+										<li class="nav-sub-item">
+											<a class="nav-sub-link" href="cargaasistencia.php">Cargar Asistencia</a>
+										</li>
+										<li class="nav-sub-item">
+											<a class="nav-sub-link" href="procesar.php">Procesar Trabajadores</a>
+										</li>
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->
-					<!--------------------Carga de documentos------------------>
+							<!--------------------Carga de documentos------------------>
 							<li class="nav-item">
 								<a class="nav-link with-sub" href="#"><i class="fe fe-upload sidemenu-icon"></i><span
 										class="sidemenu-label">Carga de Documentos</span><i
@@ -367,16 +402,21 @@ foreach ($permiso as $p) {
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="documentosfirmados.php">Documentos Firmados</a>
 									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="liquidaciones.php">Reporte Liquidaciones</a>
+									</li>
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->
 
-				</ul>
-				<?php
-					} else if ($user->getTipo() == 3) {
-						?>
-			<!-----------------------------Mandante--------------------------------->
-			<li class="nav-item">
+						</ul>
+						<?php
+							} else if ($user->getTipo() == 3) {
+							?>
+							<ul class="nav">
+								<li class="nav-header"><span class="nav-label">Reporte Mandante</span></li>
+							<!-----------------------------Mandante--------------------------------->
+							<li class="nav-item">
 								<a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span
 										class="sidemenu-label">Mandante</span><i
 										class="angle fe fe-chevron-right"></i></a>
@@ -391,11 +431,14 @@ foreach ($permiso as $p) {
 									</li>
 								</ul>
 							</li>
+							</ul>
 
-				<?php
-					}
-				}
-				?>
+						<?php
+
+							}
+						}
+						?>
+
 			</div>
 		</div>
 		<!-- End Sidemenu -->
