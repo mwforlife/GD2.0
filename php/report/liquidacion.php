@@ -112,6 +112,15 @@ if (isset($_GET['id'])) {
     $contenido .= "<td style='width: 50%;'>DIAS TRABAJADOS: " . $liquidacion->getDiastrabajados() . " Dias</td>";
     $contenido .= "<td style='width: 50%;'>TRIBUTABLE: $" . number_format($liquidacion->getTotaltributable(), 0, ",", ".") . "</td>";
     $contenido .= "</tr>";
+    if($liquidacion->getHorasextras1() > 0 && $liquidacion->getHorasextras2() > 0 && $liquidacion->getHorasextras3() > 0){
+        $contenido .= "<tr>";
+        $contenido .= "<td style='width: 50%;'>HORAS EXTRAS AL 50%: " . $liquidacion->getHorasextras1() . " hrs</td>";
+        $contenido .= "<td style='width: 50%;'>HORAS EXTRAS AL 75%: " . $liquidacion->getHorasextras2() . " hrs</td>";
+        $contenido .= "</tr>";
+        $contenido .= "<tr>";
+        $contenido .= "<td style='width: 50%;'>HORAS EXTRAS AL 100%: " . $liquidacion->getHorasextras3() . " hrs</td>";
+        $contenido .= "</tr>";
+    }else{
     $contenido .= "<tr>";
     if ($liquidacion->getHorasextras1() > 0) {
         $contenido .= "<td style='width: 50%;'>HORAS EXTRAS AL 50%: " . $liquidacion->getHorasextras1() . " hrs</td>";
@@ -123,6 +132,7 @@ if (isset($_GET['id'])) {
         $contenido .= "<td style='width: 50%;'>HORAS EXTRAS AL 100%: " . $liquidacion->getHorasextras3() . " hrs</td>";
     }
     $contenido .= "</tr>";
+    }
     $contenido .= "</table>";
     $contenido .= "<hr style='width: 100%; margin:2px;'>";
 
@@ -280,5 +290,5 @@ if (isset($_GET['id'])) {
     $mpdf->Output('Liquidacion_' . $trabajador->getNombre() . '_' . $trabajador->getApellido1() . '_' . $fecha . '.pdf', 'I');
 
 } else {
-    header('Location: ../../index.php');
+    header('Location: ../../liquidaciones.php');
 }

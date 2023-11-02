@@ -39,8 +39,13 @@ class Liquidacion{
     private $horasextras3;
     private $afp;
     private $porafp;
+    private $porsis;
     private $salud;
     private $porsalud;
+    private $desafp;
+    private $dessis;
+    private $dessalud;
+    private $gratificacion;
     private $totalimponible;
     private $totalnoimponible;
     private $totaltributable;
@@ -49,7 +54,7 @@ class Liquidacion{
     private $fecha_liquidacion;
     private $register_at;
 
-    public function __construct($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp, $salud, $porsalud, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $register_at){
+    public function __construct($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp,$porsis, $salud, $porsalud,$desafp,$dessis,$dessalud,$gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $register_at){
         $this->id = $id;
         $this->folio = $folio;
         $this->contrato = $contrato;
@@ -64,8 +69,13 @@ class Liquidacion{
         $this->horasextras3 = $horasextras3;
         $this->afp = $afp;
         $this->porafp = $porafp;
+        $this->porsis = $porsis;
         $this->salud = $salud;
         $this->porsalud = $porsalud;
+        $this->desafp = $desafp;
+        $this->dessis = $dessis;
+        $this->dessalud = $dessalud;
+        $this->gratificacion = $gratificacion;
         $this->totalimponible = $totalimponible;
         $this->totalnoimponible = $totalnoimponible;
         $this->totaltributable = $totaltributable;
@@ -131,12 +141,32 @@ class Liquidacion{
         return $this->porafp;
     }
 
+    public function getPorsis(){
+        return $this->porsis;
+    }
+
     public function getSalud(){
         return $this->salud;
     }
 
     public function getPorsalud(){
         return $this->porsalud;
+    }
+
+    public function getDesafp(){
+        return $this->desafp;
+    }
+
+    public function getDessis(){
+        return $this->dessis;
+    }
+
+    public function getDessalud(){
+        return $this->dessalud;
+    }
+
+    public function getGratificacion(){
+        return $this->gratificacion;
     }
 
     public function getTotalimponible(){

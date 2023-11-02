@@ -479,30 +479,46 @@ foreach ($permiso as $p) {
 									<div class="row">
 										<div class="col-md-3">
 											<label for="">Periodo</label>
-											<input type="month" name="periodo" id="periodo" class="form-control" value="<?php echo date("Y-m"); ?>">
+											<input type="month" name="periodo" id="periodo" class="form-control" value="<?php if (isset($_SESSION['PERIOD_LIQUIDACION'])) {
+																															echo $_SESSION['PERIOD_LIQUIDACION'];
+																														} ?>">
 										</div>
 
 										<div class="col-md-3">
 											<label for="">Centro de Costo</label>
 											<select name="centrocosto" id="centrocosto" class="form-control">
-												<option value="0">Seleccione un Funcionario</option>
+												<option value="">Seleccione un Centro de costo</option>
 												<?php
 												$lista = $c->listarcentrocosto($_SESSION['CURRENT_ENTERPRISE']);
 												foreach ($lista as $object) {
+													if (isset($_SESSION['CENTRO_COSTO_LIQUIDACION'])) {
+														if ($_SESSION['CENTRO_COSTO_LIQUIDACION'] == $object->getId()) {
+															echo "<option value='" . $object->getId() . "' selected>" . $object->getNombre() . "</option>";
+														} else {
+															echo "<option value='" . $object->getId() . "'>" . $object->getNombre() . "</option>";
+														}
+													}else{
 														echo "<option value='" . $object->getId() . "'>" . $object->getNombre() . "</option>";
+													}
 												}
 												?>
 											</select>
 										</div>
-										<div class="col-md-2">
-											<button class="btn btn-outline-primary mt-4" onclick="filtrarhaberesdescuentos()"> <i class="fa fa-filter"></i> Filtrar</button>
-											<button class="btn btn-outline-danger mt-4 d-none" onclick="limpiarfiltro()"><i class="fa fa-close"></i> Limpiar Filtro </button>
+										<div class="col-md-4">
+											<button class="btn btn-outline-primary mt-4" onclick="filtrarliquidaciones()"> <i class="fa fa-filter"></i> Filtrar</button>
+											<?php
+											if (isset($_SESSION['PERIOD_LIQUIDACION']) || isset($_SESSION['CENTRO_COSTO_LIQUIDACION'])) {
+											?>
+												<button class="btn btn-outline-danger mt-4" onclick="limpiarfiltro()"><i class="fa fa-close"></i> Limpiar Filtro </button>
+											<?php
+											}
+											?>
 										</div>
 									</div>
 
 									<div class="row mt-4">
 										<div class="col-md-12 text-right mb-3">
-											<button class="btn btn-outline-success" onclick="generarliquidacion()"> <i class="fa fa-file"></i> Imprimir Todo</button>
+											<a class="btn btn-outline-success" href='php/report/todoliquidaciones.php'> <i class="fa fa-file"></i> Imprimir Todo</a>
 										</div>
 										<div class="col-md-12">
 											<table class="table w-100 table-hover" id="example1">
@@ -519,13 +535,26 @@ foreach ($permiso as $p) {
 												<tbody id="listado">
 													<?php
 													$liquidaciones = $c->listarliquidaciones($_SESSION['CURRENT_ENTERPRISE']);
+
+													if(isset($_SESSION['PERIOD_LIQUIDACION']) && isset($_SESSION['CENTRO_COSTO_LIQUIDACION'])){
+														$periodo = $_SESSION['PERIOD_LIQUIDACION'];
+														$periodo = $periodo . "-01";
+														$liquidaciones = $c->listarliquidacionesperiodocentrocosto($_SESSION['CURRENT_ENTERPRISE'],$periodo,$_SESSION['CENTRO_COSTO_LIQUIDACION']);
+													}else if(isset($_SESSION['PERIOD_LIQUIDACION'])){
+														$periodo = $_SESSION['PERIOD_LIQUIDACION'];
+														$periodo = $periodo . "-01";
+														$liquidaciones = $c->listarliquidacionesperiodo($_SESSION['CURRENT_ENTERPRISE'],$periodo);
+													}else if(isset($_SESSION['CENTRO_COSTO_LIQUIDACION'])){
+														$liquidaciones = $c->listarliquidacionescentrocosto($_SESSION['CURRENT_ENTERPRISE'],$_SESSION['CENTRO_COSTO_LIQUIDACION']);
+													}
+
 													foreach ($liquidaciones as $object) {
 
 														$periodo = $object->getPeriodo();
 														$mes = date("m", strtotime($periodo));
 														$anio = date("Y", strtotime($periodo));
 
-														switch($mes){
+														switch ($mes) {
 															case 1:
 																$mes = "Enero";
 																break;
@@ -565,12 +594,12 @@ foreach ($permiso as $p) {
 														}
 
 														echo "<tr>";
-														echo "<td>" . $object->getTrabajador(). "</td>";
-														echo "<td>" . $object->getEmpresa(). "</td>";
-														echo "<td>" . $mes." ".$anio. "</td>";
-														echo "<td><a target='_blank' href='php/report/liquidacion.php?id=".$object->getId()."'><button class='btn btn-outline-primary'><i class='fa fa-file'></i></button></a></td>";
-														echo "<td><button class='btn btn-outline-success' onclick='agregar(".$object->getId().")'><i class='fa fa-plus'></i></button></td>";
-														echo "<td><button class='btn btn-outline-danger' onclick='eliminar(".$object->getId().")'><i class='fa fa-trash'></i></button></td>";
+														echo "<td>" . $object->getTrabajador() . "</td>";
+														echo "<td>" . $object->getEmpresa() . "</td>";
+														echo "<td>" . $mes . " " . $anio . "</td>";
+														echo "<td><a target='_blank' href='php/report/liquidacion.php?id=" . $object->getId() . "'><button class='btn btn-outline-primary'><i class='fa fa-file'></i></button></a></td>";
+														echo "<td><button class='btn btn-outline-success' onclick='agregar(" . $object->getId() . ",\"" . $object->getTrabajador() . "\",\"" . $object->getEmpresa() . "\",\"" . $mes . " " . $anio . "\")'><i class='fa fa-plus'></i></button></td>";
+														echo "<td><button class='btn btn-outline-danger' onclick='eliminar(" . $object->getId() . ")'><i class='fa fa-trash'></i></button></td>";
 														echo "</tr>";
 													}
 													?>
@@ -583,6 +612,45 @@ foreach ($permiso as $p) {
 						</div>
 					</div>
 					<!-- ROW-4 END -->
+
+					<div class="row d-none" id="objects">
+						<div class="col-md-12">
+							<div class="card">
+								<div class="card-header">
+									<div class="row">
+										<div class="col-md-12 d-flex justify-content-between">
+											<h4>Liquidaciones para imprimir</h4>
+											<div class="d-flex justify-content-between" style="gap:10px;">
+												<button class="btn btn-outline-success" onclick="imprimirtodo()"> <i class="fa fa-file"></i> Imprimir Todo</button>
+												<button class="btn btn-outline-danger" onclick="eliminartodo()"> <i class="fa fa-trash"></i> Eliminar Todo</button>
+												<button class="btn btn-outline-warning" onclick="limpiarlista()"> <i class="fa fa-trash"></i> Limpiar Lista</button>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="card-body">
+									<div class="row">
+										<div class="col-md-12">
+											<table class="table w-100">
+												<thead>
+													<tr>
+														<th>Trabajador</th>
+														<th>Centro de Costo</th>
+														<th>Periodo</th>
+														<th>Retirar</th>
+													</tr>
+												</thead>
+
+												<tbody id="contenido">
+
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 
 				</div>
 			</div>
@@ -655,7 +723,7 @@ foreach ($permiso as $p) {
 	<script src="JsFunctions/Alert/sweetalert2.all.min.js"></script>
 	<script src="JsFunctions/Alert/alert.js"></script>
 	<script src="JsFunctions/main.js"></script>
-	<script src="JsFunctions/Trabajadores.js"></script>
+	<script src="JsFunctions/liquidacion.js"></script>
 
 	<script>
 		$(document).ready(function() {

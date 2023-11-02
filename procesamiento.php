@@ -247,13 +247,13 @@
                     $dias = 30 - $ausencias - $mediodia - $contardias;
                     $periodo = date($anio . "-" . $mes1 . "-01");
                     $haberes = $c->listarhaberes_descuentotrababajador($periodo, $periodo, $empresa->getId(), $trabajador->getId(), 1);
-                    if($gratif==1){
-                     $gratificacion = $gratificacion + $sueldo;
-                    }
 
                     $sueldo = $sueldo / 30 * $dias;
                     $valor_haberes[] = array("codigo" => "SUELDO BASE", "valor" => $sueldo, "tipo" => 1);
                     $total_imponible = $total_imponible + $sueldo;
+                    if($gratif==1){
+                     $gratificacion = $gratificacion + $sueldo;
+                    }
                     //********************************************Fin Definicion de Variables************************************************************ */
 
                     //********************************************Haberes************************************************************ */
@@ -277,10 +277,13 @@
                                     $formula = str_replace("{VALOR_AGREGADO}", $haber->gethoras(), $formula);
                                     if($habere->getId()==16){
                                         $extra1 = $haber->gethoras();
+                                        echo $haber->getCodigo()." ".$extra1."<br/>";
                                     }else if($habere->getId()==17){
                                         $extra2 = $haber->gethoras();
+                                        echo $haber->getCodigo()." ".$extra2."<br/>";
                                     }else if($habere->getId()==18){
                                         $extra3 = $haber->gethoras();
+                                        echo $haber->getCodigo()." ".$extra3."<br/>";
                                     }
                                 }
 
@@ -336,7 +339,6 @@
                                 }
                                 //EVALUAMOS LA FORMULA
                                 $formula = str_replace(" ", "", $formula);
-                                echo $formula;
                                 $resultado = eval("return $formula;");
                                 $resultado = round($resultado, 0, PHP_ROUND_HALF_UP);
                                 $valor_haberes[] = array("codigo" => $haber->getCodigo(), "valor" => $resultado, "tipo" => 2);
@@ -399,6 +401,7 @@
                                 $formula = str_replace("{VALOR_AGREGADO}", $haber->gethoras(), $formula);
                                 if($habere->getId()==19 || $habere->getId()==20){
                                     $horasfalladas= $horasfalladas + $haber->gethoras();
+                                    echo "Horas Falladas: ".$horasfalladas."<br/>";
                                 }
                             }
                             //EVALUAMOS LA FORMULA
