@@ -8,7 +8,7 @@ if(isset($_POST['id'])){
     if($contrato!=false){
         $c->eliminarnotificacionfirmada($id);
         //Eliminar el archivo si existe
-        if(file_exists('../../'.$contrato->getDocumento())){
+        if(file_exists('../../uploads/documentosfirmados/'.$contrato->getDocumento())){
             unlink('../../uploads/documentosfirmados/'.$contrato->getDocumento());
         }
 

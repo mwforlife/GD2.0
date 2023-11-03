@@ -6,9 +6,9 @@ if(isset($_POST['id'])){
     $id = $_POST['id'];
     $contrato = $c->buscarcontratofirmado1($id);
     if($contrato!=false){
-        $c->eliminarContratoFirmado($id);
+        $c->eliminarContratoFirmado($contrato->getId());
         //Eliminar el archivo si existe
-        if(file_exists('../../'.$contrato->getDocumento())){
+        if(file_exists('../../uploads/documentosfirmados/'.$contrato->getDocumento())){
             unlink('../../uploads/documentosfirmados/'.$contrato->getDocumento());
             echo json_encode(array('status'=>true,'message'=>'Contrato eliminado'));
         }else{

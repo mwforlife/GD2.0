@@ -1098,10 +1098,10 @@ class Controller
 
 
     //Actualizar Tasa AFP
-    public function actualizartasaafp($tasa, $idtasa)
+    public function actualizartasaafp($tasa,$tasasis, $idtasa)
     {
         $this->conexion();
-        $sql = "update tasaafp set tasa = $tasa where id = $idtasa";
+        $sql = "update tasaafp set tasa = $tasa, tasasis=$tasasis where id = $idtasa";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return json_encode($result);
@@ -7997,10 +7997,10 @@ class Controller
     }
 
     //Listar Haberes Y Descuentos por periodo
-    function listarhaberes_descuentotrababajador($periodo_ini, $periodo_ter, $empresa, $trabajador)
+    function listarhaberes_descuentotrababajador($periodo_ini, $periodo_ter, $empresa, $trabajador,$tipohaber)
     {
         $this->conexion();
-        $sql = "select haberes_descuentos_trabajador.id as id,habres_descuentos.id as habid, habres_descuentos.descripcion as codigo,habres_descuentos.aplicaformula as tipo, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, empresa.razonsocial as empresa, habres_descuentos.imponible as register_at from haberes_descuentos_trabajador, habres_descuentos, trabajadores, empresa where haberes_descuentos_trabajador.codigo=habres_descuentos.id and haberes_descuentos_trabajador.trabajador=trabajadores.id and haberes_descuentos_trabajador.empresa=empresa.id and haberes_descuentos_trabajador.periodo_inicio between  '$periodo_ini' and '$periodo_ter' and haberes_descuentos_trabajador.empresa=$empresa and haberes_descuentos_trabajador.trabajador=$trabajador order by haberes_descuentos_trabajador.periodo_inicio asc";
+        $sql = "select haberes_descuentos_trabajador.id as id,habres_descuentos.id as habid, habres_descuentos.descripcion as codigo,habres_descuentos.aplicaformula as tipo, haberes_descuentos_trabajador.periodo_inicio as periodo_inicio, haberes_descuentos_trabajador.periodo_termino as periodo_termino, haberes_descuentos_trabajador.monto as monto, haberes_descuentos_trabajador.dias as dias, haberes_descuentos_trabajador.horas as horas, haberes_descuentos_trabajador.modalidad as modalidad, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2, empresa.razonsocial as empresa, habres_descuentos.imponible as register_at from haberes_descuentos_trabajador, habres_descuentos, trabajadores, empresa where haberes_descuentos_trabajador.codigo=habres_descuentos.id and haberes_descuentos_trabajador.trabajador=trabajadores.id and haberes_descuentos_trabajador.empresa=empresa.id and haberes_descuentos_trabajador.periodo_inicio between  '$periodo_ini' and '$periodo_ter' and haberes_descuentos_trabajador.empresa=$empresa and haberes_descuentos_trabajador.trabajador=$trabajador and habres_descuentos.tipo=$tipohaber order by haberes_descuentos_trabajador.periodo_inicio asc";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -8338,7 +8338,7 @@ class Controller
     function buscarcontratofirmado1($contrato)
     {
         $this->conexion();
-        $sql = "select * from contratosfirmados where id=$contrato";
+        $sql = "select * from contratosfirmados where contrato=$contrato";
         $result = $this->mi->query($sql);
         $contrato = false;
         while ($rs = mysqli_fetch_array($result)) {

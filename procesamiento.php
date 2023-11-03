@@ -354,7 +354,7 @@
                     //Prevision
                     $dessis = $total_imponible * ($tasa->getInstitucion() / 100);
                     $prevision_des = $total_imponible * ($tasa->getTasa() / 100);
-                    $valor_descuentos_legales[] = array("codigo" => "PREVISION", "valor" => ($prevision_des + $dessis), "tipo" => 1);
+                    $valor_descuentos_legales[] = array("codigo" => "PREVISION", "valor" => ($prevision_des), "tipo" => 1);
                     $total_descuentos_legales = $total_descuentos_legales + $prevision_des;
 
                     //Salud

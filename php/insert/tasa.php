@@ -38,7 +38,7 @@ if(isset($_POST['id'])&& isset($_POST['tasasis']) && isset($_POST['tasa']) && is
             echo 0;
         }
     }else{
-        $result = $c->actualizartasaafp($tasa, $tasaid);
+        $result = $c->actualizartasaafp($tasa,$tasasis, $tasaid);
         if($result==true){
             echo 1;
             $usuario = $_SESSION['USER_ID'];
