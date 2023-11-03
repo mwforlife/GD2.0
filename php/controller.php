@@ -5889,8 +5889,17 @@ class Controller
     function eliminarcontrato($id)
     {
         $this->conexion();
+        $sql = "delete from asistencia where contrato = $id";
+        $result = $this->mi->query($sql);
+        $sql = "delete from finiquito where contrato = $id";
+        $result = $this->mi->query($sql);
+        $sql = "delete from contratosfirmados where contrato = $id";
+        $result = $this->mi->query($sql);
+        $sql = "delete from horaspactadas where contrato = $id";
+        $result = $this->mi->query($sql);
         $sql = "delete from contratos where id = $id";
         $result = $this->mi->query($sql);
+
         $this->desconectar();
         return $result;
     }
@@ -7950,10 +7959,10 @@ class Controller
     }
 
     //Editar Haberes y descuentos
-    function editarhaberesydescuentos($id, $codigo, $descripcion, $tipo, $imponible, $tributable, $gratificacion, $reservado, $codigolre, $aplicaformula, $formula, $agrupacion)
+    function editarhaberesydescuentos($id, $codigo, $descripcion, $tipo, $imponible, $tributable, $gratificacion, $reservado, $codigolre, $agrupacion)
     {
         $this->conexion();
-        $sql = "update habres_descuentos set codigo='$codigo', descripcion='$descripcion', tipo=$tipo, imponible=$imponible, tributable=$tributable, gratificacion=$gratificacion, reservado=$reservado, codigolre=$codigolre, aplicaformula=$aplicaformula, formula='$formula', agrupacion=$agrupacion where id=$id";
+        $sql = "update habres_descuentos set codigo='$codigo', descripcion='$descripcion', tipo=$tipo, imponible=$imponible, tributable=$tributable, gratificacion=$gratificacion, reservado=$reservado, codigolre=$codigolre, agrupacion=$agrupacion where id=$id";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return $result;
