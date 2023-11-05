@@ -43,11 +43,23 @@ function Actualizar(id){
     var codigo = $("#codigo").val();
     var codigoPrevired = $("#codigoPrevired").val();
     var nombre = $("#nombre").val();
+    var termino = 2;
+    var entidad = 2;
+
+    //Validar si el termino esta checkeado
+    if($("#terminoedit").is(":checked")){
+        termino = 1;
+    }
+
+    //Validar si la entidad esta checkeada
+    if($("#entidadedit").is(":checked")){
+        entidad = 1;
+    }
 
     $.ajax({
         type: "POST",
         url: "php/update/jornadas.php",
-        data: {id: id, codigo: codigo, codigoPrevired: codigoPrevired, nombre: nombre},
+        data: {id: id, codigo: codigo, codigoPrevired: codigoPrevired, nombre: nombre, termino: termino, entidad: entidad},
         success: function(data){
             if(data == 1 || data == "1"){
                 $("#global-loader").fadeOut("slow");

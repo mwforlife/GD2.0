@@ -135,7 +135,9 @@ create table jornadas(
     id int not null auto_increment primary key,
     codigo varchar(20) not null,
     codigoprevired varchar(20) not null,
-    nombre varchar(50) not null
+    nombre varchar(50) not null,
+    termino int not null,
+    entidad int not null
 );
 
 create table tramosasignacionfamiliar(
@@ -1192,6 +1194,17 @@ create table detalle_liquidacion(
     register_at timestamp not null default current_timestamp
 );
 
+create table aporteempleador(
+    id int not null auto_increment primary key,
+    liquidacion int not null references liquidaciones(id),
+    cesantia_empleador decimal(10,2) not null,
+    cotizacionbasica decimal(10,2) not null,
+    cotizacionleysanna decimal(10,2) not null,
+    cotizacionadicional decimal(10,2) not null,
+    seguroaccidentes decimal(10,2) not null,
+    register_at timestamp not null default current_timestamp    
+);
+
 /************************************valores************************************/
 --UF
 create table uf(
@@ -1248,5 +1261,20 @@ create table topeapvanual(
     id int not null auto_increment primary key,
     ano int not null,
     valor decimal(10,2) not null,
+    register_at timestamp not null default current_timestamp
+);
+
+/****************************Movimientos trabajadores************************/
+create table movimientotrabajador(
+    id int not null auto_increment primary key,
+    trabajador int not null references trabajadores(id),
+    empresa int not null references empresa(id),
+    periodo date not null,
+    tipo int not null,
+    evento int not null references jornadas(id),
+    fechainicio date not null,
+    fechatermino date null,
+    rutentidad varchar(200) null,
+    nombreentidad varchar(200) null,
     register_at timestamp not null default current_timestamp
 );

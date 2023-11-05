@@ -31,6 +31,29 @@ if($isapre != null){
         echo "<input type='text' class='form-control' id='nombre' value='".$isapre->getNombre()."'/>";
         echo "</div>";
 
+        echo '<div class="col-lg-12">
+                <div class="form-group has-success mg-b-0 mt-4">
+                    <div class="d-flex align-items-center">
+                        <label class="custom-switch">
+                            <input value="1" type="checkbox"'; if($isapre->getTermino()==1){echo "checked"; }echo ' id="terminoedit" name="terminoedit" class="custom-switch-input">
+                            <span class="custom-switch-indicator"></span>
+                            <span class="custom-switch-description">¿Aplica Fecha de termino?.</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="form-group has-success mg-b-0 mt-4">
+                    <div class="d-flex align-items-center">
+                        <label class="custom-switch">
+                            <input value="1" type="checkbox"'; if($isapre->getEntidad()==1){echo "checked"; }echo ' id="entidadedit" name="entidadedit" class="custom-switch-input">
+                            <span class="custom-switch-indicator"></span>
+                            <span class="custom-switch-description">¿Aplica Entidad Pagadora?.</span>
+                        </label>
+                    </div>
+                </div>
+            </div>';
+
         echo "<div class='col-md-12 text-right mt-3'>";
         echo "<button class='btn btn-primary' onclick='Actualizar(".$isapre->getId().")'> <i class='fa fa-refresh'></i> Actualizar</button>";
         echo "</div>";

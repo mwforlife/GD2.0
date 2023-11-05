@@ -37,6 +37,7 @@ if(isset($_POST['id']) && isset($_POST['inicio']) && isset($_POST['termino']) &&
     echo "<button class='btn btn-success btn-sm mr-2' title='Presente'><i class='fa fa-check'></i> Presente</button>";
     echo "<button class='btn btn-info btn-sm mr-2' title='Medio Dia'><i class='fa fa-sun'></i> Medio Dia</button>";
     echo "<button class='btn btn-danger btn-sm mr-2' title='Ausente'><i class='fa fa-times'></i> Ausente</button>";
+    echo "<button class='btn btn-warning btn-sm mr-2' title='Licencia'><i class='fa fa-user-times'></i> Permiso sin goce de sueldo</button>";
     echo "<button class='btn btn-secondary btn-sm mr-2' title='Licencia'><i class='fa fa-calendar'></i> Licencia</button>";
     echo "</div>";
     echo "<table class='table table-bordered table-hover table-striped'>";
@@ -143,6 +144,8 @@ if(isset($_POST['id']) && isset($_POST['inicio']) && isset($_POST['termino']) &&
                 echo "<td><button class='btn btn-danger btn-sm' id='$elemento'  title='Ausente' onclick='cargarasistencia(".$id.",$empresa,$contrato,\"".$dia."\",3,$i)'><i class='fa fa-times'></i></button></td>";
             }else if($asistencia == 4){
                 echo "<td><button class='btn btn-secondary btn-sm' title='Licencia'><i class='fa fa-calendar'></i></button></td>";
+            }else if($asistencia == 5){
+                echo "<td><button class='btn btn-warning btn-sm' title='Permiso sin goce de sueldo' onclick='cargarasistencia(".$id.",$empresa,$contrato,\"".$dia."\",5,$i)'><i class='fa fa-user-times'></i></button></td>";
             }else if($asistencia==false){
                 echo "<td><button class='btn btn-success btn-sm' id='$elemento'  title='Presente' onclick='cargarasistencia(".$id.",$empresa,$contrato,\"".$dia."\",1,$i)'><i class='fa fa-check'></i></button></td>";
             }
@@ -166,6 +169,9 @@ if(isset($_POST['id']) && isset($_POST['inicio']) && isset($_POST['termino']) &&
             $estado = 3;
             break;
         case 3:
+            $estado = 5;
+            break;
+        case 5:
             $estado = 1;
             break;
     }
@@ -176,7 +182,20 @@ if(isset($_POST['id']) && isset($_POST['inicio']) && isset($_POST['termino']) &&
         $c->actualizarasistencia($asistencia,$estado);
         if($estado==1){
             $c->eliminarasistencia($asistencia);
+        }else if($estado==5){
+            $contratoobject = $c->buscarcontrato($contrato);
+            $valid = $c->buscarmovimientoxfecha($contratoobject->getTrabajador(),$dia,4);
+            if($valid==false){
+                $c->registrarmovimiento($contratoobject->getTrabajador(),$empresa,date('Y-m-01', strtotime($dia)),2,4,$dia,$dia,'','');
+            }
+        }else if($estado==2){
+            $contratoobject = $c->buscarcontrato($contrato);
+            $valid = $c->buscarmovimientoxfecha($contratoobject->getTrabajador(),$dia,4);
+            if($valid==false){
+                $c->registrarmovimiento($contratoobject->getTrabajador(),$empresa,date('Y-m-01', strtotime($dia)),2,4,$dia,$dia,'','');
+            }
         }
+
     }
 }else{
     echo "Error";

@@ -88,7 +88,8 @@ function cargarasistencia(id, empresa, contrato, dia, estado, elemento) {
             switch (estado) {
                 case 1: $(elemento).removeClass("btn-success"); $(elemento).addClass("btn-info"); $(elemento).attr("onclick", "cargarasistencia(" + id + "," + empresa + "," + contrato + ",'" + dia + "',2,"+valor+")"); $(elemento).attr("title", "Medio día");  $(elemento).html("<i class='fas fa-sun'></i>"); $(elemento).html('<i class="fas fa-sun"></i>'); break;
                 case 2: $(elemento).removeClass("btn-info"); $(elemento).addClass("btn-danger"); $(elemento).attr("onclick", "cargarasistencia(" + id + "," + empresa + "," + contrato + ",'" + dia + "',3,"+valor+")"); $(elemento).attr("title", "Ausente"); $(elemento).html("<i class='fas fa-times'></i>"); break;
-                case 3: $(elemento).removeClass("btn-danger"); $(elemento).addClass("btn-success"); $(elemento).attr("onclick", "cargarasistencia(" + id + "," + empresa + "," + contrato + ",'" + dia + "',1,"+valor+")"); $(elemento).attr("title", "Presente"); $(elemento).html("<i class='fas fa-check'></i>"); break;
+                case 3: $(elemento).removeClass("btn-danger"); $(elemento).addClass("btn-warning"); $(elemento).attr("onclick", "cargarasistencia(" + id + "," + empresa + "," + contrato + ",'" + dia + "',5,"+valor+")"); $(elemento).attr("title", "Permiso Sin Goce de Sueldo"); $(elemento).html("<i class='fas fa-user-times'></i>"); break;
+                case 5: $(elemento).removeClass("btn-warning"); $(elemento).addClass("btn-success"); $(elemento).attr("onclick", "cargarasistencia(" + id + "," + empresa + "," + contrato + ",'" + dia + "',1,"+valor+")"); $(elemento).attr("title", "Presente"); $(elemento).html("<i class='fas fa-check'></i>"); break;
                 default: console.log("Error"); break;
             }
             ToastifySuccess("Asistencia actualizada");

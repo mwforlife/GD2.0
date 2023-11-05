@@ -16,12 +16,24 @@ if(isset($_POST['Codigo']) && isset($_POST['CodigoPrevired']) && isset($_POST['N
     $codigoPrevired = $_POST['CodigoPrevired'];
     $nombre = $_POST['Nombre'];
     $nombre = strtoupper($nombre);
-    $result = $c->registrarjornada($codigo,$codigoPrevired, $nombre);
+
+    $termino =2;
+    $entidad =2;
+
+    if(isset($_POST['termino'])){
+        $termino = $_POST['termino'];
+    }
+
+    if(isset($_POST['entidad'])){
+        $entidad = $_POST['entidad'];
+    }
+
+    $result = $c->registrarjornada($codigo,$codigoPrevired, $nombre, $termino, $entidad);
 
     if($result == true){
         echo 1;
         $usuario = $_SESSION['USER_ID'];
-        $eventos = "Se Registro la jornada : ".$nombre . " con el Codigo: ".$codigo;
+        $eventos = "Se Registro la El Evento de movimiento personal : ".$nombre . " con el Codigo: ".$codigo;
         $c->RegistrarAuditoriaEventos($usuario, $eventos);
     }else{
         echo 0;

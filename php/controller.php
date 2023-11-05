@@ -61,6 +61,8 @@ require 'Class/Formula.php';
 require 'Class/Liquidacion.php';
 require 'Class/Detalle_liquidacion.php';
 require 'Class/UF.php';
+require 'Class/Aporteempleador.php';
+require 'Class/Movpersonal.php';
 
 //Class definition
 class Controller
@@ -381,10 +383,10 @@ class Controller
     }
 
     //Registrar Jornadas
-    public function registrarjornada($codigo, $codigoPrevired, $nombre)
+    public function registrarjornada($codigo, $codigoPrevired, $nombre,$termino,$entidad)
     {
         $this->conexion();
-        $sql = "insert into jornadas values (null, '$codigo', '$codigoPrevired', '$nombre')";
+        $sql = "insert into jornadas values (null, '$codigo', '$codigoPrevired', '$nombre',$termino, $entidad)";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return json_encode($result);
@@ -2193,7 +2195,9 @@ class Controller
             $codigo = $rs['codigo'];
             $codigoPrevired = $rs['codigoprevired'];
             $nombre = $rs['nombre'];
-            $tipojornada = new Jornadas($id, $codigo, $codigoPrevired, $nombre);
+            $termino = $rs['termino'];
+            $entidad = $rs['entidad'];
+            $tipojornada = new Jornadas($id, $codigo, $codigoPrevired, $nombre, $termino, $entidad);
             $lista[] = $tipojornada;
         }
         $this->desconectar();
@@ -2786,10 +2790,10 @@ class Controller
 
 
     //Actualizar Jornada
-    public function actualizarjornada($id, $codigo, $codigoPrevired, $nombre)
+    public function actualizarjornada($id, $codigo, $codigoPrevired, $nombre,$termino,$entidad)
     {
         $this->conexion();
-        $sql = "update jornadas set codigo='$codigo', codigoprevired='$codigoPrevired', nombre='$nombre' where id=$id";
+        $sql = "update jornadas set codigo='$codigo', codigoprevired='$codigoPrevired', nombre='$nombre', termino=$termino, entidad=$entidad where id=$id";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return $result;
@@ -3397,7 +3401,9 @@ class Controller
             $codigo = $rs['codigo'];
             $codigoprevired = $rs['codigoprevired'];
             $nombre = $rs['nombre'];
-            $jornada = new Jornadas($id, $codigo, $codigoprevired, $nombre);
+            $termino = $rs['termino'];
+            $entidad = $rs['entidad'];
+            $jornada = new Jornadas($id, $codigo, $codigoprevired, $nombre, $termino, $entidad);
             $this->desconectar();
             return $jornada;
         } else {
@@ -9976,6 +9982,68 @@ class Controller
         }
         return null;
     }
+    function listartodasliquidacionesperiodo($periodo)
+    {
+        $this->conexion();
+        $sql = "select * from liquidaciones where periodo='$periodo' order by register_at desc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $folio = $rs['folio'];
+            $contrato = $rs['contrato'];
+            $periodo = $rs['periodo'];
+            $empresa = $rs['empresa'];
+            $trabajador = $rs['trabajador'];
+            $diastrabajados = $rs['diastrabajados'];
+            $sueldobase = $rs['sueldobase'];
+            $horasfalladas = $rs['horasfalladas'];
+            $horasextras1 = $rs['horasextras1'];
+            $horasextras2 = $rs['horasextras2'];
+            $horasextras3 = $rs['horasextras3'];
+            $afp = $rs['afp'];
+            $porafp = $rs['porafp'];
+            $porsis = $rs['porsis'];
+            $salud = $rs['salud'];
+            $porsalud = $rs['porsalud'];
+            $desafp = $rs['desafp'];
+            $dessis = $rs['dessis'];
+            $dessal = $rs['dessal'];
+            $gratificacion = $rs['gratificacion'];
+            $totalimponible = $rs['totalimponible'];
+            $totalnoimponible = $rs['totalnoimponible'];
+            $totaltributable = $rs['totaltributable'];
+            $totaldeslegales = $rs['totaldeslegales'];
+            $totaldesnolegales = $rs['totaldesnolegales'];
+            $fecha_liquidacion = $rs['fecha_liquidacion'];
+            $registro = $rs['register_at'];
+            $liquidacion = new Liquidacion($id, $folio, $contrato, $periodo, $empresa, $trabajador, $diastrabajados, $sueldobase, $horasfalladas, $horasextras1, $horasextras2, $horasextras3, $afp, $porafp, $porsis, $salud, $porsalud, $desafp, $dessis, $dessal, $gratificacion, $totalimponible, $totalnoimponible, $totaltributable, $totaldeslegales, $totaldesnolegales, $fecha_liquidacion, $registro);
+            $lista[] = $liquidacion;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Listar aporte empleador
+    function buscaraportempleador($liquidacion){
+        $this->conexion();
+        $sql = "select * from aporteempleador where liquidacion=$liquidacion";
+        $result = $this->mi->query($sql);
+        if($rs=mysqli_fetch_array($result)){
+            $id=$rs['id'];
+            $liquidacion=$rs['liquidacion'];
+            $cesantia_empleador = $rs['cesantia_empleador'];
+            $cotizacionbasica = $rs['cotizacionbasica'];
+            $cotizacionleysanna = $rs['cotizacionleysanna'];
+            $cotizacionadicional = $rs['cotizacionadicional'];
+            $seguroaccidentes = $rs['seguroaccidentes'];
+            $register_at = $rs['register_at'];
+            $aporteempleador = new AporteEmpleador($id,$liquidacion,$cesantia_empleador,$cotizacionbasica,$cotizacionleysanna,$cotizacionadicional,$seguroaccidentes,$register_at);
+            $this->desconectar();
+            return $aporteempleador;
+        }
+        return null;
+    }
 
     /********************************Valores***************************** */
     /**********************************UF********************************* */
@@ -10754,4 +10822,114 @@ class Controller
     }
 
     /**********************************FIN TOPE APV ANUAL********************************* */
+
+    /***************************Movimiento del Personal******************************/
+    //Registrar movimiento
+    function registrarmovimiento($trabajador, $empresa, $periodo, $tipo, $evento, $fechainicio, $fechatermino, $rutentidad, $nombreentidad)
+    {
+        $this->conexion();
+        $sql = "insert into movimientotrabajador values(null,$trabajador,$empresa,'$periodo',$tipo,$evento,'$fechainicio','$fechatermino','$rutentidad','$nombreentidad',now())";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    //Buscar movimiento
+    function buscarmovimiento($id)
+    {
+        $this->conexion();
+        $sql = "select * from movimientotrabajador where id=$id";
+        $result = $this->mi->query($sql);
+        $movimiento = false;
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $trabajador = $rs['trabajador'];
+            $empresa = $rs['empresa'];
+            $periodo = $rs['periodo'];
+            $tipo = $rs['tipo'];
+            $evento = $rs['evento'];
+            $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $rutentidad = $rs['rutentidad'];
+            $nombreentidad = $rs['nombreentidad'];
+            $registro = $rs['register_at'];
+            $movimiento = new MovPersonal($id, $trabajador, $empresa, $periodo, $tipo, $evento, $fechainicio, $fechatermino, $rutentidad, $nombreentidad, $registro);
+        }
+        $this->desconectar();
+        return $movimiento;
+    }
+
+    //Buscar movimiento por fecha y trabajador
+    function buscarmovimientoxfecha($trabajador, $fecha, $codigoevento)
+    {
+        $this->conexion();
+        $sql = "select movimientotrabajador.id as id, mmovimientotrabajador.trabajador as trabajador, movimientotrabajador.empresa as empresa, movimientotrabajador.periodo as periodo, movimientotrabajador.tipo as tipo, movimientotrabajador.evento as evento, movimientotrabajador.fechainicio as fechainicio, movimientotrabajador.fechatermino as fechatermino, movimientotrabajador.rutentidad as rutentidad, movimientotrabajador.nombreentidad as nombreentidad, movimientotrabajador.register_at as register_at from movimientotrabajador, jornadas where movimientotrabajador.evento=jornadas.id and movimientotrabajador.trabajador=$trabajador and jornadas.codigoprevired='$codigoevento' and movimientotrabajador.fechainicio<='$fecha' and movimientotrabajador.fechatermino>='$fecha'";
+        $result = $this->mi->query($sql);
+        $movimiento = false;
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $trabajador = $rs['trabajador'];
+            $empresa = $rs['empresa'];
+            $periodo = $rs['periodo'];
+            $tipo = $rs['tipo'];
+            $evento = $rs['evento'];
+            $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $rutentidad = $rs['rutentidad'];
+            $nombreentidad = $rs['nombreentidad'];
+            $registro = $rs['register_at'];
+            $movimiento = new MovPersonal($id, $trabajador, $empresa, $periodo, $tipo, $evento, $fechainicio, $fechatermino, $rutentidad, $nombreentidad, $registro);
+        }
+        $this->desconectar();
+        return $movimiento;
+    }
+
+    //Listar movimientotrabajador
+    function listarmovimientotrabajador($empresa,$periodo)
+    {
+        $this->conexion();
+        $sql = "select * from movimientotrabajador where empresa=$empresa and periodo='$periodo' order by register_at desc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $trabajador = $rs['trabajador'];
+            $empresa = $rs['empresa'];
+            $periodo = $rs['periodo'];
+            $tipo = $rs['tipo'];
+            $evento = $rs['evento'];
+            $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $rutentidad = $rs['rutentidad'];
+            $nombreentidad = $rs['nombreentidad'];
+            $registro = $rs['register_at'];
+            $movimiento = new MovPersonal($id, $trabajador, $empresa, $periodo, $tipo, $evento, $fechainicio, $fechatermino, $rutentidad, $nombreentidad, $registro);
+            $lista[] = $movimiento;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Actualizar movimiento
+    function actualizarmovimiento($id, $trabajador, $empresa, $periodo, $tipo, $evento, $fechainicio, $fechatermino, $rutentidad, $nombreentidad)
+    {
+        $this->conexion();
+        $sql = "update movimientotrabajador set trabajador=$trabajador, empresa=$empresa, periodo='$periodo', tipo=$tipo, evento=$evento, fechainicio='$fechainicio', fechatermino='$fechatermino', rutentidad='$rutentidad', nombreentidad='$nombreentidad' where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    function eliminarmovimiento($id)
+    {
+        $this->conexion();
+        $sql = "delete from movimientotrabajador where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    /***************************FIN Movimiento del Personal******************************/
+
+
 }

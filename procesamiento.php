@@ -230,6 +230,8 @@
                     $valor_descuentos_no_legales = array();
                     $gratificacion = 0;
 
+
+
                     $horasfalladas =0;
                     $extra1 = 0;
                     $extra2 = 0;
@@ -354,7 +356,7 @@
                     //Prevision
                     $dessis = $total_imponible * ($tasa->getInstitucion() / 100);
                     $prevision_des = $total_imponible * ($tasa->getTasa() / 100);
-                    $valor_descuentos_legales[] = array("codigo" => "PREVISION", "valor" => ($prevision_des), "tipo" => 1);
+                    $valor_descuentos_legales[] = array("codigo" => "PREVISION", "valor" => ($prevision_des + $dessis), "tipo" => 1);
                     $total_descuentos_legales = $total_descuentos_legales + $prevision_des;
 
                     //Salud
@@ -374,6 +376,8 @@
                     }
 
                     $total_tributable = $total_imponible - $prevision_des - $salud_des - $cesantia_des;
+                    
+                    
 
                     $descuentos = $c->listarhaberes_descuentotrababajador($periodo, $periodo, $empresa->getId(), $trabajador->getId(), 2);
                     foreach ($descuentos as $haber) {
@@ -422,6 +426,25 @@
                             }
                         }
                     }
+
+                    //Tasa de seguros
+                    //Cesantia
+                    $cesantia_empleador = 0;
+                    if ($contrato->getTipocontrato() == "Contrato Indefinido") {
+                        $cesantia_empleador = $total_imponible * 0.024;
+                    }if ($contrato->getTipocontrato() == "Contrato a Plazo Fijo" || $contrato->getTipocontrato() == "Obra o Faena") {
+                        $cesantia_empleador = $total_imponible * 0.003;
+                    }
+
+                    $tasaadicional = $empresa->getCotizacionAdicional();
+
+                    
+                    //Seguro Accidente
+                    $seguro_accidente = 0;
+                    $cotizacionbasica = $total_imponible * (0.90/100);
+                    $cotizacionleysanna = $total_imponible * (0.30/100);
+                    $cotizacionadicion = $total_imponible * ($tasaadicional/100);
+                    $seguro_accidente = $cotizacionbasica + $cotizacionleysanna + $cotizacionadicion;
                     //********************************************Fin Descuentos************************************************************ */
                     ?>
 
@@ -589,6 +612,8 @@
                                 $c->registrardetalleliquidacion($idliquidacion,$haber['codigo'],$haber['valor'],2);
                             }
                         }
+                        $sql = "insert into aporteempleador values(null,$idliquidacion,$cesantia_empleador,$cotizacionbasica,$cotizacionleysanna,$cotizacionadicion,$seguro_accidente,now());";
+                        $c->query($sql);
                         foreach($valor_descuentos_legales as $descuento){
                             $c->registrardetalleliquidacion($idliquidacion,$descuento['codigo'],$descuento['valor'],3);
                         }

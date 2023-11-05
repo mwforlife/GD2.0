@@ -106,9 +106,7 @@ if (isset($_POST['periodo']) && isset($_FILES['asistencia'])) {
                 if (intval($data[$j]) == 1) {
                 } else {
                     $c->registrarasistencia($trabajador->getId(), $contrato->getId(), $fecha, $data[$j]);
-                }
-                
-                //$success .= "Asistencia del trabajador " . $trabajador->getNombre() . " " . $trabajador->getApellido1() . " " . $trabajador->getApellido2() . " de dia $fecha Cargado con exito <br>";
+                }    
             } else {
                 if (intval($data[$j]) == 1) {
                     $c->eliminarasistencia($asistencia);

@@ -8,10 +8,16 @@ unset($_SESSION['TRABJADOR_CONTRATO']);
 if (!isset($_SESSION['USER_ID'])) {
 	header("Location: signin.php");
 } else {
-	$valid  = $c->validarsesion($_SESSION['USER_ID'], $_SESSION['USER_TOKEN']);
+	$valid = $c->validarsesion($_SESSION['USER_ID'], $_SESSION['USER_TOKEN']);
 	if ($valid == false) {
 		header("Location: lockscreen.php");
 	}
+}
+unset($_SESSION['TRABJADOR_CONTRATO']);
+if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
+	$empresa = $_SESSION['CURRENT_ENTERPRISE'];
+} else {
+	header("Location: index.php");
 }
 $permiso = $c->listarPermisosUsuario1($_SESSION['USER_ID']);
 $gestion = false;
@@ -58,7 +64,7 @@ foreach ($permiso as $p) {
 	<link rel="icon" href="assets/img/brand/favicon.ico" type="image/x-icon" />
 
 	<!-- Title -->
-	<title>Gestor de Documentos</title>
+	<title>Gestor de Documentos | Movimiento de Personal</title>
 
 	<!-- Bootstrap css-->
 	<link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
@@ -111,8 +117,6 @@ foreach ($permiso as $p) {
 
 	<!-- Page -->
 	<div class="page">
-
-
 		<!-- Sidemenu -->
 		<div class="main-sidebar main-sidebar-sticky side-menu">
 			<div class="sidemenu-logo">
@@ -403,7 +407,6 @@ foreach ($permiso as $p) {
 			</div>
 		</div>
 		<!-- End Sidemenu -->
-
 		<!-- Main Header-->
 		<div class="main-header side-header sticky">
 			<div class="container-fluid">
@@ -416,15 +419,9 @@ foreach ($permiso as $p) {
 						<a href="index.php"><img src="assets/img/brand/logo.png" class="mobile-logo-dark" alt="logo"></a>
 					</div>
 					<div class="input-group">
-						<div class="mt-0">
-							<form class="form-inline">
-								<div class="search-element">
-									<input type="search" class="form-control header-search" placeholder="Search…" aria-label="Search" tabindex="1">
-									<button class="btn" type="submit">
-										<i class="fa fa-search"></i>
-									</button>
-								</div>
-							</form>
+						<div class="d-flex justify-content-center align-items-center">
+							<h5 class="empresaname m-0">
+								<h5>
 						</div>
 					</div>
 				</div>
@@ -449,7 +446,8 @@ foreach ($permiso as $p) {
 							<div class="header-navheading">
 								<h6 class="main-notification-title">
 									<?php echo $_SESSION['USER_NAME'];
-									?></h6>
+									?>
+								</h6>
 							</div>
 							<a class="dropdown-item" href="close.php">
 								<i class="fe fe-power"></i> Cerrar Sesíon
@@ -486,7 +484,9 @@ foreach ($permiso as $p) {
 							</a>
 							<div class="dropdown-menu">
 								<div class="header-navheading">
-									<h6 class="main-notification-title"><?php echo $_SESSION['USER_NAME']; ?></h6>
+									<h6 class="main-notification-title">
+										<?php echo $_SESSION['USER_NAME']; ?>
+									</h6>
 								</div>
 
 								<a class="dropdown-item" href="close.php">
@@ -506,126 +506,151 @@ foreach ($permiso as $p) {
 			<div class="container-fluid">
 				<div class="inner-body">
 
-
 					<!-- Page Header -->
 					<div class="page-header">
 						<div class="page-header-1">
-							<h1 class="main-content-title tx-30">Movimiento Personal</h1>
+							<h1 class="main-content-title tx-30">Movimiento de Personal</h1>
 							<ol class="breadcrumb">
 								<li class="breadcrumb-item"><a href="index.php">Inicio</a></li>
 							</ol>
 						</div>
 					</div>
 					<!-- End Page Header -->
+
+
+					<!-- ROW- opened -->
 					<div class="row">
-						<div class="col-lg-12">
-							<div class="card orverflow-hidden">
+						<div class="col-md-12">
+							<div class="card">
 								<div class="card-body">
-									<div>
-										<h6 class="main-content-label mb-1">Registro de Movimiento Personal</h6>
-										<p class="text-mutted card-sub-title"></p>
-									</div>
-									<form id="RegisForm" name="RegisForm" class="needs-validation was-validated">
-										<div class="row">
-											<div class="col-lg-6">
-												<div class="form-group has-success mg-b-0">
-													<label>Codigo (DT)</label>
-													<input class="form-control" id="Codigo" name="Codigo" placeholder="Codigo" required="" type="text" value="">
-												</div>
-											</div>
-											<div class="col-lg-6">
-												<div class="form-group has-success mg-b-0">
-													<label>Codigo (PREVIRED)</label>
-													<input class="form-control" id="CodigoPrevired" name="CodigoPrevired" placeholder="Codigo (PREVIRED)" required="" type="text" value="">
-												</div>
-											</div>
-											<div class="col-lg-6">
-												<div class="form-group has-success mg-b-0">
-													<label>Nombre</label>
-													<input class="form-control" id="Nombre" name="Nombre" placeholder="Nombre del Evento" required="" type="text" value="">
-												</div>
-											</div>
-											<div class="col-lg-3">
-												<div class="form-group has-success mg-b-0 mt-4">
-													<div class="d-flex align-items-center">
-														<label class="custom-switch">
-															<input value="1" type="checkbox" id="termino" name="termino" class="custom-switch-input">
-															<span class="custom-switch-indicator"></span>
-															<span class="custom-switch-description">¿Aplica Fecha de termino?.</span>
-														</label>
-													</div>
-												</div>
-											</div>
-											<div class="col-lg-3">
-												<div class="form-group has-success mg-b-0 mt-4">
-													<div class="d-flex align-items-center">
-														<label class="custom-switch">
-															<input value="1" type="checkbox" id="entidad" name="entidad" class="custom-switch-input">
-															<span class="custom-switch-indicator"></span>
-															<span class="custom-switch-description">¿Aplica Entidad Pagadora?.</span>
-														</label>
-													</div>
-												</div>
-											</div>
-											<div class="col-md-12 mt-3 text-right">
-												<button type="reset" href="#" class="btn btn-warning btn-md"> <i class="fa fa-refresh"></i> Restablecer</button>
-												<button type="submit" href="#" class="btn btn-primary btn-md"> <i class="fa fa-save"></i> Registrar</button>
-											</div>
+									<div class="row">
+										<div class="col-md-4">
+											<label for="">Periodo</label>
+											<input type="month" name="periodo" id="periodo" class="form-control"
+												value="<?php echo date("Y-m"); ?>">
+
 										</div>
-									</form>
+										<div class="col-md-4">
+											<label for="">Tipo de Movimiento</label>
+											<select name="tipo" id="tipo" class="form-control">
+												<option value="1">AFILIADO VOLUTARIO</option>
+												<option value="2">AFP</option>
+												<option value="3">ISAPRE</option>
+											</select>
+										</div>
+										<div class="col-md-4">
+											<label for="">Evento:</label>
+											<select name="evento" id="evento" class="form-control" onchange="cambiarevento(this)">
+												<?php
+													$mov = $c->listarjornada();
+													foreach ($mov as $m) {
+														echo "<option value='" . $m->getId() . "' termino='" . $m->getTermino() . "' entidad='" . $m->getEntidad() . "' >" . $m->getNombre() . "</option>";
+													}
+
+												?>
+											</select>
+										</div>
+										<div class="col-md-4">
+											<label for="">Fecha Inicio</label>
+											<input type="date" name="fechainicio" id="fechainicio" class="form-control"
+												value="<?php echo date("Y-m-d"); ?>">
+										</div>
+										<div class="col-md-4 termino">
+											<label for="">Fecha Termino</label>
+											<input type="date" name="fechatermino" id="fechatermino" class="form-control"
+												value="<?php echo date("Y-m-d"); ?>">
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<!-- ROW-4 opened -->
 					<div class="row">
-						<div class="col-xl-12 col-lg-12 col-md-12">
+						<div class="col-xl-6 col-lg-6 col-md-12">
 							<div class="card transcation-crypto1" id="transcation-crypto1">
-								<div class="card-header bd-b-0">
-									<h4 class="card-title font-weight-semibold mb-0">Listado Movimiento Personal</h4>
+								<div class="card-header bd-b-0 ">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="row">
+												<div class="col-lg-4">
+													<label for="">Centro de Costo</label>
+													<select name="centrocosto" id="centrocosto" class="form-control select2">
+														<?php
+														$centrocostos = $c->listarcentrocosto($_SESSION['CURRENT_ENTERPRISE']);
+														foreach ($centrocostos as $centrocosto) {
+															if (isset($_SESSION['COST_CENTER'])) {
+																if ($centrocosto->getId() == $_SESSION['COST_CENTER']) {
+																	echo "<option value='" . $centrocosto->getId() . "' selected>" . $centrocosto->getNombre() . "</option>";
+																} else {
+																	echo "<option value='" . $centrocosto->getId() . "'>" . $centrocosto->getNombre() . "</option>";
+																}
+															} else {
+																echo "<option value='" . $centrocosto->getId() . "'>" . $centrocosto->getNombre() . "</option>";
+															}
+														}
+														?>
+													</select>
+												</div>
+												<div class="col-lg-3">
+													<button type="button" class="btn btn-outline-primary mt-4 mb-0 mr-2" onclick="filtrartrabajadores()">FILTRAR <i class="fa fa-filter"></i></button>
+													<?php
+													if (isset($_SESSION['COST_CENTER'])) { ?>
+														<button type="button" class="btn btn-outline-danger mt-4 mb-0 mr-2" onclick="limpiarfiltro()">LIMPIAR FILTRAR <i class="fa fa-trash"></i></button>
+													<?php
+													} ?>
+												</div>
+											</div>
+											<hr>
+										</div>
+									</div>
+									<div class="d-flex justify-content-between">
+										<h4 class="card-title font-weight-semibold mb-0">Listado de Trabajadores</h4>
+										<?php
+										$lista = array();
+										if (isset($_SESSION['COST_CENTER'])) {
+											$lista = $c->listartrabajadoresactivoscenter($_SESSION['CURRENT_ENTERPRISE'], $_SESSION['COST_CENTER']);
+										} else {
+											$lista = $c->listartrabajadoresactivos($_SESSION['CURRENT_ENTERPRISE']);
+										}
+										?>
+										<button onclick="allwork()" class="btn btn-success"><i class="fa fa-plus"></i>
+											Todo</button>
+									</div>
+
 								</div>
-								<div class="card-body">
+								<div class="card-body p-4">
 									<div class="">
 										<div class="table-responsive">
 											<table class="table w-100 text-nowrap" id="example1">
-												<thead class="border-top text-center">
+												<thead class="border-top">
 													<tr>
-														<th class="bg-transparent">Codigo (DT)</th>
-														<th class="bg-transparent">Codigo (PREVIRED)</th>
+														<th class="bg-transparent">RUT</th>
 														<th class="bg-transparent">Nombre</th>
-														<th class="bg-transparent text-center">Fecha de Termino</th>
-														<th class="bg-transparent text-center">Entidad Pagadora</th>
-														<th class="bg-transparent text-center">Accion</th>
+														<th class="bg-transparent">Centro Costo</th>
+														<th class="bg-transparent text-center">Agregar Al Lote</th>
 													</tr>
 												</thead>
-												<tbody class="text-center">
+												<tbody>
 													<?php
-													$lista = $c->listarjornada();
-													if (count($lista) > 0) {
-														foreach ($lista as $object) {
-															echo "<tr>
-																		<td>" . $object->getCodigo() . "</td>
-																		<td>" . $object->getCodigoPrevired() . "</td>
-																		<td>" . $object->getNombre() . "</td>";
-																		if($object->getTermino() == 1){
-																			echo "<td class='text-center'><span class='badge badge-success'><i class='fa fa-check'></i></span></td>";
-																		}else{
-																			echo "<td class='text-center'><span class='badge badge-danger'><i class='fa fa-times'></i></span></td>";
-																		}
-
-																		if($object->getEntidad() == 1){
-																			echo "<td class='text-center'><span class='badge badge-success'><i class='fa fa-check'></i></span></td>";
-																		}else{
-																			echo "<td class='text-center'><span class='badge badge-danger'><i class='fa fa-times'></i></span></td>";
-																		}
-																		echo "<td class='text-center'>
-																			<a href='javascript:void(0)' class='btn btn-sm btn-primary' data-toggle='modal' data-target='#modaledit' onclick='Editar(" . $object->getId() . ")'><i class='fa fa-edit'></i></a>
-																			<a href='javascript:void(0)' class='btn btn-sm btn-danger' onclick='Eliminar(" . $object->getId() . ")'><i class='fa fa-trash'></i></a>
-																		</td>
-																	</tr>";
-														}
+													foreach ($lista as $object) {
+														echo "<tr class='border-bottom-0'>";
+														echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
+														echo $object->getRut();
+														echo "</td>";
+														echo "<td class='text-muted fs-15 font-weight-semibold'>";
+														echo $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2();
+														echo "</td>";
+														echo "<td class='text-muted fs-15 font-weight-semibold'>";
+														echo $object->getDiscapacidad();
+														echo "</td>";
+														echo "<td class='text-center'>";
+														echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='agregartrabajador(" . $object->getId() . ",\"" . $object->getRut() . "\",\"" . $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2() . "\"," . $object->getNacionalidad() . ")'>";
+														echo "<i class='fa fa-plus'>";
+														echo "</i>";
+														echo "</a>";
+														echo "</td>";
+														echo "</tr>";
 													}
-
 													?>
 												</tbody>
 											</table>
@@ -634,8 +659,39 @@ foreach ($permiso as $p) {
 								</div>
 							</div>
 						</div>
+
+						<div class="col-xl-6 col-lg-6 col-md-12">
+							<div class="card transcation-crypto1" id="transcation-crypto1">
+								<div class="card-header bd-b-0 d-flex justify-content-between">
+									<h4 class="card-title font-weight-semibold mb-0">Trabajadores</h4>
+									<div class="div d-flex align-items-center" style="gap:10px;">
+										<button onclick="procesartodo()" class="btn btn-outline-success"><i class="fa fa-trash"></i>
+											Procesar</button>
+										<button onclick="Eliminartodo()" class="btn btn-outline-danger"><i class="fa fa-trash"></i>
+											Todo</button>
+									</div>
+								</div>
+								<div class="card-body p-4">
+									<div class="">
+										<div class="table-responsive">
+											<table class="table text-nowrap">
+												<thead class="border-top">
+													<tr>
+														<th class="bg-transparent">RUT</th>
+														<th class="bg-transparent">Nombre</th>
+														<th class="bg-transparent text-center">Eliminar</th>
+													</tr>
+												</thead>
+												<tbody id="lotes">
+
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-					<!-- ROW-4 END -->
 
 
 				</div>
@@ -657,24 +713,8 @@ foreach ($permiso as $p) {
 
 
 
-		<!-- Edit Modal -->
-		<div class="modal fade" id="modaledit" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="staticBackdropLabel">Edición</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<div class="content">
 
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+
 	</div>
 	<!-- End Page -->
 
@@ -724,13 +764,52 @@ foreach ($permiso as $p) {
 	<script src="assets/js/sticky.js"></script>
 
 	<!-- Custom js -->
-	<!-- Custom js -->
 	<script src="assets/js/custom.js"></script>
+	<script src="JsFunctions/validation.js"></script>
 	<script src="JsFunctions/Alert/toastify.js"></script>
 	<script src="JsFunctions/Alert/sweetalert2.all.min.js"></script>
 	<script src="JsFunctions/Alert/alert.js"></script>
-	<script src="JsFunctions/jornadas.js"></script>
+	<script src="JsFunctions/main.js"></script>
+	<script src="JsFunctions/movpersonal.js"></script>
+	<script src="JsFunctions/precargado.js"></script>
 
+	<script>
+		$(document).ready(function() {
+			mostrarEmpresa();
+		});
+	</script>
+	<script>
+		$(document).ready(function() {
+			//Add Datatable
+			$('#e2').DataTable({
+				"language": {
+					"lengthMenu": "Mostrar _MENU_ datos/página",
+					"zeroRecords": "No se encontraron resultados en su búsqueda",
+					"searchPlaceholder": "Buscar registros",
+					"info": "Mostrando registros de _START_ al _END_ de un total de  _TOTAL_ registros",
+					"infoEmpty": "No existen registros",
+					"infoFiltered": "(filtrado de un total de _MAX_ registros)",
+					"search": "Buscar:",
+					"paginate": {
+						"first": "Primero",
+						"last": "Último",
+						"next": "Siguiente",
+						"previous": "Anterior"
+					},
+				},
+				"paging": true,
+				"lengthChange": true,
+				"searching": true,
+				"ordering": true,
+				"info": true,
+				"autoWidth": true,
+				"responsive": true,
+				buttons: ['copy', 'excel', 'pdf', 'colvis']
+			});
+
+
+		});
+	</script>
 
 
 </body>

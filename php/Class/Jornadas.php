@@ -4,12 +4,16 @@ class Jornadas{
     private $codigo;
     private $codigoPrevired;
     private $nombre;
+    private $termino;
+    private $entidad;
 
-    public function __construct($id, $codigo, $codigoPrevired, $nombre){
+    public function __construct($id, $codigo, $codigoPrevired, $nombre, $termino, $entidad){
         $this->id = $id;
         $this->codigo = $codigo;
         $this->codigoPrevired = $codigoPrevired;
         $this->nombre = $nombre;
+        $this->termino = $termino;
+        $this->entidad = $entidad;
     }
 
     public function getId(){
@@ -42,5 +46,21 @@ class Jornadas{
 
     public function setNombre($nombre){
         $this->nombre = $nombre;
+    }
+
+    public function getTermino(){
+        return $this->termino;
+    }
+
+    public function setTermino($termino){
+        $this->termino = $termino;
+    }
+
+    public function getEntidad(){
+        return $this->entidad;
+    }
+
+    public function setEntidad($entidad){
+        $this->entidad = $entidad;
     }
 }

@@ -16,8 +16,10 @@ $codigoPrevired = $_POST['codigoPrevired'];
 $nombre = $_POST['nombre'];
 $nombre = strtoupper($nombre);
 $nombre = $c->escapeString($nombre);
+$termino = $_POST['termino'];
+$entidad = $_POST['entidad'];
 
-$result = $c->actualizarjornada($id, $codigo, $codigoPrevired, $nombre);
+$result = $c->actualizarjornada($id, $codigo, $codigoPrevired, $nombre, $termino, $entidad);
 
 if($result == true){
     echo 1;
