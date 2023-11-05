@@ -190,7 +190,7 @@ if(isset($_POST['id']) && isset($_POST['inicio']) && isset($_POST['termino']) &&
             }
         }else if($estado==2){
             $contratoobject = $c->buscarcontrato($contrato);
-            $valid = $c->buscarmovimientoxfecha($contratoobject->getTrabajador(),$dia,4);
+            $valid = $c->buscarmovimientoxfecha($contratoobject->getTrabajador(),$dia,11);
             if($valid==false){
                 $c->registrarmovimiento($contratoobject->getTrabajador(),$empresa,date('Y-m-01', strtotime($dia)),2,4,$dia,$dia,'','');
             }
