@@ -1,6 +1,9 @@
 <?php
 require '../controller.php';
 $c = new Controller();
+session_start();
+
+$empresa = $_SESSION['CURRENT_ENTERPRISE'];
 
 if(isset($_POST['trabajadores']) && isset($_POST['periodo']) && isset($_POST['tipomovimiento']) && isset($_POST['evento']) && isset($_POST['termino']) && isset($_POST['entidad']) && isset($_POST['fechainicio'])){
     $trabajadores = $_POST['trabajadores'];
@@ -26,6 +29,8 @@ if(isset($_POST['trabajadores']) && isset($_POST['periodo']) && isset($_POST['ti
         return;
     }
 
+    $periodo = $periodo . '-01';
+
     if($tipomovimiento == '' || $tipomovimiento == '0'){
         echo json_encode(array('status'=> false, 'message'=> 'No se ha seleccionado ningun tipo de movimiento'));
         return;
@@ -37,12 +42,12 @@ if(isset($_POST['trabajadores']) && isset($_POST['periodo']) && isset($_POST['ti
     }
 
     if($termino == '' || $termino == '0'){
-        echo json_encode(array('status'=> false, 'message'=> 'No se ha seleccionado ningun termino'));
+        echo json_encode(array('status'=> false, 'message'=> 'Hubo un error, rellene el formulario nuevamente'));
         return;
     }
 
     if($entidad == '' || $entidad == '0'){
-        echo json_encode(array('status'=> false, 'message'=> 'No se ha seleccionado ninguna entidad'));
+        echo json_encode(array('status'=> false, 'message'=> 'Hubo un error, rellene el formulario nuevamente'));
         return;
     }
 
@@ -60,9 +65,72 @@ if(isset($_POST['trabajadores']) && isset($_POST['periodo']) && isset($_POST['ti
         }
     }
 
+    $eventoobject = $c->buscarjornada($evento);
+    $errores = array();
+    $exito = array();    
+
     foreach($trabajadores as $trabajador){
+        $contrato = $c->buscarultimocontratoactivoperiodo($trabajador->id,$fechainicio);
+        if($entidad == 1){
+            $licencia = $c->buscarlicenciastrabajador($trabajador->id, $fechainicio, $fechatermino);
+            if($licencia != null){
+                $rutentidad = $licencia->getRegistro();
+                $entidadpagadora = $licencia->getPagadora();
+            }
+        }
+
+        $fechatermino1 = $fechainicio;
+
+        if($fechatermino != ""){
+            $fechatermino1 = $fechatermino;
+        }
+
+        $valid = $c->validarmovimiento($trabajador->id,$fechainicio,$fechatermino1,$evento);
+        if($valid == true){
+            $errores[] = "El trabajador " . $trabajador->nombre . " ya tiene registrado el evento " . $eventoobject->getNombre() . " en el periodo de " . date("d-m-Y", strtotime($fechainicio)) . " a " . date("d-m-Y", strtotime($fechatermino1));
+            continue;
+        }
+        $result = $c->registrarmovimiento($trabajador->id,$empresa, $periodo,$tipomovimiento, $evento, $fechainicio, $fechatermino, $rutentidad, $entidadpagadora);
         
+        if($result==true){
+            $exito[] = "Se ha registrado el movimiento para el trabajador " . $trabajador->nombre;
+        }else{
+            $errores[] = "No se ha registrado el movimiento para el trabajador " . $trabajador->nombre;
+        }
+        
+        if($eventoobject->getCodigoPrevired()==4){
+            //Verificar si viene fecha de termino
+            if($termino == 1){
+                //Recorrer el range de fechas de inicio a termino
+                $fechainicio = new DateTime($fechainicio);
+                $fechatermino = new DateTime($fechatermino);
+                $fechatermino->modify('+1 day');
+                while($fechainicio <= $fechatermino){
+                    
+                    $fechainicio->modify('+1 day');
+                }
+            }else{
+
+            }
+        }else if($eventoobject->getCodigoPrevired()==11){
+            //Verificar si viene fecha de termino
+            if($termino == 1){
+                //Recorrer el range de fechas de inicio a termino
+                $fechainicio = new DateTime($fechainicio);
+                $fechatermino = new DateTime($fechatermino);
+                while($fechainicio <= $fechatermino){
+                    
+                }
+            }else{
+
+            }
+        }
     }
 
+    echo json_encode(array('status'=> true, 'exito'=> $exito, 'errores'=> $errores));
+
     
+}else{
+    echo json_encode(array('status'=> false, 'message'=> 'UPS! Hubo un error, rellene el formulario nuevamente'));
+    return;
 }

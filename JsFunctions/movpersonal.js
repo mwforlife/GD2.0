@@ -170,15 +170,34 @@ function procesartodo() {
         $.ajax({
             url: "php/insert/movpersonal.php",
             method: "POST",
-            data: { trabajadores: JSON.stringify(trabajadores), periodo: periodo, tipomovimiento: tipomovimiento, evento: evento,termino:termino,enttidad:entidad, fechainicio: fechainicio, fechatermino: fechatermino },
+            data: { trabajadores: JSON.stringify(trabajadores), periodo: periodo, tipomovimiento: tipomovimiento, evento: evento,termino:termino,entidad:entidad, fechainicio: fechainicio, fechatermino: fechatermino },
             success: function (response) {
                 try {
                     var json = JSON.parse(response);
                     if (json.status == true) {
-                        ToastifyOk("Movimiento de personal ingresado correctamente");
-                        location.reload();
+                        var jsonexito = json.exito;
+                        var jsonerror = json.errores;
+                        var html = "";
+                        var htmlerror = "";
+                        for (var i = 0; i < jsonexito.length; i++) {
+                            html += jsonexito[i] + "<br>";
+                        }
+
+                        for (var i = 0; i < jsonerror.length; i++) {
+                            htmlerror += jsonerror[i] + "<br>";
+                        }
+
+                        if (html.trim().length > 0) {
+                            html = "<div class=\"alert alert-success\" role=\"alert\">" + html + "</div>";
+                        }
+
+                        if (htmlerror.trim().length > 0) {
+                            htmlerror = "<div class=\"alert alert-danger\" role=\"alert\">" + htmlerror + "</div>";
+                        }
+
+                        $("#message-content").html(html + htmlerror);
                     } else {
-                        ToastifyError("Error al ingresar el movimiento de personal");
+                        ToastifyError(json.message);
                     }
                 } catch (error) {
                     console.log(error);

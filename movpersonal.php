@@ -560,6 +560,9 @@ foreach ($permiso as $p) {
 											<input type="date" name="fechatermino" id="fechatermino" class="form-control"
 												value="<?php echo date("Y-m-d"); ?>">
 										</div>
+										<div class="col-md-12 mt-4" id="message-content">
+
+										</div>
 									</div>
 								</div>
 							</div>

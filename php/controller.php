@@ -4426,6 +4426,32 @@ class Controller
         return false;
     }
 
+    //Buscar licencia por periodo y trabajador
+    public function buscarlicenciastrabajador($trabajador, $inicio, $fin)
+    {
+        $this->conexion();
+        $sql = "select licenciamedica.id as id,folio, tipolicencia.nombre as tipolicencia, fechainicio, fechatermino,pagadoressubsidio.codigoprevired as rut, pagadoressubsidio.nombre as pagado, comentario, documentolicencia,comprobantetramite, trabajador, register_at from licenciamedica,tipolicencia, pagadoressubsidio where tipolicencia.id=licenciamedica.tipolicencia and licenciamedica.pagadora = pagadoressubsidio.id and trabajador = $trabajador and fechainicio between '$inicio' and '$fin'";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $folio = $rs['folio'];
+            $tipolicencia = $rs['tipolicencia'];
+            $inicio = $rs['fechainicio'];
+            $fin = $rs['fechatermino'];
+            $pagadora = $rs['pagado'];
+            $comentario = $rs['comentario'];
+            $documentolicencia = $rs['documentolicencia'];
+            $comprobantetramite = $rs['comprobantetramite'];
+            $trabajador = $rs['trabajador'];
+            $registro = $rs['rut'];
+            $licencia = new Licencias($id, $folio, $tipolicencia, $inicio, $fin, $pagadora, $comentario, $documentolicencia, $comprobantetramite, $trabajador, $registro);
+            $this->desconectar();
+            return $licencia;
+        }
+        $this->desconectar();
+        return null;
+    }
+
     //Buscar Licencia Medica
     public function buscarlicencia($id)
     {
@@ -5224,6 +5250,32 @@ class Controller
     {
         $this->conexion();
         $sql = "select contratos.id as id, trabajadores.id as traid, trabajadores.nombre as nombre,contratos.centrocosto as centrocosto, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.trabajador=$trabajador and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and contratos.estado=1 order by contratos.id desc limit 1";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $nombre = $rs['nombre'] . " " . $rs['primerapellido'] . " " . $rs['segundoapellido'];
+            $razonsocial = $rs['razonsocial'];
+            $tipocontrato = $rs['tipocontrato'];
+            $centrocosto = $rs['centrocosto'];
+            $cargo = $rs['cargo'];
+            $sueldo = $rs['sueldo'];
+            $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $documento = $rs['documento'];
+            $estado = $rs['estado'];
+            $register_at = $rs['traid'];
+            $contrato = new Contrato($id, $nombre, $razonsocial, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $this->desconectar();
+            return $contrato;
+        }
+        $this->desconectar();
+        return false;
+    }
+
+    function buscarultimocontratoactivoperiodo($trabajador,$fecha)
+    {
+        $this->conexion();
+        $sql = "select contratos.id as id, trabajadores.id as traid, trabajadores.nombre as nombre,contratos.centrocosto as centrocosto, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.trabajador=$trabajador and contratos.fechainicio<='$fecha' and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa and contratos.estado=1 order by contratos.id desc limit 1";
         $result = $this->mi->query($sql);
         if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
@@ -10879,6 +10931,20 @@ class Controller
             $nombreentidad = $rs['nombreentidad'];
             $registro = $rs['register_at'];
             $movimiento = new MovPersonal($id, $trabajador, $empresa, $periodo, $tipo, $evento, $fechainicio, $fechatermino, $rutentidad, $nombreentidad, $registro);
+        }
+        $this->desconectar();
+        return $movimiento;
+    }
+
+    //Validar Movimiento por trabajador, $fechainicio, $fechatermino y $evento
+    function validarmovimiento($trabajador, $fechainicio, $fechatermino, $evento)
+    {
+        $this->conexion();
+        $sql = "select * from movimientotrabajador where trabajador=$trabajador and fechainicio between '$fechainicio' and '$fechatermino' and evento=$evento";
+        $result = $this->mi->query($sql);
+        $movimiento = false;
+        if ($rs = mysqli_fetch_array($result)) {
+            $movimiento = true;
         }
         $this->desconectar();
         return $movimiento;
