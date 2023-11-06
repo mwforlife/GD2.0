@@ -241,7 +241,7 @@ if (isset($_POST['periodo'])) {
         $trabajador = $c->buscartrabajador($liquidacion->getTrabajador());
         $aporteempleador = $c->buscaraportempleador($liquidacion->getId());
         $sis = $liquidacion->getDessis();
-        $cesantia = 0;
+        $cesantiap = 0;
         $tasabase = 0;
         $leysana = 0;
         $adicional = 0;

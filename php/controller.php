@@ -3411,6 +3411,27 @@ class Controller
             return null;
         }
     }
+    //Buscar Jornada x codigo
+    public function buscarjornadaxcodigo($codigo)
+    {
+        $this->conexion();
+        $sql = "SELECT * FROM jornadas WHERE codigoprevired = '$codigo'";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $codigoprevired = $rs['codigoprevired'];
+            $nombre = $rs['nombre'];
+            $termino = $rs['termino'];
+            $entidad = $rs['entidad'];
+            $jornada = new Jornadas($id, $codigo, $codigoprevired, $nombre, $termino, $entidad);
+            $this->desconectar();
+            return $jornada;
+        } else {
+            $this->desconectar();
+            return null;
+        }
+    }
 
     //Buscar Tipo Sueldo
     public function buscartiposueldo($id)
@@ -10906,6 +10927,8 @@ class Controller
             $nombreentidad = $rs['nombreentidad'];
             $registro = $rs['register_at'];
             $movimiento = new MovPersonal($id, $trabajador, $empresa, $periodo, $tipo, $evento, $fechainicio, $fechatermino, $rutentidad, $nombreentidad, $registro);
+            $this->desconectar();
+            return $movimiento;
         }
         $this->desconectar();
         return $movimiento;
@@ -10915,7 +10938,7 @@ class Controller
     function buscarmovimientoxfecha($trabajador, $fecha, $codigoevento)
     {
         $this->conexion();
-        $sql = "select movimientotrabajador.id as id, mmovimientotrabajador.trabajador as trabajador, movimientotrabajador.empresa as empresa, movimientotrabajador.periodo as periodo, movimientotrabajador.tipo as tipo, movimientotrabajador.evento as evento, movimientotrabajador.fechainicio as fechainicio, movimientotrabajador.fechatermino as fechatermino, movimientotrabajador.rutentidad as rutentidad, movimientotrabajador.nombreentidad as nombreentidad, movimientotrabajador.register_at as register_at from movimientotrabajador, jornadas where movimientotrabajador.evento=jornadas.id and movimientotrabajador.trabajador=$trabajador and jornadas.codigoprevired='$codigoevento' and movimientotrabajador.fechainicio<='$fecha' and movimientotrabajador.fechatermino>='$fecha'";
+        $sql = "select movimientotrabajador.id as id, movimientotrabajador.trabajador as trabajador, movimientotrabajador.empresa as empresa, movimientotrabajador.periodo as periodo, movimientotrabajador.tipo as tipo, movimientotrabajador.evento as evento, movimientotrabajador.fechainicio as fechainicio, movimientotrabajador.fechatermino as fechatermino, movimientotrabajador.rutentidad as rutentidad, movimientotrabajador.nombreentidad as nombreentidad, movimientotrabajador.register_at as register_at from movimientotrabajador, jornadas where movimientotrabajador.evento=jornadas.id and movimientotrabajador.trabajador=$trabajador and jornadas.codigoprevired=$codigoevento and movimientotrabajador.fechainicio<='$fecha' and movimientotrabajador.fechatermino>='$fecha'";
         $result = $this->mi->query($sql);
         $movimiento = false;
         if ($rs = mysqli_fetch_array($result)) {
@@ -10960,6 +10983,30 @@ class Controller
         while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $trabajador = $rs['trabajador'];
+            $empresa = $rs['empresa'];
+            $periodo = $rs['periodo'];
+            $tipo = $rs['tipo'];
+            $evento = $rs['evento'];
+            $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $rutentidad = $rs['rutentidad'];
+            $nombreentidad = $rs['nombreentidad'];
+            $registro = $rs['register_at'];
+            $movimiento = new MovPersonal($id, $trabajador, $empresa, $periodo, $tipo, $evento, $fechainicio, $fechatermino, $rutentidad, $nombreentidad, $registro);
+            $lista[] = $movimiento;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    function listarmovimientotrabajadortext($empresa, $periodo){
+        $this->conexion();
+        $sql = "select movimientotrabajador.id as id, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2,movimientotrabajador.empresa as empresa, movimientotrabajador.periodo as periodo, movimientotrabajador.tipo as tipo, jornadas.nombre as evento, movimientotrabajador.fechainicio as fechainicio, movimientotrabajador.fechatermino as fechatermino, movimientotrabajador.rutentidad as rutentidad, movimientotrabajador.nombreentidad as nombreentidad, movimientotrabajador.register_at as register_at from movimientotrabajador, jornadas, trabajadores where movimientotrabajador.evento=jornadas.id and movimientotrabajador.trabajador=trabajadores.id and movimientotrabajador.empresa=$empresa and movimientotrabajador.periodo='$periodo' order by movimientotrabajador.register_at desc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $trabajador = $rs['nombre']." ".$rs['apellido1']." ".$rs['apellido2'];
             $empresa = $rs['empresa'];
             $periodo = $rs['periodo'];
             $tipo = $rs['tipo'];

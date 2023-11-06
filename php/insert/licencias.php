@@ -61,6 +61,9 @@ if (isset($_POST['folio']) && isset($_POST['tipolicencia']) && isset($_POST['fec
     $result = $c->registrarlicencia($folio, $tipolicencia, $fechainicio, $fechatermino, $pagadora, $comentario, $file_licenciadoc, $file_tramitedoc, $TrabajadorId);
     if ($result == true) {
         echo 1;
+        $evento = $c->buscarjornadaxcodigo(3);
+        $pagador = $c->buscarpagadoresubsidio($pagadora);
+        $c->registrarmovimiento($TrabajadorId, $_SESSION['CURRENT_ENTERPRISE'], date("Y-m-01", strtotime($fechainicio)), 2, $evento->getId(), $fechainicio, $fechatermino,$pagador->getCodigoPrevired(),$pagador->getNombre());
         $usuario = $_SESSION['USER_ID'];
         $eventos = "Se Registro La Licencia del Trabajador con ID: " . $TrabajadorId . " Fecha Inicio: " . $fechainicio . " Fecha Termino: " . $fechatermino;
         $c->RegistrarAuditoriaEventos($usuario, $eventos);

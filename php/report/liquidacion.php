@@ -106,10 +106,10 @@ if (isset($_GET['id'])) {
     $contenido .= "</tr>";
     $contenido .= "<tr>";
     $contenido .= "<td style='width: 50%;'>INICIO CONTRATO: " . date("d-m-Y", strtotime($contrato->getFechaInicio())) . "</td>";
-    $contenido .= "<td style='width: 50%;'>IMPONIBLE: $" . number_format($liquidacion->getTotalimponible(), 0, ",", ".") . "</td>";
+    $contenido .= "<td style='width: 50%;'>IMPONIBLE: $" . number_format($liquidacion->getTotalimponible(), 0, ",", ".") . " Días</td>";
     $contenido .= "</tr>";
     $contenido .= "<tr>";
-    $contenido .= "<td style='width: 50%;'>DIAS TRABAJADOS: " . $liquidacion->getDiastrabajados() . " Dias</td>";
+    $contenido .= "<td style='width: 50%;'>DIAS TRABAJADOS: " . number_format($liquidacion->getDiasTrabajados(), 1, ",", ".") . " Días</td>";
     $contenido .= "<td style='width: 50%;'>TRIBUTABLE: $" . number_format($liquidacion->getTotaltributable(), 0, ",", ".") . "</td>";
     $contenido .= "</tr>";
     if($liquidacion->getHorasextras1() > 0 && $liquidacion->getHorasextras2() > 0 && $liquidacion->getHorasextras3() > 0){

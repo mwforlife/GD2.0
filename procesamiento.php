@@ -250,7 +250,7 @@
                     $periodo = date($anio . "-" . $mes1 . "-01");
                     $haberes = $c->listarhaberes_descuentotrababajador($periodo, $periodo, $empresa->getId(), $trabajador->getId(), 1);
 
-                    $sueldo = $sueldo / 30 * $dias;
+                    $sueldo = round(($sueldo / 30 * $dias), 0, PHP_ROUND_HALF_UP);
                     $valor_haberes[] = array("codigo" => "SUELDO BASE", "valor" => $sueldo, "tipo" => 1);
                     $total_imponible = $total_imponible + $sueldo;
                     if($gratif==1){
@@ -291,7 +291,7 @@
                                 $resultado = eval("return $formula;");
                                 $resultado = round($resultado, 0, PHP_ROUND_HALF_UP);
                                 $valor_haberes[] = array("codigo" => $haber->getCodigo(), "valor" => $resultado, "tipo" => 1);
-                                $total_imponible = $total_imponible + $resultado;
+                                $total_imponible = $total_imponible + round($resultado, 0, PHP_ROUND_HALF_UP);
                                 if($gratif==1){
                                     if($habere->getGratificacion()==1){
                                         $gratificacion = $gratificacion + $resultado;
@@ -300,7 +300,7 @@
                             } else {
                                 $habere = $c->buscarhaberesydescuentos($haber->getEmpresa());
                                 $valor_haberes[] = array("codigo" => $haber->getCodigo(), "valor" => $haber->getMonto(), "tipo" => 1);
-                                $total_imponible = $total_imponible + $haber->getMonto();
+                                $total_imponible = $total_imponible + round($haber->getMonto(), 0, PHP_ROUND_HALF_UP);
                                 if($gratif==1){
                                     if($habere->getGratificacion()==1){
                                         $gratificacion = $gratificacion + $haber->getMonto();
@@ -314,7 +314,7 @@
                     if($gratif==1){
                         $gratificacion = $gratificacion * 0.25;
                         $valor_haberes[] = array("codigo" => "GRATIFICACION", "valor" => $gratificacion, "tipo" => 1);
-                        $total_imponible = $total_imponible + $gratificacion;
+                        $total_imponible = $total_imponible + round( $gratificacion, 0, PHP_ROUND_HALF_UP);
                     }
 
                     foreach ($haberes as $haber) {

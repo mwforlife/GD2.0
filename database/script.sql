@@ -1151,7 +1151,7 @@ create table liquidaciones(
     periodo date not null,
     empresa int not null references empresa(id),
     trabajador int not null references trabajadores(id),
-    diastrabajados int not null,
+    diastrabajados decimal(10,2) not null,
     sueldobase int not null,
     horasfalladas int not null,
     horasextras1 int not null,
