@@ -11001,9 +11001,9 @@ class Controller
         return $lista;
     }
 
-    function listarmovimientotrabajadortext($empresa, $periodo){
+    function listarmovimientotrabajadortext($empresa, $periodo, $periodotermino){
         $this->conexion();
-        $sql = "select movimientotrabajador.id as id, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2,movimientotrabajador.empresa as empresa, movimientotrabajador.periodo as periodo, movimientotrabajador.tipo as tipo, jornadas.nombre as evento, movimientotrabajador.fechainicio as fechainicio, movimientotrabajador.fechatermino as fechatermino, movimientotrabajador.rutentidad as rutentidad, movimientotrabajador.nombreentidad as nombreentidad, movimientotrabajador.register_at as register_at from movimientotrabajador, jornadas, trabajadores where movimientotrabajador.evento=jornadas.id and movimientotrabajador.trabajador=trabajadores.id and movimientotrabajador.empresa=$empresa and movimientotrabajador.periodo='$periodo' order by movimientotrabajador.register_at desc";
+        $sql = "select movimientotrabajador.id as id, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2,movimientotrabajador.empresa as empresa,centrocosto.nombre as centrocosto, movimientotrabajador.periodo as periodo, movimientotrabajador.tipo as tipo, jornadas.nombre as evento, movimientotrabajador.fechainicio as fechainicio, movimientotrabajador.fechatermino as fechatermino, movimientotrabajador.rutentidad as rutentidad, movimientotrabajador.nombreentidad as nombreentidad, movimientotrabajador.register_at as register_at from movimientotrabajador, jornadas, trabajadores,contratos, centrocosto where movimientotrabajador.evento=jornadas.id and movimientotrabajador.trabajador=trabajadores.id and movimientotrabajador.empresa=$empresa and movimientotrabajador.periodo between '$periodo' and '$periodotermino' and contratos.trabajador=trabajadores.id and contratos.centrocosto=centrocosto.id order by movimientotrabajador.register_at desc";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -11017,13 +11017,39 @@ class Controller
             $fechatermino = $rs['fechatermino'];
             $rutentidad = $rs['rutentidad'];
             $nombreentidad = $rs['nombreentidad'];
-            $registro = $rs['register_at'];
+            $registro = $rs['centrocosto'];
             $movimiento = new MovPersonal($id, $trabajador, $empresa, $periodo, $tipo, $evento, $fechainicio, $fechatermino, $rutentidad, $nombreentidad, $registro);
             $lista[] = $movimiento;
         }
         $this->desconectar();
         return $lista;
     }
+
+    
+    function listarmovimientotrabajadortextcentro($empresa, $periodo, $periodotermino,$centrocosto){
+        $this->conexion();
+        $sql = "select movimientotrabajador.id as id, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2,movimientotrabajador.empresa as empresa,centrocosto.nombre as centrocosto, movimientotrabajador.periodo as periodo, movimientotrabajador.tipo as tipo, jornadas.nombre as evento, movimientotrabajador.fechainicio as fechainicio, movimientotrabajador.fechatermino as fechatermino, movimientotrabajador.rutentidad as rutentidad, movimientotrabajador.nombreentidad as nombreentidad, movimientotrabajador.register_at as register_at from movimientotrabajador, jornadas, trabajadores,contratos, centrocosto where movimientotrabajador.evento=jornadas.id and movimientotrabajador.trabajador=trabajadores.id and movimientotrabajador.empresa=$empresa and movimientotrabajador.periodo between '$periodo' and '$periodotermino' and contratos.trabajador=trabajadores.id and contratos.centrocosto=centrocosto.id and centrocosto.id=$centrocosto order by movimientotrabajador.register_at desc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $trabajador = $rs['nombre']." ".$rs['apellido1']." ".$rs['apellido2'];
+            $empresa = $rs['empresa'];
+            $periodo = $rs['periodo'];
+            $tipo = $rs['tipo'];
+            $evento = $rs['evento'];
+            $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $rutentidad = $rs['rutentidad'];
+            $nombreentidad = $rs['nombreentidad'];
+            $registro = $rs['centrocosto'];
+            $movimiento = new MovPersonal($id, $trabajador, $empresa, $periodo, $tipo, $evento, $fechainicio, $fechatermino, $rutentidad, $nombreentidad, $registro);
+            $lista[] = $movimiento;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
 
     //Actualizar movimiento
     function actualizarmovimiento($id, $trabajador, $empresa, $periodo, $tipo, $evento, $fechainicio, $fechatermino, $rutentidad, $nombreentidad)

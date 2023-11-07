@@ -1,10 +1,12 @@
 function filtarmovimiento(){
     var periodo = $("#periodo").val();
+    var periodo_termino = $("#periodo_termino").val();
+    var centrocosto = $("#centrocosto").val();
 
     $.ajax({
         type: "POST",
         url: "php/validation/filtrarmovimiento.php",
-        data: { periodo: periodo },
+        data: { periodo: periodo, periodo_termino: periodo_termino, centrocosto: centrocosto },
         success: function (response) {
             location.reload();
         }

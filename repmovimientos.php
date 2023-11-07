@@ -549,6 +549,7 @@ foreach ($permiso as $p) {
 									<div class="row">
 										<div class="col-md-3">
 											<?php
+												$empresa = $_SESSION['CURRENT_ENTERPRISE'];
 											$periodo = date('Y-m');
 
 											if (isset($_SESSION['PERIODO_REPORTE'])) {
@@ -556,22 +557,50 @@ foreach ($permiso as $p) {
 											}
 
 											?>
-											<label for="">Periodo</label>
+											<label for="">Periodo Inicio</label>
 											<input type="month" name="periodo" id="periodo" class="form-control"
 												value="<?php echo $periodo; ?>">
 										</div>
 										<div class="col-md-3">
+											<?php
+											$periodo_termino = date('Y-m');
+
+											if (isset($_SESSION['PERIODO_REPORTE_TERMINO'])) {
+												$periodo_termino = $_SESSION['PERIODO_REPORTE_TERMINO'];
+											}
+
+											?>
+											<label for="">Periodo Termino</label>
+											<input type="month" name="periodo_termino" id="periodo_termino"
+												class="form-control" value="<?php echo $periodo_termino; ?>">
+										</div>
+										<div class="col-md-3">
+											<label for="">Centro de Costo</label>
+											<select name="centrocosto" id="centrocosto" class="form-control">
+												<option value="0">Seleccione</option>
+												<?php
+												$centro = 0;
+												if (isset($_SESSION['CENTRO_COSTO_REPORTE'])) {
+													$centro = $_SESSION['CENTRO_COSTO_REPORTE'];
+												}
+												$centrocostos = $c->listarcentrocosto($empresa);
+												foreach ($centrocostos as $cc) {
+													if ($centro == $cc->getId()) {
+														echo "<option value='" . $cc->getId() . "' selected>" . $cc->getNombre() . "</option>";
+													} else {
+														echo "<option value='" . $cc->getId() . "'>" . $cc->getNombre() . "</option>";
+													}
+												}
+												?>
+											</select>
+										</div>
+										<div class="col-md-3">
 											<button class="btn btn-primary mt-4" onclick="filtarmovimiento()"> <i
 													class="fe fe-filter"></i> Filtrar</button>
-											<button
-												class="btn btn-outline-danger mt-4 <?php if (!isset($_SESSION['PERIODO_REPORTE'])) {
-													echo "d-none";
-												} ?>"
-												onclick="limpiarfiltro()"><i class="fa fa-close"></i> Limpiar Filtro
+											<button class="btn btn-outline-danger mt-4 <?php if (!isset($_SESSION['PERIODO_REPORTE'])) {
+												echo "d-none";
+											} ?>" onclick="limpiarfiltro()"><i class="fa fa-close"></i> Limpiar Filtro
 											</button>
-										</div>
-										<div class="col-md-6 text-right">
-											<a href="movpersonal.php" class="btn btn-outline-primary mt-4"><i class="fa fa-plus"></i> Registrar Movimiento</a>
 										</div>
 
 									</div>
@@ -582,11 +611,18 @@ foreach ($permiso as $p) {
 						<div class="col-md-12">
 							<div class="card">
 								<div class="card-body">
+									<div class="row">
+										<div class="col-md-12 text-right">
+											<a href="movpersonal.php" class="btn btn-outline-primary mt-4"><i
+													class="fa fa-plus"></i> Registrar Movimiento</a>
+										</div>
+									</div>
 									<div class="table-responsive">
 										<table class="table table-hover w-100" id="example1">
 											<thead>
 												<tr>
 													<th>Trabajador</th>
+													<th>Cento de Costo</th>
 													<th>Periodo</th>
 													<th>Tipo</th>
 													<th>Evento</th>
@@ -598,33 +634,37 @@ foreach ($permiso as $p) {
 											</thead>
 											<tbody>
 												<?php
-												$empresa = $_SESSION['CURRENT_ENTERPRISE'];
-												$periodo = $periodo."-01";
-												$movimientos = $c->listarmovimientotrabajadortext($empresa, $periodo);
+												$periodo = $periodo . "-01";
+												$periodo_termino = $periodo_termino . "-01";
+												$movimientos = $c->listarmovimientotrabajadortext($empresa, $periodo,$periodo_termino);
+												if($centro > 0){
+													$movimientos = $c->listarmovimientotrabajadortextcentro($empresa, $periodo,$periodo_termino,$centro);
+												}
 												foreach ($movimientos as $m) {
 													echo "<tr>";
-													echo "<td>" . $m->getTrabajador(). "</td>";
-													echo "<td>" . $m->getPeriodo(). "</td>";
-													if($m->getTipo() == 1){
+													echo "<td>" . $m->getTrabajador() . "</td>";
+													echo "<td>" . $m->getRegister_at() . "</td>";
+													echo "<td>" . $m->getPeriodo() . "</td>";
+													if ($m->getTipo() == 1) {
 														echo "<td>AFILIADO VOLUNTARIO</td>";
-													}else if($m->getTipo() == 2){
+													} else if ($m->getTipo() == 2) {
 														echo "<td>AFP</td>";
-													}else if($m->getTipo() == 3){
+													} else if ($m->getTipo() == 3) {
 														echo "<td>ISAPRE</td>";
 													}
-													echo "<td>" . $m->getEvento(). "</td>";
-													echo "<td>" . date("d-m-Y", strtotime($m->getFechaInicio())). "</td>";
-													if($m->getFechaTermino() == null || $m->getFechaTermino() == "" || $m->getFechaTermino() == "0000-00-00"){
+													echo "<td>" . $m->getEvento() . "</td>";
+													echo "<td>" . date("d-m-Y", strtotime($m->getFechaInicio())) . "</td>";
+													if ($m->getFechaTermino() == null || $m->getFechaTermino() == "" || $m->getFechaTermino() == "0000-00-00") {
 														echo "<td> - </td>";
-													}else{
-														echo "<td>" . date("d-m-Y", strtotime($m->getFechaTermino())). "</td>";
+													} else {
+														echo "<td>" . date("d-m-Y", strtotime($m->getFechaTermino())) . "</td>";
 													}
-													if($m->getRutentidad() == ""){
+													if ($m->getRutentidad() == "") {
 														echo "<td> - </td>";
-													}else{
-														echo "<td>" . $m->getNombreentidad()." - ". $m->getRutentidad(). "</td>";
+													} else {
+														echo "<td>" . $m->getNombreentidad() . " - " . $m->getRutentidad() . "</td>";
 													}
-													echo "<td><button class='btn btn-outline-danger btn-sm' onclick='eliminar(".$m->getId().")'><i class='fa fa-trash-alt'></i></button></td>";
+													echo "<td><button class='btn btn-outline-danger btn-sm' onclick='eliminar(" . $m->getId() . ")'><i class='fa fa-trash-alt'></i></button></td>";
 													echo "</tr>";
 												}
 												?>
