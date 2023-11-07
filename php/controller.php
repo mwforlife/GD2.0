@@ -10007,9 +10007,11 @@ class Controller
     function eliminarliquidacion($id)
     {
         $this->conexion();
-        $sql = "delete from liquidaciones where id=$id";
+        $sql = "delete from aporteempleador where liquidacion=$id";
         $result = $this->mi->query($sql);
         $sql = "delete from detalle_liquidacion where liquidacion=$id";
+        $result = $this->mi->query($sql);
+        $sql = "delete from liquidaciones where id=$id";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return $result;

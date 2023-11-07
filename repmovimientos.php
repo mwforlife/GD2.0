@@ -570,6 +570,9 @@ foreach ($permiso as $p) {
 												onclick="limpiarfiltro()"><i class="fa fa-close"></i> Limpiar Filtro
 											</button>
 										</div>
+										<div class="col-md-6 text-right">
+											<a href="movpersonal.php" class="btn btn-outline-primary mt-4"><i class="fa fa-plus"></i> Registrar Movimiento</a>
+										</div>
 
 									</div>
 

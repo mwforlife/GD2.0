@@ -338,7 +338,7 @@ foreach ($permiso as $p) {
 											<a class="nav-sub-link" href="cargaasistencia.php">Cargar Asistencia</a>
 										</li>
 										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="movpersonal.php">Movimiento de Personal</a>
+											<a class="nav-sub-link" href="repmovimientos.php">Movimiento de Personal</a>
 										</li>
 										<li class="nav-sub-item">
 											<a class="nav-sub-link" href="procesar.php">Procesar Trabajadores</a>
@@ -373,9 +373,6 @@ foreach ($permiso as $p) {
 									</li>
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="documentosfirmados.php">Documentos Firmados</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="repmovimientos.php">Reporte de Movimientos</a>
 									</li>
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="liquidaciones.php">Reporte Liquidaciones</a>
