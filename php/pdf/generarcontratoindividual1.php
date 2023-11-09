@@ -2071,6 +2071,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
     $mpdf->subject = 'Contrato de Trabajo';
     $mpdf->keywords = 'Contrato, Trabajo, Empleo';
     $mpdf->SetDisplayMode('fullpage');
+    $mpdf->SetHTMLFooter('<div style="text-align: center; font-size: 10px;">www.iustax.cl</div>');
     $mpdf->WriteHTML($contenido);
     $fecha = date('Ymdhis');
     //Generar nombre documento

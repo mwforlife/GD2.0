@@ -16,20 +16,14 @@ if(isset($_POST['id'])){
         $evento = $mov->getEvento();
         $trabajador = $mov->getTrabajador();
         $evento = $c->buscarjornada($evento);
-        if($evento->getCodigoPrevired() == 4){
+        if($evento->getCodigoPrevired() == 4 || $evento->getCodigoPrevired() == 11 || $evento->getCodigoPrevired() == 3 && $contrato != false){
             $fechainicio = new Datetime($fechainicio);
             $fechatermino = new Datetime($fechatermino);
             while($fechainicio <= $fechatermino){
                 $asistencia = $c->validarasistencia($mov->getTrabajador(),$contrato->getId(),$fechainicio->format('Y-m-d'));
-                $c->eliminarasistencia($asistencia);
-                $fechainicio->modify('+1 day');
-            }
-        }else if($evento->getCodigoPrevired() == 11){
-            $fechainicio = new Datetime($fechainicio);
-            $fechatermino = new Datetime($fechatermino);
-            while($fechainicio <= $fechatermino){
-                $asistencia = $c->validarasistencia($mov->getTrabajador(),$contrato->getId(),$fechainicio->format('Y-m-d'));
-                $c->eliminarasistencia($asistencia);
+                if($asistencia!=false){
+                    $c->eliminarasistencia($asistencia);
+                }
                 $fechainicio->modify('+1 day');
             }
         }

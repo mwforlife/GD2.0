@@ -148,6 +148,31 @@ if (isset($_POST['trabajadores']) && isset($_POST['periodo']) && isset($_POST['t
                 }
 
             }
+        }else if ($eventoobject->getCodigoPrevired() == 3) {
+            //Verificar si viene fecha de termino
+            if ($termino == 1) {
+                //Recorrer el range de fechas de inicio a termino
+                $fechainicio = new DateTime($fechainicio);
+                $fechatermino = new DateTime($fechatermino);
+                while ($fechainicio <= $fechatermino) {
+                    $asistencia = $c->validarasistencia($trabajador->id, $contrato->getId(), $fechainicio->format('Y-m-d'));
+                    if ($asistencia == false) {
+                        $c->registrarasistencia($trabajador->id, $contrato->getId(), $fechainicio->format('Y-m-d'), 4);
+                    } else {
+                        $c->actualizarasistencia($asistencia, 4);
+                    }
+                    $fechainicio->modify('+1 day');
+                }
+            } else {
+                $asistencia = $c->validarasistencia($trabajador->id, $contrato->getId(), $fechainicio);
+                if ($asistencia == false) {
+                    $c->registrarasistencia($trabajador->id, $contrato->getId(), $fechainicio, 4);
+                } else {
+                    $c->actualizarasistencia($asistencia, 4);
+
+                }
+
+            }
         }
     }
 

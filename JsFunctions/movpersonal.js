@@ -165,7 +165,19 @@ function procesartodo() {
                 ToastifyError("Debe seleccionar una fecha de termino");
                 return false;
             }
+
+            //Validar que la fecha de termino sea mayor o igual a la fecha de inicio
+            var fechainicio = new Date(fechainicio);
+            var fechatermino = new Date(fechatermino);
+            if (fechatermino < fechainicio) {
+                ToastifyError("La fecha de termino no puede ser menor a la fecha de inicio");
+                $("#fechatermino").focus();
+                return false;
+            }
         }
+
+        fechainicio = $("#fechainicio").val();
+        fechatermino = $("#fechatermino").val();
 
         $.ajax({
             url: "php/insert/movpersonal.php",
@@ -193,9 +205,13 @@ function procesartodo() {
 
                         if (htmlerror.trim().length > 0) {
                             htmlerror = "<div class=\"alert alert-danger\" role=\"alert\">" + htmlerror + "</div>";
+                            return false;
                         }
 
                         $("#message-content").html(html + htmlerror);
+                        setTimeout(function () {
+                            location.href = "repmovimientos.php";
+                        }, 1500);
                     } else {
                         ToastifyError(json.message);
                     }

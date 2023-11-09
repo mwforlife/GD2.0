@@ -278,7 +278,7 @@ if (isset($_GET['liquidaciones'])) {
         $contenido .= "</table>";
         $mpdf->AddPage();
         $mpdf->SetDisplayMode('fullpage');
-        $mpdf->SetHTMLFooter('<div style="text-align: center; font-size: 10px;">www.apoyocontratista.cl</div>');
+        $mpdf->SetHTMLFooter('<div style="text-align: center; font-size: 10px;">www.iustax.cl</div>');
         $mpdf->WriteHTML($contenido);
     }
     $mpdf->title = 'Liquidaciones de Sueldo';
@@ -286,6 +286,7 @@ if (isset($_GET['liquidaciones'])) {
     $mpdf->creator = 'KaiserTech - Gestor de Documentos';
     $mpdf->subject = 'Finiquito del Trabajador';
     $mpdf->keywords = 'Finiquito, Trabajador, KaiserTech';
+    $mpdf->SetHTMLFooter('<div style="text-align: center; font-size: 10px;">www.iustax.cl</div>');
     $fecha = date('Ymdhis');
     $mpdf->Output('Liquidacion_' . $fecha . '.pdf', 'I');
 } else {

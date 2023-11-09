@@ -81,7 +81,7 @@ function cargarasistencia(id, empresa, contrato, dia, estado, elemento) {
     var valor = elemento;
     elemento = document.getElementById("button"+elemento);
     $.ajax({
-        url: "php/validation/asistencia.php",
+        url: "php/validation/asistence.php",
         type: "POST",
         data: { id: id, empresa: empresa, contrato: contrato, dia: dia, estado: estado },
         success: function () {

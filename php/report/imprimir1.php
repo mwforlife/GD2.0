@@ -181,6 +181,7 @@ if (isset($_GET['cart'])) {
             $mpdf->keywords = 'Finiquito del Trabajador';
             $mpdf->SetDisplayMode('fullpage');
             $mpdf->WriteHTML($contenido);
+            $mpdf->SetHTMLFooter('<div style="text-align: center; font-size: 10px;">www.iustax.cl</div>');
             $fecha = date('Ymdhis');
             //Generar nombre documento
         }

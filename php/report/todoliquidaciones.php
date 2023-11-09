@@ -289,7 +289,7 @@ if (count($liquidaciones) > 0) {
         $contenido .= "</table>";
         $mpdf->AddPage();
         $mpdf->SetDisplayMode('fullpage');
-        $mpdf->SetHTMLFooter('<div style="text-align: center; font-size: 10px;">www.apoyocontratista.cl</div>');
+        $mpdf->SetHTMLFooter('<div style="text-align: center; font-size: 10px;">www.iustax.cl</div>');
         $mpdf->WriteHTML($contenido);
     }
     $mpdf->title = 'Liquidaciones de Sueldo';

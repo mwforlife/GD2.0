@@ -148,6 +148,7 @@ if (isset($_GET['code'])) {
         $mpdf->author = 'Wilkens Mompoint';
         $mpdf->creator = 'Wilkens Mompoint';
         $mpdf->subject = 'Comprobante de Vacaciones';
+        $mpdf->SetHTMLFooter('<div style="text-align: center; font-size: 10px;">www.iustax.cl</div>');
         $mpdf->keywords = 'Comprobante de Vacaciones';
         $mpdf->SetDisplayMode('fullpage');
         $mpdf->WriteHTML($contenido);

@@ -284,7 +284,7 @@ if (isset($_GET['id'])) {
     $mpdf->subject = 'Finiquito del Trabajador';
     $mpdf->keywords = 'Finiquito, Trabajador, KaiserTech';
     $mpdf->SetDisplayMode('fullpage');
-    $mpdf->SetHTMLFooter('<div style="text-align: center; font-size: 10px;">www.apoyocontratista.cl</div>');
+    $mpdf->SetHTMLFooter('<div style="text-align: center; font-size: 10px;">www.iustax.cl</div>');
     $mpdf->WriteHTML($contenido);
     $fecha = date('Ymdhis');
     $mpdf->Output('Liquidacion_' . $trabajador->getNombre() . '_' . $trabajador->getApellido1() . '_' . $fecha . '.pdf', 'I');

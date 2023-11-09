@@ -215,6 +215,7 @@ if (isset($_GET['id'])) {
             $mpdf->subject = 'Notificacion de Termino de Contrato Laboralr';
             $mpdf->keywords = 'Notificacion de Termino de Contrato Laboralr';
             $mpdf->SetDisplayMode('fullpage');
+            $mpdf->SetHTMLFooter('<div style="text-align: center; font-size: 10px;">www.iustax.cl</div>');
             $mpdf->WriteHTML($contenido);
             $fecha = date('Ymdhis');
             //Generar nombre documento

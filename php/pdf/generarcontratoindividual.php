@@ -1964,6 +1964,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
     $mpdf->title = 'Contrato de Trabajo';
     $mpdf->author = 'Wilkens Mompoint';
     $mpdf->creator = 'Wilkens Mompoint';
+    $mpdf->SetHTMLFooter('<div style="text-align: center; font-size: 10px;">www.iustax.cl</div>');
     $mpdf->subject = 'Contrato de Trabajo';
     $mpdf->keywords = 'Contrato, Trabajo, Empleo';
     $mpdf->SetDisplayMode('fullpage');

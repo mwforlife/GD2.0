@@ -54,53 +54,21 @@ if (isset($_POST['id']) && isset($_POST['empresa']) && isset($_POST['contrato'])
                     $tipo = $valid->getTipo();
                     $rutentidad = $valid->getRutEntidad();
                     $nombreentidad = $valid->getNombreEntidad();
-                    $fechainicio = $valid->getFechaInicio();
-                    $fechatermino = $valid->getFechaTermino();
-                    if ($fechatermino == null || $fechatermino == '' || $fechatermino == '0000-00-00') {
-                        $fechatermino = $fechainicio;
-                    }
-                    $fechainicio = new DateTime($fechainicio);
-                    $fechatermino = new DateTime($fechatermino);
-                    $i = 0;
-                    $y = 0;
-                    $fechainicio1 = $fechainicio;
-                    $fechatermino1 = "";
-                    $fechainicio2 = "";
-                    $fechatermino2 = $fechatermino;
-                    while ($fechainicio <= $fechatermino) {
-                        if ($fechainicio->format('Y-m-d') < $dia) {
-                            $i++;
-                            if($i == 1){
-                                $fechainicio1 = $fechainicio;
-                                $fechaetermino1 = $fechainicio;
-                            }else if($i>1){
-                                $fechatermino1 = $fechainicio;
-                            }
-                            $fechatermino1 = $fechainicio;
-                        }
-                        if($fechainicio->format('Y-m-d') == $dia){
-                            $fechainicio->modify('+1 day');
-                            continue;
-                        }
-                        if ($fechainicio->format('Y-m-d') > $dia) {
-                            $y++;
-                            if($y == 1){
-                                $fechainicio2 = $fechainicio;
-                                $fechatermino2 = $fechainicio;
-                            }else if($y>1){
-                                $fechatermino2 = $fechainicio;
-                            }
-                        }
-                        $fechainicio->modify('+1 day');
-                    }
+                    $fechainicio1 = $valid->getFechaInicio();
+                    $fechatermino1 = date('Y-m-d', strtotime($dia . ' -1 day'));
+                    $fechainicio2 = date('Y-m-d', strtotime($dia . ' +1 day'));
+                    $fechatermino2 = $valid->getFechaTermino();
 
-                    if ($i >= 1) {
-                            $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio1->format('Y-m-d'), $fechatermino1->format('Y-m-d'), $rutentidad, $nombreentidad);
-                    }else if ($y >= 1) {
-                            $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio2->format('Y-m-d'), $fechatermino2->format('Y-m-d'), $rutentidad, $nombreentidad);
-                        
-                    } else {
-                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, date('Y-m-01', strtotime($dia)), 2, $evento->getId(), $dia, $dia, '', '');
+                    if($fechainicio1 == $fechatermino2){
+                       
+                    }else{
+                        if($fechainicio1 < $dia){
+                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio1,$fechatermino1, $rutentidad, $nombreentidad);
+                        }
+
+                        if($fechatermino2 > $dia){
+                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio2,$fechatermino2, $rutentidad, $nombreentidad);
+                        }
                     }
                 } else {
                     $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, date('Y-m-01', strtotime($dia)), 2, $evento->getId(), $dia, $dia, '', '');
@@ -122,53 +90,21 @@ if (isset($_POST['id']) && isset($_POST['empresa']) && isset($_POST['contrato'])
                     $tipo = $valid->getTipo();
                     $rutentidad = $valid->getRutEntidad();
                     $nombreentidad = $valid->getNombreEntidad();
-                    $fechainicio = $valid->getFechaInicio();
-                    $fechatermino = $valid->getFechaTermino();
-                    if ($fechatermino == null || $fechatermino == '' || $fechatermino == '0000-00-00') {
-                        $fechatermino = $fechainicio;
-                    }
-                    $fechainicio = new DateTime($fechainicio);
-                    $fechatermino = new DateTime($fechatermino);
-                    $i = 0;
-                    $y = 0;
-                    $fechainicio1 = $fechainicio;
-                    $fechatermino1 = "";
-                    $fechainicio2 = "";
-                    $fechatermino2 = $fechatermino;
-                    while ($fechainicio <= $fechatermino) {
-                        if ($fechainicio->format('Y-m-d') < $dia) {
-                            $i++;
-                            if($i == 1){
-                                $fechainicio1 = $fechainicio;
-                                $fechaetermino1 = $fechainicio;
-                            }else if($i>1){
-                                $fechatermino1 = $fechainicio;
-                            }
-                            $fechatermino1 = $fechainicio;
-                        }
-                        if($fechainicio->format('Y-m-d') == $dia){
-                            $fechainicio->modify('+1 day');
-                            continue;
-                        }
-                        if ($fechainicio->format('Y-m-d') > $dia) {
-                            $y++;
-                            if($y == 1){
-                                $fechainicio2 = $fechainicio;
-                                $fechatermino2 = $fechainicio;
-                            }else if($y>1){
-                                $fechatermino2 = $fechainicio;
-                            }
-                        }
-                        $fechainicio->modify('+1 day');
-                    }
+                    $fechainicio1 = $valid->getFechaInicio();
+                    $fechatermino1 = date('Y-m-d', strtotime($dia . ' -1 day'));
+                    $fechainicio2 = date('Y-m-d', strtotime($dia . ' +1 day'));
+                    $fechatermino2 = $valid->getFechaTermino();
 
-                    if ($i >= 1) {
-                            $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio1->format('Y-m-d'), $fechatermino1->format('Y-m-d'), $rutentidad, $nombreentidad);
-                    }else if ($y >= 1) {
-                            $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio2->format('Y-m-d'), $fechatermino2->format('Y-m-d'), $rutentidad, $nombreentidad);
-                        
-                    } else {
-                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, date('Y-m-01', strtotime($dia)), 2, $evento->getId(), $dia, $dia, '', '');
+                    if($fechainicio1 == $fechatermino2){
+                       
+                    }else{
+                        if($fechainicio1 < $dia){
+                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio1,$fechatermino1, $rutentidad, $nombreentidad);
+                        }
+
+                        if($fechatermino2 > $dia){
+                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio2,$fechatermino2, $rutentidad, $nombreentidad);
+                        }
                     }
                 } else {
                     $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, date('Y-m-01', strtotime($dia)), 2, $evento->getId(), $dia, $dia, '', '');
