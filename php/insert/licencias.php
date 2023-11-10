@@ -37,6 +37,12 @@ if (isset($_POST['folio']) && isset($_POST['tipolicencia']) && isset($_POST['fec
         return;
     }
 
+    //Comprobar que la fecha de inicio no sea mayor a la fecha de termino
+    if ($fechainicio > $fechatermino) {
+        echo "La fecha de inicio no puede ser mayor a la fecha de termino";
+        return;
+    }
+
     $file_licenciadoc = $licenciadoc;
 
     $tramitedoc = "";

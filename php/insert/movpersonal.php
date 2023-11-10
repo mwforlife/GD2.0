@@ -71,6 +71,18 @@ if (isset($_POST['trabajadores']) && isset($_POST['periodo']) && isset($_POST['t
 
     foreach ($trabajadores as $trabajador) {
         $contrato = $c->buscarultimocontratoactivoperiodo($trabajador->id, $fechainicio);
+        if ($contrato == false) {
+            $contrato = $c->buscarultimocontratoactivo($trabajador->id);
+            if ($contrato == false) {
+                $errores[] = "No se ha encontrado un contrato activo para el trabajador " . $trabajador->nombre;
+                continue;
+            }else{
+                if($fechainicio < $contrato->getFechaInicio()){
+                    $errores[] = "No se puede registrar el movimiento para el trabajador " . $trabajador->nombre . " ya que el contrato activo comienza el " . date("d-m-Y", strtotime($contrato->getFechaInicio()));
+                    continue;
+                }
+            }
+        }
         if ($entidad == 1) {
             $licencia = $c->buscarlicenciastrabajador($trabajador->id, date("Y-m-01", strtotime($periodo)), date("Y-m-t", strtotime($periodo)));
             if ($licencia != null) {

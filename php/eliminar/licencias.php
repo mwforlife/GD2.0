@@ -11,7 +11,16 @@ if (!isset($_SESSION['USER_ID'])) {
 	}
 }
 $id = $_POST['id'];
-
+$licencia = $c->buscarlicencia($id);
+if($licencia!=null){
+	$fechainicio = $licencia->getFechainicio();
+	$fechatermino = $licencia->getFechafin();
+	$trabajador = $licencia->getTrabajador();
+	$movimiento = $c->buscarmovimientoxfechaexaca($trabajador, $fechainicio, $fechatermino,3);
+	if($movimiento!=null){
+		$c->eliminarmovimiento($movimiento->getId());
+	}
+}
 $result = $c->eliminarlicencia($id);
 
 $usuario = $_SESSION['USER_ID'];

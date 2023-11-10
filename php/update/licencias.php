@@ -45,10 +45,21 @@ if (isset($_POST['folio']) && isset($_POST['tipolicencia']) && isset($_POST['fec
         //Movemos el archivo desde la ruta temporal a nuestra ruta indicada anteriormente
         move_uploaded_file($_FILES['comprobantetramite']['tmp_name'], $target_path . $file_name2);
     }
+    $licencia = $c->buscarlicencia($id);
+    $iniciofecha = $licencia->getFechainicio();
+    $terminofecha = $licencia->getFechafin();
+    $TrabajadorId = $licencia->getTrabajador(); 
 
     $result = $c->actualizarlicencia($id, $folio, $tipolicencia, $fechainicio, $fechatermino, $pagadora, $comentario, $file_name, $file_name2);
     if ($result == true) {
         echo 1;
+        $evento = $c->buscarjornadaxcodigo(3);
+        $pagador = $c->buscarpagadoresubsidio($pagadora);
+        $movimiento = $c->buscarmovimientoxfechaexaca($TrabajadorId, $iniciofecha, $terminofecha, 3);
+        $c->eliminarmovimiento($movimiento->getId());
+        
+        $c->registrarmovimiento($TrabajadorId, $_SESSION['CURRENT_ENTERPRISE'], date("Y-m-01", strtotime($fechainicio)), 2, $evento->getId(), $fechainicio, $fechatermino,$pagador->getCodigoPrevired(),$pagador->getNombre());
+        
         $usuario = $_SESSION['USER_ID'];
         $eventos = "Se Actualizo La Licencia del Trabajador con ID: " . $id . " Fecha Inicio: " . $fechainicio . " Fecha Termino: " . $fechatermino;
         $c->RegistrarAuditoriaEventos($usuario, $eventos);

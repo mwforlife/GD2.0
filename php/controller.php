@@ -68,13 +68,13 @@ require 'Class/Movpersonal.php';
 class Controller
 {
     private $host = "localhost";
-    /*Variables*/
+    /*Variables
     private $user = "root";
     private $pass = "";
     private $bd = "gestordocumentos";
 
 
-    /*Variables BD Remota
+    /*Variables BD Remota*/
     private $user = 'kaiserte_admin';
     private $pass = 'Kaiser2022$';
     private $bd = 'kaiserte_gd';
@@ -4420,6 +4420,30 @@ class Controller
         $this->desconectar();
         return null;
     }
+    public function buscarlicenciasperiodo($trabajador, $inicio, $fin)
+    {
+        $this->conexion();
+        $sql = "select licenciamedica.id as id,folio, tipolicencia.nombre as tipolicencia, fechainicio, fechatermino,pagadoressubsidio.codigoprevired as rut, pagadoressubsidio.nombre as pagado, comentario, documentolicencia,comprobantetramite, trabajador, register_at from licenciamedica,tipolicencia, pagadoressubsidio where tipolicencia.id=licenciamedica.tipolicencia and licenciamedica.pagadora = pagadoressubsidio.id and trabajador = $trabajador and fechainicio='$inicio' and fechatermino='$fin'";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $folio = $rs['folio'];
+            $tipolicencia = $rs['tipolicencia'];
+            $inicio = $rs['fechainicio'];
+            $fin = $rs['fechatermino'];
+            $pagadora = $rs['pagado'];
+            $comentario = $rs['comentario'];
+            $documentolicencia = $rs['documentolicencia'];
+            $comprobantetramite = $rs['comprobantetramite'];
+            $trabajador = $rs['trabajador'];
+            $registro = $rs['rut'];
+            $licencia = new Licencias($id, $folio, $tipolicencia, $inicio, $fin, $pagadora, $comentario, $documentolicencia, $comprobantetramite, $trabajador, $registro);
+            $this->desconectar();
+            return $licencia;
+        }
+        $this->desconectar();
+        return null;
+    }
 
     //Ultima Licencia Medica mostrando RUT pagador subsidio
     public function ultimalicencia($trabajador)
@@ -4451,7 +4475,7 @@ class Controller
     public function buscarlicenciastrabajador($trabajador, $inicio, $fin)
     {
         $this->conexion();
-        $sql = "select licenciamedica.id as id,folio, tipolicencia.nombre as tipolicencia, fechainicio, fechatermino,pagadoressubsidio.codigoprevired as rut, pagadoressubsidio.nombre as pagado, comentario, documentolicencia,comprobantetramite, trabajador, register_at from licenciamedica,tipolicencia, pagadoressubsidio where tipolicencia.id=licenciamedica.tipolicencia and licenciamedica.pagadora = pagadoressubsidio.id and trabajador = $trabajador and fechainicio between '$inicio' and '$fin'";
+        $sql = "select licenciamedica.id as id,folio, tipolicencia.nombre as tipolicencia, fechainicio, fechatermino,pagadoressubsidio.codigoprevired as rut, pagadoressubsidio.nombre as pagado, comentario, documentolicencia,comprobantetramite, trabajador, register_at from licenciamedica,tipolicencia, pagadoressubsidio where tipolicencia.id=licenciamedica.tipolicencia and licenciamedica.pagadora = pagadoressubsidio.id and trabajador = $trabajador order by register_at desc limit 1";
         $result = $this->mi->query($sql);
         if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
@@ -10941,6 +10965,29 @@ class Controller
     {
         $this->conexion();
         $sql = "select movimientotrabajador.id as id, movimientotrabajador.trabajador as trabajador, movimientotrabajador.empresa as empresa, movimientotrabajador.periodo as periodo, movimientotrabajador.tipo as tipo, movimientotrabajador.evento as evento, movimientotrabajador.fechainicio as fechainicio, movimientotrabajador.fechatermino as fechatermino, movimientotrabajador.rutentidad as rutentidad, movimientotrabajador.nombreentidad as nombreentidad, movimientotrabajador.register_at as register_at from movimientotrabajador, jornadas where movimientotrabajador.evento=jornadas.id and movimientotrabajador.trabajador=$trabajador and jornadas.codigoprevired=$codigoevento and movimientotrabajador.fechainicio<='$fecha' and movimientotrabajador.fechatermino>='$fecha'";
+        $result = $this->mi->query($sql);
+        $movimiento = false;
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $trabajador = $rs['trabajador'];
+            $empresa = $rs['empresa'];
+            $periodo = $rs['periodo'];
+            $tipo = $rs['tipo'];
+            $evento = $rs['evento'];
+            $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $rutentidad = $rs['rutentidad'];
+            $nombreentidad = $rs['nombreentidad'];
+            $registro = $rs['register_at'];
+            $movimiento = new MovPersonal($id, $trabajador, $empresa, $periodo, $tipo, $evento, $fechainicio, $fechatermino, $rutentidad, $nombreentidad, $registro);
+        }
+        $this->desconectar();
+        return $movimiento;
+    }
+    function buscarmovimientoxfechaexaca($trabajador, $fechainicio, $fechatermino, $codigoevento)
+    {
+        $this->conexion();
+        $sql = "select movimientotrabajador.id as id, movimientotrabajador.trabajador as trabajador, movimientotrabajador.empresa as empresa, movimientotrabajador.periodo as periodo, movimientotrabajador.tipo as tipo, movimientotrabajador.evento as evento, movimientotrabajador.fechainicio as fechainicio, movimientotrabajador.fechatermino as fechatermino, movimientotrabajador.rutentidad as rutentidad, movimientotrabajador.nombreentidad as nombreentidad, movimientotrabajador.register_at as register_at from movimientotrabajador, jornadas where movimientotrabajador.evento=jornadas.id and movimientotrabajador.trabajador=$trabajador and jornadas.codigoprevired=$codigoevento and movimientotrabajador.fechainicio='$fechainicio' and movimientotrabajador.fechatermino='$fechatermino'";
         $result = $this->mi->query($sql);
         $movimiento = false;
         if ($rs = mysqli_fetch_array($result)) {

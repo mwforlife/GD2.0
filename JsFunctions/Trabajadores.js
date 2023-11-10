@@ -266,10 +266,11 @@ $(document).ready(function () {
                 if (data == 1 || data == "1") {
                     ToastifySuccess("Datos guardados correctamente");
                     setTimeout(function () {
-                        window.location.href = "menuinfo.php";
+                        //Volver a la pagina anterior del historial
+                        window.history.back();
                     }, 2000);
                 } else {
-                    ToastifyError("Error al guardar los datos");
+                    ToastifyError(data);
                 }
             }
         });
@@ -290,10 +291,11 @@ $(document).ready(function () {
                 if (data == 1 || data == "1") {
                     ToastifySuccess("Datos Actualizados correctamente");
                     setTimeout(function () {
-                        window.location.href = "menuinfo.php";
+                        //Volver a la pagina anterior del historial
+                        window.history.back();
                     }, 2000);
                 } else {
-                    ToastifyError("Error al guardar los datos");
+                    ToastifyError(data);
                 }
             }
         });
