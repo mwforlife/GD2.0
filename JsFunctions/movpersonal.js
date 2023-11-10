@@ -241,7 +241,7 @@ function procesartodo() {
               }, 1500);
             }
           } else {
-            ToastifyError(json.message);
+            $("#message-content").html(json.message);
           }
         } catch (error) {
           console.log(error);
