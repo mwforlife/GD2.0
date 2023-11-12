@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 require '../controller.php';
 $c = new Controller();
 session_start();
@@ -77,8 +80,8 @@ if (isset($_POST['trabajadores']) && isset($_POST['periodo']) && isset($_POST['t
             if ($contrato == false) {
                 $errores[] = "No se ha encontrado un contrato activo para el trabajador " . $trabajador->nombre;
                 $exis = true;
-            }else{
-                if($fechainicio < $contrato->getFechaInicio()){
+            } else {
+                if ($fechainicio < $contrato->getFechaInicio()) {
                     $errores[] = "No se puede registrar el movimiento para el trabajador " . $trabajador->nombre . " ya que el contrato activo comienza el " . date("d-m-Y", strtotime($contrato->getFechaInicio()));
                     $exis = true;
                 }
@@ -86,25 +89,33 @@ if (isset($_POST['trabajadores']) && isset($_POST['periodo']) && isset($_POST['t
         }
     }
 
-    if($exis == true){
+    if ($exis == true) {
         echo json_encode(array('status' => false, 'message' => $errores));
         return;
     }
 
     foreach ($trabajadores as $trabajador) {
-        $contrato = $c->buscarultimocontratoactivoperiodo($trabajador->id, $fechainicio);
-        if ($contrato == false) {
-            $contrato = $c->buscarultimocontratoactivo($trabajador->id);
-            if ($contrato == false) {
-                $errores[] = "No se ha encontrado un contrato activo para el trabajador " . $trabajador->nombre;
-                continue;
-            }else{
-                if($fechainicio < $contrato->getFechaInicio()){
-                    $errores[] = "No se puede registrar el movimiento para el trabajador " . $trabajador->nombre . " ya que el contrato activo comienza el " . date("d-m-Y", strtotime($contrato->getFechaInicio()));
-                    continue;
-                }
+        $fechainicio = $_POST['fechainicio'];
+        if ($termino == 1) {
+            if (isset($_POST['fechatermino'])) {
+                $fechatermino = $_POST['fechatermino'];
+            } else {
+                echo json_encode(array('status' => false, 'message' => 'No se ha seleccionado ninguna fecha de termino'));
+                return;
             }
         }
+        
+        $contrato = $c->buscarcontratobyID($trabajador->contrato);
+        if ($contrato == false) {
+            $errores[] = "No se ha encontrado un contrato activo para el trabajador " . $trabajador->nombre;
+            continue;
+        } else {
+            if ($fechainicio < $contrato->getFechaInicio()) {
+                $errores[] = "No se puede registrar el movimiento para el trabajador " . $trabajador->nombre . " ya que el contrato activo comienza el " . date("d-m-Y", strtotime($contrato->getFechaInicio()));
+                continue;
+            }
+        }
+
         if ($entidad == 1) {
             $licencia = $c->buscarlicenciastrabajador($trabajador->id, date("Y-m-01", strtotime($periodo)), date("Y-m-t", strtotime($periodo)));
             if ($licencia != null) {
@@ -153,9 +164,7 @@ if (isset($_POST['trabajadores']) && isset($_POST['periodo']) && isset($_POST['t
                     $c->registrarasistencia($id, $contrato->getId(), $fechainicio, 5);
                 } else {
                     $c->actualizarasistencia($asistencia, 5);
-
                 }
-
             }
         } else if ($eventoobject->getCodigoPrevired() == 11) {
             //Verificar si viene fecha de termino
@@ -178,11 +187,9 @@ if (isset($_POST['trabajadores']) && isset($_POST['periodo']) && isset($_POST['t
                     $c->registrarasistencia($trabajador->id, $contrato->getId(), $fechainicio, 3);
                 } else {
                     $c->actualizarasistencia($asistencia, 3);
-
                 }
-
             }
-        }else if ($eventoobject->getCodigoPrevired() == 3) {
+        } else if ($eventoobject->getCodigoPrevired() == 3) {
             //Verificar si viene fecha de termino
             if ($termino == 1) {
                 //Recorrer el range de fechas de inicio a termino
@@ -203,16 +210,12 @@ if (isset($_POST['trabajadores']) && isset($_POST['periodo']) && isset($_POST['t
                     $c->registrarasistencia($trabajador->id, $contrato->getId(), $fechainicio, 4);
                 } else {
                     $c->actualizarasistencia($asistencia, 4);
-
                 }
-
             }
         }
     }
 
     echo json_encode(array('status' => true, 'exito' => $exito, 'errores' => $errores));
-
-
 } else {
     echo json_encode(array('status' => false, 'message' => 'UPS! Hubo un error, rellene el formulario nuevamente'));
     return;
