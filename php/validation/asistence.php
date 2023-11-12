@@ -63,14 +63,14 @@ if (isset($_POST['id']) && isset($_POST['empresa']) && isset($_POST['contrato'])
                         $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio1,$fechatermino2, $rutentidad, $nombreentidad);
                        
                     }else{
-                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio1,$fechatermino2, $rutentidad, $nombreentidad);
+                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $dia,$dia, $rutentidad, $nombreentidad);
 
                         if($fechainicio1 < $dia){
-                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio1,$fechatermino1, $rutentidad, $nombreentidad);
+                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $valid->getEvento(), $fechainicio1,$fechatermino1, $rutentidad, $nombreentidad);
                         }
 
                         if($fechatermino2 > $dia){
-                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio2,$fechatermino2, $rutentidad, $nombreentidad);
+                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $valid->getEvento(), $fechainicio2,$fechatermino2, $rutentidad, $nombreentidad);
                         }
                     }
                 } else {
@@ -78,8 +78,30 @@ if (isset($_POST['id']) && isset($_POST['empresa']) && isset($_POST['contrato'])
                 }
             } else {
                 $id = $valid->getId();
-                $c->eliminarmovimiento($id);
-                $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, date('Y-m-01', strtotime($dia)), 2, $evento->getId(), $dia, $dia, '', '');
+                    $c->eliminarmovimiento($id);
+                    $periodo = $valid->getPeriodo();
+                    $tipo = $valid->getTipo();
+                    $rutentidad = $valid->getRutEntidad();
+                    $nombreentidad = $valid->getNombreEntidad();
+                    $fechainicio1 = $valid->getFechaInicio();
+                    $fechatermino1 = date('Y-m-d', strtotime($dia . ' -1 day'));
+                    $fechainicio2 = date('Y-m-d', strtotime($dia . ' +1 day'));
+                    $fechatermino2 = $valid->getFechaTermino();
+
+                    if($fechainicio1 == $fechatermino2){
+                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $valid->getEvento(), $fechainicio1,$fechatermino2, $rutentidad, $nombreentidad);
+                       
+                    }else{
+                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $dia,$dia, $rutentidad, $nombreentidad);
+
+                        if($fechainicio1 < $dia){
+                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $valid->getEvento(), $fechainicio1,$fechatermino1, $rutentidad, $nombreentidad);
+                        }
+
+                        if($fechatermino2 > $dia){
+                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $valid->getEvento(), $fechainicio2,$fechatermino2, $rutentidad, $nombreentidad);
+                        }
+                    }
             }
         } else if ($estado == 3) {
             $valid = $c->buscarmovimientoxfecha($contratoobject->getFecharegistro(), $dia, 11);
@@ -102,11 +124,11 @@ if (isset($_POST['id']) && isset($_POST['empresa']) && isset($_POST['contrato'])
                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio1,$fechatermino2, $rutentidad, $nombreentidad);
                     }else{
                         if($fechainicio1 < $dia){
-                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio1,$fechatermino1, $rutentidad, $nombreentidad);
+                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $valid->getEvento(), $fechainicio1,$fechatermino1, $rutentidad, $nombreentidad);
                         }
 
                         if($fechatermino2 > $dia){
-                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio2,$fechatermino2, $rutentidad, $nombreentidad);
+                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $valid->getEvento(), $fechainicio2,$fechatermino2, $rutentidad, $nombreentidad);
                         }
 
                         $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $dia,$dia, $rutentidad, $nombreentidad);
@@ -116,8 +138,29 @@ if (isset($_POST['id']) && isset($_POST['empresa']) && isset($_POST['contrato'])
                 }
             } else {
                 $id = $valid->getId();
-                $c->eliminarmovimiento($id);
-                $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, date('Y-m-01', strtotime($dia)), 2, $evento->getId(), $dia, $dia, '', '');
+                    $c->eliminarmovimiento($id);
+                    $periodo = $valid->getPeriodo();
+                    $tipo = $valid->getTipo();
+                    $rutentidad = $valid->getRutEntidad();
+                    $nombreentidad = $valid->getNombreEntidad();
+                    $fechainicio1 = $valid->getFechaInicio();
+                    $fechatermino1 = date('Y-m-d', strtotime($dia . ' -1 day'));
+                    $fechainicio2 = date('Y-m-d', strtotime($dia . ' +1 day'));
+                    $fechatermino2 = $valid->getFechaTermino();
+
+                    if($fechainicio1 == $fechatermino2){
+                       $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio1,$fechatermino2, $rutentidad, $nombreentidad);
+                    }else{
+                        if($fechainicio1 < $dia){
+                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $valid->getEvento(), $fechainicio1,$fechatermino1, $rutentidad, $nombreentidad);
+                        }
+
+                        if($fechatermino2 > $dia){
+                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $valid->getEvento(), $fechainicio2,$fechatermino2, $rutentidad, $nombreentidad);
+                        }
+
+                        $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $dia,$dia, $rutentidad, $nombreentidad);
+                    }
             }
         }
 
