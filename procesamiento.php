@@ -433,7 +433,7 @@
                     if ($contrato->getTipocontrato() == "Contrato Indefinido") {
                         $cesantia_empleador = $total_imponible * 0.024;
                     }if ($contrato->getTipocontrato() == "Contrato a Plazo Fijo" || $contrato->getTipocontrato() == "Obra o Faena") {
-                        $cesantia_empleador = $total_imponible * 0.003;
+                        $cesantia_empleador = $total_imponible * 0.03;
                     }
 
                     $tasaadicional = $empresa->getCotizacionAdicional();

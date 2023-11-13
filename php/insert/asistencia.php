@@ -102,305 +102,160 @@ if (isset($_POST['periodo']) && isset($_FILES['asistencia'])) {
 
 
             $asistencia = $c->validarasistencia($trabajador->getId(), $contrato->getId(), $fecha);
+            $estado = $data[$j];
+            $contratoobject = $c->buscarcontratoid($contrato->getId());
+            $dia = $fecha;
+            $id = $trabajador->getId();
             if ($asistencia == false) {
-
-                if (intval($data[$j]) == 1) {
-                    $valid = $c->buscarmovimientoxfecha($trabajador->getId(), $fecha, 4);
+                if($estado==5){
+                    $evento = $c->buscarjornadaxcodigo(4);
+                    $c->registrarasistencia($id, $contratoobject->getId(), $dia, $estado);
+                    $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, date('Y-m-01', strtotime($dia)), 2, $evento->getId(), $dia, $dia, '', '');
+                }else if($estado==3){
+                    $evento = $c->buscarjornadaxcodigo(11);
+                    $c->registrarasistencia($id, $contratoobject->getId(), $dia, $estado);
+                    $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, date('Y-m-01', strtotime($dia)), 2, $evento->getId(), $dia, $dia, '', '');
+                }else if($estado==2){
+                    $c->registrarasistencia($id, $contratoobject->getId(), $dia, $estado);
+                }
+            } else {
+                $c->actualizarasistencia($asistencia, $estado);
+                if ($estado == 1) {
+                    $c->eliminarasistencia($asistencia);
+                    $valid = $c->buscarmovimientoxfecha($contratoobject->getFecharegistro(), $dia, 4);
                     if ($valid != false) {
                         $id = $valid->getId();
                         $c->eliminarmovimiento($id);
                     } else {
-                        $valid = $c->buscarmovimientoxfecha($trabajador->getId(), $fecha, 11);
+                        $valid = $c->buscarmovimientoxfecha($contratoobject->getFecharegistro(), $dia, 11);
                         if ($valid != false) {
                             $id = $valid->getId();
                             $c->eliminarmovimiento($id);
                         }
-
+        
                     }
-                } else {
-                    $c->registrarasistencia($trabajador->getId(), $contrato->getId(), $fecha, $data[$j]);
-                    if ($data[$j] == 5) {
-                        $evento = $c->buscarjornadaxcodigo(4);
-                        $valid = $c->buscarmovimientoxfecha($trabajador->getId(), $fecha, 4);
-                        if ($valid == false) {
-                            $valid = $c->buscarmovimientoxfecha($trabajador->getId(), $fecha, 11);
-                            if ($valid != false) {
-                                $id = $valid->getId();
-                                $c->eliminarmovimiento($id);
-                                $periodo = $valid->getPeriodo();
-                                $tipo = $valid->getTipo();
-                                $rutentidad = $valid->getRutEntidad();
-                                $nombreentidad = $valid->getNombreEntidad();
-                                $fechainicio = $valid->getFechaInicio();
-                                $fechatermino = $valid->getFechaTermino();
-                                if ($fechatermino == null || $fechatermino == '' || $fechatermino == '0000-00-00') {
-                                    $fechatermino = $fechainicio;
-                                }
-                                $fechainicio = new DateTime($fechainicio);
-                                $fechatermino = new DateTime($fechatermino);
-                                $i = 0;
-                                $y = 0;
-                                $fechainicio1 = $fechainicio;
-                                $fechatermino1 = "";
-                                $fechainicio2 = "";
-                                $fechatermino2 = $fechatermino;
-                                while ($fechainicio <= $fechatermino) {
-                                    if ($fechainicio->format('Y-m-d') < $fecha) {
-                                        $i++;
-                                        if ($i == 1) {
-                                            $fechainicio1 = $fechainicio;
-                                            $fechaetermino1 = $fechainicio;
-                                        } else if ($i > 1) {
-                                            $fechatermino1 = $fechainicio;
-                                        }
-                                        $fechatermino1 = $fechainicio;
-                                    }
-                                    if ($fechainicio->format('Y-m-d') == $fecha) {
-                                        $fechainicio->modify('+1 day');
-                                        continue;
-                                    }
-                                    if ($fechainicio->format('Y-m-d') > $fecha) {
-                                        $y++;
-                                        if ($y == 1) {
-                                            $fechainicio2 = $fechainicio;
-                                            $fechatermino2 = $fechainicio;
-                                        } else if ($y > 1) {
-                                            $fechatermino2 = $fechainicio;
-                                        }
-                                    }
-                                    $fechainicio->modify('+1 day');
-                                }
-
-                                if ($i >= 1) {
-                                    $c->registrarmovimiento($trabajador->getId(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio1->format('Y-m-d'), $fechatermino1->format('Y-m-d'), $rutentidad, $nombreentidad);
-                                } else if ($y >= 1) {
-                                    $c->registrarmovimiento($trabajador->getId(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio2->format('Y-m-d'), $fechatermino2->format('Y-m-d'), $rutentidad, $nombreentidad);
-
-                                } else {
-                                    $c->registrarmovimiento($trabajador->getId(), $empresa, date('Y-m-01', strtotime($fecha)), 2, $evento->getId(), $fecha, $fecha, '', '');
-                                }
-                            } else {
-                                $c->registrarmovimiento($trabajador->getId(), $empresa, date('Y-m-01', strtotime($fecha)), 2, $evento->getId(), $fecha, $fecha, '', '');
-                            }
-                        } else {
+                } else if ($estado == 5) {
+                    $evento = $c->buscarjornadaxcodigo(4);
+                    $valid = $c->buscarmovimientoxfecha($contratoobject->getFecharegistro(), $dia, 4);
+                    if ($valid == false) {
+                        $valid = $c->buscarmovimientoxfecha($contratoobject->getFecharegistro(), $dia, 11);
+                        if ($valid != false) {
                             $id = $valid->getId();
                             $c->eliminarmovimiento($id);
-                            $c->registrarmovimiento($trabajador->getId(), $empresa, date('Y-m-01', strtotime($fecha)), 2, $evento->getId(), $fecha, $fecha, '', '');
-                        }
-                    } else if ($data[$j] == 3) {
-                        $valid = $c->buscarmovimientoxfecha($trabajador->getId(), $fecha, 11);
-                        $evento = $c->buscarjornadaxcodigo(11);
-                        if ($valid == false) {
-                            $valid = $c->buscarmovimientoxfecha($trabajador->getId(), $fecha, 4);
-                            if ($valid != false) {
-                                $id = $valid->getId();
-                                $c->eliminarmovimiento($id);
-                                $periodo = $valid->getPeriodo();
-                                $tipo = $valid->getTipo();
-                                $rutentidad = $valid->getRutEntidad();
-                                $nombreentidad = $valid->getNombreEntidad();
-                                $fechainicio = $valid->getFechaInicio();
-                                $fechatermino = $valid->getFechaTermino();
-                                if ($fechatermino == null || $fechatermino == '' || $fechatermino == '0000-00-00') {
-                                    $fechatermino = $fechainicio;
+                            $periodo = $valid->getPeriodo();
+                            $tipo = $valid->getTipo();
+                            $rutentidad = $valid->getRutEntidad();
+                            $nombreentidad = $valid->getNombreEntidad();
+                            $fechainicio1 = $valid->getFechaInicio();
+                            $fechatermino1 = date('Y-m-d', strtotime($dia . ' -1 day'));
+                            $fechainicio2 = date('Y-m-d', strtotime($dia . ' +1 day'));
+                            $fechatermino2 = $valid->getFechaTermino();
+        
+                            if($fechainicio1 == $fechatermino2){
+                                $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio1,$fechatermino2, $rutentidad, $nombreentidad);
+                               
+                            }else{
+                                $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $dia,$dia, $rutentidad, $nombreentidad);
+        
+                                if($fechainicio1 < $dia){
+                                $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $valid->getEvento(), $fechainicio1,$fechatermino1, $rutentidad, $nombreentidad);
                                 }
-                                $fechainicio = new DateTime($fechainicio);
-                                $fechatermino = new DateTime($fechatermino);
-                                $i = 0;
-                                $y = 0;
-                                $fechainicio1 = $fechainicio;
-                                $fechatermino1 = "";
-                                $fechainicio2 = "";
-                                $fechatermino2 = $fechatermino;
-                                while ($fechainicio <= $fechatermino) {
-                                    if ($fechainicio->format('Y-m-d') < $dia) {
-                                        $i++;
-                                        if ($i == 1) {
-                                            $fechainicio1 = $fechainicio;
-                                            $fechaetermino1 = $fechainicio;
-                                        } else if ($i > 1) {
-                                            $fechatermino1 = $fechainicio;
-                                        }
-                                        $fechatermino1 = $fechainicio;
-                                    }
-                                    if ($fechainicio->format('Y-m-d') == $dia) {
-                                        $fechainicio->modify('+1 day');
-                                        continue;
-                                    }
-                                    if ($fechainicio->format('Y-m-d') > $dia) {
-                                        $y++;
-                                        if ($y == 1) {
-                                            $fechainicio2 = $fechainicio;
-                                            $fechatermino2 = $fechainicio;
-                                        } else if ($y > 1) {
-                                            $fechatermino2 = $fechainicio;
-                                        }
-                                    }
-                                    $fechainicio->modify('+1 day');
+        
+                                if($fechatermino2 > $dia){
+                                $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $valid->getEvento(), $fechainicio2,$fechatermino2, $rutentidad, $nombreentidad);
                                 }
-
-                                if ($i >= 1) {
-                                    $c->registrarmovimiento($trabajador->getId(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio1->format('Y-m-d'), $fechatermino1->format('Y-m-d'), $rutentidad, $nombreentidad);
-                                } else if ($y >= 1) {
-                                    $c->registrarmovimiento($trabajador->getId(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio2->format('Y-m-d'), $fechatermino2->format('Y-m-d'), $rutentidad, $nombreentidad);
-
-                                } else {
-                                    $c->registrarmovimiento($trabajador->getId(), $empresa, date('Y-m-01', strtotime($dia)), 2, $evento->getId(), $dia, $dia, '', '');
-                                }
-                            } else {
-                                $c->registrarmovimiento($trabajador->getId(), $empresa, date('Y-m-01', strtotime($dia)), 2, $evento->getId(), $dia, $dia, '', '');
                             }
                         } else {
+                            $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, date('Y-m-01', strtotime($dia)), 2, $evento->getId(), $dia, $dia, '', '');
+                        }
+                    } else {
+                        $id = $valid->getId();
+                            $c->eliminarmovimiento($id);
+                            $periodo = $valid->getPeriodo();
+                            $tipo = $valid->getTipo();
+                            $rutentidad = $valid->getRutEntidad();
+                            $nombreentidad = $valid->getNombreEntidad();
+                            $fechainicio1 = $valid->getFechaInicio();
+                            $fechatermino1 = date('Y-m-d', strtotime($dia . ' -1 day'));
+                            $fechainicio2 = date('Y-m-d', strtotime($dia . ' +1 day'));
+                            $fechatermino2 = $valid->getFechaTermino();
+        
+                            if($fechainicio1 == $fechatermino2){
+                                $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $valid->getEvento(), $fechainicio1,$fechatermino2, $rutentidad, $nombreentidad);
+                               
+                            }else{
+                                $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $dia,$dia, $rutentidad, $nombreentidad);
+        
+                                if($fechainicio1 < $dia){
+                                $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $valid->getEvento(), $fechainicio1,$fechatermino1, $rutentidad, $nombreentidad);
+                                }
+        
+                                if($fechatermino2 > $dia){
+                                $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $valid->getEvento(), $fechainicio2,$fechatermino2, $rutentidad, $nombreentidad);
+                                }
+                            }
+                    }
+                } else if ($estado == 3) {
+                    $valid = $c->buscarmovimientoxfecha($contratoobject->getFecharegistro(), $dia, 11);
+                    $evento = $c->buscarjornadaxcodigo(11);
+                    if ($valid == false) {
+                        $valid = $c->buscarmovimientoxfecha($contratoobject->getFecharegistro(), $dia, 4);
+                        if ($valid != false) {
                             $id = $valid->getId();
                             $c->eliminarmovimiento($id);
-                            $c->registrarmovimiento($trabajador->getId(), $empresa, date('Y-m-01', strtotime($fecha)), 2, $evento->getId(), $fecha, $fecha, '', '');
+                            $periodo = $valid->getPeriodo();
+                            $tipo = $valid->getTipo();
+                            $rutentidad = $valid->getRutEntidad();
+                            $nombreentidad = $valid->getNombreEntidad();
+                            $fechainicio1 = $valid->getFechaInicio();
+                            $fechatermino1 = date('Y-m-d', strtotime($dia . ' -1 day'));
+                            $fechainicio2 = date('Y-m-d', strtotime($dia . ' +1 day'));
+                            $fechatermino2 = $valid->getFechaTermino();
+        
+                            if($fechainicio1 == $fechatermino2){
+                               $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio1,$fechatermino2, $rutentidad, $nombreentidad);
+                            }else{
+                                if($fechainicio1 < $dia){
+                                $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $valid->getEvento(), $fechainicio1,$fechatermino1, $rutentidad, $nombreentidad);
+                                }
+        
+                                if($fechatermino2 > $dia){
+                                $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $valid->getEvento(), $fechainicio2,$fechatermino2, $rutentidad, $nombreentidad);
+                                }
+        
+                                $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $dia,$dia, $rutentidad, $nombreentidad);
+                            }
+                        } else {
+                            $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, date('Y-m-01', strtotime($dia)), 2, $evento->getId(), $dia, $dia, '', '');
                         }
+                    } else {
+                        $id = $valid->getId();
+                            $c->eliminarmovimiento($id);
+                            $periodo = $valid->getPeriodo();
+                            $tipo = $valid->getTipo();
+                            $rutentidad = $valid->getRutEntidad();
+                            $nombreentidad = $valid->getNombreEntidad();
+                            $fechainicio1 = $valid->getFechaInicio();
+                            $fechatermino1 = date('Y-m-d', strtotime($dia . ' -1 day'));
+                            $fechainicio2 = date('Y-m-d', strtotime($dia . ' +1 day'));
+                            $fechatermino2 = $valid->getFechaTermino();
+        
+                            if($fechainicio1 == $fechatermino2){
+                               $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio1,$fechatermino2, $rutentidad, $nombreentidad);
+                            }else{
+                                if($fechainicio1 < $dia){
+                                $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $valid->getEvento(), $fechainicio1,$fechatermino1, $rutentidad, $nombreentidad);
+                                }
+        
+                                if($fechatermino2 > $dia){
+                                $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $valid->getEvento(), $fechainicio2,$fechatermino2, $rutentidad, $nombreentidad);
+                                }
+        
+                                $c->registrarmovimiento($contratoobject->getFecharegistro(), $empresa, $periodo, $tipo, $evento->getId(), $dia,$dia, $rutentidad, $nombreentidad);
+                            }
                     }
                 }
-            } else {
-                if (intval($data[$j]) == 1) {
-                    $c->eliminarasistencia($asistencia);
-                } else {
-                    $c->actualizarasistencia($asistencia, $data[$j]);
-                    if ($data[$j] == 5) {
-                        $evento = $c->buscarjornadaxcodigo(4);
-                        $valid = $c->buscarmovimientoxfecha($trabajador->getId(), $fecha, 4);
-                        if ($valid == false) {
-                            $valid = $c->buscarmovimientoxfecha($trabajador->getId(), $fecha, 11);
-                            if ($valid != false) {
-                                $id = $valid->getId();
-                                $c->eliminarmovimiento($id);
-                                $periodo = $valid->getPeriodo();
-                                $tipo = $valid->getTipo();
-                                $rutentidad = $valid->getRutEntidad();
-                                $nombreentidad = $valid->getNombreEntidad();
-                                $fechainicio = $valid->getFechaInicio();
-                                $fechatermino = $valid->getFechaTermino();
-                                if ($fechatermino == null || $fechatermino == '' || $fechatermino == '0000-00-00') {
-                                    $fechatermino = $fechainicio;
-                                }
-                                $fechainicio = new DateTime($fechainicio);
-                                $fechatermino = new DateTime($fechatermino);
-                                $i = 0;
-                                $y = 0;
-                                $fechainicio1 = $fechainicio;
-                                $fechatermino1 = "";
-                                $fechainicio2 = "";
-                                $fechatermino2 = $fechatermino;
-                                while ($fechainicio <= $fechatermino) {
-                                    if ($fechainicio->format('Y-m-d') < $fecha) {
-                                        $i++;
-                                        if ($i == 1) {
-                                            $fechainicio1 = $fechainicio;
-                                            $fechaetermino1 = $fechainicio;
-                                        } else if ($i > 1) {
-                                            $fechatermino1 = $fechainicio;
-                                        }
-                                        $fechatermino1 = $fechainicio;
-                                    }
-                                    if ($fechainicio->format('Y-m-d') == $fecha) {
-                                        $fechainicio->modify('+1 day');
-                                        continue;
-                                    }
-                                    if ($fechainicio->format('Y-m-d') > $fecha) {
-                                        $y++;
-                                        if ($y == 1) {
-                                            $fechainicio2 = $fechainicio;
-                                            $fechatermino2 = $fechainicio;
-                                        } else if ($y > 1) {
-                                            $fechatermino2 = $fechainicio;
-                                        }
-                                    }
-                                    $fechainicio->modify('+1 day');
-                                }
-
-                                if ($i >= 1) {
-                                    $c->registrarmovimiento($trabajador->getId(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio1->format('Y-m-d'), $fechatermino1->format('Y-m-d'), $rutentidad, $nombreentidad);
-                                } else if ($y >= 1) {
-                                    $c->registrarmovimiento($trabajador->getId(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio2->format('Y-m-d'), $fechatermino2->format('Y-m-d'), $rutentidad, $nombreentidad);
-
-                                } else {
-                                    $c->registrarmovimiento($trabajador->getId(), $empresa, date('Y-m-01', strtotime($fecha)), 2, $evento->getId(), $fecha, $fecha, '', '');
-                                }
-                            } else {
-                                $c->registrarmovimiento($trabajador->getId(), $empresa, date('Y-m-01', strtotime($fecha)), 2, $evento->getId(), $fecha, $fecha, '', '');
-                            }
-                        } else {
-                            $id = $valid->getId();
-                            $c->eliminarmovimiento($id);
-                            $c->registrarmovimiento($trabajador->getId(), $empresa, date('Y-m-01', strtotime($fecha)), 2, $evento->getId(), $fecha, $fecha, '', '');
-                        }
-                    } else if ($data[$j] == 4) {
-                        $valid = $c->buscarmovimientoxfecha($trabajador->getId(), $fecha, 11);
-                        $evento = $c->buscarjornadaxcodigo(11);
-                        if ($valid == false) {
-                            $valid = $c->buscarmovimientoxfecha($trabajador->getId(), $fecha, 4);
-                            if ($valid != false) {
-                                $id = $valid->getId();
-                                $c->eliminarmovimiento($id);
-                                $periodo = $valid->getPeriodo();
-                                $tipo = $valid->getTipo();
-                                $rutentidad = $valid->getRutEntidad();
-                                $nombreentidad = $valid->getNombreEntidad();
-                                $fechainicio = $valid->getFechaInicio();
-                                $fechatermino = $valid->getFechaTermino();
-                                if ($fechatermino == null || $fechatermino == '' || $fechatermino == '0000-00-00') {
-                                    $fechatermino = $fechainicio;
-                                }
-                                $fechainicio = new DateTime($fechainicio);
-                                $fechatermino = new DateTime($fechatermino);
-                                $i = 0;
-                                $y = 0;
-                                $fechainicio1 = $fechainicio;
-                                $fechatermino1 = "";
-                                $fechainicio2 = "";
-                                $fechatermino2 = $fechatermino;
-                                while ($fechainicio <= $fechatermino) {
-                                    if ($fechainicio->format('Y-m-d') < $dia) {
-                                        $i++;
-                                        if ($i == 1) {
-                                            $fechainicio1 = $fechainicio;
-                                            $fechaetermino1 = $fechainicio;
-                                        } else if ($i > 1) {
-                                            $fechatermino1 = $fechainicio;
-                                        }
-                                        $fechatermino1 = $fechainicio;
-                                    }
-                                    if ($fechainicio->format('Y-m-d') == $dia) {
-                                        $fechainicio->modify('+1 day');
-                                        continue;
-                                    }
-                                    if ($fechainicio->format('Y-m-d') > $dia) {
-                                        $y++;
-                                        if ($y == 1) {
-                                            $fechainicio2 = $fechainicio;
-                                            $fechatermino2 = $fechainicio;
-                                        } else if ($y > 1) {
-                                            $fechatermino2 = $fechainicio;
-                                        }
-                                    }
-                                    $fechainicio->modify('+1 day');
-                                }
-
-                                if ($i >= 1) {
-                                    $c->registrarmovimiento($trabajador->getId(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio1->format('Y-m-d'), $fechatermino1->format('Y-m-d'), $rutentidad, $nombreentidad);
-                                } else if ($y >= 1) {
-                                    $c->registrarmovimiento($trabajador->getId(), $empresa, $periodo, $tipo, $evento->getId(), $fechainicio2->format('Y-m-d'), $fechatermino2->format('Y-m-d'), $rutentidad, $nombreentidad);
-
-                                } else {
-                                    $c->registrarmovimiento($trabajador->getId(), $empresa, date('Y-m-01', strtotime($dia)), 2, $evento->getId(), $dia, $dia, '', '');
-                                }
-                            } else {
-                                $c->registrarmovimiento($trabajador->getId(), $empresa, date('Y-m-01', strtotime($dia)), 2, $evento->getId(), $dia, $dia, '', '');
-                            }
-                        } else {
-                            $id = $valid->getId();
-                            $c->eliminarmovimiento($id);
-                            $c->registrarmovimiento($trabajador->getId(), $empresa, date('Y-m-01', strtotime($fecha)), 2, $evento->getId(), $fecha, $fecha, '', '');
-                        }
-                    }
-
-                }
+        
             }
         }
         $i++;

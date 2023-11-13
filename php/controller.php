@@ -4082,6 +4082,7 @@ class Controller
         return $lista;
     }
 
+
     //Ultima prevision del trabajador
     public function ultimaprevision($trabajador)
     {
@@ -5316,6 +5317,7 @@ class Controller
         $this->desconectar();
         return false;
     }
+    
 
     function buscarultimocontratoactivoperiodo($trabajador,$fecha)
     {
@@ -10927,7 +10929,7 @@ class Controller
     function registrarmovimiento($trabajador, $empresa, $periodo, $tipo, $evento, $fechainicio, $fechatermino, $rutentidad, $nombreentidad)
     {
         $this->conexion();
-        $sql = "insert into movimientotrabajador values(null,$trabajador,$empresa,'$periodo',$tipo,$evento,'$fechainicio','$fechatermino','$rutentidad','$nombreentidad',now())";
+        $sql = "insert into movimientotrabajador values(null,$trabajador,$empresa,'$periodo',$tipo,$evento,'$fechainicio','$fechatermino','$rutentidad','$nombreentidad',now());";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return json_encode($result);
@@ -10955,6 +10957,31 @@ class Controller
             $movimiento = new MovPersonal($id, $trabajador, $empresa, $periodo, $tipo, $evento, $fechainicio, $fechatermino, $rutentidad, $nombreentidad, $registro);
             $this->desconectar();
             return $movimiento;
+        }
+        $this->desconectar();
+        return $movimiento;
+    }
+
+    //Buscar movimiento x trabajador y periodo
+    function buscarmovimientoxtrabajador($trabajador, $periodo)
+    {
+        $this->conexion();
+        $sql = "select * from movimientotrabajador where trabajador=$trabajador and periodo='$periodo'";
+        $result = $this->mi->query($sql);
+        $movimiento = false;
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $trabajador = $rs['trabajador'];
+            $empresa = $rs['empresa'];
+            $periodo = $rs['periodo'];
+            $tipo = $rs['tipo'];
+            $evento = $rs['evento'];
+            $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $rutentidad = $rs['rutentidad'];
+            $nombreentidad = $rs['nombreentidad'];
+            $registro = $rs['register_at'];
+            $movimiento = new MovPersonal($id, $trabajador, $empresa, $periodo, $tipo, $evento, $fechainicio, $fechatermino, $rutentidad, $nombreentidad, $registro);
         }
         $this->desconectar();
         return $movimiento;

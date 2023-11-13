@@ -535,8 +535,10 @@ foreach ($permiso as $p) {
 											<label for="">Periodo</label>
 											<input type="month" name="periodo" id="periodo" class="form-control" value="<?php echo date('Y-m'); ?>">
 										</div>
-										<div class="col-md-3">
+										<div class="col-md-9">
 											<button class="btn btn-primary mt-4" onclick="generarlibro()"> <i class="fe fe-file-text"></i> Generar Libro</button>
+											<button class="btn btn-primary mt-4" onclick="archivoprevired()"> <i class="fe fe-file-text"></i>Generar Archivo Previred</button>
+											<button class="btn btn-primary mt-4" onclick="archivolre()"> <i class="fe fe-file-text"></i>Generar Archivo LRE</button>
 										</div>
 										
 									</div>

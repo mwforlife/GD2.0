@@ -38,3 +38,23 @@ exportarlibroremuneracionesexcel = function(){
 
     window.open('php/report/libroremuneracionesexcel.php?periodo='+periodo);
 }
+
+function archivoprevired(){
+    var periodo = $("#periodo").val();
+    if(periodo == ""){
+        ToastifyError("Debe seleccionar un periodo");
+        return false;
+    }
+
+    window.open('php/report/archivoprevired.php?periodo='+periodo);
+}
+
+function archivolre(){
+    var periodo = $("#periodo").val();
+    if(periodo == ""){
+        ToastifyError("Debe seleccionar un periodo");
+        return false;
+    }
+
+    window.open('php/report/archivolre.php?periodo='+periodo);
+}
