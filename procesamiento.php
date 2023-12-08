@@ -225,18 +225,19 @@
                     <?php
 
                     //********************************************Definicion de variables************************************************************ */
+                    //Variables de Haberes y Descuentos
                     $valor_haberes = array();
                     $valor_descuentos_legales = array();
                     $valor_descuentos_no_legales = array();
                     $gratificacion = 0;
 
-
-
-                    $horasfalladas =0;
+                    //Horas falladas y extras
+                    $horasfalladas = 0;
                     $extra1 = 0;
                     $extra2 = 0;
                     $extra3 = 0;
 
+                    //Totales
                     $total_haberes = 0;
                     $total_Descuentos = 0;
                     $total_imponible = 0;
@@ -244,6 +245,29 @@
                     $total_descuentos_legales = 0;
                     $total_descuentos_no_legales = 0;
                     $total_tributable = 0;
+
+                    //Topes
+                    $topeafp = $c->topesafp($periodo);
+                    if ($topeafp == 0) {
+                        $topeafp = $c->ultimotopeafp();
+                    }
+                    $topeips = $c->topesips($periodo);
+                    if ($topeips == 0) {
+                        $topeips = $c->ultimotopeips();
+                    }
+                    $topecesantiap = $c->topescesantia($periodo);
+                    if ($topecesantiap == 0) {
+                        $topecesantiap = $c->ultimotopecesantia();
+                    }
+                    $topeapvmensual = $c->topesapvmensual($periodo);
+                    if ($topeapvmensual == 0) {
+                        $topeapvmensual = $c->ultimotopeapvmensual();
+                    }
+                    $ano = date("Y", strtotime($periodo));
+                    $topeapvanual = $c->topesapvanual($ano);
+                    if ($topeapvanual == 0) {
+                        $topeapvanual = $c->ultimotopeapvanual();
+                    }
 
                     $sueldo = $contrato->getSueldo();
                     $dias = 30 - $ausencias - $mediodia - $contardias;
@@ -253,8 +277,8 @@
                     $sueldo = round(($sueldo / 30 * $dias), 0, PHP_ROUND_HALF_UP);
                     $valor_haberes[] = array("codigo" => "SUELDO BASE", "valor" => $sueldo, "tipo" => 1);
                     $total_imponible = $total_imponible + $sueldo;
-                    if($gratif==1){
-                     $gratificacion = $gratificacion + $sueldo;
+                    if ($gratif == 1) {
+                        $gratificacion = $gratificacion + $sueldo;
                     }
                     //********************************************Fin Definicion de Variables************************************************************ */
 
@@ -271,17 +295,17 @@
                                 $formula = str_replace("{VALOR_HORA}", 12000, $formula);
                                 $formula = str_replace("{HORAS_TRABAJADAS}", $horas, $formula);
 
-                                if ($haber->getMonto()>0) {
+                                if ($haber->getMonto() > 0) {
                                     $formula = str_replace("{VALOR_AGREGADO}", $haber->getMonto(), $formula);
-                                } else if ($haber->getDias()>0) {
+                                } else if ($haber->getDias() > 0) {
                                     $formula = str_replace("{VALOR_AGREGADO}", $haber->getDias(), $formula);
                                 } else {
                                     $formula = str_replace("{VALOR_AGREGADO}", $haber->gethoras(), $formula);
-                                    if($habere->getId()==16){
+                                    if ($habere->getId() == 16) {
                                         $extra1 = $haber->gethoras();
-                                    }else if($habere->getId()==17){
+                                    } else if ($habere->getId() == 17) {
                                         $extra2 = $haber->gethoras();
-                                    }else if($habere->getId()==18){
+                                    } else if ($habere->getId() == 18) {
                                         $extra3 = $haber->gethoras();
                                     }
                                 }
@@ -292,8 +316,8 @@
                                 $resultado = round($resultado, 0, PHP_ROUND_HALF_UP);
                                 $valor_haberes[] = array("codigo" => $haber->getCodigo(), "valor" => $resultado, "tipo" => 1);
                                 $total_imponible = $total_imponible + round($resultado, 0, PHP_ROUND_HALF_UP);
-                                if($gratif==1){
-                                    if($habere->getGratificacion()==1){
+                                if ($gratif == 1) {
+                                    if ($habere->getGratificacion() == 1) {
                                         $gratificacion = $gratificacion + $resultado;
                                     }
                                 }
@@ -301,20 +325,19 @@
                                 $habere = $c->buscarhaberesydescuentos($haber->getEmpresa());
                                 $valor_haberes[] = array("codigo" => $haber->getCodigo(), "valor" => $haber->getMonto(), "tipo" => 1);
                                 $total_imponible = $total_imponible + round($haber->getMonto(), 0, PHP_ROUND_HALF_UP);
-                                if($gratif==1){
-                                    if($habere->getGratificacion()==1){
+                                if ($gratif == 1) {
+                                    if ($habere->getGratificacion() == 1) {
                                         $gratificacion = $gratificacion + $haber->getMonto();
                                     }
                                 }
-
                             }
                         }
                     }
 
-                    if($gratif==1){
+                    if ($gratif == 1) {
                         $gratificacion = $gratificacion * 0.25;
                         $valor_haberes[] = array("codigo" => "GRATIFICACION", "valor" => $gratificacion, "tipo" => 1);
-                        $total_imponible = $total_imponible + round( $gratificacion, 0, PHP_ROUND_HALF_UP);
+                        $total_imponible = $total_imponible + round($gratificacion, 0, PHP_ROUND_HALF_UP);
                     }
 
                     foreach ($haberes as $haber) {
@@ -334,7 +357,6 @@
                                     $formula = str_replace("{VALOR_AGREGADO}", $haber->getDias(), $formula);
                                 } else if ($haber->getHoras() > 0) {
                                     $formula = str_replace("{VALOR_AGREGADO}", $haber->gethoras(), $formula);
-                                    
                                 }
                                 //EVALUAMOS LA FORMULA
                                 $formula = str_replace(" ", "", $formula);
@@ -342,7 +364,6 @@
                                 $resultado = round($resultado, 0, PHP_ROUND_HALF_UP);
                                 $valor_haberes[] = array("codigo" => $haber->getCodigo(), "valor" => $resultado, "tipo" => 2);
                                 $total_no_imponible = intval($total_no_imponible) + intval($resultado);
-                                
                             } else {
                                 $valor_haberes[] = array("codigo" => $haber->getCodigo(), "valor" => $haber->getMonto(), "tipo" => 2);
                                 $total_no_imponible = intval($total_no_imponible) + intval($haber->getMonto());
@@ -356,6 +377,27 @@
                     //Prevision
                     $dessis = $total_imponible * ($tasa->getInstitucion() / 100);
                     $prevision_des = $total_imponible * ($tasa->getTasa() / 100);
+                    $uf = $c->buscaruf($periodo);
+                    if($uf==false){
+                        $uf = $c->ultimavaloruf();
+                        if($uf==false){
+                            $uf = 0;
+                        }else{
+                            $uf = $uf->getTasa();
+                        }
+                    }else{
+                        $uf = $uf->getTasa();
+                    }
+                    
+                    if($uf>0){
+                        $topeafp = $topeafp * $uf;
+                    }
+
+                    if($topeafp>0){
+                        if($prevision_des>$topeafp){
+                            $prevision_des = $topeafp;
+                        }
+                    }
                     $valor_descuentos_legales[] = array("codigo" => "PREVISION", "valor" => ($prevision_des + $dessis), "tipo" => 1);
                     $total_descuentos_legales = $total_descuentos_legales + $prevision_des;
 
@@ -371,13 +413,23 @@
                     $cesantia_des = 0;
                     if ($contrato->getTipocontrato() == "Contrato Indefinido") {
                         $cesantia_des = $total_imponible * 0.006;
+
+                        if($uf>0){
+                            $topecesantiap = $topecesantiap * $uf;
+                        }
+
+                        if($topecesantiap>0){
+                            if($cesantia_des>$topecesantiap){
+                                $cesantia_des = $topecesantiap;
+                            }
+                        }
                         $valor_descuentos_legales[] = array("codigo" => "CESANTIA", "valor" => $cesantia_des, "tipo" => 1);
                         $total_descuentos_legales = $total_descuentos_legales + $cesantia_des;
                     }
 
                     $total_tributable = $total_imponible - $prevision_des - $salud_des - $cesantia_des;
-                    
-                    
+
+
 
                     $descuentos = $c->listarhaberes_descuentotrababajador($periodo, $periodo, $empresa->getId(), $trabajador->getId(), 2);
                     foreach ($descuentos as $haber) {
@@ -400,8 +452,8 @@
                                 $formula = str_replace("{VALOR_AGREGADO}", $haber->getDias(), $formula);
                             } else if ($haber->getHoras() > 0) {
                                 $formula = str_replace("{VALOR_AGREGADO}", $haber->gethoras(), $formula);
-                                if($habere->getId()==19 || $habere->getId()==20){
-                                    $horasfalladas= $horasfalladas + $haber->gethoras();
+                                if ($habere->getId() == 19 || $habere->getId() == 20) {
+                                    $horasfalladas = $horasfalladas + $haber->gethoras();
                                 }
                             }
                             //EVALUAMOS LA FORMULA
@@ -432,19 +484,41 @@
                     $cesantia_empleador = 0;
                     if ($contrato->getTipocontrato() == "Contrato Indefinido") {
                         $cesantia_empleador = $total_imponible * 0.024;
-                    }if ($contrato->getTipocontrato() == "Contrato a Plazo Fijo" || $contrato->getTipocontrato() == "Obra o Faena") {
+                    }
+                    if ($contrato->getTipocontrato() == "Contrato a Plazo Fijo" || $contrato->getTipocontrato() == "Obra o Faena") {
                         $cesantia_empleador = $total_imponible * 0.03;
                     }
 
                     $tasaadicional = $empresa->getCotizacionAdicional();
 
-                    
+
                     //Seguro Accidente
+                    $tasamutual = $c->buscartasamutual($periodo);
+                    $tasabasica = 0.90;
+                    if($tasamutual!=null){
+                        $tasabasica = $tasamutual->getFecha();
+                        $tasamutual = $tasamutual->getTasa();
+                    }else{
+                        $tasa = $c->buscarultimatasamutual();
+                        if($tasa!=null){
+                            $tasabasica = $tasa->getFecha();
+                            $tasamutual = $tasa->getTasa();
+                        }else{
+                            $tasamutual = 0.03;
+                        }
+                    }
                     $seguro_accidente = 0;
-                    $cotizacionbasica = $total_imponible * (0.90/100);
-                    $cotizacionleysanna = $total_imponible * (0.30/100);
-                    $cotizacionadicion = $total_imponible * ($tasaadicional/100);
-                    $seguro_accidente = $cotizacionbasica + $cotizacionleysanna + $cotizacionadicion;
+                    $cotizacionbasica = $total_imponible * ($tasabasica / 100);
+                    $cotizacionleysanna = 0;
+                    
+                    if($contardias>0){
+                        $cotizacionleysanna = ((($total_imponible / 30)*$contardias) * ($tasamutual / 100) + ($total_imponible * ($tasamutual / 100)));
+                    }else{
+                        $cotizacionleysanna = $total_imponible * ($tasamutual / 100);
+                    }
+                    $cotizacionadicion = $total_imponible * ($tasaadicional / 100);
+
+                    $seguro_accidente = ($cotizacionbasica + $cotizacionleysanna + $cotizacionadicion);
                     //********************************************Fin Descuentos************************************************************ */
                     ?>
 
@@ -468,13 +542,13 @@
                                         ?>
                                     </td>
                                     <td>
-                                        
-                                    <?php
+
+                                        <?php
                                         echo $extra1 + $extra2 + $extra3;
                                         ?>
                                     </td>
                                     <td>
-                                        <?php echo $horasfalladas;?>
+                                        <?php echo $horasfalladas; ?>
                                     </td>
                                     <td>
                                         <?php
@@ -572,7 +646,7 @@
                                     </td>
                                     <td>TOTAL DESCUENTOS</td>
                                     <td>
-                                        <?php echo " $" . number_format(($total_descuentos_legales+$total_descuentos_no_legales), 0, ',', '.'); ?>
+                                        <?php echo " $" . number_format(($total_descuentos_legales + $total_descuentos_no_legales), 0, ',', '.'); ?>
                                     </td>
                                 </tr>
                                 <tr>
@@ -600,30 +674,30 @@
                         </div>
                     </div>
                     <?php
-                        /****************************************************SENTENCIAS************************************************ */
-                        $valid = $c->validarliquidacion($periodo,$contrato->getId(),$empresa->getId());
-                        if($valid==false){
-                        $ultimofolio = $c->ultimofolioliquidacion($empresa->getId())+1;
-                        $idliquidacion = $c->registrarliquidacion($ultimofolio,$contrato->getId(),$periodo,$empresa->getId(),$trabajador->getId(),$dias,$sueldo,$horasfalladas,$extra1,$extra2,$extra3,$afp->getNombre(),$tasa->getTasa(),$tasa->getInstitucion(),$isapre->getNombre(),$desc_salud,$prevision_des,$dessis,$salud_des,$gratificacion,$total_imponible,$total_no_imponible,$total_tributable,$total_descuentos_legales,$total_descuentos_no_legales,date("Y-m-d"));
-                        foreach($valor_haberes as $haber){
-                            if($haber['tipo']==1){
-                            $c->registrardetalleliquidacion($idliquidacion,$haber['codigo'],$haber['valor'],1);
-                            }else{
-                                $c->registrardetalleliquidacion($idliquidacion,$haber['codigo'],$haber['valor'],2);
+                    /****************************************************SENTENCIAS************************************************ */
+                    $valid = $c->validarliquidacion($periodo, $contrato->getId(), $empresa->getId());
+                    if ($valid == false) {
+                        $ultimofolio = $c->ultimofolioliquidacion($empresa->getId()) + 1;
+                        $idliquidacion = $c->registrarliquidacion($ultimofolio, $contrato->getId(), $periodo, $empresa->getId(), $trabajador->getId(), $dias, $sueldo, $horasfalladas, $extra1, $extra2, $extra3, $afp->getNombre(), $tasa->getTasa(), $tasa->getInstitucion(), $isapre->getNombre(), $desc_salud, $prevision_des, $dessis, $salud_des, $gratificacion, $total_imponible, $total_no_imponible, $total_tributable, $total_descuentos_legales, $total_descuentos_no_legales, date("Y-m-d"));
+                        foreach ($valor_haberes as $haber) {
+                            if ($haber['tipo'] == 1) {
+                                $c->registrardetalleliquidacion($idliquidacion, $haber['codigo'], $haber['valor'], 1);
+                            } else {
+                                $c->registrardetalleliquidacion($idliquidacion, $haber['codigo'], $haber['valor'], 2);
                             }
                         }
                         $sql = "insert into aporteempleador values(null,$idliquidacion,$cesantia_empleador,$cotizacionbasica,$cotizacionleysanna,$cotizacionadicion,$seguro_accidente,now());";
                         $c->query($sql);
-                        foreach($valor_descuentos_legales as $descuento){
-                            $c->registrardetalleliquidacion($idliquidacion,$descuento['codigo'],$descuento['valor'],3);
+                        foreach ($valor_descuentos_legales as $descuento) {
+                            $c->registrardetalleliquidacion($idliquidacion, $descuento['codigo'], $descuento['valor'], 3);
                         }
 
-                        foreach($valor_descuentos_no_legales as $descuento){
-                            $c->registrardetalleliquidacion($idliquidacion,$descuento['codigo'],$descuento['valor'],4);
+                        foreach ($valor_descuentos_no_legales as $descuento) {
+                            $c->registrardetalleliquidacion($idliquidacion, $descuento['codigo'], $descuento['valor'], 4);
                         }
-                        }else{
-                            echo "<div class='alert alert-danger'>Ya se ha generado la liquidacion de este trabajador para este periodo, si desea generarla nuevamente debe eliminar la liquidacion anterior</div>";
-                        }
+                    } else {
+                        echo "<div class='alert alert-danger'>Ya se ha generado la liquidacion de este trabajador para este periodo, si desea generarla nuevamente debe eliminar la liquidacion anterior</div>";
+                    }
 
                     ?>
                     <hr>

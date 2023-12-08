@@ -130,6 +130,7 @@ foreach ($permiso as $p) {
 					<img src="assets/img/brand/icon.png" class="header-brand-img icon-logo theme-logo" alt="logo">
 				</a>
 			</div>
+			
 			<div class="main-sidebar-body">
 				<?php
 				$user = $c->buscarusuario($_SESSION['USER_ID']);
@@ -348,6 +349,9 @@ foreach ($permiso as $p) {
 											<a class="nav-sub-link" href="cargaasistencia.php">Cargar Asistencia</a>
 										</li>
 										<li class="nav-sub-item">
+											<a class="nav-sub-link" href="repmovimientos.php">Movimiento de Personal</a>
+										</li>
+										<li class="nav-sub-item">
 											<a class="nav-sub-link" href="procesar.php">Procesar Trabajadores</a>
 										</li>
 								</ul>
@@ -383,6 +387,9 @@ foreach ($permiso as $p) {
 									</li>
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="liquidaciones.php">Reporte Liquidaciones</a>
+									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="librosremuneraciones.php">Libros de Remuneraciones</a>
 									</li>
 								</ul>
 							</li>
@@ -572,7 +579,7 @@ foreach ($permiso as $p) {
 
 									<div class="row mt-4">
 										<div class="col-md-12 text-right mb-3">
-											<a class="btn btn-outline-success" href='php/report/todoliquidaciones.php'> <i class="fa fa-file"></i> Imprimir Todo</a>
+											<a class="btn btn-outline-success" target="_blank" href='php/report/todoliquidaciones.php'> <i class="fa fa-file"></i> Imprimir Todo</a>
 										</div>
 										<div class="col-md-12">
 											<table class="table w-100 table-hover" id="example1">

@@ -7,7 +7,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 
 session_start();
-if(!isset($_SESSION['CURRENT_ENTERPRISE'])){
+if (!isset($_SESSION['CURRENT_ENTERPRISE'])) {
     header("location: ../../");
 }
 $empresa = $_SESSION['CURRENT_ENTERPRISE'];
@@ -24,113 +24,6 @@ if (isset($_GET['periodo'])) {
     //Formato UTF-8
     $writer->setUseBOM(true);
     $spreadsheet->getActiveSheet()->setTitle('Hoja 1');
-    /*
-    $spreadsheet->getActiveSheet()->setCellValue('A1', 'RUT');
-    $spreadsheet->getActiveSheet()->setCellValue('B1', 'DV');
-    $spreadsheet->getActiveSheet()->setCellValue('C1', 'Apellido Paterno');
-    $spreadsheet->getActiveSheet()->setCellValue('D1', 'Apellido Materno');
-    $spreadsheet->getActiveSheet()->setCellValue('E1', 'Nombres');
-    $spreadsheet->getActiveSheet()->setCellValue('F1', 'Sexo');
-    $spreadsheet->getActiveSheet()->setCellValue('G1', 'Nacionalidad');
-    $spreadsheet->getActiveSheet()->setCellValue('H1', 'Tipo Pago');
-    $spreadsheet->getActiveSheet()->setCellValue('I1', 'Período Remuneraciones (Desde)');
-    $spreadsheet->getActiveSheet()->setCellValue('J1', 'Período Remuneraciones (Hasta)');
-    $spreadsheet->getActiveSheet()->setCellValue('K1', 'Régimen Previsional');
-    $spreadsheet->getActiveSheet()->setCellValue('L1', 'Tipo Trabajador');
-    $spreadsheet->getActiveSheet()->setCellValue('M1', 'Días Trabajados');
-    $spreadsheet->getActiveSheet()->setCellValue('N1', 'Tipo de Línea');
-    $spreadsheet->getActiveSheet()->setCellValue('O1', 'Código Movimiento de Personal');
-    $spreadsheet->getActiveSheet()->setCellValue('P1', 'Fecha Desde');
-    $spreadsheet->getActiveSheet()->setCellValue('Q1', 'Fecha Hasta');
-    $spreadsheet->getActiveSheet()->setCellValue('R1', 'Tramo Asignación Familiar');
-    $spreadsheet->getActiveSheet()->setCellValue('S1', 'N° Cargas Simples');
-    $spreadsheet->getActiveSheet()->setCellValue('T1', 'N° Cargas Maternales');
-    $spreadsheet->getActiveSheet()->setCellValue('U1', 'N° Cargas Inválidas');
-    $spreadsheet->getActiveSheet()->setCellValue('V1', 'Asignación Familiar');
-    $spreadsheet->getActiveSheet()->setCellValue('W1', 'Asignación Familiar Retroactiva');
-    $spreadsheet->getActiveSheet()->setCellValue('X1', 'Reintegro Cargas Familiares');
-    $spreadsheet->getActiveSheet()->setCellValue('Y1', 'Subsidio Trabajador Joven');
-    $spreadsheet->getActiveSheet()->setCellValue('Z1', 'Código de la AFP');
-    $spreadsheet->getActiveSheet()->setCellValue('AA1', 'Renta Imponible AFP');
-    $spreadsheet->getActiveSheet()->setCellValue('AB1', 'Cotización Obligatoria AFP');
-    $spreadsheet->getActiveSheet()->setCellValue('AC1', 'Cotización Seguro de Invalidez y Sobrevivencia SIS');
-    $spreadsheet->getActiveSheet()->setCellValue('AD1', 'Cuenta de Ahorro Voluntario AFP');
-    $spreadsheet->getActiveSheet()->setCellValue('AE1', 'Renta Imp. Sust.AFP');
-    $spreadsheet->getActiveSheet()->setCellValue('AF1', 'Tasa Pactada (Sustit.)');
-    $spreadsheet->getActiveSheet()->setCellValue('AG1', 'Aporte Indemn. (Sustit.)');
-    $spreadsheet->getActiveSheet()->setCellValue('AH1', 'N° Períodos (Sustit.)');
-    $spreadsheet->getActiveSheet()->setCellValue('AI1', 'Período desde (Sustit.)');
-    $spreadsheet->getActiveSheet()->setCellValue('AJ1', 'Período Hasta (Sustit.)');
-    $spreadsheet->getActiveSheet()->setCellValue('AK1', 'Puesto de Trabajo Pesado');
-    $spreadsheet->getActiveSheet()->setCellValue('AL1', '% Cotización Trabajo Pesado');
-    $spreadsheet->getActiveSheet()->setCellValue('AM1', 'Cotización Trabajo Pesado');
-    $spreadsheet->getActiveSheet()->setCellValue('AN1', 'Código de la Institución APVI');
-    $spreadsheet->getActiveSheet()->setCellValue('AO1', 'Número de Contrato APVI');
-    $spreadsheet->getActiveSheet()->setCellValue('AP1', 'Forma de Pago APVI');
-    $spreadsheet->getActiveSheet()->setCellValue('AQ1', 'Cotización APVI');
-    $spreadsheet->getActiveSheet()->setCellValue('AR1', 'Cotización Depósitos Convenidos');
-    $spreadsheet->getActiveSheet()->setCellValue('AS1', 'Código de la Institución Autorizada APVC');
-    $spreadsheet->getActiveSheet()->setCellValue('AT1', 'Número de Contrato APVC');
-    $spreadsheet->getActiveSheet()->setCellValue('AU1', 'Forma de Pago APVC');
-    $spreadsheet->getActiveSheet()->setCellValue('AV1', 'Cotización Trabajador APVC');
-    $spreadsheet->getActiveSheet()->setCellValue('AW1', 'Cotización Empleador APVC');
-    $spreadsheet->getActiveSheet()->setCellValue('AX1', 'RUT Afiliado Voluntario');
-    $spreadsheet->getActiveSheet()->setCellValue('AY1', 'DV Afiliado Voluntario');
-    $spreadsheet->getActiveSheet()->setCellValue('AZ1', 'Apellido Paterno');
-    $spreadsheet->getActiveSheet()->setCellValue('BA1', 'Apellido Materno');
-    $spreadsheet->getActiveSheet()->setCellValue('BB1', 'Nombres');
-    $spreadsheet->getActiveSheet()->setCellValue('BC1', 'Código Movimiento de Personal');
-    $spreadsheet->getActiveSheet()->setCellValue('BD1', 'Fecha Desde');
-    $spreadsheet->getActiveSheet()->setCellValue('BE1', 'Fecha Hasta');
-    $spreadsheet->getActiveSheet()->setCellValue('BF1', 'Código de la AFP');
-    $spreadsheet->getActiveSheet()->setCellValue('BG1', 'Monto Capitalización Voluntaria');
-    $spreadsheet->getActiveSheet()->setCellValue('BH1', 'Monto Ahorro Voluntario');
-    $spreadsheet->getActiveSheet()->setCellValue('BI1', 'Número de Periodos de Cotización');
-    $spreadsheet->getActiveSheet()->setCellValue('BJ1', 'Código Ex-Caja Régimen');
-    $spreadsheet->getActiveSheet()->setCellValue('BK1', 'Tasa Cotización Ex-Caja Previsión');
-    $spreadsheet->getActiveSheet()->setCellValue('BL1', 'Renta Imponible IPS / ISL / Fonasa');
-    $spreadsheet->getActiveSheet()->setCellValue('BM1', 'Cotización Obligatoria IPS');
-    $spreadsheet->getActiveSheet()->setCellValue('BN1', 'Renta Imponible Desahucio');
-    $spreadsheet->getActiveSheet()->setCellValue('BO1', 'Código Ex-Caja Régimen Desahucio');
-    $spreadsheet->getActiveSheet()->setCellValue('BP1', 'Tasa Cotización Desahucio');
-    $spreadsheet->getActiveSheet()->setCellValue('BQ1', 'Cotización Desahucio');
-    $spreadsheet->getActiveSheet()->setCellValue('BR1', 'Cotización Fonasa');
-    $spreadsheet->getActiveSheet()->setCellValue('BS1', 'Cotización Acc. Trabajo (INP)');
-    $spreadsheet->getActiveSheet()->setCellValue('BT1', 'Bonificación Ley 15.386');
-    $spreadsheet->getActiveSheet()->setCellValue('BU1', 'Descuento por cargas familiar IPS');
-    $spreadsheet->getActiveSheet()->setCellValue('BV1', 'Bonos de Gobierno');
-    $spreadsheet->getActiveSheet()->setCellValue('BW1', 'Código Institución de Salud');
-    $spreadsheet->getActiveSheet()->setCellValue('BX1', 'Número del FUN');
-    $spreadsheet->getActiveSheet()->setCellValue('BY1', 'Renta Imponible Isapre');
-    $spreadsheet->getActiveSheet()->setCellValue('BZ1', 'Moneda del plan pactado con Isapre');
-    $spreadsheet->getActiveSheet()->setCellValue('CA1', 'Cotización Pactada');
-    $spreadsheet->getActiveSheet()->setCellValue('CB1', 'Cotización Obligatoria Isapre');
-    $spreadsheet->getActiveSheet()->setCellValue('CC1', 'Cotización Adicional Voluntaria');
-    $spreadsheet->getActiveSheet()->setCellValue('CD1', 'Monto Garantía Explícita de Salud');
-    $spreadsheet->getActiveSheet()->setCellValue('CE1', 'Código CCAF');
-    $spreadsheet->getActiveSheet()->setCellValue('CF1', 'Renta Imponible CCAF');
-    $spreadsheet->getActiveSheet()->setCellValue('CG1', 'Créditos Personales CCAF');
-    $spreadsheet->getActiveSheet()->setCellValue('CH1', 'Descuento Dental CCAF');
-    $spreadsheet->getActiveSheet()->setCellValue('CI1', 'Descuento por Leasing');
-    $spreadsheet->getActiveSheet()->setCellValue('CJ1', 'Descuento por seguro de vida CCAF');
-    $spreadsheet->getActiveSheet()->setCellValue('CK1', 'Otros descuentos CCAF');
-    $spreadsheet->getActiveSheet()->setCellValue('CL1', 'Cotización a CCAF de no afiliados a Isapres');
-    $spreadsheet->getActiveSheet()->setCellValue('CM1', 'Descuento Cargas Familiares CCAF');
-    $spreadsheet->getActiveSheet()->setCellValue('CN1', 'Otros Descuentos CCAF 1');
-    $spreadsheet->getActiveSheet()->setCellValue('CO1', 'Otros Descuentos CCAF 2');
-    $spreadsheet->getActiveSheet()->setCellValue('CP1', 'Bonos de Gobierno (Uso Futuro)');
-    $spreadsheet->getActiveSheet()->setCellValue('CQ1', 'Código de Sucursal (Uso Futuro)');
-    $spreadsheet->getActiveSheet()->setCellValue('CR1', 'Código Mutual');
-    $spreadsheet->getActiveSheet()->setCellValue('CS1', 'Renta Imponible Mutual');
-    $spreadsheet->getActiveSheet()->setCellValue('CT1', 'Cotización Accidente');
-    $spreadsheet->getActiveSheet()->setCellValue('CU1', 'Sucursal para pago Mutual');
-    $spreadsheet->getActiveSheet()->setCellValue('CV1', 'Renta Imponible Seguro Cesantía');
-    $spreadsheet->getActiveSheet()->setCellValue('CW1', 'Aporte Trabajador Seguro Cesantía');
-    $spreadsheet->getActiveSheet()->setCellValue('CX1', 'Aporte Empleador Seguro Cesantía');
-    $spreadsheet->getActiveSheet()->setCellValue('CY1', 'Rut Pagadora Subsidio');
-    $spreadsheet->getActiveSheet()->setCellValue('CZ1', 'DV Pagadora Subsidio');
-    $spreadsheet->getActiveSheet()->setCellValue('DA1', 'Centro de Costos, Sucursal, Agencia, Obra, Región');*/
-
     $pos = 1;
     if (strlen($periodo) < 7) {
         echo "Periodo invalido<br>";
@@ -138,7 +31,7 @@ if (isset($_GET['periodo'])) {
         return;
     }
     $periodo = $periodo . "-01";
-    $mes = date("m", strtotime($periodo));
+    $mesperiodo = date("m", strtotime($periodo));
 
     $liquidaciones = $c->listartodasliquidacionesperiodo($periodo);
     $empresa = $c->buscarEmpresa1($empresa);
@@ -149,47 +42,62 @@ if (isset($_GET['periodo'])) {
         $detalleliquidacion = $c->buscardetallesliquidacion($liquidacion->getId());
         $aportepatronal = $c->buscaraportempleador($liquidacion->getId());
         $prevision  = $c->buscarprevisiontrabajador($liquidacion->getTrabajador());
-        $movimientos = $c->buscarmovimientoxtrabajador($liquidacion->getTrabajador(), $periodo);
+        $movimientos = $c->buscarmovimientoxtrabajador1($liquidacion->getTrabajador(), $periodo);
         $contrato = $c->buscarultimocontratoactivo($liquidacion->getTrabajador());
         $afp = null;
-        if($prevision!=null){
+        if ($prevision != null) {
             $afp = $c->buscarafp($prevision->getAfp());
         }
 
         //Gestion de datos y valores
-        $rut = $trabajador->getRut();
+        $ruttrabajador = $trabajador->getRut();
+
+        //Dividir el RUN en número de indentificación y dígito verificador
+        $posicionGuion = strpos($ruttrabajador, "-");
+        $numeroIdentificacion = substr($ruttrabajador, 0, $posicionGuion);
+        $digitoVerificador = substr($ruttrabajador, $posicionGuion + 1);
+
+        $rut = $numeroIdentificacion;
         $rut = str_replace(".", "", $rut);
-        //El DV es el ultimo caracter del rut
-        $dv = substr($rut, -1);
-        //El rut es todo menos el ultimo caracter
-        $rut = str_replace("-", "", $rut);
-        $rut = substr($rut, 0, -1);
+        $dv = $digitoVerificador;
+
         $ape_paterno = $trabajador->getApellido1();
         $ape_materno = $trabajador->getApellido2();
         $nombres = $trabajador->getNombre();
         $sexo = $trabajador->getSexo();
+        if($sexo == 1){
+            $sexo = "M";
+        }else{
+            $sexo = "F";
+        }
         $nacionalidad = $trabajador->getNacionalidad();
+        $nacionalidad = $c->buscarnacionalidad($nacionalidad);
+        if ($nacionalidad != null) {
+            $nacionalidad = $nacionalidad->getCodigoPrevired();
+        } else {
+            $nacionalidad = "00";
+        }
         $tipo_pago = "01";
         $mesperiodo = date("m", strtotime($periodo));
         $anioperiodo = date("Y", strtotime($periodo));
         $mesperiodo = intval($mesperiodo);
-        $periododesde = $mes.$anioperiodo;
-        $periodohasta = $mes.$anioperiodo;
+        $periododesde = $mesperiodo . $anioperiodo;
+        $periodohasta = $mesperiodo . $anioperiodo;
         $regimenprevisional = "AFP";
-        if($afp!=null){
-            if($afp->getCodigoPrevired()>0){
+        if ($afp != null) {
+            if ($afp->getCodigoPrevired() > 0) {
                 $regimenprevisional = "AFP";
-            }else{
+            } else {
                 $regimenprevisional = "SIP";
             }
-        }else{
+        } else {
             $regimenprevisional = "SIP";
         }
         $tipotrabajador = "01";
         $tipotrabajador = 0;
-        if($trabajador->getPension()==1){
+        if ($trabajador->getPension() == 1) {
             $tipotrabajador = 1;
-        }else{
+        } else {
             $fechanacimiento = $trabajador->getNacimiento();
             //Calculo de la edad
             $dia = date("d");
@@ -216,7 +124,7 @@ if (isset($_GET['periodo'])) {
         $codmovi = 0;
         $fechadesde = "";
         $fechahasta = "";
-        $tramoasignacion = "Sin Información";
+        $tramoasignacion = "D";
         $cargasimple = 0;
         $cargamaterna = 0;
         $cargainvalida = 0;
@@ -225,8 +133,8 @@ if (isset($_GET['periodo'])) {
         $reintegrocargas = 0;
         $subsidiojoven = "N";
         $codafp = "00";
-        if($regimenprevisional=="AFP"){
-            if($afp!=null){
+        if ($regimenprevisional == "AFP") {
+            if ($afp != null) {
                 $codafp = $afp->getCodigoPrevired();
             }
         }
@@ -245,15 +153,15 @@ if (isset($_GET['periodo'])) {
         $porcotizaciontrabajopesado = 0;
         $codapvi = "000";
         $ncontratoapvi = "";
-        $formapagoapvi = "";
+        $formapagoapvi = 0;
         $cotizacionapvi = 0;
         $cotizaciondepositos = 0;
         $codapvc = "00";
         $ncontratoapvc = "";
-        $formapagoapvc = "";
+        $formapagoapvc = 0;
         $cotizaciontrabajadorapvc = 0;
         $cotizacionempleadorapvc = 0;
-        $rutafiliado = "";
+        $rutafiliado = 0;
         $dvafiliado = "";
         $apepaternoafiliado = "";
         $apematernoafiliado = "";
@@ -278,14 +186,14 @@ if (isset($_GET['periodo'])) {
         $bonificacionley = 0;
         $descuentocargas = 0;
         $bonosgobierno = 0;
-        $instsalud ="00";
-        if($prevision!=null){
+        $instsalud = "00";
+        if ($prevision != null) {
             $instsalud = $c->buscarisapre($prevision->getIsapre());
-            if($instsalud!=null){
+            if ($instsalud != null) {
                 $instsalud = $instsalud->getCodigoPrevired();
             }
         }
-        $numerofun = "";
+        $numerofun = 0;
         $rentaimponibleisapre = 0;
         $monedapactada = "00";
         $cotizacionpactada = 0;
@@ -293,7 +201,7 @@ if (isset($_GET['periodo'])) {
         $cotizacionadicional = 0;
         $montoges = 0;
         $codccaf = "00";
-        if($cajacompensacion!=null){
+        if ($cajacompensacion != null) {
             $codccaf = $cajacompensacion->getCodigoPrevired();
         }
         $rentaimponibleccaf = $liquidacion->getTotalimponible();
@@ -307,9 +215,9 @@ if (isset($_GET['periodo'])) {
         $otrosdescuentosccaf1 = 0;
         $otrosdescuentosccaf2 = 0;
         $bonosgobiernoccaf = 0;
-        $codsucursal = "00";
+        $codsucursal = "";
         $codmutual = "00";
-        if($mutual!=null){
+        if ($mutual != null) {
             $codmutual = $mutual->getCodigoPrevired();
         }
         $rentaimponiblemutual = $liquidacion->getTotalimponible();
@@ -317,8 +225,8 @@ if (isset($_GET['periodo'])) {
         $sucursalpago = "0";
         $rentaimponiblecesantia = $liquidacion->getTotalimponible();
         $aportetrabajadorcesantia = 0;
-        foreach($detalleliquidacion as $detalle){
-            if($detalle->getCodigo()=="CESANTIA"){
+        foreach ($detalleliquidacion as $detalle) {
+            if ($detalle->getCodigo() == "CESANTIA") {
                 $aportetrabajadorcesantia = $detalle->getMonto();
             }
         }
@@ -328,6 +236,7 @@ if (isset($_GET['periodo'])) {
         $centrocostos = $contrato->getCentrocosto();
 
         //Ingresas la linea Principal
+        //Que las columnas A sea numerica
         $spreadsheet->getActiveSheet()->setCellValue('A' . $pos, $rut);
         $spreadsheet->getActiveSheet()->setCellValue('B' . $pos, $dv);
         $spreadsheet->getActiveSheet()->setCellValue('C' . $pos, $ape_paterno);
@@ -428,12 +337,142 @@ if (isset($_GET['periodo'])) {
         $spreadsheet->getActiveSheet()->setCellValue('CT' . $pos, $cotizacionaccidentemutual);
         $spreadsheet->getActiveSheet()->setCellValue('CU' . $pos, $sucursalpago);
         $spreadsheet->getActiveSheet()->setCellValue('CV' . $pos, $rentaimponiblecesantia);
-        $spreadsheet->getActiveSheet()->setCellValue('CW' . $pos, $aportetrabajadorcesantia);
-        $spreadsheet->getActiveSheet()->setCellValue('CX' . $pos, $aporteempleadorcesantia);
+        $spreadsheet->getActiveSheet()->setCellValue('CW' . $pos, round($aportetrabajadorcesantia, 0));
+        $spreadsheet->getActiveSheet()->setCellValue('CX' . $pos, round($aporteempleadorcesantia, 0));
         $spreadsheet->getActiveSheet()->setCellValue('CY' . $pos, $rutpagador);
         $spreadsheet->getActiveSheet()->setCellValue('CZ' . $pos, $dvpagador);
         $spreadsheet->getActiveSheet()->setCellValue('DA' . $pos, $centrocostos);
-        
+        //Ingresas las lineas de movimientos
+        foreach ($movimientos as $movimiento) {
+            $pos++;
+            $spreadsheet->getActiveSheet()->setCellValue('A' . $pos, $rut);
+            $spreadsheet->getActiveSheet()->setCellValue('B' . $pos, $dv);
+            $spreadsheet->getActiveSheet()->setCellValue('C' . $pos, $ape_paterno);
+            $spreadsheet->getActiveSheet()->setCellValue('D' . $pos, $ape_materno);
+            $spreadsheet->getActiveSheet()->setCellValue('E' . $pos, $nombres);
+            $spreadsheet->getActiveSheet()->setCellValue('F' . $pos, $sexo);
+            $spreadsheet->getActiveSheet()->setCellValue('G' . $pos, $nacionalidad);
+            $spreadsheet->getActiveSheet()->setCellValue('H' . $pos, $tipo_pago);
+            $spreadsheet->getActiveSheet()->setCellValue('I' . $pos, $periododesde);
+            $spreadsheet->getActiveSheet()->setCellValue('J' . $pos, $periodohasta);
+            $spreadsheet->getActiveSheet()->setCellValue('K' . $pos, $regimenprevisional);
+            $spreadsheet->getActiveSheet()->setCellValue('L' . $pos, $tipotrabajador);
+            $spreadsheet->getActiveSheet()->setCellValue('M' . $pos, $diastrabajados);
+            $spreadsheet->getActiveSheet()->setCellValue('N' . $pos, "01");
+            $spreadsheet->getActiveSheet()->setCellValue('O' . $pos, $movimiento->getEvento());
+            if($movimiento->getEvento() == 2){
+                $spreadsheet->getActiveSheet()->setCellValue('P' . $pos, $contrato->getFechainicio());
+                $spreadsheet->getActiveSheet()->setCellValue('Q' . $pos, $movimiento->getFechainicio());
+            }else{
+            $spreadsheet->getActiveSheet()->setCellValue('P' . $pos, $movimiento->getFechainicio());
+            $spreadsheet->getActiveSheet()->setCellValue('Q' . $pos, $movimiento->getFechatermino());
+            }
+            $spreadsheet->getActiveSheet()->setCellValue('R' . $pos, "D");
+            $spreadsheet->getActiveSheet()->setCellValue('S' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('T' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('U' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('V' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('W' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('X' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('Y' . $pos, $subsidiojoven);
+            $spreadsheet->getActiveSheet()->setCellValue('Z' . $pos, $codafp);
+            $spreadsheet->getActiveSheet()->setCellValue('AA' . $pos, $rentaimponibleafp);
+            $spreadsheet->getActiveSheet()->setCellValue('AB' . $pos, $cotizacionobligatoriaafp);
+            $spreadsheet->getActiveSheet()->setCellValue('AC' . $pos, $cotizacionsegurosis);
+            $spreadsheet->getActiveSheet()->setCellValue('AD' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('AE' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('AF' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('AG' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('AH' . $pos, "00");
+            $spreadsheet->getActiveSheet()->setCellValue('AI' . $pos, "");
+            $spreadsheet->getActiveSheet()->setCellValue('AJ' . $pos, "");
+            $spreadsheet->getActiveSheet()->setCellValue('AK' . $pos, "");
+            $spreadsheet->getActiveSheet()->setCellValue('AL' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('AM' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('AN' . $pos, $codapvi);
+            $spreadsheet->getActiveSheet()->setCellValue('AO' . $pos, $ncontratoapvi);
+            $spreadsheet->getActiveSheet()->setCellValue('AP' . $pos, $formapagoapvi);
+            $spreadsheet->getActiveSheet()->setCellValue('AQ' . $pos, $cotizacionapvi);
+            $spreadsheet->getActiveSheet()->setCellValue('AR' . $pos, $cotizaciondepositos);
+            $spreadsheet->getActiveSheet()->setCellValue('AS' . $pos, $codapvc);
+            $spreadsheet->getActiveSheet()->setCellValue('AT' . $pos, $ncontratoapvc);
+            $spreadsheet->getActiveSheet()->setCellValue('AU' . $pos, $formapagoapvc);
+            $spreadsheet->getActiveSheet()->setCellValue('AV' . $pos, $cotizaciontrabajadorapvc);
+            $spreadsheet->getActiveSheet()->setCellValue('AW' . $pos, $cotizacionempleadorapvc);
+            $spreadsheet->getActiveSheet()->setCellValue('AX' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('AY' . $pos, "");
+            $spreadsheet->getActiveSheet()->setCellValue('AZ' . $pos, "");
+            $spreadsheet->getActiveSheet()->setCellValue('BA' . $pos, "");
+            $spreadsheet->getActiveSheet()->setCellValue('BB' . $pos, "");
+            $spreadsheet->getActiveSheet()->setCellValue('BC' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('BD' . $pos, "");
+            $spreadsheet->getActiveSheet()->setCellValue('BE' . $pos, "");
+            $spreadsheet->getActiveSheet()->setCellValue('BF' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('BG' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('BH' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('BI' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('BJ' . $pos, $codexcaja);
+            $spreadsheet->getActiveSheet()->setCellValue('BK' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('BL' . $pos, $rentaimponiblefonasa);
+            $spreadsheet->getActiveSheet()->setCellValue('BM' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('BN' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('BO' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('BP' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('BQ' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('BR' . $pos, $cotizacionfonasa);
+            $spreadsheet->getActiveSheet()->setCellValue('BS' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('BT' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('BU' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('BV' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('BW' . $pos, $instsalud);
+            $spreadsheet->getActiveSheet()->setCellValue('BX' . $pos, $numerofun);
+            $spreadsheet->getActiveSheet()->setCellValue('BY' . $pos, $rentaimponibleisapre);
+            $spreadsheet->getActiveSheet()->setCellValue('BZ' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('CA' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('CB' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('CC' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('CD' . $pos, $montoges);
+            $spreadsheet->getActiveSheet()->setCellValue('CE' . $pos, $codccaf);
+            $spreadsheet->getActiveSheet()->setCellValue('CF' . $pos, $rentaimponibleccaf);
+            $spreadsheet->getActiveSheet()->setCellValue('CG' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('CH' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('CI' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('CJ' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('CK' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('CL' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('CM' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('CN' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('CO' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('CP' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('CQ' . $pos, "");
+            $spreadsheet->getActiveSheet()->setCellValue('CR' . $pos, $codmutual);
+            $spreadsheet->getActiveSheet()->setCellValue('CS' . $pos, $rentaimponiblemutual);
+            $spreadsheet->getActiveSheet()->setCellValue('CT' . $pos, $cotizacionaccidentemutual);
+            $spreadsheet->getActiveSheet()->setCellValue('CU' . $pos, $sucursalpago);
+            $spreadsheet->getActiveSheet()->setCellValue('CV' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('CW' . $pos, 0);
+            $spreadsheet->getActiveSheet()->setCellValue('CX' . $pos, 0);
+
+            $rutpagador = "";
+            $dvpagador = "";
+            if ($movimiento->getEvento() == 3) {
+                $runCompleto = $movimiento->getRutentidad();
+                // Dividir el RUN en número de identificación y dígito verificador
+                $posicionGuion = strpos($runCompleto, '-');
+                $numeroIdentificacion = substr($runCompleto, 0, $posicionGuion);
+                $digitoVerificador = substr($runCompleto, $posicionGuion + 1);
+
+                $rutpagador = $numeroIdentificacion;
+                $dvpagador = $digitoVerificador;
+            } else {
+                $rutpagador = 0;
+                $dvpagador = "";
+            }
+            $spreadsheet->getActiveSheet()->setCellValue('CY' . $pos, $rutpagador);
+            $spreadsheet->getActiveSheet()->setCellValue('CZ' . $pos, $dvpagador);
+            $spreadsheet->getActiveSheet()->setCellValue('DA' . $pos, $centrocostos);
+        }
+
         $pos++;
     }
     //Fin del cuerpo del excel

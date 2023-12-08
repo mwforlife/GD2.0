@@ -68,13 +68,13 @@ require 'Class/Movpersonal.php';
 class Controller
 {
     private $host = "localhost";
-    /*Variables*/
+    /*Variables
     private $user = "root";
     private $pass = "";
     private $bd = "gestordocumentos";
 
 
-    /*Variables BD Remota
+    /*Variables BD Remota*/
     private $user = 'kaiserte_admin';
     private $pass = 'Kaiser2022$';
     private $bd = 'kaiserte_gd';
@@ -771,6 +771,8 @@ class Controller
         return json_encode($result);
     }
 
+    
+
     //Registrar Tasa Caja Compensacion
     public function registrartasacaja($periodo, $tasa)
     {
@@ -824,6 +826,45 @@ class Controller
         }
         $this->desconectar();
         return $lista;
+    }
+
+    //buscar tasa por periodo
+    public function buscartasamutual($periodo)
+    {
+        $this->conexion();
+        $sql = "select * from tasamutual where periodo = '$periodo' order by id desc";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $periodo = $rs['periodo'];
+            $tasabasica = $rs['tasabasica'];
+            $tasaleysanna = $rs['tasaleysanna'];
+            $T = new Tasa($id, $periodo, $tasabasica, $tasaleysanna);
+            $this->desconectar();
+            return $T;
+        }
+        $this->desconectar();
+        return null;
+    }
+
+    //Ultima tasa mutual
+    public function buscarultimatasamutual()
+    {
+        $this->conexion();
+        $sql = "select * from tasamutual order by id desc limit 1";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $periodo = $rs['periodo'];
+            $tasabasica = $rs['tasabasica'];
+            $tasaleysanna = $rs['tasaleysanna'];
+            $T = new Tasa($id, $periodo, $tasabasica, $tasaleysanna);
+            $this->desconectar();
+            return $T;
+        }
+        $this->desconectar();
+        return null;
     }
 
     //buscar tasa afp
@@ -9579,7 +9620,7 @@ class Controller
     function cantidadausencias($trabajador, $contrato, $mes, $anio)
     {
         $this->conexion();
-        $sql = "select count(estado) as cantidad from asistencia where trabajador=$trabajador and contrato=$contrato and month(fecha)=$mes and year(fecha)=$anio and estado=3";
+        $sql = "select count(estado) as cantidad from asistencia where trabajador=$trabajador and contrato=$contrato and month(fecha)=$mes and year(fecha)=$anio and (estado=3 or estado=5)";
         $result = $this->mi->query($sql);
         if ($rs = mysqli_fetch_array($result)) {
             $cantidad = $rs['cantidad'];
@@ -10086,7 +10127,7 @@ class Controller
     function listartodasliquidacionesperiodo($periodo)
     {
         $this->conexion();
-        $sql = "select * from liquidaciones where periodo='$periodo' order by register_at desc";
+        $sql = "select liquidaciones.id as id,trabajadores.rut as rut, liquidaciones.folio as folio, liquidaciones.contrato as contrato, liquidaciones.periodo as periodo, liquidaciones.empresa as empresa, liquidaciones.trabajador as trabajador, liquidaciones.diastrabajados as diastrabajados, liquidaciones.sueldobase as sueldobase, liquidaciones.horasfalladas as horasfalladas, liquidaciones.horasextras1 as horasextras1, liquidaciones.horasextras2 as horasextras2, liquidaciones.horasextras3 as horasextras3, liquidaciones.afp as afp, liquidaciones.porafp as porafp, liquidaciones.porsis as porsis, liquidaciones.salud as salud, liquidaciones.porsalud as porsalud,liquidaciones.desafp as desafp,liquidaciones.dessis as dessis,liquidaciones.dessal as dessal,liquidaciones.gratificacion as gratificacion, liquidaciones.totalimponible as totalimponible, liquidaciones.totalnoimponible as totalnoimponible, liquidaciones.totaltributable as totaltributable, liquidaciones.totaldeslegales as totaldeslegales, liquidaciones.totaldesnolegales as totaldesnolegales, liquidaciones.fecha_liquidacion as fecha_liquidacion, liquidaciones.empresa as register_at from liquidaciones, trabajadores where liquidaciones.trabajador=trabajadores.id and liquidaciones.periodo='$periodo' order by trabajadores.rut desc";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -10180,6 +10221,24 @@ class Controller
     {
         $this->conexion();
         $sql = "select * from uf where id=$id";
+        $result = $this->mi->query($sql);
+        $uf = false;
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $periodo = $rs['periodo'];
+            $tasa = $rs['tasa'];
+            $registro = $rs['register_at'];
+            $uf = new UF($id, $periodo, $tasa, $registro);
+        }
+        $this->desconectar();
+        return $uf;
+    }
+
+    //Ultimo valor uf
+    function ultimavaloruf()
+    {
+        $this->conexion();
+        $sql = "select * from uf order by register_at desc limit 1";
         $result = $this->mi->query($sql);
         $uf = false;
         if ($rs = mysqli_fetch_array($result)) {
@@ -10577,6 +10636,34 @@ class Controller
         return $result;
     }
 
+    /*Ultimo tope afp */
+    function ultimotopeafp()
+    {
+        $this->conexion();
+        $sql = "select * from topeafp order by register_at desc limit 1";
+        $result = $this->mi->query($sql);
+        $tasa = 0;
+        if ($rs = mysqli_fetch_array($result)) {
+            $tasa = $rs['valor'];
+        }
+        $this->desconectar();
+        return $tasa;
+    }
+
+    /*Tope afp por periodo */
+    function topesafp($periodo)
+    {
+        $this->conexion();
+        $sql = "select * from topeafp where periodo='$periodo'";
+        $result = $this->mi->query($sql);
+        $tasa = 0;
+        if ($rs = mysqli_fetch_array($result)) {
+            $tasa = $rs['valor'];
+        }
+        $this->desconectar();
+        return $tasa;
+    }
+
     /**********************************FIN TOPE AFP********************************* */
     
     /**********************************TOPE IPS********************************* */
@@ -10662,6 +10749,34 @@ class Controller
         $result = $this->mi->query($sql);
         $this->desconectar();
         return $result;
+    }
+
+    /*Ultimo tope ips */
+    function ultimotopeips()
+    {
+        $this->conexion();
+        $sql = "select * from topeips order by register_at desc limit 1";
+        $result = $this->mi->query($sql);
+        $tasa = 0;
+        if ($rs = mysqli_fetch_array($result)) {
+            $tasa = $rs['valor'];
+        }
+        $this->desconectar();
+        return $tasa;
+    }
+
+    /*Tope ips por periodo */
+    function topesips($periodo)
+    {
+        $this->conexion();
+        $sql = "select * from topeips where periodo='$periodo'";
+        $result = $this->mi->query($sql);
+        $tasa = 0;
+        if ($rs = mysqli_fetch_array($result)) {
+            $tasa = $rs['valor'];
+        }
+        $this->desconectar();
+        return $tasa;
     }
 
     /**********************************FIN TOPE IPS********************************* */
@@ -10750,6 +10865,34 @@ class Controller
         return $result;
     }
 
+    /*Ultimo tope cesantia */
+    function ultimotopecesantia()
+    {
+        $this->conexion();
+        $sql = "select * from topecesantia order by register_at desc limit 1";
+        $result = $this->mi->query($sql);
+        $tasa = 0;
+        if ($rs = mysqli_fetch_array($result)) {
+            $tasa = $rs['valor'];
+        }
+        $this->desconectar();
+        return $tasa;
+    }
+
+    /*Tope cesantia por periodo */
+    function topescesantia($periodo)
+    {
+        $this->conexion();
+        $sql = "select * from topecesantia where periodo='$periodo'";
+        $result = $this->mi->query($sql);
+        $tasa = 0;
+        if ($rs = mysqli_fetch_array($result)) {
+            $tasa = $rs['valor'];
+        }
+        $this->desconectar();
+        return $tasa;
+    }
+
     /**********************************FIN TOPE CESANTIA********************************* */
     /**********************************TOPE APV MENSUAL********************************* */
     //Registrar utm
@@ -10834,6 +10977,34 @@ class Controller
         $result = $this->mi->query($sql);
         $this->desconectar();
         return $result;
+    }
+
+    /*Ultimo tope apv mensual */
+    function ultimotopeapvmensual()
+    {
+        $this->conexion();
+        $sql = "select * from topeapvmensual order by register_at desc limit 1";
+        $result = $this->mi->query($sql);
+        $tasa = 0;
+        if ($rs = mysqli_fetch_array($result)) {
+            $tasa = $rs['valor'];
+        }
+        $this->desconectar();
+        return $tasa;
+    }
+
+    /*Tope apv mensual por periodo */
+    function topesapvmensual($periodo)
+    {
+        $this->conexion();
+        $sql = "select * from topeapvmensual where periodo='$periodo'";
+        $result = $this->mi->query($sql);
+        $tasa = 0;
+        if ($rs = mysqli_fetch_array($result)) {
+            $tasa = $rs['valor'];
+        }
+        $this->desconectar();
+        return $tasa;
     }
 
     /**********************************FIN TOPE APV MENSUAL********************************* */
@@ -10922,6 +11093,34 @@ class Controller
         return $result;
     }
 
+    /*Ultimo tope apv anual */
+    function ultimotopeapvanual()
+    {
+        $this->conexion();
+        $sql = "select * from topeapvanual order by register_at desc limit 1";
+        $result = $this->mi->query($sql);
+        $tasa = 0;
+        if ($rs = mysqli_fetch_array($result)) {
+            $tasa = $rs['valor'];
+        }
+        $this->desconectar();
+        return $tasa;
+    }
+
+    /*Tope apv anual por periodo */
+    function topesapvanual($ano)
+    {
+        $this->conexion();
+        $sql = "select * from topeapvanual where ano='$ano'";
+        $result = $this->mi->query($sql);
+        $tasa = 0;
+        if ($rs = mysqli_fetch_array($result)) {
+            $tasa = $rs['valor'];
+        }
+        $this->desconectar();
+        return $tasa;
+    }
+
     /**********************************FIN TOPE APV ANUAL********************************* */
 
     /***************************Movimiento del Personal******************************/
@@ -10968,8 +11167,8 @@ class Controller
         $this->conexion();
         $sql = "select * from movimientotrabajador where trabajador=$trabajador and periodo='$periodo'";
         $result = $this->mi->query($sql);
-        $movimiento = false;
-        if ($rs = mysqli_fetch_array($result)) {
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $trabajador = $rs['trabajador'];
             $empresa = $rs['empresa'];
@@ -10982,9 +11181,34 @@ class Controller
             $nombreentidad = $rs['nombreentidad'];
             $registro = $rs['register_at'];
             $movimiento = new MovPersonal($id, $trabajador, $empresa, $periodo, $tipo, $evento, $fechainicio, $fechatermino, $rutentidad, $nombreentidad, $registro);
+            $lista[] = $movimiento;
         }
         $this->desconectar();
-        return $movimiento;
+        return $lista;
+    }
+
+    function buscarmovimientoxtrabajador1($trabajador, $periodo){
+        $this->conexion();
+        $sql = "select distinct movimientotrabajador.id as id, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido1, trabajadores.segundoapellido as apellido2,movimientotrabajador.empresa as empresa,centrocosto.nombre as centrocosto, movimientotrabajador.periodo as periodo, movimientotrabajador.tipo as tipo, jornadas.codigoprevired as evento, movimientotrabajador.fechainicio as fechainicio, movimientotrabajador.fechatermino as fechatermino, movimientotrabajador.rutentidad as rutentidad, movimientotrabajador.nombreentidad as nombreentidad, movimientotrabajador.register_at as register_at from movimientotrabajador, jornadas, trabajadores,contratos, centrocosto where movimientotrabajador.evento=jornadas.id and movimientotrabajador.trabajador=trabajadores.id and movimientotrabajador.trabajador=$trabajador and movimientotrabajador.periodo='$periodo' and contratos.trabajador=trabajadores.id and contratos.centrocosto=centrocosto.id order by movimientotrabajador.fechainicio asc";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $trabajador = $rs['nombre']." ".$rs['apellido1']." ".$rs['apellido2'];
+            $empresa = $rs['empresa'];
+            $periodo = $rs['periodo'];
+            $tipo = $rs['tipo'];
+            $evento = $rs['evento'];
+            $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $rutentidad = $rs['rutentidad'];
+            $nombreentidad = $rs['nombreentidad'];
+            $registro = $rs['centrocosto'];
+            $movimiento = new MovPersonal($id, $trabajador, $empresa, $periodo, $tipo, $evento, $fechainicio, $fechatermino, $rutentidad, $nombreentidad, $registro);
+            $lista[] = $movimiento;
+        }
+        $this->desconectar();
+        return $lista;
     }
 
     //Buscar movimiento por fecha y trabajador

@@ -69,10 +69,27 @@ if (isset($_POST['folio']) && isset($_POST['tipolicencia']) && isset($_POST['fec
         echo 1;
         $evento = $c->buscarjornadaxcodigo(3);
         $pagador = $c->buscarpagadoresubsidio($pagadora);
-        $c->registrarmovimiento($TrabajadorId, $_SESSION['CURRENT_ENTERPRISE'], date("Y-m-01", strtotime($fechainicio)), 2, $evento->getId(), $fechainicio, $fechatermino,$pagador->getCodigoPrevired(),$pagador->getNombre());
+        $c->registrarmovimiento($TrabajadorId, $_SESSION['CURRENT_ENTERPRISE'], date("Y-m-01", strtotime($fechainicio)), 2, $evento->getId(), $fechainicio, $fechatermino, $pagador->getCodigoPrevired(), $pagador->getNombre());
         $usuario = $_SESSION['USER_ID'];
         $eventos = "Se Registro La Licencia del Trabajador con ID: " . $TrabajadorId . " Fecha Inicio: " . $fechainicio . " Fecha Termino: " . $fechatermino;
         $c->RegistrarAuditoriaEventos($usuario, $eventos);
+        $contrato = $c->buscarcontrato($TrabajadorId);
+        if ($contrato != null) {
+            $contrato = $contrato->getId();
+            $init = new DateTime($fechainicio);
+            $end = new DateTime($fechatermino);
+            while ($init <= $end) {
+                $fechita = $init->format('Y-m-d');
+                //Comprobar si el dia esta dentro de la licencia
+                $asistencia = $c->validarasistencia($TrabajadorId, $contrato, $fechita);
+                if ($asistencia == false) {
+                    $c->registrarasistencia($TrabajadorId, $contrato, $fechita, 4);
+                } else {
+                    $c->actualizarasistencia($asistencia, 4);
+                }
+                $init->modify('+1 day');
+            }
+        }
     } else {
         echo 0;
     }

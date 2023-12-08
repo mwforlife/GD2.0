@@ -140,6 +140,7 @@ if (isset($_GET['code'])) {
 					<img src="assets/img/brand/icon.png" class="header-brand-img icon-logo theme-logo" alt="logo">
 				</a>
 			</div>
+			
 			<div class="main-sidebar-body">
 				<?php
 				$user = $c->buscarusuario($_SESSION['USER_ID']);
@@ -358,6 +359,9 @@ if (isset($_GET['code'])) {
 											<a class="nav-sub-link" href="cargaasistencia.php">Cargar Asistencia</a>
 										</li>
 										<li class="nav-sub-item">
+											<a class="nav-sub-link" href="repmovimientos.php">Movimiento de Personal</a>
+										</li>
+										<li class="nav-sub-item">
 											<a class="nav-sub-link" href="procesar.php">Procesar Trabajadores</a>
 										</li>
 								</ul>
@@ -393,6 +397,9 @@ if (isset($_GET['code'])) {
 									</li>
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="liquidaciones.php">Reporte Liquidaciones</a>
+									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="librosremuneraciones.php">Libros de Remuneraciones</a>
 									</li>
 								</ul>
 							</li>
