@@ -284,6 +284,8 @@ if (isset($_GET['periodoinicio']) &&  isset($_GET['periodotermino']) && isset($_
         $mpdf->creator = 'Wilkens Mompoint';
         $mpdf->subject = 'Comporbante de Vacaciones';
         $mpdf->keywords = 'Comporbante de Vacaciones';
+        //PIE de pagina www.iustax.cl
+        $mpdf->SetHTMLFooter('<div style="text-align: center; font-size: 10px;">www.iustax.cl</div>');
         $mpdf->SetDisplayMode('fullpage');
         $mpdf->WriteHTML($contenido);
         $fecha = date('Ymdhis');

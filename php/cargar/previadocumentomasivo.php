@@ -107,6 +107,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid'])  && isset($_P
         $mpdf->subject = 'Documento';
         $mpdf->keywords = 'Documento';
         $mpdf->SetDisplayMode('fullpage');
+        $mpdf->SetHTMLFooter('<div style="text-align: center; font-size: 10px;">www.iustax.cl</div>');
         $mpdf->WriteHTML($contenido);
         $mpdf->AddPage();
     }

@@ -211,6 +211,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid']) && isset($_PO
         $mpdf->creator = 'WilkensTech';
         $mpdf->subject = 'Finiquito del Trabajador';
         $mpdf->keywords = 'Finiquito del Trabajador';
+        $mpdf->SetHTMLFooter('<div style="text-align: center; font-size: 10px;">www.iustax.cl</div>');
         $mpdf->SetDisplayMode('fullpage');
         $mpdf->WriteHTML($contenido);
         //Agregar pagina

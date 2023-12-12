@@ -251,6 +251,7 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['tipocontratoid']) && isset($_P
         $mpdf->creator = 'WilkensTech';
         $mpdf->subject = 'Notificacion de Termino de Contrato Laboralr';
         $mpdf->keywords = 'Notificacion de Termino de Contrato Laboralr';
+        $mpdf->SetHTMLFooter('<div style="text-align: center; font-size: 10px;">www.iustax.cl</div>');
         $mpdf->SetDisplayMode('fullpage');
         $mpdf->WriteHTML($contenido);
         //Agregar Pagina

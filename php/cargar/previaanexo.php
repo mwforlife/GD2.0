@@ -151,6 +151,7 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
         $mpdf->author = 'KaiserTech - Gestor de Documentos';
         $mpdf->creator = 'WilkensTech';
         $mpdf->subject = 'anexo del Trabajador';
+        $mpdf->SetHTMLFooter('<div style="text-align: center; font-size: 10px;">www.iustax.cl</div>');
         $mpdf->keywords = 'anexo del Trabajador';
         $mpdf->SetDisplayMode('fullpage');
         $mpdf->WriteHTML($contenido);
