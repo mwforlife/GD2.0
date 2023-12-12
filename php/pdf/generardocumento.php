@@ -27,6 +27,7 @@ $mpdf->author = 'Wilkens Mompoint';
 $mpdf->creator = 'Wilkens Mompoint';
 $mpdf->subject = 'Contrato de Trabajo';
 $mpdf->keywords = 'Contrato, Trabajo, Empleo';
+$mpdf->SetHTMLFooter('<div style="text-align: center; font-size: 10px;">www.iustax.cl</div>');
 $mpdf->SetDisplayMode('fullpage');
 $mpdf->WriteHTML($contenido);
 $fecha = date('Ymdhis');
