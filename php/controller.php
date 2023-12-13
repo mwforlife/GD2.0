@@ -75,9 +75,9 @@ class Controller
 
 
     /*Variables BD Remota*/
-    private $user = 'kaiserte_admin';
-    private $pass = 'Kaiser2022$';
-    private $bd = 'kaiserte_gd';
+    private $user = 'iustaxcl_admin';
+    private $pass = 'Kairos2023$#';
+    private $bd = 'iustaxcl_kairos';
 
     /**Variables globales */
     private $mi;
@@ -5974,7 +5974,7 @@ class Controller
     function buscarfiniquitotext($id)
     {
         $this->conexion();
-        $sql = "select finiquito.id as id, contrato, tipodocumento, fechafiniqito, fechainicio, fechatermino, causalterminocontrato.nombre as causalterminocontrato, trabajador, empresa, register_at from finiquito inner join causalterminocontrato on finiquito.causalterminocontrato = causalterminocontrato.id where finiquito.id = $id";
+        $sql = "select finiquito.id as id, contrato, tipodocumento, fechafiniqito, fechainicio, fechatermino, causalterminocontrato.nombre as causalterminocontrato, causalterminocontrato.articulo as articulo, causalterminocontrato.letra as letra, trabajador, empresa, register_at from finiquito inner join causalterminocontrato on finiquito.causalterminocontrato = causalterminocontrato.id where finiquito.id = $id";
         $result = $this->mi->query($sql);
         if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
@@ -5983,7 +5983,7 @@ class Controller
             $fechafiniquito = $rs['fechafiniqito'];
             $fechainicio = $rs['fechainicio'];
             $fechatermino = $rs['fechatermino'];
-            $causalterminocontrato = $rs['causalterminocontrato'];
+            $causalterminocontrato = $rs['causalterminocontrato']." ".$rs['articulo']." ".$rs['letra'];
             $trabajador = $rs['trabajador'];
             $empresa = $rs['empresa'];
             $register_at = $rs['register_at'];
