@@ -91,7 +91,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['finiquito']) && isset($_POST['t
 
 
     $causal = $c->buscarcausalterminacioncontrato($causal);
-    $causal = $causal->getNombre();
+    $causal = $causal->getNombre()." ".$causal->getArticulo()." ".$causal->getLetra();
     $trabajador = $c->buscartrabajador($trabajadorid);
     $dom = $c->ultimodomicilio($trabajadorid);
     $comunatra = $c->buscarcomuna($dom->getComuna());

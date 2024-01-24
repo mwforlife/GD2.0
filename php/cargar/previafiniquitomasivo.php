@@ -44,7 +44,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid']) && isset($_PO
         return;
     }
     $causal = $c->buscarcausalterminacioncontrato($causal);
-    $causal = $causal->getNombre();
+    $causal = $causal->getNombre()." ".$causal->getArticulo()." ".$causal->getLetra();
     $empresa = $c->buscarempresa($empresa);
     $comuna = $empresa->getComuna();
     $region = $empresa->getRegion();

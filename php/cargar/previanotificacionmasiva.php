@@ -68,7 +68,7 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['tipocontratoid']) && isset($_P
     }
 
     $causal = $c->buscarcausalterminacioncontrato($causal);
-    $causal = $causal->getNombre();
+    $causal = $causal->getNombre()." ".$causal->getArticulo()." ".$causal->getLetra();
 
     $mpdf = new \Mpdf\Mpdf();
 

@@ -68,13 +68,13 @@ require 'Class/Movpersonal.php';
 class Controller
 {
     private $host = "localhost";
-    /*Variables
+    /*Variables*/
     private $user = "root";
     private $pass = "";
     private $bd = "gestordocumentos";
 
 
-    /*Variables BD Remota*/
+    /*Variables BD Remota
     private $user = 'iustaxcl_admin';
     private $pass = 'Kairos2023$#';
     private $bd = 'iustaxcl_kairos';
