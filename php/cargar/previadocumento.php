@@ -82,7 +82,11 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid']) && isset($_PO
         "{NACIONALIDAD}" => $trabajador->getNacionalidad(),
         "{ESTADO_CIVIL}" => $trabajador->getCivil(),
         "{CORREO_TRABAJADOR}" => $con->getCorreo(),
-        "{CARGO}" => $contrato->getCargo()
+        "{CARGO}" => $contrato->getCargo(),
+        "{INICIO_CONTRATO}" => date("d-m-Y", strtotime($contrato->getFechainicio())),
+        "{TERMINO_CONTRATO}" => date("d-m-Y", strtotime($contrato->getFechatermino())),
+        "{FECHA_TERMINO}" => date("d-m-Y", strtotime($contrato->getFechatermino()))
+
     );
 
     $contenido = $c->buscarplantilla($tipocontratoid);
