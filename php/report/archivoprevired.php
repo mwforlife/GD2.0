@@ -21,9 +21,6 @@ if (isset($_GET['periodo'])) {
     $writer->setDelimiter(';');
     $writer->setEnclosure('');
     $writer->setLineEnding("\r\n");
-    //Formato UTF-8
-    $writer->setUseBOM(true);
-    $spreadsheet->getActiveSheet()->setTitle('Hoja 1');
     $pos = 1;
     if (strlen($periodo) < 7) {
         echo "Periodo invalido<br>";
@@ -52,14 +49,10 @@ if (isset($_GET['periodo'])) {
         //Gestion de datos y valores
         $ruttrabajador = $trabajador->getRut();
 
-        //Dividir el RUN en número de indentificación y dígito verificador
-        $posicionGuion = strpos($ruttrabajador, "-");
-        $numeroIdentificacion = substr($ruttrabajador, 0, $posicionGuion);
-        $digitoVerificador = substr($ruttrabajador, $posicionGuion + 1);
-
-        $rut = $numeroIdentificacion;
-        $rut = str_replace(".", "", $rut);
-        $dv = $digitoVerificador;
+        $ruttrabajador = str_replace(".", "", $ruttrabajador);
+        $dv = "";
+        $dv = substr($ruttrabajador, -1);
+        $rut = substr($ruttrabajador, 0, -2);
 
         $ape_paterno = $trabajador->getApellido1();
         $ape_materno = $trabajador->getApellido2();
@@ -237,6 +230,7 @@ if (isset($_GET['periodo'])) {
 
         //Ingresas la linea Principal
         //Que las columnas A sea numerica
+        $rut = intval($rut);
         $spreadsheet->getActiveSheet()->setCellValue('A' . $pos, $rut);
         $spreadsheet->getActiveSheet()->setCellValue('B' . $pos, $dv);
         $spreadsheet->getActiveSheet()->setCellValue('C' . $pos, $ape_paterno);

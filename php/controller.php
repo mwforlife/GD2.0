@@ -493,7 +493,7 @@ class Controller
     public function registrarusuario($rut, $nombre, $apellido, $correo, $direccion, $region, $comuna, $telefono, $pass, $tipo)
     {
         $this->conexion();
-        $sql = "insert into users values(null, '$rut', '$nombre', '$apellido', '$correo', '$direccion', $region, $comuna, '$telefono', sha1('$pass'), 1,$tipo, sha1('$correo'), now(), now());";
+        $sql = "insert into users values(null, '$rut', '$nombre', '$apellido', '$correo', '$direccion', $region, $comuna, '$telefono', sha1('$pass'), 1, sha1('$correo'),$tipo, now(), now());";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return json_encode($result);
