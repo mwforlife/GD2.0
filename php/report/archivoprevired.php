@@ -175,7 +175,7 @@ if (isset($_GET['periodo'])) {
         $tasacotizaciondesahucio = 0;
         $cotizaciondesahucio = 0;
         $cotizacionfonasa = $liquidacion->getDessalud();
-        $cotizacionaccidente = 0;
+        $cotizacionaccidente = round($aportepatronal->getSeguroaccidentes(), 0);
         $bonificacionley = 0;
         $descuentocargas = 0;
         $bonosgobierno = 0;
@@ -187,7 +187,7 @@ if (isset($_GET['periodo'])) {
             }
         }
         $numerofun = 0;
-        $rentaimponibleisapre = 0;
+        $rentaimponibleisapre = $liquidacion->getTotalimponible();
         $monedapactada = "00";
         $cotizacionpactada = 0;
         $cotizacionobligatoriaisapre = 0;
@@ -210,11 +210,17 @@ if (isset($_GET['periodo'])) {
         $bonosgobiernoccaf = 0;
         $codsucursal = "";
         $codmutual = "00";
+        $rentaimponiblemutual = 0;
+        $cotizacionaccidentemutual = 0;
         if ($mutual != null) {
+            if($mutual->getCodigoPrevired() == "00"){
+                $codmutual = "00";
+            }else{
             $codmutual = $mutual->getCodigoPrevired();
+            $rentaimponiblemutual = $liquidacion->getTotalimponible();
+            $cotizacionaccidentemutual = round($aportepatronal->getSeguroaccidentes(), 0);
+            }
         }
-        $rentaimponiblemutual = $liquidacion->getTotalimponible();
-        $cotizacionaccidentemutual = round($aportepatronal->getSeguroaccidentes(), 0);
         $sucursalpago = "0";
         $rentaimponiblecesantia = $liquidacion->getTotalimponible();
         $aportetrabajadorcesantia = 0;

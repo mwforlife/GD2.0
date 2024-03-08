@@ -129,302 +129,291 @@ foreach ($permiso as $p) {
                     <img src="assets/img/brand/icon.png" class="header-brand-img icon-logo theme-logo" alt="logo">
                 </a>
             </div>
-            
-			<div class="main-sidebar-body">
-				<?php
-				$user = $c->buscarusuario($_SESSION['USER_ID']);
-				if ($user != null) {
-					if ($user->getTipo() != 3) {
-						?>
-						<ul class="nav">
-							<li class="nav-header"><span class="nav-label">Dashboard</span></li>
 
-							<?php
+            <div class="main-sidebar-body">
+                <?php
+                $user = $c->buscarusuario($_SESSION['USER_ID']);
+                if ($user != null) {
+                    if ($user->getTipo() != 3) {
+                ?>
+                        <ul class="nav">
+                            <li class="nav-header"><span class="nav-label">Dashboard</span></li>
 
-							if (isset($_SESSION['GESTION_PERMISO']) || isset($_SESSION['LECTURA_PERMISO']) || isset($_SESSION['ESCRITURA_PERMISO']) || isset($_SESSION['ACTUALIZACION_PERMISO']) || isset($_SESSION['ELIMINACION_PERMISO'])) {
-								if ($_SESSION['GESTION_PERMISO'] == true) {
+                            <?php
 
-									?>
-									<li class="nav-item">
-										<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span
-												class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
-										<ul class="nav-sub">
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="isapres.php">Institución de Salud</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="afp.php">AFP</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="pagadoressubsidio.php">PAGADORES SUBSIDIO</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="regiones.php">REGIONES</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="comunas.php">COMUNAS</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="nacionalidad.php">NACIONALIDADES</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="jornadas.php">MOVIMIENTO PERSONAL</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="tiposueldo.php">TIPO SUELDO BASE</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="cajacompensacion.php">CAJAS DE COMPENSACIÓN</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="mutuales.php">MUTUALES DE SEGURIDAD</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="asignacionfamiliar.php">TRAMOS ASIGNACION FAMILIAR</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="tipocontrato.php">TIPO CONTRATO LABORAL</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="causaltermino.php">CAUSAL TERMINO CONTRATO</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="diasferiados.php">DIAS FERIADOS</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="codigolre.php">CODIGOS LRE</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="uf.php">UF</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="utm.php">UTM</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="uta.php">UTA</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="sminimo.php">SUELDO MÍNIMO</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="topeafp.php">Tope AFP</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="topeips.php">TOPE IPS</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="topecesantia.php">TOPE SEGURO CESANTÍA</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="topeapv.php">TOPE APV MENSUAL</a>
-											</li>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="topeapvanual.php">TOPE APV ANUAL</a>
-											</li>
-										</ul>
-									</li>
-									<?php
-								}
-								?>
-								<li class="nav-header"><span class="nav-label">FUNCIONES</span></li>
+                            if (isset($_SESSION['GESTION_PERMISO']) || isset($_SESSION['LECTURA_PERMISO']) || isset($_SESSION['ESCRITURA_PERMISO']) || isset($_SESSION['ACTUALIZACION_PERMISO']) || isset($_SESSION['ELIMINACION_PERMISO'])) {
+                                if ($_SESSION['GESTION_PERMISO'] == true) {
+
+                            ?>
+                                    <li class="nav-item">
+                                        <a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
+                                        <ul class="nav-sub">
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="isapres.php">Institución de Salud</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="afp.php">AFP</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="pagadoressubsidio.php">PAGADORES SUBSIDIO</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="regiones.php">REGIONES</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="comunas.php">COMUNAS</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="nacionalidad.php">NACIONALIDADES</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="jornadas.php">MOVIMIENTO PERSONAL</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="tiposueldo.php">TIPO SUELDO BASE</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="cajacompensacion.php">CAJAS DE COMPENSACIÓN</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="mutuales.php">MUTUALES DE SEGURIDAD</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="asignacionfamiliar.php">TRAMOS ASIGNACION FAMILIAR</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="tipocontrato.php">TIPO CONTRATO LABORAL</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="causaltermino.php">CAUSAL TERMINO CONTRATO</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="diasferiados.php">DIAS FERIADOS</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="codigolre.php">CODIGOS LRE</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="uf.php">UF</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="utm.php">UTM</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="uta.php">UTA</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="sminimo.php">SUELDO MÍNIMO</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="topeafp.php">Tope AFP</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="topeips.php">TOPE IPS</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="topecesantia.php">TOPE SEGURO CESANTÍA</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="topeapv.php">TOPE APV MENSUAL</a>
+                                            </li>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="topeapvanual.php">TOPE APV ANUAL</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                <?php
+                                }
+                                ?>
+                                <li class="nav-header"><span class="nav-label">FUNCIONES</span></li>
 
 
-								<li class="nav-item">
-									<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span
-											class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
-									<ul class="nav-sub">
-										<?php
-										if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
-											?>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="empresas.php">Empresas</a>
-											</li>
-											<?php
-										}
-										?>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="asignarcentrocosto.php">Gestionar Mandante</a>
-										</li>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="trabajadores.php">Trabajadores</a>
-										</li>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="haberes.php">Haberes y Descuentos</a>
-										</li>
+                                <li class="nav-item">
+                                    <a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
+                                    <ul class="nav-sub">
+                                        <?php
+                                        if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
+                                        ?>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="empresas.php">Empresas</a>
+                                            </li>
+                                        <?php
+                                        }
+                                        ?>
+                                        <li class="nav-sub-item">
+                                            <a class="nav-sub-link" href="asignarcentrocosto.php">Gestionar Mandante</a>
+                                        </li>
+                                        <li class="nav-sub-item">
+                                            <a class="nav-sub-link" href="trabajadores.php">Trabajadores</a>
+                                        </li>
+                                        <li class="nav-sub-item">
+                                            <a class="nav-sub-link" href="haberes.php">Haberes y Descuentos</a>
+                                        </li>
 
-										<?php
-										if ($_SESSION['GESTION_PERMISO'] == true) {
-											?>
-											<li class="nav-sub-item">
-												<a class="nav-sub-link" href="tipodocumento.php">Escritos</a>
-											</li>
-											<?php
-										}
-										?>
+                                        <?php
+                                        if ($_SESSION['GESTION_PERMISO'] == true) {
+                                        ?>
+                                            <li class="nav-sub-item">
+                                                <a class="nav-sub-link" href="tipodocumento.php">Escritos</a>
+                                            </li>
+                                        <?php
+                                        }
+                                        ?>
 
-										<?php
-										if (isset($_SESSION['GESTION_PERMISO'])) {
-											if ($_SESSION['GESTION_PERMISO'] == true) {
+                                        <?php
+                                        if (isset($_SESSION['GESTION_PERMISO'])) {
+                                            if ($_SESSION['GESTION_PERMISO'] == true) {
 
-												?>
-												<li class="nav-sub-item">
-													<a class="nav-sub-link" href="usuarios.php">Usuarios</a>
-												</li>
-												<?php
-											}
-										}
-										?>
-									</ul>
-								</li>
-								<?php
-							}
+                                        ?>
+                                                <li class="nav-sub-item">
+                                                    <a class="nav-sub-link" href="usuarios.php">Usuarios</a>
+                                                </li>
+                                        <?php
+                                            }
+                                        }
+                                        ?>
+                                    </ul>
+                                </li>
+                            <?php
+                            }
 
-							if ($_SESSION['GESTION_PERMISO'] == true) {
-								?>
-								<li class="nav-item">
-									<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span
-											class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
-									<ul class="nav-sub">
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="auditoriatrabajadores.php">Auditoria de trabajadores</a>
-										</li>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="auditoriaeventos.php">Auditoria de eventos</a>
-										</li>
+                            if ($_SESSION['GESTION_PERMISO'] == true) {
+                            ?>
+                                <li class="nav-item">
+                                    <a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
+                                    <ul class="nav-sub">
+                                        <li class="nav-sub-item">
+                                            <a class="nav-sub-link" href="auditoriatrabajadores.php">Auditoria de trabajadores</a>
+                                        </li>
+                                        <li class="nav-sub-item">
+                                            <a class="nav-sub-link" href="auditoriaeventos.php">Auditoria de eventos</a>
+                                        </li>
 
-									</ul>
-								</li>
-								<?php
-							}
-							?>
-							<!--------------------Generarion de documentos------------------>
-							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
-										class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
-								<ul class="nav-sub">
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="contratoindividual.php">Contrato Individual</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="generarlote.php">Contratos Masivos</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="generarloteanexo.php">Anexos Masivos</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="finiquitoindividual.php">Finiquito Individual</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="generarlotefiniquito.php">Finiquitos Masivos</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="notificacionindividual.php">Notificacion Individual</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="generarlotenotificacion.php">Notificación Masiva</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="documentospersonalizados.php">Documentos Individual</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="generarlotepersonalizado.php">Documentos Masivos</a>
-									</li>
-								</ul>
-							</li>
-							<!--------------------------------------------------------------->
-							<!--------------------Remuneraciones------------------>
-							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-dollar-sign sidemenu-icon"></i><span
-										class="sidemenu-label">Remuneraciones</span><i
-										class="angle fe fe-chevron-right"></i></a>
-								<ul class="nav-sub">
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="habmaster.php">Haberes y Descuentos</a>
-									</li>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="asistencia.php">Asistencia</a>
-										</li>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="cargaasistencia.php">Cargar Asistencia</a>
-										</li>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="repmovimientos.php">Movimiento de Personal</a>
-										</li>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="procesar.php">Procesar Trabajadores</a>
-										</li>
-								</ul>
-							</li>
-							<!--------------------------------------------------------------->
-							<!--------------------Carga de documentos------------------>
-							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-upload sidemenu-icon"></i><span
-										class="sidemenu-label">Carga de Documentos</span><i
-										class="angle fe fe-chevron-right"></i></a>
-								<ul class="nav-sub">
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="cargatrabajador.php">Trabajadores</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="cargaempresa.php">Empresa</a>
-									</li>
-								</ul>
-							</li>
-							<!--------------------Reportes------------------>
-							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
-										class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
-								<ul class="nav-sub">
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="impresiondocumentos.php">Impresión Documentos</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="impresionmasiva.php">Impresión Masiva</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="documentosfirmados.php">Documentos Firmados</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="liquidaciones.php">Reporte Liquidaciones</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="librosremuneraciones.php">Libros de Remuneraciones</a>
-									</li>
-								</ul>
-							</li>
-							<!--------------------------------------------------------------->
+                                    </ul>
+                                </li>
+                            <?php
+                            }
+                            ?>
+                            <!--------------------Generarion de documentos------------------>
+                            <li class="nav-item">
+                                <a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
+                                <ul class="nav-sub">
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="contratoindividual.php">Contrato Individual</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="generarlote.php">Contratos Masivos</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="generarloteanexo.php">Anexos Masivos</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="finiquitoindividual.php">Finiquito Individual</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="generarlotefiniquito.php">Finiquitos Masivos</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="notificacionindividual.php">Notificacion Individual</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="generarlotenotificacion.php">Notificación Masiva</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="documentospersonalizados.php">Documentos Individual</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="generarlotepersonalizado.php">Documentos Masivos</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!--------------------------------------------------------------->
+                            <!--------------------Remuneraciones------------------>
+                            <li class="nav-item">
+                                <a class="nav-link with-sub" href="#"><i class="fe fe-dollar-sign sidemenu-icon"></i><span class="sidemenu-label">Remuneraciones</span><i class="angle fe fe-chevron-right"></i></a>
+                                <ul class="nav-sub">
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="habmaster.php">Haberes y Descuentos</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="asistencia.php">Asistencia</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="cargaasistencia.php">Cargar Asistencia</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="repmovimientos.php">Movimiento de Personal</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="procesar.php">Procesar Trabajadores</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!--------------------------------------------------------------->
+                            <!--------------------Carga de documentos------------------>
+                            <li class="nav-item">
+                                <a class="nav-link with-sub" href="#"><i class="fe fe-upload sidemenu-icon"></i><span class="sidemenu-label">Carga de Documentos</span><i class="angle fe fe-chevron-right"></i></a>
+                                <ul class="nav-sub">
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="cargatrabajador.php">Trabajadores</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="cargaempresa.php">Empresa</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!--------------------Reportes------------------>
+                            <li class="nav-item">
+                                <a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
+                                <ul class="nav-sub">
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="impresiondocumentos.php">Impresión Documentos</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="impresionmasiva.php">Impresión Masiva</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="documentosfirmados.php">Documentos Firmados</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="liquidaciones.php">Reporte Liquidaciones</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="librosremuneraciones.php">Libros de Remuneraciones</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!--------------------------------------------------------------->
 
-						</ul>
-						<?php
-							} else if ($user->getTipo() == 3) {
-							?>
-							<ul class="nav">
-								<li class="nav-header"><span class="nav-label">Reporte Mandante</span></li>
-							<!-----------------------------Mandante--------------------------------->
-							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span
-										class="sidemenu-label">Mandante</span><i
-										class="angle fe fe-chevron-right"></i></a>
-								<ul class="nav-sub">
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="mandanteempresa.php">Documentos Empresa</a>
-									</li>
-									<li class="nav-sub-item">
-										<a class="nav-sub-link" href="mandantetrabajadores.php">Documentos Trabajadores
+                        </ul>
+                    <?php
+                    } else if ($user->getTipo() == 3) {
+                    ?>
+                        <ul class="nav">
+                            <li class="nav-header"><span class="nav-label">Reporte Mandante</span></li>
+                            <!-----------------------------Mandante--------------------------------->
+                            <li class="nav-item">
+                                <a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span class="sidemenu-label">Mandante</span><i class="angle fe fe-chevron-right"></i></a>
+                                <ul class="nav-sub">
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="mandanteempresa.php">Documentos Empresa</a>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a class="nav-sub-link" href="mandantetrabajadores.php">Documentos Trabajadores
 
-										</a>
-									</li>
-								</ul>
-							</li>
-							</ul>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
 
-						<?php
+                <?php
 
-							}
-						}
-						?>
+                    }
+                }
+                ?>
 
-			</div>
+            </div>
         </div>
         <!-- End Sidemenu -->
         <!-- Main Header-->
@@ -552,64 +541,119 @@ foreach ($permiso as $p) {
 
                     <!-- ROW- opened -->
                     <div class="row">
-                        <?php
-                        $lista = $c->listarlotescontrato($_SESSION['CURRENT_ENTERPRISE']);
-                        foreach ($lista as $object) {
-                            $lista1 = $c->listarlotestext($object->getId());
-                            if (count($lista1) > 0) {
-                        ?>
-                                <div class="col-xl-6 col-lg-6 col-md-12">
-                                    <div class="card transcation-crypto1" id="transcation-crypto1">
-                                        <div class="card-header bd-b-0 d-flex justify-content-between">
-                                            <h4 class="card-title font-weight-semibold mb-0">Lote: <?php echo $object->getNombre_lote(); ?></h4>
-                                            <button onclick="agregartodoanexo(<?php echo $object->getId(); ?>)" class="btn btn-info"><i class="fa fa-plus"></i> Todo</button>
-                                        </div>
-                                        <div class="card-body p-4">
-                                            <div class="">
-                                                <div class="table-responsive">
-                                                    <table class="table w-100 text-nowrap table-lote">
-                                                        <thead class="border-top">
-                                                            <tr>
-                                                                <th class="bg-transparent">Contrato</th>
-                                                                <th class="bg-transparent">Trabajador</th>
-                                                                <th class="bg-transparent text-center">Agregar Al Lote</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <?php
-                                                            foreach ($lista1 as $object1) {
-                                                                echo "<tr class='border-bottom-0'>";
-                                                                echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
-                                                                $fecha = $object1->getFecha_inicio();
-                                                                //Convertir fecha en formato dd-mm-YYYY
-                                                                $fecha = date("d-m-Y", strtotime($fecha));
+                        <div class="col-md-6">
+                            <div class="col-md-12 d-none">
+                                <?php
+                                $lista = $c->listarlotescontrato($_SESSION['CURRENT_ENTERPRISE']);
+                                foreach ($lista as $object) {
+                                    $lista1 = $c->listarlotestext($object->getId());
+                                    if (count($lista1) > 0) {
+                                ?>
+                                        <div class="col-xl-12 col-lg-12 col-md-12">
+                                            <div class="card transcation-crypto1" id="transcation-crypto1">
+                                                <div class="card-header bd-b-0 d-flex justify-content-between">
+                                                    <h4 class="card-title font-weight-semibold mb-0">Lote: <?php echo $object->getNombre_lote(); ?></h4>
+                                                    <button onclick="agregartodoanexo(<?php echo $object->getId(); ?>)" class="btn btn-info"><i class="fa fa-plus"></i> Todo</button>
+                                                </div>
+                                                <div class="card-body p-4">
+                                                    <div class="">
+                                                        <div class="table-responsive">
+                                                            <table class="table w-100 text-nowrap table-lote">
+                                                                <thead class="border-top">
+                                                                    <tr>
+                                                                        <th class="bg-transparent">Contrato</th>
+                                                                        <th class="bg-transparent">Trabajador</th>
+                                                                        <th class="bg-transparent text-center">Agregar Al Lote</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <?php
+                                                                    foreach ($lista1 as $object1) {
+                                                                        echo "<tr class='border-bottom-0'>";
+                                                                        echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
+                                                                        $fecha = $object1->getFecha_inicio();
+                                                                        //Convertir fecha en formato dd-mm-YYYY
+                                                                        $fecha = date("d-m-Y", strtotime($fecha));
 
-                                                                echo $object1->getContrato() . " - " . $fecha;
-                                                                echo "</td>";
-                                                                echo "<td class='text-muted fs-15 font-weight-semibold'>";
-                                                                echo $object1->getTrabajador();
-                                                                echo "</td>";
-                                                                echo "<td class='text-center'>";
-                                                                echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='agregarloteanexo(" . $object1->getId() . ")' data-toggle='tooltip' data-original-title='Agregar al Lote'>";
-                                                                echo "<i class='fa fa-plus'>";
-                                                                echo "</i>";
-                                                                echo "</a>";
-                                                                echo "</td>";
-                                                                echo "</tr>";
-                                                            }
-                                                            ?>
-                                                        </tbody>
-                                                    </table>
+                                                                        echo $object1->getContrato() . " - " . $fecha;
+                                                                        echo "</td>";
+                                                                        echo "<td class='text-muted fs-15 font-weight-semibold'>";
+                                                                        echo $object1->getTrabajador();
+                                                                        echo "</td>";
+                                                                        echo "<td class='text-center'>";
+                                                                        echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='agregarloteanexo(" . $object1->getId() . ")' data-toggle='tooltip' data-original-title='Agregar al Lote'>";
+                                                                        echo "<i class='fa fa-plus'>";
+                                                                        echo "</i>";
+                                                                        echo "</a>";
+                                                                        echo "</td>";
+                                                                        echo "</tr>";
+                                                                    }
+                                                                    ?>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                <?php
+                                    }
+                                }
+                                ?>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-12">
+                                        <div class="card transcation-crypto1" id="transcation-crypto1">
+                                            <div class="card-header bd-b-0">
+                                                <h4 class="card-title font-weight-semibold mb-0">Listado de Trabajadores Activos</h4>
+                                            </div>
+                                            <div class="card-body p-4">
+                                                <div class="">
+                                                    <div class="table-responsive">
+                                                        <table class="table text-nowrap w-100" id="example1">
+                                                            <thead class="border-top">
+                                                                <tr>
+                                                                    <th class="bg-transparent">RUT</th>
+                                                                    <th class="bg-transparent">Nombre</th>
+                                                                    <th class="bg-transparent">Fecha de Nacimiento</th>
+                                                                    <th class="bg-transparent text-center">Agregar al Lote</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php
+                                                                $lista = $c->listartrabajadoresactivosparaanexo($_SESSION['CURRENT_ENTERPRISE']);
+                                                                foreach ($lista as $object) {
+                                                                    echo "<tr class='border-bottom-0'>";
+                                                                    echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
+                                                                    echo $object->getRut();
+                                                                    echo "</td>";
+                                                                    echo "<td class='text-muted fs-15 font-weight-semibold'>";
+                                                                    echo $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2();
+                                                                    echo "</td>";
+                                                                    echo "<td class='text-muted fs-15 font-weight-semibold'>";
+                                                                    echo date("d-m-Y", strtotime($object->getNacimiento()));
+                                                                    echo "</td>";
+                                                                    echo "<td class='text-center'>";
+                                                                    echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='agregarloteanexo1(" . $object->getRegistrar() . ")' data-toggle='tooltip' data-original-title='Agregar al Lote'>";
+                                                                    echo "<i class='fa fa-plus'>";
+                                                                    echo "</i>";
+                                                                    echo "</a>";
+                                                                    echo "</td>";
+                                                                    echo "</tr>";
+                                                                }
+                                                                ?>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
-                        <?php
-                            }
-                        }
-                        ?>
+                            </div>
+                        </div>
 
                         <div class="col-xl-6 col-lg-6 col-md-12">
                             <div class="card transcation-crypto1" id="transcation-crypto1">

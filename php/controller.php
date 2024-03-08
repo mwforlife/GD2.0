@@ -68,13 +68,13 @@ require 'Class/Movpersonal.php';
 class Controller
 {
     private $host = "localhost";
-    /*Variables*/
+    /*Variables
     private $user = "root";
     private $pass = "";
     private $bd = "gestordocumentos";
 
 
-    /*Variables BD Remota
+    /*Variables BD Remota*/
     private $user = 'iustaxcl_admin';
     private $pass = 'Kairos2023$#';
     private $bd = 'iustaxcl_kairos';
@@ -1387,6 +1387,35 @@ class Controller
     {
         $this->conexion();
         $sql = "select trabajadores.id as id, contratos.id as contrato, rut, dni, trabajadores.nombre as nombre, primerapellido,segundoapellido,fechanacimiento, fechainicio as fechanacimiento, sexo, centrocosto.nombre as centrocosto, estadocivil, nacionalidad, discapacidad,contratos.id as centroid, pension, trabajadores.empresa as empresa from centrocosto,trabajadores,contratos where trabajadores.id=contratos.trabajador and trabajadores.empresa = $empresa and contratos.estado=1 and centrocosto.id=contratos.centrocosto group by trabajadores.id;";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $rut = $rs['rut'];
+            $dni = $rs['dni'];
+            $nombre = $rs['nombre'];
+            $apellido1 = $rs['primerapellido'];
+            $apellido2 = $rs['segundoapellido'];
+            $nacimiento = $rs['fechanacimiento'];
+            $sexo = $rs['sexo'];
+            $estadocivil = $rs['estadocivil'];
+            $nacionalidad = $rs['centroid'];
+            $discapacidad = $rs['centrocosto'];
+            $pension = $rs['pension'];
+            $empresa = $rs['empresa'];
+            $registrar = $rs["contrato"];
+            $T = new Trabajadores($id, $rut, $dni, $nombre, $apellido1, $apellido2, $nacimiento, $sexo, $estadocivil, $nacionalidad, $discapacidad, $pension, $empresa, $registrar);
+            $lista[] = $T;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    //Listar Trabajadores Activos
+    public function listartrabajadoresactivosparaanexo($empresa)
+    {
+        $this->conexion();
+        $sql = "select trabajadores.id as id, contratos.id as contrato, rut, dni, trabajadores.nombre as nombre, primerapellido,segundoapellido,fechanacimiento, fechainicio as fechanacimiento, sexo, centrocosto.nombre as centrocosto, estadocivil, nacionalidad, discapacidad,contratos.id as centroid, pension, trabajadores.empresa as empresa from contratos left join centrocosto on centrocosto.id=contratos.centrocosto left join trabajadores on trabajadores.id=contratos.trabajador left join detallelotes on detallelotes.contrato=contratos.id where detallelotes.id is null and trabajadores.empresa = $empresa and contratos.estado=1 group by trabajadores.id order by contratos.id desc;";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
