@@ -651,7 +651,7 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                                                 <div class="col-lg-6 mt-1">
                                                     <label for="">¿Modifica Sueldo Base?</label>
 														<label class="custom-switch m-0 p-0">
-															<input type="checkbox" name="base" id="base" class="custom-switch-input" value="1">
+															<input type="checkbox" name="base" id="base" class="custom-switch-input" value="0">
 															<span class="custom-switch-indicator"></span>
 															<span class="custom-switch-description">No.</span>
 														</label>

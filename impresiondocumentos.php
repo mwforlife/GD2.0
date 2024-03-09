@@ -724,6 +724,17 @@ foreach ($permiso as $p) {
 																				echo "</tr>";
 																			}
 																		}
+																		$anexos = $c->listaranexos($_SESSION['CURRENT_ENTERPRISE']);
+																		foreach ($anexos as $anexo) {
+																			echo "<tr>";
+																			echo "<td>" . $anexo->getBase() . "</td>";
+																			echo "<td>" . $anexo->getContrato() . "</td>";
+																			echo "<td>" . date("d-m-Y", strtotime($anexo->getFechageneracion())) . "</td>";
+																			echo "<td>Anexo de Contrato</td>";
+																			echo "<td><a href='php/report/anexo.php?id=" . $anexo->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
+																			echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminardanexo(" . $anexo->getId() . ")'><i class='fa fa-trash'></i></button></td>";
+																			echo "</tr>";
+																		}
 																		?>
 																	</tbody>
 																</table>

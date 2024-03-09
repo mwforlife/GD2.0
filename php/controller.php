@@ -68,13 +68,13 @@ require 'Class/Movpersonal.php';
 class Controller
 {
     private $host = "localhost";
-    /*Variables
+    /*Variables*/
     private $user = "root";
     private $pass = "";
     private $bd = "gestordocumentos";
 
 
-    /*Variables BD Remota*/
+    /*Variables BD Remota
     private $user = 'iustaxcl_admin';
     private $pass = 'Kairos2023$#';
     private $bd = 'iustaxcl_kairos';
@@ -5307,6 +5307,33 @@ class Controller
         return false;
     }
 
+    //Buscar contrato por id
+    function buscarcontratoidanexo($id)
+    {
+        $this->conexion();
+        $sql = "select contratos.id as id, trabajadores.id as traid,contratos.centrocosto as centrocosto, trabajadores.nombre as nombre, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido,empresa.id as empresaid, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos, trabajadores, empresa where contratos.id = $id and trabajadores.id = contratos.trabajador and empresa.id = contratos.empresa";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $nombre = $rs['nombre'] . " " . $rs['primerapellido'] . " " . $rs['segundoapellido'];
+            $razonsocial = $rs['razonsocial'];
+            $tipocontrato = $rs['tipocontrato'];
+            $centrocosto = $rs['centrocosto'];
+            $cargo = $rs['cargo'];
+            $sueldo = $rs['sueldo'];
+            $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $documento = $rs['documento'];
+            $estado = $rs['empresaid'];
+            $register_at = $rs['traid'];
+            $contrato = new Contrato($id, $nombre, $razonsocial, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $this->desconectar();
+            return $contrato;
+        }
+        $this->desconectar();
+        return false;
+    }
+
     //Search COntrato
     function searchcontrato($id)
     {
@@ -6060,24 +6087,6 @@ class Controller
         return $result;
     }
 
-    //Eliminar Contrato
-    function eliminarcontrato($id)
-    {
-        $this->conexion();
-        $sql = "delete from asistencia where contrato = $id";
-        $result = $this->mi->query($sql);
-        $sql = "delete from finiquito where contrato = $id";
-        $result = $this->mi->query($sql);
-        $sql = "delete from contratosfirmados where contrato = $id";
-        $result = $this->mi->query($sql);
-        $sql = "delete from horaspactadas where contrato = $id";
-        $result = $this->mi->query($sql);
-        $sql = "delete from contratos where id = $id";
-        $result = $this->mi->query($sql);
-
-        $this->desconectar();
-        return $result;
-    }
 
     //Listar Detalle finiquito
     function listardetallefiniquito($finiquito)
@@ -6405,6 +6414,90 @@ class Controller
         return $result;
     }
 
+    //Eliminar Contrato
+    function eliminarcontrato($id)
+    {
+        $this->conexion();
+        $sql = "delete from asistencia where contrato = $id";
+        $result = $this->mi->query($sql);
+        $sql = "delete from finiquito where contrato = $id";
+        $result = $this->mi->query($sql);
+        $sql = "delete from contratosfirmados where contrato = $id";
+        $result = $this->mi->query($sql);
+        $sql = "delete from horaspactadas where contrato = $id";
+        $result = $this->mi->query($sql);
+        $sql = "delete from contratos where id = $id";
+        $result = $this->mi->query($sql);
+
+        $this->desconectar();
+        return $result;
+    }
+
+    //Validar si el contrato tiene asistencias
+    function buscarasistenciacontrato($id){
+        $this->conexion();
+        $sql = "select * asistencia where contrato = $id";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $this->desconectar();
+            return true;
+        }
+        $this->desconectar();
+        return false;
+    }
+
+    //Validar si el contrato tiene finiquito
+    function buscarfiniquitocontrato($id){
+        $this->conexion();
+        $sql = "select * from finiquito where contrato = $id";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $this->desconectar();
+            return true;
+        }
+        $this->desconectar();
+        return false;
+    }
+
+    //Validar si el contrato tiene contrato firmado
+    function buscarcontratofirmadocontrato($id){
+        $this->conexion();
+        $sql = "select * from contratosfirmados where contrato = $id";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $this->desconectar();
+            return true;
+        }
+        $this->desconectar();
+        return false;
+    }
+
+    //Validar si el contrato tiene horas pactadas
+    function buscarhoraspactadascontrato($id){
+        $this->conexion();
+        $sql = "select * from horaspactadas where contrato = $id";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $this->desconectar();
+            return true;
+        }
+        $this->desconectar();
+        return false;
+    }
+
+    //Validar si el contrato tiene anexos
+    function buscaranexoscontrato($id){
+        $this->conexion();
+        $sql = "select * from anexoscontrato where contrato = $id";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $this->desconectar();
+            return true;
+        }
+        $this->desconectar();
+        return false;
+    }
+
     function eliminarcontratohoraspactadas($contrato)
     {
         $this->conexion();
@@ -6715,6 +6808,53 @@ class Controller
         $this->desconectar();
         return $lista;
     }
+    
+
+    function listaranexos($empresa){
+        $this->conexion();
+        $sql = "select trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, anexoscontrato.id as id, anexoscontrato.contrato as contrato, anexoscontrato.fechageneracion as fechageneracion, anexoscontrato.base as base, anexoscontrato.sueldo_base as sueldo_base, anexoscontrato.estado as estado, anexoscontrato.register_at as register_at from anexoscontrato, contratos, trabajadores where anexoscontrato.contrato = contratos.id and contratos.trabajador = trabajadores.id and contratos.empresa = $empresa and contratos.estado = 1";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $contrato = $rs['contrato'];
+            $fechageneracion = $rs['fechageneracion'];
+            $base = $rs['base'];
+            $sueldo_base = $rs['sueldo_base'];
+            $estado = $rs['estado'];
+            $registro = $rs['register_at'];
+            $rut = $rs['rut'];
+            $nombre = $rs['nombre'];
+            $apellido = $rs['apellido'];
+            $a = new Anexo($id, $nombre." ".$apellido, $fechageneracion, $rut, $sueldo_base, $estado, $registro);
+            $lista[] = $a;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    function listaranexostrabajador($trabajador){
+        $this->conexion();
+        $sql = "select trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, anexoscontrato.id as id, anexoscontrato.contrato as contrato, anexoscontrato.fechageneracion as fechageneracion, anexoscontrato.base as base, anexoscontrato.sueldo_base as sueldo_base, anexoscontrato.estado as estado, anexoscontrato.register_at as register_at from anexoscontrato, contratos, trabajadores where anexoscontrato.contrato = contratos.id and contratos.trabajador = trabajadores.id and contratos.trabajador = $trabajador";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $contrato = $rs['contrato'];
+            $fechageneracion = $rs['fechageneracion'];
+            $base = $rs['base'];
+            $sueldo_base = $rs['sueldo_base'];
+            $estado = $rs['estado'];
+            $registro = $rs['register_at'];
+            $rut = $rs['rut'];
+            $nombre = $rs['nombre'];
+            $apellido = $rs['apellido'];
+            $a = new Anexo($id, $nombre." ".$apellido, $fechageneracion, $rut, $sueldo_base, $estado, $registro);
+            $lista[] = $a;
+        }
+        $this->desconectar();
+        return $lista;
+    }
 
     //Buscar Anexo
     function buscaranexo($id)
@@ -6755,7 +6895,7 @@ class Controller
         $sql = "select * from clausulasanexos where anexo=$anexo";
         $result = $this->mi->query($sql);
         $lista = array();
-        if ($rs = mysqli_fetch_array($result)) {
+        while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $anexo = $rs['anexo'];
             $clausula = $rs['clausula'];
@@ -6955,6 +7095,8 @@ class Controller
         $this->desconectar();
         return $lista;
     }
+
+    
 
     //Listar documentos text empresa
     function listardocumentostextempresa2($empresa)

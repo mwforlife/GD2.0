@@ -1331,3 +1331,30 @@ function eliminaranexo(id,contrato){
         }
     });
 }
+
+function eliminardanexo(id){
+    //Confirmar Eliminarcion
+    swal.fire({
+        title: "¿Estas seguro?",
+        text: "¿Deseas eliminar este anexo?",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Si, Eliminar",
+        cancelButtonText: "No, Cancelar",
+    }).then((result) => {
+        if(result.value){
+            $.ajax({
+                type: "POST",
+                url: "php/eliminar/anexo.php",
+                data: { id: id },
+                success: function (data) {
+                    if(data == 1 || data == "1"){
+                        location.reload();
+                    }else{
+                        ToastifyError("Error al Eliminar");
+                    }
+                }
+            });
+        }
+    });
+}
