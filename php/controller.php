@@ -6418,20 +6418,12 @@ class Controller
     function eliminarcontrato($id)
     {
         $this->conexion();
-        $sql = "delete from asistencia where contrato = $id";
-        $result = $this->mi->query($sql);
-        $sql = "delete from finiquito where contrato = $id";
-        $result = $this->mi->query($sql);
-        $sql = "delete from contratosfirmados where contrato = $id";
-        $result = $this->mi->query($sql);
         $sql = "delete from horaspactadas where contrato = $id";
-        $result = $this->mi->query($sql);
-        $sql = "delete from anexoscontrato where contrato = $id";
         $result = $this->mi->query($sql);
         $sql = "delete from contratos where id = $id";
         $result = $this->mi->query($sql);
         $this->desconectar();
-        return $result;
+        return json_encode($result);
     }
 
     //Validar si el contrato tiene asistencias
