@@ -1011,11 +1011,16 @@ function eliminarcontrato(id) {
                 url: "php/eliminar/contrato.php",
                 data: "id=" + id,
                 success: function (data) {
-                    if (data == 1 || data == "1") {
-                        ToastifySuccess("Contrato eliminado");
-                        setTimeout(function () { location.reload(); }, 1000);
-                    } else {
-                        ToastifyError("No se pudo eliminar el registro");
+                    try {
+                        var json = JSON.parse(data);
+                        if(json.status == true){
+                            ToastifySuccess("Registro eliminado");
+                            setTimeout(function () { location.reload(); }, 1000);
+                        }else{
+                            ToastifyError(json.message);
+                        }
+                    } catch (error) {
+                        ToastifyError(error);
                     }
                 },
             });

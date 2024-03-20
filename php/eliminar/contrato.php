@@ -6,8 +6,22 @@ if(isset($_POST['id'])){
     $id = $_POST['id'];
     $contrato = $c->buscarcontratoid($id);
 
-    if($c->buscarasistenciacontrato($id)==true || $c->buscarfiniquitocontrato($id)==true || $c->buscarcontratofirmadocontrato($id)==true || $c->buscarhoraspactadascontrato($id)==true || $c->buscaranexoscontrato($id)==true){
-        echo 0;
+    if($c->buscarasistenciacontrato($id)==true){
+        echo json_encode(array("status"=>false,"message"=>"No se puede eliminar el contrato porque tiene asistencias registradas."));
+        return;
+    } 
+    
+    if($c->buscarfiniquitocontrato($id)==true){
+        echo json_encode(array("status"=>false,"message"=>"No se puede eliminar el contrato porque tiene finiquitos registrados."));
+        return;
+    }
+    
+    if($c->buscarcontratofirmadocontrato($id)==true){
+        echo json_encode(array("status"=>false,"message"=>"No se puede eliminar el contrato porque tiene contratos firmados registrados."));
+        return;
+    }
+    if($c->buscaranexoscontrato($id)==true){
+        echo json_encode(array("status"=>false,"message"=>"No se puede eliminar el contrato porque tiene anexos registrados."));
         return;
     }
 
@@ -19,8 +33,10 @@ if(isset($_POST['id'])){
         }
     }
     if($result==true){
-        echo 1;
+        echo json_encode(array("status"=>true,"message"=>"Contrato eliminado correctamente."));
     }else{
-        echo 0;
+        echo json_encode(array("status"=>false,"message"=>"Error al eliminar el contrato."));
     }
+}else{
+    echo json_encode(array("status"=>false,"message"=>"Error al eliminar el contrato."));
 }
