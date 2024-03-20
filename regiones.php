@@ -548,7 +548,7 @@ foreach ($permiso as $p) {
 										<div class="row">
 											<div class="col-lg-6">
 												<div class="form-group has-success mg-b-0">
-													<label>Codigo (DT)</label>
+													<label>Codigo (LRM)</label>
 													<input class="form-control" id="Codigo" name="Codigo" placeholder="Codigo" required="" type="text" value="">
 												</div>
 											</div>
@@ -587,7 +587,7 @@ foreach ($permiso as $p) {
 											<table class="table w-100 text-nowrap" id="example1">
 												<thead class="border-top text-center">
 													<tr>
-														<th class="bg-transparent">Codigo (DT)</th>
+														<th class="bg-transparent">Codigo (LRM)</th>
 														<th class="bg-transparent">Codigo (PREVIRED)</th>
 														<th class="bg-transparent">Región</th>
 														<th class="bg-transparent">Agregar Provincia</th>

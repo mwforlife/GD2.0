@@ -17,6 +17,24 @@ function agregarloteanexo(id) {
     });
 }
 
+function agregarloteanexo1(id) {
+    $.ajax({
+        url: 'php/insert/loteanexo1.php',
+        type: 'POST',
+        data: { contrato: id },
+        success: function (response) {
+            if (response == 1) {
+                ToastifySuccess("Contrato agregado correctamente");
+                listarlotesanexo();
+            } else if (response == 2) {
+                ToastifyError("Contrato ya agregado");
+            } else {
+                ToastifyError("Error al agregar Contrato");
+            }
+        }
+    });
+}
+
 function agregartodoanexo(lote) {
     $.ajax({
         url: 'php/insert/loteanexo.php',

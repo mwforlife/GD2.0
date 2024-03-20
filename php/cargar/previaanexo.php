@@ -77,6 +77,15 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
         $estadocivil = $c->buscarestadocivil($trabajador->getCivil());
         $cuentabancaria = $c->ultimacuentabancariaregistrada1($trabajador->getId());
         $contact = $c->buscarcontacto($trabajador->getId());
+        $prevision = $c->buscarprevision($trabajadorid);
+
+        if($prevision==null){
+            echo "El trabajador no tiene prevision registrada";
+            return;
+        }
+
+        $isapre = $c->buscarisapre($prevision->getIsapre());
+        $afp = $c->buscarafp($prevision->getAfp());
 
         $tipocuenta = "No Registrada";
         $numerocuenta = "No Registrada";
@@ -134,7 +143,10 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
             "{NUMERO_CUENTA}" => $numerocuenta,
             "{BANCO}" => $banco,
             "{SUELDO_MONTO}" => $sueldo,
-            "{SUELDO_MONTO_LETRAS}" => $sueldo1
+            "{SUELDO_MONTO_LETRAS}" => $sueldo1,
+            "{SALUD}" => $isapre->getNombre(),
+            "{AFP}" => $afp->getNombre(),
+            "{FECHA_CELEBRACION}" => date("d-m-Y", strtotime($fechageneracion)),
         );
 
         $contenido = "";

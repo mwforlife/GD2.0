@@ -194,19 +194,20 @@ $(document).ready(function () {
         $("#global-loader").fadeIn("slow");
         var empresa = $("#empresa").val();
         var fechageneracion = $("#fechageneracion").val();
-        var base = $("#base").val();
+        var base = 0;
         var sueldo = $("#sueldo").val();
         
+        //Comprobar si el modificar sueldo base esta chequeado
         if($("#base").is(":checked")){
             base = 1;
+            //Comprobar si el sueldo esta vacio
             if(sueldo.trim().length == 0){
                 $("#global-loader").fadeOut("slow");
-                ToastifyError("Por favor, Agregue un Sueldo Base");
+                ToastifyError("Por favor, ingrese el sueldo base.");
                 $("#sueldo").focus();
                 return false;
             }
         }
-
 
         //Validar si el array esta vacio
         if (clausulasArray.length == 0) {
@@ -272,8 +273,8 @@ $(document).ready(function () {
                         ToastifySuccess("Anexos Registrados Correctamente");
                         setTimeout(function () {
                             //Volver atras
-                            window.history.back();
-                        }, 2000);
+                            location.href = "impresiondocumentos.php";
+                        }, 1000);
                     } else {
                         ToastifyError("Error al Registrar");
                     }
