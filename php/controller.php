@@ -6420,6 +6420,10 @@ class Controller
         $this->conexion();
         $sql = "delete from horaspactadas where contrato = $id";
         $result = $this->mi->query($sql);
+        $sql = "delete from lote2 where contrato = $id";
+        $result = $this->mi->query($sql);
+        $sql = "delete from lote4 where contrato = $id";
+        $result = $this->mi->query($sql);
         $sql = "delete from contratos where id = $id";
         $result = $this->mi->query($sql);
         $this->desconectar();
