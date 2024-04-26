@@ -52,6 +52,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['contrato']) && isset($_POST['ti
     $causal = $causal->getNombre()." ".$causal->getArticulo()." ".$causal->getLetra();
     $trabajador = $c->buscartrabajador($trabajadorid);
     $dom = $c->ultimodomicilio($trabajadorid);
+    $contact = $c->ultimocontacto($trabajadorid);
     $comunatra = $c->buscarcomuna($dom->getComuna());
     $comunatra = $comunatra->getNombre();
     $regiontra = $dom->getRegion();
@@ -132,7 +133,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['contrato']) && isset($_POST['ti
         $nacionalidad = $c->buscarnacionalidad($trabajador->getNacionalidad());
         $estadocivil = $c->buscarestadocivil($trabajador->getCivil());
         $cuentabancaria = $c->ultimacuentabancariaregistrada1($trabajador->getId());
-        $contact = $c->buscarcontacto($_POST['trabajadorid']);
+        $contact = $c->ultimocontacto($_POST['trabajadorid']);
 
         $tipocuenta = "No Registrada";
         $numerocuenta = "No Registrada";

@@ -63,7 +63,7 @@ if (isset($_SESSION['USER_ID'])  && isset($_GET['id'])) {
     $nacionalidad = $c->buscarnacionalidad($trabajador->getNacionalidad());
     $estadocivil = $c->buscarestadocivil($trabajador->getCivil());
     $cuentabancaria = $c->ultimacuentabancariaregistrada1($trabajador->getId());
-    $contact = $c->buscarcontacto($trabajador->getId());
+    $contact = $c->ultimocontacto($trabajador->getId());
     $prevision = $c->buscarprevision($trabajadorid);
 
     if ($prevision == null) {

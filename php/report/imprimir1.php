@@ -26,7 +26,7 @@ if (isset($_GET['cart'])) {
 
             $trabajador = $c->buscartrabajador($finiquito->getTrabajador());
             $dom = $c->ultimodomicilio($finiquito->getTrabajador());
-            $contact = $c->buscarcontacto($finiquito->getTrabajador());
+            $contact = $c->ultimocontacto($finiquito->getTrabajador());
             $comunatra = $c->buscarcomuna($dom->getComuna());
             $comunatra = $comunatra->getNombre();
             $regiontra = $dom->getRegion();
