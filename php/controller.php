@@ -5729,6 +5729,36 @@ class Controller
         return false;
     }
 
+    function buscarbanco($banco_id){
+        $this->conexion();
+        $sql = "select * from banco where id=$banco_id";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $nombre = $rs['nombre'];
+            $b = new Banco($id, $nombre);
+            $this->desconectar();
+            return $b;
+        }
+        $this->desconectar();
+        return null;
+    }
+
+    function buscartipocuentabancaria($tipocuenta_id){
+        $this->conexion();
+        $sql = "select * from tipocuenta where id=$tipocuenta_id";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $nombre = $rs['nombre'];
+            $tipo = array("id"=>$id,"nombre"=>$nombre);
+            $this->desconectar();
+            return $tipo;
+        }
+        $this->desconectar();
+        return null;
+    }
+
     function actualizarcuentabancaria($id, $banco, $tipocuenta, $numerocuenta)
     {
         $this->conexion();

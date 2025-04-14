@@ -207,7 +207,8 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
 
         $formapagot = $_POST['formapagot'];
         $fechapagot = $_POST['fechapagot'];
-        $cuentabancaria = $c->ultimacuentabancariaregistrada($tra->getEmpresa());
+
+        $cuentabancaria = $c->ultimacuentabancariaregistrada($trabajador);
         if ($formapagot == 1 || $formapagot == 2 || $formapagot == 3) {
         } else {
             if ($cuentabancaria == false) {
@@ -215,70 +216,20 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
                 return;
             } else {
                 $banco = $cuentabancaria->getBanco();
-                switch ($banco) {
-                    case '1':
-                        $banco = "Banco de Chile";
-                        break;
-                    case '2':
-                        $banco = "Banco Santander";
-                        break;
-                    case '3':
-                        $banco = "Banco Estado";
-                        break;
-                    case '4':
-                        $banco = "Banco Security";
-                        break;
-                    case '5':
-                        $banco = "Banco Itaú";
-                        break;
-                    case '6':
-                        $banco = "Banco BCI";
-                        break;
-                    case '7':
-                        $banco = "Banco Falabella";
-                        break;
-                    case '8':
-                        $banco = "Banco Ripley";
-                        break;
-                    case '9':
-                        $banco = "Banco Consorcio";
-                        break;
-                    case '10':
-                        $banco = "Banco Internacional";
-                        break;
-                    case '11':
-                        $banco = "Banco Edwards Citi";
-                        break;
-                    case '12':
-                        $banco = "Banco de Crédito e Inversiones (BCI)";
-                        break;
-                    case '13':
-                        $banco = "Banco Penta";
-                        break;
-                    case '14':
-                        $banco = "Banco Paris";
-                        break;
+                $banco = $c->buscarBanco($banco);
+                if ($banco == null) {
+                    echo "No se ha encontrado el banco asociado a la cuenta bancaria del trabajador " . $tra->getNombre() . " " . $tra->getApellido1() . " " . $tra->getApellido2() . ".";
+                    return;
                 }
+                $banco = $banco->getNombre();
 
                 $tipocuenta = $cuentabancaria->getTipo();
-                switch ($tipocuenta) {
-                    case '1':
-                        $tipocuenta = "Cuenta Corriente";
-                        break;
-                    case '2':
-                        $tipocuenta = "Cuenta Vista";
-                        break;
-                    case '3':
-                        $tipocuenta = "Cuenta Rut";
-                        break;
-                    case '4':
-                        $tipocuenta = "Cuenta de Ahorro";
-                        break;
-                    case '5':
-                        $tipocuenta = "Cuenta de Inversiones";
-                        break;
+                $tipocuenta = $c->buscartipocuentabancaria($tipocuenta);
+                if ($tipocuenta == null) {
+                    echo "No se ha encontrado el tipo de cuenta bancaria asociada al trabajador " . $tra->getNombre() . " " . $tra->getApellido1() . " " . $tra->getApellido2() . ".";
+                    return;
                 }
-
+                $tipocuenta = $tipocuenta['nombre'];
                 $numerocuenta = $cuentabancaria->getNumero();
             }
         }
@@ -630,7 +581,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
         }
 
         $horarioturno = $_POST['horarioturno'];
-        
+
         $distribucion = "";
 
         if ($horarioturno == 1) {
@@ -673,7 +624,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             $domingoinicio = date("H:i", strtotime($domingoinicio));
             $domingofin = $_POST['domingofin'];
             $domingofin = date("H:i", strtotime($domingofin));
-    
+
             //Agregar cabezale de table jornada general
             $distribucion .= "<table border='1' width='100%' >";
             $distribucion .= "<thead><tr><th>Días</th>";
@@ -698,7 +649,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             if ($domingo == 1) {
                 $distribucion .= "<th>Domingo</th>";
             }
-    
+
             $distribucion .= "</tr></thead><tbody><tr><td>Inicio</td>";
             if ($lunes == 1) {
                 $distribucion .= "<td>" . $lunesinicio . "</td>";
@@ -721,7 +672,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             if ($domingo == 1) {
                 $distribucion .= "<td>" . $domingoinicio . "</td>";
             }
-    
+
             $distribucion .= "</tr><tr><td>Fin</td>";
             if ($lunes == 1) {
                 $distribucion .= "<td>" . $lunesfin . "</td>";
@@ -744,20 +695,19 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             if ($domingo == 1) {
                 $distribucion .= "<td>" . $domingofin . "</td>";
             }
-    
+
             $distribucion .= "</tr></tbody></table>" . "<br>";
-    
         }
-    
+
         if ($horarioturno == 2) {
             $rotativo = "";
             $distribucion = "<p>NB: Turnos de trabajo especificados en el reglamento interno de orden, higiene y seguridad</p>";
         }
-    
+
         if ($horarioturno == 3) {
             $distribucion .= "<p>Duración de colación: " . $colacion . " minutos</p>";
             $distribucion = "";
-    
+
             //Jornada Matutina
             //Formato Hora HH:MM
             $lunesm = $_POST['lunesm'];
@@ -795,11 +745,11 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             $domingoiniciom = date("H:i", strtotime($domingoiniciom));
             $domingofinm = $_POST['domingomfin'];
             $domingofinm = date("H:i", strtotime($domingofinm));
-    
+
             //Agregar cabezale de table jornada matutina
             $distribucion .= "<table border='1' width='100%'>";
             $distribucion .= "<thead><tr><th>Días</th>";
-    
+
             if ($lunesm == 1) {
                 $distribucion .= "<th>Lunes</th>";
             }
@@ -821,7 +771,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             if ($domingom == 1) {
                 $distribucion .= "<th>Domingo</th>";
             }
-            
+
             $distribucion .= "</tr></thead><tbody><tr><td>Inicio</td>";
             if ($lunesm == 1) {
                 $distribucion .= "<td>" . $lunesiniciom . "</td>";
@@ -844,7 +794,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             if ($domingom == 1) {
                 $distribucion .= "<td>" . $domingoiniciom . "</td>";
             }
-    
+
             $distribucion .= "</tr><tr><td>Fin</td>";
             if ($lunesm == 1) {
                 $distribucion .= "<td>" . $lunesfinm . "</td>";
@@ -868,8 +818,8 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
                 $distribucion .= "<td>" . $domingofinm . "</td>";
             }
             $distribucion .= "</tr></tbody></table>" . "<br>";
-    
-    
+
+
             //Jornada Tarde
             $distribucion .= "";
             $lunest = $_POST['lunest'];
@@ -908,10 +858,10 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             $domingoiniciot = date("H:i", strtotime($domingoiniciot));
             $domingofint = $_POST['domingotfin'];
             $domingofint = date("H:i", strtotime($domingofint));
-    
+
             //Agregar cabezale de table jornada Tarde
             $distribucion = $distribucion . "<table border='1' width='100%'>";
-            $distribucion = $distribucion . "<thead><tr><th>Días</th>";         
+            $distribucion = $distribucion . "<thead><tr><th>Días</th>";
             if ($lunest == 1) {
                 $distribucion = $distribucion . "<th>Lunes</th>";
             }
@@ -933,7 +883,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             if ($domingot == 1) {
                 $distribucion = $distribucion . "<th>Domingo</th>";
             }
-            
+
             $distribucion = $distribucion . "</tr></thead><tbody><tr><td>Inicio</td>";
             if ($lunest == 1) {
                 $distribucion = $distribucion . "<td>" . $lunesiniciot . "</td>";
@@ -956,7 +906,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             if ($domingot == 1) {
                 $distribucion = $distribucion . "<td>" . $domingoiniciot . "</td>";
             }
-    
+
             $distribucion = $distribucion . "</tr><tr><td>Fin</td>";
             if ($lunest == 1) {
                 $distribucion = $distribucion . "<td>" . $lunesfint . "</td>";
@@ -981,7 +931,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             }
             $distribucion = $distribucion . "</tr></tbody></table>" . "<br>";
         }
-    
+
         if ($horarioturno == 4) {
             //Jornada Tarde
             $distribucion .= "<p>Duración de colación: " . $colacion . " minutos</p>";
@@ -1022,10 +972,10 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             $domingoiniciot = date("H:i", strtotime($domingoiniciot));
             $domingofint = $_POST['domingotfin'];
             $domingofint = date("H:i", strtotime($domingofint));
-    
+
             //Agregar cabezale de table jornada Tarde
             $distribucion = $distribucion . "<table border='1' width='100%'>";
-            $distribucion = $distribucion . "<thead><tr><th>Días</th>";         
+            $distribucion = $distribucion . "<thead><tr><th>Días</th>";
             if ($lunest == 1) {
                 $distribucion = $distribucion . "<th>Lunes</th>";
             }
@@ -1047,7 +997,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             if ($domingot == 1) {
                 $distribucion = $distribucion . "<th>Domingo</th>";
             }
-            
+
             $distribucion = $distribucion . "</tr></thead><tbody><tr><td>Inicio</td>";
             if ($lunest == 1) {
                 $distribucion = $distribucion . "<td>" . $lunesiniciot . "</td>";
@@ -1070,7 +1020,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             if ($domingot == 1) {
                 $distribucion = $distribucion . "<td>" . $domingoiniciot . "</td>";
             }
-    
+
             $distribucion = $distribucion . "</tr><tr><td>Fin</td>";
             if ($lunest == 1) {
                 $distribucion = $distribucion . "<td>" . $lunesfint . "</td>";
@@ -1094,10 +1044,10 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
                 $distribucion = $distribucion . "<td>" . $domingofint . "</td>";
             }
             $distribucion = $distribucion . "</tr></tbody></table>" . "<br>";
-    
+
             //Jornada Nocturna
             $distribucion .= "<h4></h2>";
-    
+
             //Formato Hora HH:MM
             $lunesn = $_POST['lunesn'];
             $lunesinicion = $_POST['lunesninicio'];
@@ -1110,7 +1060,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             $martesfinn = $_POST['martesnfin'];
             $martesfinn = date("H:i", strtotime($martesfinn));
             $miercolesn = $_POST['miercolesn'];
-            $miercolesinicion = $_POST['miercolesninicio']; 
+            $miercolesinicion = $_POST['miercolesninicio'];
             $miercolesinicion = date("H:i", strtotime($miercolesinicion));
             $miercolesfinn = $_POST['miercolesnfin'];
             $miercolesfinn = date("H:i", strtotime($miercolesfinn));
@@ -1134,7 +1084,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             $domingoinicion = date("H:i", strtotime($domingoinicion));
             $domingofinn = $_POST['domingonfin'];
             $domingofinn = date("H:i", strtotime($domingofinn));
-    
+
             //Agregar cabezale de table jornada Nocturna
             $distribucion .= "<table border='1' width='100%'>";
             $distribucion .= "<thead><tr><th>Días</th>";
@@ -1159,7 +1109,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             if ($domingon == 1) {
                 $distribucion .= "<th>Domingo</th>";
             }
-            
+
             $distribucion .= "</tr></thead><tbody><tr><td>Inicio</td>";
             if ($lunesn == 1) {
                 $distribucion .= "<td>" . $lunesinicion . "</td>";
@@ -1182,7 +1132,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             if ($domingon == 1) {
                 $distribucion .= "<td>" . $domingoinicion . "</td>";
             }
-    
+
             $distribucion .= "</tr><tr><td>Fin</td>";
             if ($lunesn == 1) {
                 $distribucion .= "<td>" . $lunesfinn . "</td>";
@@ -1207,12 +1157,12 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             }
             $distribucion .= "</tr></tbody></table>" . "<br>";
         }
-    
+
         if ($horarioturno == 5) {
             //Jornada Matutina
             $distribucion .= "<p>Duración de colación: " . $colacion . " minutos</p>";
             $distribucion .= "";
-    
+
             //Formato Hora HH:MM
             $lunesm = $_POST['lunesm'];
             $lunesiniciom = $_POST['lunesminicio'];
@@ -1249,7 +1199,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             $domingoiniciom = date("H:i", strtotime($domingoiniciom));
             $domingofinm = $_POST['domingomfin'];
             $domingofinm = date("H:i", strtotime($domingofinm));
-    
+
             //Agregar cabezale de table jornada matutina
             $distribucion .= "<table border='1' width='100%'>";
             $distribucion .= "<thead><tr><th>Días</th>";
@@ -1274,7 +1224,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             if ($domingom == 1) {
                 $distribucion .= "<th>Domingo</th>";
             }
-            
+
             $distribucion .= "</tr></thead><tbody><tr><td>Inicio</td>";
             if ($lunesm == 1) {
                 $distribucion .= "<td>" . $lunesiniciom . "</td>";
@@ -1296,8 +1246,8 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             }
             if ($domingom == 1) {
                 $distribucion .= "<td>" . $domingoiniciom . "</td>";
-            }       
-    
+            }
+
             $distribucion .= "</tr><tr><td>Fin</td>";
             if ($lunesm == 1) {
                 $distribucion .= "<td>" . $lunesfinm . "</td>";
@@ -1321,11 +1271,11 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
                 $distribucion .= "<td>" . $domingofinm . "</td>";
             }
             $distribucion .= "</tr></tbody></table>" . "<br>";
-    
-    
+
+
             //Jornada Nocturna
             $distribucion .= "<h4></h2>";
-    
+
             //Formato Hora HH:MM
             $lunesn = $_POST['lunesn'];
             $lunesinicion = $_POST['lunesninicio'];
@@ -1338,7 +1288,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             $martesfinn = $_POST['martesnfin'];
             $martesfinn = date("H:i", strtotime($martesfinn));
             $miercolesn = $_POST['miercolesn'];
-            $miercolesinicion = $_POST['miercolesninicio']; 
+            $miercolesinicion = $_POST['miercolesninicio'];
             $miercolesinicion = date("H:i", strtotime($miercolesinicion));
             $miercolesfinn = $_POST['miercolesnfin'];
             $miercolesfinn = date("H:i", strtotime($miercolesfinn));
@@ -1362,7 +1312,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             $domingoinicion = date("H:i", strtotime($domingoinicion));
             $domingofinn = $_POST['domingonfin'];
             $domingofinn = date("H:i", strtotime($domingofinn));
-    
+
             //Agregar cabezale de table jornada Nocturna
             $distribucion .= "<table border='1' width='100%'>";
             $distribucion .= "<thead><tr><th>Días</th>";
@@ -1387,7 +1337,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             if ($domingon == 1) {
                 $distribucion .= "<th>Domingo</th>";
             }
-            
+
             $distribucion .= "</tr></thead><tbody><tr><td>Inicio</td>";
             if ($lunesn == 1) {
                 $distribucion .= "<td>" . $lunesinicion . "</td>";
@@ -1410,7 +1360,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             if ($domingon == 1) {
                 $distribucion .= "<td>" . $domingoinicion . "</td>";
             }
-    
+
             $distribucion .= "</tr><tr><td>Fin</td>";
             if ($lunesn == 1) {
                 $distribucion .= "<td>" . $lunesfinn . "</td>";
@@ -1435,7 +1385,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             }
             $distribucion .= "</tr></tbody></table>" . "<br>";
         }
-    
+
         if ($horarioturno == 6) {
             //Jornada Matutina
             $distribucion .= "<p>Duración de colación: " . $colacion . " minutos</p>";
@@ -1476,7 +1426,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             $domingoiniciom = date("H:i", strtotime($domingoiniciom));
             $domingofinm = $_POST['domingomfin'];
             $domingofinm = date("H:i", strtotime($domingofinm));
-    
+
             //Agregar cabezale de table jornada matutina
             $distribucion .= "<table border='1' width='100%'>";
             $distribucion .= "<thead><tr><th>Días</th>";
@@ -1501,7 +1451,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             if ($domingom == 1) {
                 $distribucion .= "<th>Domingo</th>";
             }
-            
+
             $distribucion .= "</tr></thead><tbody><tr><td>Inicio</td>";
             if ($lunesm == 1) {
                 $distribucion .= "<td>" . $lunesiniciom . "</td>";
@@ -1523,8 +1473,8 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             }
             if ($domingom == 1) {
                 $distribucion .= "<td>" . $domingoiniciom . "</td>";
-            }       
-    
+            }
+
             $distribucion .= "</tr><tr><td>Fin</td>";
             if ($lunesm == 1) {
                 $distribucion .= "<td>" . $lunesfinm . "</td>";
@@ -1548,7 +1498,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
                 $distribucion .= "<td>" . $domingofinm . "</td>";
             }
             $distribucion .= "</tr></tbody></table>" . "<br>";
-    
+
             //Jornada Tarde
             $distribucion .= "";
             //Formato Hora HH:MM
@@ -1587,10 +1537,10 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             $domingoiniciot = date("H:i", strtotime($domingoiniciot));
             $domingofint = $_POST['domingotfin'];
             $domingofint = date("H:i", strtotime($domingofint));
-    
+
             //Agregar cabezale de table jornada Tarde
             $distribucion = $distribucion . "<table border='1' width='100%'>";
-            $distribucion = $distribucion . "<thead><tr><th>Días</th>";         
+            $distribucion = $distribucion . "<thead><tr><th>Días</th>";
             if ($lunest == 1) {
                 $distribucion = $distribucion . "<th>Lunes</th>";
             }
@@ -1612,7 +1562,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             if ($domingot == 1) {
                 $distribucion = $distribucion . "<th>Domingo</th>";
             }
-            
+
             $distribucion = $distribucion . "</tr></thead><tbody><tr><td>Inicio</td>";
             if ($lunest == 1) {
                 $distribucion = $distribucion . "<td>" . $lunesiniciot . "</td>";
@@ -1635,7 +1585,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             if ($domingot == 1) {
                 $distribucion = $distribucion . "<td>" . $domingoiniciot . "</td>";
             }
-    
+
             $distribucion = $distribucion . "</tr><tr><td>Fin</td>";
             if ($lunest == 1) {
                 $distribucion = $distribucion . "<td>" . $lunesfint . "</td>";
@@ -1659,12 +1609,12 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
                 $distribucion = $distribucion . "<td>" . $domingofint . "</td>";
             }
             $distribucion = $distribucion . "</tr></tbody></table>" . "<br>";
-    
-    
-           
+
+
+
             //Jornada Nocturna
             $distribucion .= "<h4></h2>";
-    
+
             //Formato Hora HH:MM
             $lunesn = $_POST['lunesn'];
             $lunesinicion = $_POST['lunesninicio'];
@@ -1677,7 +1627,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             $martesfinn = $_POST['martesnfin'];
             $martesfinn = date("H:i", strtotime($martesfinn));
             $miercolesn = $_POST['miercolesn'];
-            $miercolesinicion = $_POST['miercolesninicio']; 
+            $miercolesinicion = $_POST['miercolesninicio'];
             $miercolesinicion = date("H:i", strtotime($miercolesinicion));
             $miercolesfinn = $_POST['miercolesnfin'];
             $miercolesfinn = date("H:i", strtotime($miercolesfinn));
@@ -1701,7 +1651,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             $domingoinicion = date("H:i", strtotime($domingoinicion));
             $domingofinn = $_POST['domingonfin'];
             $domingofinn = date("H:i", strtotime($domingofinn));
-    
+
             //Agregar cabezale de table jornada Nocturna
             $distribucion .= "<table border='1' width='100%'>";
             $distribucion .= "<thead><tr><th>Días</th>";
@@ -1726,7 +1676,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             if ($domingon == 1) {
                 $distribucion .= "<th>Domingo</th>";
             }
-            
+
             $distribucion .= "</tr></thead><tbody><tr><td>Inicio</td>";
             if ($lunesn == 1) {
                 $distribucion .= "<td>" . $lunesinicion . "</td>";
@@ -1749,7 +1699,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             if ($domingon == 1) {
                 $distribucion .= "<td>" . $domingoinicion . "</td>";
             }
-    
+
             $distribucion .= "</tr><tr><td>Fin</td>";
             if ($lunesn == 1) {
                 $distribucion .= "<td>" . $lunesfinn . "</td>";
@@ -2006,7 +1956,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
         }
         //Guardar en la base de datos
         $result = $c->query_id("insert into contratos values(null, " . $tra->getEmpresa() . ", $empresa,$centrocostoid, '$typecontract','$Charge',$sueldo1, '$fechainicioregistro', '$fecha_termino', '$nombre_documento',1,now())");
-        if ($result>0) {
+        if ($result > 0) {
             $c->query("insert into horaspactadas values(null,$horaspac,$result,now())");
             $c->eliminartrabajadorlote($tra->getEmpresa(), $_SESSION['USER_ID']);
             $id = $c->buscaridultimocontrato();
