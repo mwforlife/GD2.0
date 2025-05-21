@@ -573,7 +573,7 @@ foreach ($permiso as $p) {
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                    $lista1 = $c->listarfiniquitofiniquitosnonotificados();
+                                                    $lista1 = $c->listarfiniquitofiniquitosnonotificados($_SESSION['CURRENT_ENTERPRISE']);
                                                     foreach ($lista1 as $object1) {
                                                         echo "<tr class='border-bottom-0'>";
                                                         echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";

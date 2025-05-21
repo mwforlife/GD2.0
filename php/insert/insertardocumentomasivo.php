@@ -34,9 +34,15 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid'])  && isset($_P
     } else {
         $codigo = $codigo->getCodigosii() . " - " . $codigo->getNombre();
     }
-    
+
     $empresa = $c->buscarempresa($empresa);
 
+    $villa_empresa = $empresa->getVilla();
+    if ($villa_empresa == "") {
+        $villa_empresa = "";
+    } else {
+        $villa_empresa = $empresa->getVilla() . ", ";
+    }
 
     foreach ($lista as $object) {
         $val3 = $tipocontratoid;
@@ -72,6 +78,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid'])  && isset($_P
             "{RUT_REPRESENTANTE_LEGAL}" => $repre->getRut(),
             "{CALLE_EMPRESA}" => $empresa->getCalle(),
             "{NUMERO_EMPRESA}" => $empresa->getNumero(),
+            "{VILLA_EMPRESA}," => $villa_empresa,
             "{DEPT_EMPRESA}" => $empresa->getDepartamento(),
             "{COMUNA_EMPRESA}" => $empresa->getComuna(),
             "{REGION_EMPRESA}" => $empresa->getRegion(),
@@ -123,7 +130,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid'])  && isset($_P
         $carpeta = "../../uploads/documentos/";
         //Generar archivo y guardar en carpeta
         $mpdf->Output($carpeta . $nombre_documento, 'F');
-        $result = $c->registrardocumento($val1, $val2,$contrato->getId(), $val3, $val4, $nombre_documento);
+        $result = $c->registrardocumento($val1, $val2, $contrato->getId(), $val3, $val4, $nombre_documento);
         //Esperar 1 segundo para que se guarde el archivo
         sleep(1);
     }

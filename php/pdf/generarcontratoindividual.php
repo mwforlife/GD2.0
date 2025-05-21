@@ -1709,7 +1709,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
         $distribucion = "<p>El trabajador se encuentra excluido de la limitación de jornada de trabajo conforme al Artículo 22 Inciso 2° del Código del Trabajo.</p>";
     }
 
-    $zona = "<div style='width: 100%; display: flex; justify-content: center;'><h1>Zonas de Prestacion de Servicio</h1>";
+    $zona = "<div style='margin-bottom: -40px; margin-top: -30px;'>";
     $zonaregion = $c->listarzonasregion($_SESSION['USER_ID']);
     $zonaprovincia = $c->listarzonaprovinciatrabajador($_SESSION['USER_ID']);
     $zonacomunas = $c->listarzonacomunatrabajador($_SESSION['USER_ID']);
@@ -1720,36 +1720,30 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
         $zona .= "</div>";
     } else {
         if (count($zonaregion) > 0) {
-            $zona .= "<div>";
-            $zona .= "<h6>Regiones de Prestacion de Servicio: </h6>";
-            $zona .= "<ul>";
+            $zona .= "<p style='margin-top:-10px;'>Regiones de Prestacion de Servicio: </p>";
+            $zona .= "<ul  style='margin-bottom:0px; margin-top:-5px;'>";
             foreach ($zonaregion as $zr) {
                 $zona .= "<li>" . $zr->getNombre() . "</li>";
             }
             $zona .= "</ul>";
-            $zona .= "</div>";
         }
 
         if (count($zonaprovincia) > 0) {
-            $zona .= "<div>";
-            $zona .= "<h6>Provincias de Prestacion de Servicio: </h6>";
-            $zona .= "<ul>";
+            $zona .= "<p style='margin-top:0px;'>Provincias de Prestacion de Servicio: </p>";
+            $zona .= "<ul  style='margin-bottom:0px; margin-top:-5px;'>";
             foreach ($zonaprovincia as $zp) {
                 $zona .= "<li>" . $zp->getNombre() . "</li>";
             }
             $zona .= "</ul>";
-            $zona .= "</div>";
         }
 
         if (count($zonacomunas) > 0) {
-            $zona .= "<div>";
-            $zona .= "<h6>Comunas de Prestacion de Servicio: </h6>";
-            $zona .= "<ul>";
+            $zona .= "<p style='margin-top:0px;'>Comunas de Prestacion de Servicio: </p>";
+            $zona .= "<ul  style='margin-bottom: 0px; margin-top:-5px;'>";
             foreach ($zonacomunas as $zc) {
                 $zona .= "<li>" . $zc->getNombre() . "</li>";
             }
             $zona .= "</ul>";
-            $zona .= "</div>";
         }
 
         if (count($zonaregion) == 0 && count($zonaprovincia) == 0 && count($zonacomunas) == 0) {

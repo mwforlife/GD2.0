@@ -579,9 +579,10 @@ foreach ($permiso as $p) {
                                         <div class="col-sm-12 col-md-12">
                                             <h5>Contratos a Finiquitar</h5>
                                             <div class="table-responsive">
-                                                <table class="table text-nowrap">
+                                                <table class="table text-wrap" id="example1">
                                                     <thead class="border-top">
                                                         <tr>
+                                                            <th class="bg-transparent">#</th>
                                                             <th class="bg-transparent">Contrato</th>
                                                             <th class="bg-transparent">Trabajador</th>
                                                         </tr>
@@ -589,23 +590,33 @@ foreach ($permiso as $p) {
                                                     <tbody id="lotes">
                                                         <?php
                                                         $lista = $c->buscarlotefiniquito($_SESSION['USER_ID']);
+                                                        $i = 1;
                                                         foreach ($lista as $object1) {
                                                             echo "<tr class='border-bottom-0'>";
-                                                            echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
+                                                            echo "<td>" . $i . "</td>";
+                                                            echo "<td>";
                                                             $fecha = $object1->getFechainicio();
                                                             //Convertir fecha en formato dd-mm-YYYY
                                                             $fecha = date("d-m-Y", strtotime($fecha));
 
                                                             echo $object1->getTipocontrato() . " - " . $fecha;
                                                             echo "</td>";
-                                                            echo "<td class='text-muted fs-15 font-weight-semibold'>";
+                                                            echo "<td>";
                                                             echo $object1->getTrabajador();
                                                             echo "</td>";
                                                             echo "</tr>";
+                                                            $i++;
                                                         }
                                                         ?>
                                                     </tbody>
                                                 </table>
+                                            </div>
+                                            <div class="col-md-12 mt-3">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <p class="text-muted">Total de Trabajadores: <?php echo $i - 1; ?></p>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-12 text-right">

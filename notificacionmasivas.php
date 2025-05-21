@@ -43,6 +43,7 @@ foreach ($permiso as $p) {
         $_SESSION['ELIMINACION_PERMISO'] = true;
     }
 }
+$emp = null;
 if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
     $empresa = $_SESSION['CURRENT_ENTERPRISE'];
     $emp = $c->buscarempresa($empresa);
@@ -766,8 +767,8 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                                                             </div>
                                                             <div class="col-sm-12 col-md-12 vista3 d-none mt-2">
                                                                 <label for="">Detalle:</label>
-                                                                <textarea class="form-control" name="texto2" id="texto2" cols="30" rows="10">Se le informa que su finiquito estará disponible de manera presencial, desde el día 04 de octubre del 2022, en la oficina de camino Apalta SN, comuna de Rengo, asimismo, informamos, que al momento de suscribir el documento del finiquito ud, podrá formular reserva de derechos, si así lo estima necesario.</textarea>
-                                                            </div>
+                                                                <textarea class="form-control" name="texto2" id="texto2" cols="30" rows="10">Se le informa que su finiquito estará disponible de manera presencial, desde el día {FECHA_NOTIFICACION}, en la oficina {CALLE_EMPRESA} {NUMERO_EMPRESA},{VILLA_EMPRESA}, comuna de la {COMUNA_EMPRESA}, asimismo, informamos, que al momento de suscribir el documento del finiquito ud, podrá formular reserva de derechos, si así lo estima necesario. Podrá siempre optar por realizar la gestión de forma electrónica ante Ministro de fe, por ende, en caso de no estar de acuerdo con la forma propuesta, deberá comunicarlo a la empresa. Asimismo, informamos, que al momento de suscribir el documento del finiquito Ud., podrá formular reserva de derechos, si así lo estima necesario</textarea>
+                                                           </div>
 
                                                         </div>
                                                     </div>

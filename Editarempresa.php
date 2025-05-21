@@ -655,7 +655,7 @@ if (isset($_GET['code'])) {
 											<div class="col-lg-6">
 												<div class="form-group has-success ">
 													<label>Villa / Poblacion</label>
-													<input class="form-control" id="Enterprisevilla" name="Enterprisevilla" placeholder="Villa / Población" required="" type="text" value="<?php echo $villa; ?>">
+													<input class="form-control" id="Enterprisevilla" name="Enterprisevilla" placeholder="Villa / Población" type="text" value="<?php echo $villa; ?>">
 												</div>
 											</div>
 											<div class="col-lg-6">

@@ -165,7 +165,12 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['tipocontratoid']) && isset($_P
 
 
 
-
+        $villa_empresa = $empresa->getVilla();
+        if ($villa_empresa == "") {
+            $villa_empresa = "";
+        } else {
+            $villa_empresa = $empresa->getVilla() . ", ";
+        }
         $swap_var = array(
             "{CEL_COMUNA}" => $empresa->getComuna(),
             "{FECHA_FINIQUITO}" => $fechafiniquito,
@@ -174,7 +179,7 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['tipocontratoid']) && isset($_P
             "{REPRESENTANTE_LEGAL}" => $repre->getNombre() . " " . $repre->getApellido1() . " " . $repre->getApellido2(),
             "{RUT_REPRESENTANTE_LEGAL}" => $repre->getRut(),
             "{CALLE_EMPRESA}" => $empresa->getCalle(),
-            "{VILLA_EMPRESA}" => $empresa->getVilla(),
+            "{VILLA_EMPRESA}," => $empresa->getVilla(),
             "{NUMERO_EMPRESA}" => $empresa->getNumero(),
             "{DEPT_EMPRESA}" => $empresa->getDepartamento(),
             "{COMUNA_EMPRESA}" => $empresa->getComuna(),
@@ -213,7 +218,7 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['tipocontratoid']) && isset($_P
             "{REPRESENTANTE_LEGAL}" => $repre->getNombre() . " " . $repre->getApellido1() . " " . $repre->getApellido2(),
             "{RUT_REPRESENTANTE_LEGAL}" => $repre->getRut(),
             "{CALLE_EMPRESA}" => $empresa->getCalle(),
-            "{VILLA_EMPRESA}" => $empresa->getVilla(),
+            "{VILLA_EMPRESA}," => $villa_empresa,
             "{NUMERO_EMPRESA}" => $empresa->getNumero(),
             "{DEPT_EMPRESA}" => $empresa->getDepartamento(),
             "{COMUNA_EMPRESA}" => $empresa->getComuna(),

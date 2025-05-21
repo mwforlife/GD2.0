@@ -21,7 +21,7 @@ if (isset($_GET['id'])) {
 
         $trabajador = $c->buscartrabajador($finiquito->getTrabajador());
         $dom = $c->ultimodomicilio($finiquito->getTrabajador());
-        $contact = $c->buscarcontacto($finiquito->getTrabajador());
+        $contact = $c->searchcontact_by_employeer($finiquito->getTrabajador());
         $comunatra = $c->buscarcomuna($dom->getComuna());
         $comunatra = $comunatra->getNombre();
         $regiontra = $dom->getRegion();
@@ -134,7 +134,7 @@ if (isset($_GET['id'])) {
             "{TELEFONO_EMPRESA}" => $empresa->getTelefono(),
             "{CORREO_EMPRESA}" => $empresa->getEmail(),
             "{NUMERO_EMPRESA}" => $empresa->getNumero(),
-            "{FECHA_NACIMIENTO}" => $trabajador->getNacimiento(),
+            "{FECHA_NACIMIENTO}" => date("d-m-Y", strtotime($trabajador->getNacimiento())),
             "{DEPT_EMPRESA}" => $empresa->getDepartamento(),
             "{COMUNA_EMPRESA}" => $empresa->getComuna(),
             "{CEL_COMUNA}" => $empresa->getComuna(),

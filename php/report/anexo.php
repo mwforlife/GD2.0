@@ -64,7 +64,7 @@ if (isset($_SESSION['USER_ID'])  && isset($_GET['id'])) {
     $estadocivil = $c->buscarestadocivil($trabajador->getCivil());
     $cuentabancaria = $c->ultimacuentabancariaregistrada1($trabajador->getId());
     $contact = $c->ultimocontacto($trabajador->getId());
-    $prevision = $c->buscarprevision($trabajadorid);
+    $prevision = $c->buscarprevisiontrabajador($trabajadorid);
 
     if ($prevision == null) {
         echo "El trabajador no tiene prevision registrada";
@@ -103,7 +103,7 @@ if (isset($_SESSION['USER_ID'])  && isset($_GET['id'])) {
         "{TELEFONO_EMPRESA}" => $empresa->getTelefono(),
         "{CORREO_EMPRESA}" => $empresa->getEmail(),
         "{NUMERO_EMPRESA}" => $empresa->getNumero(),
-        "{FECHA_NACIMIENTO}" => $trabajador->getNacimiento(),
+        "{FECHA_NACIMIENTO}" => date("d-m-Y", strtotime($trabajador->getNacimiento())),
         "{DEPT_EMPRESA}" => $empresa->getDepartamento(),
         "{COMUNA_EMPRESA}" => $empresa->getComuna(),
         "{CEL_COMUNA}" => $empresa->getComuna(),

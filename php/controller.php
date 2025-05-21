@@ -68,13 +68,13 @@ require 'Class/Movpersonal.php';
 class Controller
 {
     private $host = "localhost";
-    /*Variables
+    /*Variables*/
     private $user = "root";
     private $pass = "";
     private $bd = "gestordocumentos";
 
 
-    /*Variables BD Remota*/
+    /*Variables BD Remota
     private $user = 'iustaxcl_admin';
     private $pass = 'Kairos2023$#';
     private $bd = 'iustaxcl_kairos';
@@ -1685,6 +1685,26 @@ class Controller
     {
         $this->conexion();
         $sql = "select * from trabajadorcontacto where id = $id order by id desc limit 1";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $telefono = $rs['telefono'];
+            $email = $rs['email'];
+            $trabajador = $rs['trabajador'];
+            $fecha = $rs['register_at'];
+            $T = new TrabajadorContacto($id, $telefono, $email, $fecha);
+            $this->desconectar();
+            return $T;
+        } else {
+            $this->desconectar();
+            return false;
+        }
+    }
+
+    public function searchcontact_by_employeer($id)
+    {
+        $this->conexion();
+        $sql = "select * from trabajadorcontacto where trabajador = $id order by id desc limit 1";
         $result = $this->mi->query($sql);
         if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
@@ -6032,10 +6052,10 @@ class Controller
     }
 
     //Listar Finiquito text
-    function listarfiniquitofiniquitosnonotificados()
+    function listarfiniquitofiniquitosnonotificados($empresa)
     {
         $this->conexion();
-        $sql = "select finiquito.id as id, contrato, finiquito.tipodocumento as tipodocumento, fechafiniqito, fechainicio, fechatermino, causalterminocontrato.nombre as causalterminocontrato, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, finiquito.empresa as empresa, finiquito.register_at as register_at from finiquito inner join causalterminocontrato on finiquito.causalterminocontrato = causalterminocontrato.id inner join trabajadores on finiquito.trabajador = trabajadores.id left outer join notificaciones on finiquito.id = notificaciones.finiquito where notificaciones.finiquito is null";
+        $sql = "select finiquito.id as id, contrato, finiquito.tipodocumento as tipodocumento, fechafiniqito, fechainicio, fechatermino, causalterminocontrato.nombre as causalterminocontrato, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, finiquito.empresa as empresa, finiquito.register_at as register_at from finiquito inner join causalterminocontrato on finiquito.causalterminocontrato = causalterminocontrato.id inner join trabajadores on finiquito.trabajador = trabajadores.id left outer join notificaciones on finiquito.id = notificaciones.finiquito where notificaciones.finiquito is null and finiquito.empresa = $empresa";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {

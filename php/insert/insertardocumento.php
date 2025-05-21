@@ -66,6 +66,14 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid']) && isset($_PO
     $regiontra = $c->buscarregion($regiontra);
     $regiontra = $regiontra->getNombre();
 
+
+    $villa_empresa = $empresa->getVilla();
+    if ($villa_empresa == "") {
+        $villa_empresa = "";
+    } else {
+        $villa_empresa = $empresa->getVilla() . ", ";
+    }
+
     $swap_var = array(
         "{CEL_COMUNA}" => $empresa->getComuna(),
         "{RUT_EMPRESA}" => $empresa->getRut(),
@@ -74,6 +82,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid']) && isset($_PO
         "{RUT_REPRESENTANTE_LEGAL}" => $repre->getRut(),
         "{CALLE_EMPRESA}" => $empresa->getCalle(),
         "{NUMERO_EMPRESA}" => $empresa->getNumero(),
+        "{VILLA_EMPRESA}," => $villa_empresa,
         "{DEPT_EMPRESA}" => $empresa->getDepartamento(),
         "{COMUNA_EMPRESA}" => $empresa->getComuna(),
         "{REGION_EMPRESA}" => $empresa->getRegion(),
@@ -126,7 +135,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid']) && isset($_PO
     $carpeta = "../../uploads/documentos/";
     //Generar archivo y guardar en carpeta
     $mpdf->Output($carpeta . $nombre_documento, 'F');
-    $result = $c->registrardocumento($val1, $val2,$contrato->getId(), $val3, $val4, $nombre_documento);
+    $result = $c->registrardocumento($val1, $val2, $contrato->getId(), $val3, $val4, $nombre_documento);
 
     if ($result == true) {
         echo 1;

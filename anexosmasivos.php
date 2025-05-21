@@ -591,10 +591,11 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-sm-12 col-md-12 text-center">
-                                            <table class="table text-nowrap text-center">
+                                        <div class="col-sm-12 col-md-12">
+                                            <table class="table text-wrap text-center w-100 table-striped" id="example1" >
                                                 <thead class="border-top">
                                                     <tr>
+                                                        <th class="bg-transparent">#</th>
                                                         <th class="bg-transparent">Contrato</th>
                                                         <th class="bg-transparent">Trabajador</th>
                                                     </tr>
@@ -602,26 +603,36 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                                                 <tbody id="lotes">
                                                     <?php
                                                     $lista = $c->buscarloteanexo($_SESSION['USER_ID'], $empresa);
+                                                    $i = 1;
                                                     foreach ($lista as $object1) {
                                                         echo "<tr class='border-bottom-0'>";
-                                                        echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
+                                                        echo "<td class=' fs-15 font-weight-semibold'>".$i."</td>";
+                                                        echo "<td>";
                                                         $fecha = $object1->getFechainicio();
                                                         //Convertir fecha en formato dd-mm-YYYY
                                                         $fecha = date("d-m-Y", strtotime($fecha));
 
                                                         echo $object1->getTipocontrato() . " - " . $fecha;
                                                         echo "</td>";
-                                                        echo "<td class='text-muted fs-15 font-weight-semibold'>";
+                                                        echo "<td>";
                                                         echo $object1->getTrabajador();
                                                         echo "</td>";
+
                                                         echo "</tr>";
+                                                        $i++;
                                                     }
                                                     ?>
                                                 </tbody>
                                             </table>
+                                            <div class="col-md-12 mt-3">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <p class="text-muted">Total de Trabajadores: <?php echo $i - 1; ?></p>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="col-md-12 text-right">
-
                                             <a class="btn btn-danger" href="generarlotepersonalizado.php"><i
                                                     class="fa fa-arrow-left"></i> Volver</a>
                                         </div>

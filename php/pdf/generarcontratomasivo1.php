@@ -1730,7 +1730,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             $distribucion = "<p>El trabajador se encuentra excluido de la limitación de jornada de trabajo conforme al Artículo 22 Inciso 2° del Código del Trabajo.</p>";
         }
 
-        $zona = "<div style='width: 100%; display: flex; justify-content: center;'><h5>Zonas de Prestacion de Servicio</h5>";
+        $zona = "";
         $zonaregion = $c->listarzonasregion($_SESSION['USER_ID']);
         $zonaprovincia = $c->listarzonaprovinciatrabajador($_SESSION['USER_ID']);
         $zonacomunas = $c->listarzonacomunatrabajador($_SESSION['USER_ID']);

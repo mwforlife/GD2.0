@@ -536,116 +536,122 @@ foreach ($permiso as $p) {
                     </div>
 
 
-
-
-
                     <!-- ROW- opened -->
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="col-md-12 d-none">
-                                <?php
-                                $lista = $c->listarlotescontrato($_SESSION['CURRENT_ENTERPRISE']);
-                                foreach ($lista as $object) {
-                                    $lista1 = $c->listarlotestext($object->getId());
-                                    if (count($lista1) > 0) {
-                                ?>
-                                        <div class="col-xl-12 col-lg-12 col-md-12">
-                                            <div class="card transcation-crypto1" id="transcation-crypto1">
-                                                <div class="card-header bd-b-0 d-flex justify-content-between">
-                                                    <h4 class="card-title font-weight-semibold mb-0">Lote: <?php echo $object->getNombre_lote(); ?></h4>
-                                                    <button onclick="agregartodoanexo(<?php echo $object->getId(); ?>)" class="btn btn-info"><i class="fa fa-plus"></i> Todo</button>
-                                                </div>
-                                                <div class="card-body p-4">
-                                                    <div class="">
-                                                        <div class="table-responsive">
-                                                            <table class="table w-100 text-nowrap table-lote">
-                                                                <thead class="border-top">
-                                                                    <tr>
-                                                                        <th class="bg-transparent">Contrato</th>
-                                                                        <th class="bg-transparent">Trabajador</th>
-                                                                        <th class="bg-transparent text-center">Agregar Al Lote</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <?php
-                                                                    foreach ($lista1 as $object1) {
-                                                                        echo "<tr class='border-bottom-0'>";
-                                                                        echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
-                                                                        $fecha = $object1->getFecha_inicio();
-                                                                        //Convertir fecha en formato dd-mm-YYYY
-                                                                        $fecha = date("d-m-Y", strtotime($fecha));
+                        <div class="col-md-12 m-0 p-0">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <?php
+                                    $lista = $c->listarlotescontrato($_SESSION['CURRENT_ENTERPRISE']);
+                                    foreach ($lista as $object) {
+                                        $lista1 = $c->listarlotestext($object->getId());
+                                        if (count($lista1) > 0) {
+                                            $lotenobre = $object->getNombre_lote();
+                                            //Borrar el resto del texto despues del _
+                                            $pos = strpos($lotenobre, "_");
+                                            if ($pos === false) {
+                                            } else {
+                                                $lotenobre = substr($lotenobre, 0, $pos);
+                                            }
+                                    ?>
+                                            <div class="col-xl-6 col-lg-12 col-md-12">
+                                                <div class="card transcation-crypto1" id="transcation-crypto1">
+                                                    <div class="card-header bd-b-0 d-flex justify-content-between">
+                                                        <h4 class="card-title font-weight-semibold mb-0">Lote: <?php echo $lotenobre; ?></h4>
+                                                        <button onclick="agregartodoanexo(<?php echo $object->getId(); ?>)" class="btn btn-info"><i class="fa fa-plus"></i> Todo</button>
+                                                    </div>
+                                                    <div class="card-body p-4">
+                                                        <div class="">
+                                                            <div class="table-responsive">
+                                                                <table class="table w-100 text-nowrap table-lote">
+                                                                    <thead class="border-top">
+                                                                        <tr>
+                                                                            <th class="bg-transparent">Contrato</th>
+                                                                            <th class="bg-transparent">Trabajador</th>
+                                                                            <th class="bg-transparent text-center">Agregar Al Lote</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <?php
+                                                                        foreach ($lista1 as $object1) {
+                                                                            echo "<tr class='border-bottom-0'>";
+                                                                            echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
+                                                                            $fecha = $object1->getFecha_inicio();
+                                                                            //Convertir fecha en formato dd-mm-YYYY
+                                                                            $fecha = date("d-m-Y", strtotime($fecha));
 
-                                                                        echo $object1->getContrato() . " - " . $fecha;
-                                                                        echo "</td>";
-                                                                        echo "<td class='text-muted fs-15 font-weight-semibold'>";
-                                                                        echo $object1->getTrabajador();
-                                                                        echo "</td>";
-                                                                        echo "<td class='text-center'>";
-                                                                        echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='agregarloteanexo(" . $object1->getId() . ")' data-toggle='tooltip' data-original-title='Agregar al Lote'>";
-                                                                        echo "<i class='fa fa-plus'>";
-                                                                        echo "</i>";
-                                                                        echo "</a>";
-                                                                        echo "</td>";
-                                                                        echo "</tr>";
-                                                                    }
-                                                                    ?>
-                                                                </tbody>
-                                                            </table>
+                                                                            echo $object1->getContrato() . " - " . $fecha;
+                                                                            echo "</td>";
+                                                                            echo "<td class='text-muted fs-15 font-weight-semibold'>";
+                                                                            echo $object1->getTrabajador();
+                                                                            echo "</td>";
+                                                                            echo "<td class='text-center'>";
+                                                                            echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='agregarloteanexo(" . $object1->getId() . ")' data-toggle='tooltip' data-original-title='Agregar al Lote'>";
+                                                                            echo "<i class='fa fa-plus'>";
+                                                                            echo "</i>";
+                                                                            echo "</a>";
+                                                                            echo "</td>";
+                                                                            echo "</tr>";
+                                                                        }
+                                                                        ?>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                <?php
+                                    <?php
+                                        }
                                     }
-                                }
-                                ?>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-xl-12 col-lg-12 col-md-12">
-                                        <div class="card transcation-crypto1" id="transcation-crypto1">
-                                            <div class="card-header bd-b-0">
-                                                <h4 class="card-title font-weight-semibold mb-0">Listado de Trabajadores Activos</h4>
-                                            </div>
-                                            <div class="card-body p-4">
-                                                <div class="">
-                                                    <div class="table-responsive">
-                                                        <table class="table text-nowrap w-100" id="example1">
-                                                            <thead class="border-top">
-                                                                <tr>
-                                                                    <th class="bg-transparent">RUT</th>
-                                                                    <th class="bg-transparent">Nombre</th>
-                                                                    <th class="bg-transparent">Fecha de Nacimiento</th>
-                                                                    <th class="bg-transparent text-center">Agregar al Lote</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <?php
-                                                                $lista = $c->listartrabajadoresactivosparaanexo($_SESSION['CURRENT_ENTERPRISE']);
-                                                                foreach ($lista as $object) {
-                                                                    echo "<tr class='border-bottom-0'>";
-                                                                    echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
-                                                                    echo $object->getRut();
-                                                                    echo "</td>";
-                                                                    echo "<td class='text-muted fs-15 font-weight-semibold'>";
-                                                                    echo $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2();
-                                                                    echo "</td>";
-                                                                    echo "<td class='text-muted fs-15 font-weight-semibold'>";
-                                                                    echo date("d-m-Y", strtotime($object->getNacimiento()));
-                                                                    echo "</td>";
-                                                                    echo "<td class='text-center'>";
-                                                                    echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='agregarloteanexo1(" . $object->getRegistrar() . ")' data-toggle='tooltip' data-original-title='Agregar al Lote'>";
-                                                                    echo "<i class='fa fa-plus'>";
-                                                                    echo "</i>";
-                                                                    echo "</a>";
-                                                                    echo "</td>";
-                                                                    echo "</tr>";
-                                                                }
-                                                                ?>
-                                                            </tbody>
-                                                        </table>
+                                    ?>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-xl-12 col-lg-12 col-md-12">
+                                                <div class="card transcation-crypto1" id="transcation-crypto1">
+                                                    <div class="card-header bd-b-0">
+                                                        <h4 class="card-title font-weight-semibold mb-0">Listado de Trabajadores Activos</h4>
+                                                    </div>
+                                                    <div class="card-body p-4">
+                                                        <div class="">
+                                                            <div class="table-responsive">
+                                                                <table class="table text-nowrap w-100" id="example1">
+                                                                    <thead class="border-top">
+                                                                        <tr>
+                                                                            <th class="bg-transparent">RUT</th>
+                                                                            <th class="bg-transparent">Nombre</th>
+                                                                            <th class="bg-transparent">Fecha de Nacimiento</th>
+                                                                            <th class="bg-transparent text-center">Agregar al Lote</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <?php
+                                                                        $lista = $c->listartrabajadoresactivosparaanexo($_SESSION['CURRENT_ENTERPRISE']);
+                                                                        foreach ($lista as $object) {
+                                                                            echo "<tr class='border-bottom-0'>";
+                                                                            echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
+                                                                            echo $object->getRut();
+                                                                            echo "</td>";
+                                                                            echo "<td class='text-muted fs-15 font-weight-semibold'>";
+                                                                            echo $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2();
+                                                                            echo "</td>";
+                                                                            echo "<td class='text-muted fs-15 font-weight-semibold'>";
+                                                                            echo date("d-m-Y", strtotime($object->getNacimiento()));
+                                                                            echo "</td>";
+                                                                            echo "<td class='text-center'>";
+                                                                            echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='agregarloteanexo1(" . $object->getRegistrar() . ")' data-toggle='tooltip' data-original-title='Agregar al Lote'>";
+                                                                            echo "<i class='fa fa-plus'>";
+                                                                            echo "</i>";
+                                                                            echo "</a>";
+                                                                            echo "</td>";
+                                                                            echo "</tr>";
+                                                                        }
+                                                                        ?>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -655,7 +661,7 @@ foreach ($permiso as $p) {
                             </div>
                         </div>
 
-                        <div class="col-xl-6 col-lg-6 col-md-12">
+                        <div class="col-xl-12 col-lg-12 col-md-12">
                             <div class="card transcation-crypto1" id="transcation-crypto1">
                                 <div class="card-header bd-b-0 d-flex justify-content-between">
                                     <h4 class="card-title font-weight-semibold mb-0">Lote</h4>

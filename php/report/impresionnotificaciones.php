@@ -126,6 +126,13 @@ if (isset($_GET['id'])) {
 
             $texto = $notif->getTexto();
 
+            $villa_empresa = $empresa->getVilla();
+            if ($villa_empresa == "") {
+                $villa_empresa = "";
+            } else {
+                $villa_empresa = $empresa->getVilla() . ", ";
+            }
+
             $swap_var = array(
                 "{CEL_COMUNA}" => $comuna,
                 "{FECHA_FINIQUITO}" => $fechafiniquito,
@@ -134,6 +141,7 @@ if (isset($_GET['id'])) {
                 "{REPRESENTANTE_LEGAL}" => $repre->getNombre() . " " . $repre->getApellido1() . " " . $repre->getApellido2(),
                 "{RUT_REPRESENTANTE_LEGAL}" => $repre->getRut(),
                 "{CALLE_EMPRESA}" => $empresa->getCalle(),
+                "{VILLA_EMPRESA}," => $villa_empresa,
                 "{NUMERO_EMPRESA}" => $empresa->getNumero(),
                 "{TELEFONO_EMPRESA}" => $empresa->getTelefono(),
                 "{CORREO_EMPRESA}" => $empresa->getEmail(),
@@ -174,6 +182,7 @@ if (isset($_GET['id'])) {
                 "{RUT_REPRESENTANTE_LEGAL}" => $repre->getRut(),
                 "{CALLE_EMPRESA}" => $empresa->getCalle(),
                 "{NUMERO_EMPRESA}" => $empresa->getNumero(),
+                "{VILLA_EMPRESA}," => $villa_empresa,
                 "{TELEFONO_EMPRESA}" => $empresa->getTelefono(),
                 "{CORREO_EMPRESA}" => $empresa->getEmail(),
                 "{DEPT_EMPRESA}" => $empresa->getDepartamento(),

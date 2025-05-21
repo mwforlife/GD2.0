@@ -163,7 +163,12 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['finiquito']) && isset($_POST['t
 
 
 
-
+    $villa_empresa = $empresa->getVilla();
+    if ($villa_empresa == "") {
+        $villa_empresa = "";
+    } else {
+        $villa_empresa = $empresa->getVilla() . ", ";
+    }
 
     $swap_var = array(
         "{CEL_COMUNA}" => $empresa->getComuna(),
@@ -173,7 +178,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['finiquito']) && isset($_POST['t
         "{REPRESENTANTE_LEGAL}" => $repre->getNombre() . " " . $repre->getApellido1() . " " . $repre->getApellido2(),
         "{RUT_REPRESENTANTE_LEGAL}" => $repre->getRut(),
         "{CALLE_EMPRESA}" => $empresa->getCalle(),
-        "{VILLA_EMPRESA}" => $empresa->getVilla(),
+        "{VILLA_EMPRESA}," => $villa_empresa,
         "{NUMERO_EMPRESA}" => $empresa->getNumero(),
         "{DEPT_EMPRESA}" => $empresa->getDepartamento(),
         "{COMUNA_EMPRESA}" => $empresa->getComuna(),
