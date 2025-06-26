@@ -72,6 +72,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid'])  && isset($_P
 
         $swap_var = array(
             "{CEL_COMUNA}" => $empresa->getComuna(),
+            "{FECHA_CELEBRACION}" => date("d-m-Y", strtotime($fechageneracion)),
             "{RUT_EMPRESA}" => $empresa->getRut(),
             "{NOMBRE_EMPRESA}" => $empresa->getRazonSocial(),
             "{REPRESENTANTE_LEGAL}" => $repre->getNombre() . " " . $repre->getApellido1() . " " . $repre->getApellido2(),
@@ -88,8 +89,8 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid'])  && isset($_P
             "{NOMBRE_TRABAJADOR}" => $trabajador->getNombre(),
             "{APELLIDO_1}" => $trabajador->getApellido1(),
             "{APELLIDO_2}" => $trabajador->getApellido2(),
-            //Fecha de nacimiento en formato dd/mm/aaaa
-            "{FECHA_NACIMIENTO}" => date("d/m/Y", strtotime($trabajador->getNacimiento())),
+            //Fecha de nacimiento en formato dd-mm-aaaa
+            "{FECHA_NACIMIENTO}" => date("d-m-Y", strtotime($trabajador->getNacimiento())),
             "{CALLE_TRABAJADOR}" => $dom->getCalle(),
             "{NUMERO_CASA_TRABAJADOR}" => $dom->getNumero(),
             "{DEPARTAMENTO_TRABAJADOR}" => $dom->getDepartamento(),
@@ -102,6 +103,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid'])  && isset($_P
             "{NACIONALIDAD}" => $trabajador->getNacionalidad(),
             "{ESTADO_CIVIL}" => $trabajador->getCivil(),
             "{CORREO_TRABAJADOR}" => $con->getCorreo(),
+            "{TELEFONO_TRABAJADOR}" => $con->getTelefono(),
             "{CARGO}" => $contrato->getCargo(),
             "{FECHA_GENERACION}" => date("d-m-Y", strtotime($fechageneracion))
         );
@@ -113,7 +115,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid'])  && isset($_P
             $contenido = str_replace($key, $swap_var[$key], $contenido);
         }
 
-        $mpdf = new \Mpdf\Mpdf();
+        $mpdf = new \Mpdf\Mpdf(['format' => [216, 356]]);
         $mpdf->title = 'Finiquito del Trabajador';
         $mpdf->author = 'KaiserTech - Gestor de Documentos';
         $mpdf->creator = 'WilkensTech';

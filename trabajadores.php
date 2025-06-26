@@ -558,7 +558,7 @@ foreach ($permiso as $p) {
 													<tr>
 														<th class="bg-transparent">RUT</th>
 														<th class="bg-transparent">Nombre</th>
-														<th class="bg-transparent">Fecha de Nacimiento</th>
+														<th class="bg-transparent">Fecha Inicio Contrato</th>
 														<th class="bg-transparent">Ficha</th>
 														<th class="bg-transparent text-center">Generar Contrato</th>
 													</tr>

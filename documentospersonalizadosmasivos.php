@@ -575,9 +575,11 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-sm-12 col-md-12 text-center">
-                                            <table class="table text-nowrap text-center">
+                                            <div class="table-responsive">
+                                            <table class="table text-wrap" id="example1">
                                                 <thead class="border-top">
                                                     <tr>
+                                                        <th class="bg-transparent">#</th>
                                                         <th class="bg-transparent">Contrato</th>
                                                         <th class="bg-transparent">Trabajador</th>
                                                     </tr>
@@ -585,8 +587,10 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                                                 <tbody id="lotes">
                                                     <?php
                                                     $lista = $c->buscarlotefiniquito($_SESSION['USER_ID']);
+                                                    $i = 1;
                                                     foreach ($lista as $object1) {
                                                         echo "<tr class='border-bottom-0'>";
+                                                        echo "<td>" . $i . "</td>";
                                                         echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
                                                         $fecha = $object1->getFechainicio();
                                                         //Convertir fecha en formato dd-mm-YYYY
@@ -598,11 +602,22 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                                                         echo $object1->getTrabajador();
                                                         echo "</td>";
                                                         echo "</tr>";
+                                                        $i++;
                                                     }
                                                     ?>
                                                 </tbody>
                                             </table>
-                                            <a class="btn btn-danger" href="generarlotepersonalizado.php"><i class="fa fa-arrow-left"></i> Volver</a>
+                                            </div>
+                                            <div class="col-md-12 mt-3">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <p class="text-muted">Total de Trabajadores: <?php echo $i - 1; ?></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 text-right">
+                                                <a class="btn btn-danger" href="generarlotepersonalizado.php"><i class="fa fa-arrow-left"></i> Volver</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

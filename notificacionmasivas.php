@@ -583,10 +583,11 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                                         </div>
                                         <div class="col-lg-12 col-md-12 mt-1 ">
                                             <h3>Finiquito a Notificar</h3>
-                                            <div class="table-responsive text-center">
-                                                <table class="table w-100 text-nowrap">
+                                            <div class="table-responsive">
+                                                <table class="table w-100 text-nowrap" id="example1">
                                                     <thead class="border-top">
                                                         <tr>
+                                                            <th class="bg-transparent">#</th>
                                                             <th class="bg-transparent">Finiquito (Causal)</th>
                                                             <th class="bg-transparent">Trabajador</th>
                                                             <th class="bg-transparent">Fecha Termino</th>
@@ -596,8 +597,10 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                                                     <tbody id="lotes">
                                                         <?php
                                                         $lista = $c->buscarlotenotifacion($_SESSION['USER_ID']);
+                                                        $i = 1;
                                                         foreach ($lista as $object1) {
                                                             echo "<tr class='border-bottom-0'>";
+                                                            echo "<td>" . $i . "</td>";
                                                             echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
                                                             echo $object1->getCausal();
                                                             echo "</td>";
@@ -617,11 +620,21 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                                                             echo $fecha;
                                                             echo "</td>";
                                                             echo "</tr>";
+                                                            $i++;
                                                         }
                                                         ?>
                                                     </tbody>
                                                 </table>
-                                                <a class="btn btn-danger" href="generarlotenotificacion.php"><i class="fa fa-arrow-left"></i> Volver</a>
+                                            </div>
+                                            <div class="col-md-12 mt-3">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <p class="text-muted">Total de Trabajadores: <?php echo $i - 1; ?></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 text-right">
+                                                    <a class="btn btn-danger" href="generarlotenotificacion.php"><i class="fa fa-arrow-left"></i> Volver</a>
                                             </div>
 
                                         </div>

@@ -76,6 +76,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid']) && isset($_PO
 
     $swap_var = array(
         "{CEL_COMUNA}" => $empresa->getComuna(),
+        "{FECHA_CELEBRACION}" => date("d-m-Y", strtotime($fechageneracion)),
         "{RUT_EMPRESA}" => $empresa->getRut(),
         "{NOMBRE_EMPRESA}" => $empresa->getRazonSocial(),
         "{REPRESENTANTE_LEGAL}" => $repre->getNombre() . " " . $repre->getApellido1() . " " . $repre->getApellido2(),
@@ -107,6 +108,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid']) && isset($_PO
         "{NACIONALIDAD}" => $trabajador->getNacionalidad(),
         "{ESTADO_CIVIL}" => $trabajador->getCivil(),
         "{CORREO_TRABAJADOR}" => $con->getCorreo(),
+        "{TELEFONO_TRABAJADOR}" => $con->getTelefono(),
         "{CARGO}" => $contrato->getCargo(),
         "{INICIO_CONTRATO}" => date("d-m-Y", strtotime($contrato->getFechainicio())),
         "{TERMINO_CONTRATO}" => date("d-m-Y", strtotime($contrato->getFechatermino()))
@@ -118,7 +120,7 @@ if (isset($_SESSION['USER_ID']) && isset($_POST['tipocontratoid']) && isset($_PO
         $contenido = str_replace($key, $swap_var[$key], $contenido);
     }
 
-    $mpdf = new \Mpdf\Mpdf();
+    $mpdf = new \Mpdf\Mpdf(['format' => [216, 356]]);
     $mpdf->title = 'Finiquito del Trabajador';
     $mpdf->author = 'KaiserTech - Gestor de Documentos';
     $mpdf->creator = 'WilkensTech';
