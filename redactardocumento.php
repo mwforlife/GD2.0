@@ -332,6 +332,9 @@ foreach ($permiso as $p) {
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="generarlotepersonalizado.php">Documentos Masivos</a>
 									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="documentosempresa.php">Documentos Empresa</a>
+									</li>
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->
@@ -1028,8 +1031,9 @@ foreach ($permiso as $p) {
 		<!-- Perfect-scrollbar js -->
 		<script src="assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 
-		<!-- Internal Summernote js-->
-		<script src="assets/plugins/summernote/summernote-bs4.js"></script>
+		<!-- Internal Tinymce js-->
+        <script src="JsFunctions/tinymce.min.js"></script>
+		<!--<script src="assets/plugins/summernote/summernote-bs4.js"></script>-->
 
 		<!-- Internal Form-editor js-->
 		<script src="assets/js/form-editor.js"></script>
@@ -1067,8 +1071,14 @@ foreach ($permiso as $p) {
 		<script src="JsFunctions/precargado.js"></script>
 		<script src="JsFunctions/EditDocumento.js"></script>
 		<script>
+			//Cerrar notificaciones de TinyMCE
+			function cerrar() {
+				$(".tox-notifications-container").addClass("d-none");
+				$(".tox tox-silver-sink tox-tinymce-aux").addClass("d-none");
+			}
+
 			window.onload = function() {
-				cargarDocumento(<?php echo $id; ?>);
+				cargarDocumento(<?php echo $id; ?>);	
 			}
 		</script>
 </body>

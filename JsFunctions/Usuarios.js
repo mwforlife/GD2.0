@@ -1,5 +1,4 @@
 window.onload = function () {
-    //alert("Hola");
     listarcomunas();
     $(".form-control").attr("autocomplete","off");
 }
@@ -13,29 +12,28 @@ $(document).ready(function(){
         var pass2 = $("#UserPassword1").val();
         if(validarRut(rut)){
             if(pass == pass2){
-
-            var form = $(this);
-            var data = form.serialize();
-            $.ajax({
-                url: "php/insert/usuarios.php",
-                type: "POST",
-                data: data,
-                success: function(data){
-                    if(data == 1 || data == "1"){
-                        $("#global-loader").fadeOut("slow");
-                        ToastifySuccess("Registro insertado correctamente");
-                        setTimeout(function(){
-                            window.location.href = "usuarios.php";
-                        }, 1500);
-                    }else if(data == 0 || data == "0"){
-                        $("#global-loader").fadeOut("slow");
-                        ToastifyError("Error Al Registrar");
-                    }else{
-                        $("#global-loader").fadeOut("slow");
-                        ToastifyError(data);
+                var form = $(this);
+                var data = form.serialize();
+                $.ajax({
+                    url: "php/insert/usuarios.php",
+                    type: "POST",
+                    data: data,
+                    success: function(data){
+                        if(data == 1 || data == "1"){
+                            $("#global-loader").fadeOut("slow");
+                            ToastifySuccess("Registro insertado correctamente");
+                            setTimeout(function(){
+                                window.location.href = "usuarios.php";
+                            }, 1500);
+                        }else if(data == 0 || data == "0"){
+                            $("#global-loader").fadeOut("slow");
+                            ToastifyError("Error Al Registrar");
+                        }else{
+                            $("#global-loader").fadeOut("slow");
+                            ToastifyError(data);
+                        }
                     }
-                }
-            });
+                });
             }else{
                 $("#global-loader").fadeOut("slow");
                 ToastifyError("Las contraseñas no coinciden");
@@ -44,8 +42,7 @@ $(document).ready(function(){
             $("#global-loader").fadeOut("slow");
             ToastifyError("Rut Invalido");
         }
-    }
-    );
+    });
 
     $("#UserEditForm").on("submit", function(e){
         e.preventDefault();
@@ -73,8 +70,7 @@ $(document).ready(function(){
         }else{
             ToastifyError("Rut Invalido");
         }
-    }
-    );
+    });
 
     $("#changepass").on("click", function(e){
         e.preventDefault();
@@ -102,10 +98,8 @@ $(document).ready(function(){
         }else{
             ToastifyError("Las contraseñas no coinciden");
         }
-    }
-    );
+    });
 });
-
 
 function more(id){
     $.ajax({
@@ -114,10 +108,8 @@ function more(id){
         data: {id:id},
         success: function(data){
            $(".detalle").html(data);
-           ;
         }
     });
-    
 }
 
 function Eliminar(id){
@@ -207,13 +199,9 @@ function revocar(id,usuario){
         }else{
             ToastifyInfo("Proceso Cancelado");
         }
-    }
-    );
-
-    
+    });
 }
 
 function cargarid(id){
     $("#idus").val(id);
 }
-

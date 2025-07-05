@@ -247,6 +247,17 @@ insert into tipousuario(nombre) values('Administrador');
 insert into tipousuario(nombre) values('Contratista');
 insert into tipousuario(nombre) values('Mandante');
 
+-- Modificar tabla users para agregar nuevos campos
+ALTER TABLE users 
+ADD COLUMN nacionalidad int not null default 0,
+ADD COLUMN estado_civil int not null default 0,
+ADD COLUMN profesion varchar(200) null,
+ADD FOREIGN KEY (nacionalidad) REFERENCES nacionalidad(id),
+ADD FOREIGN KEY (estado_civil) REFERENCES estadocivil(id);
+
+-- Script para verificar la estructura actualizada
+DESCRIBE users;
+
 
 create table users (
     id_usu int not null auto_increment primary key,
@@ -1278,3 +1289,255 @@ create table movimientotrabajador(
     nombreentidad varchar(200) null,
     register_at timestamp not null default current_timestamp
 );
+
+/**************************Sistema de Documentos Empresariales************************/
+
+-- Tabla para tipos de documentos empresariales
+CREATE TABLE IF NOT EXISTS tipo_documento_empresa_plantilla (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    codigo VARCHAR(20) NOT NULL UNIQUE,
+    nombre VARCHAR(200) NOT NULL,
+    categoria ENUM('mandato_especial_empresa', 'mandato_especial_representante', 'contrato_arriendo', 'contrato_comodato') NOT NULL,
+    descripcion TEXT NULL,
+    activo TINYINT(1) NOT NULL DEFAULT 1,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_categoria (categoria),
+    INDEX idx_activo (activo)
+);
+
+-- Tabla para las plantillas base de documentos
+CREATE TABLE IF NOT EXISTS plantillas_empresa (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    tipo_documento INT NOT NULL,
+    nombre VARCHAR(200) NOT NULL,
+    contenido LONGTEXT NOT NULL,
+    version VARCHAR(20) NOT NULL DEFAULT '1.0',
+    activo TINYINT(1) NOT NULL DEFAULT 1,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (tipo_documento) REFERENCES tipo_documento_empresa_plantilla(id) ON DELETE CASCADE,
+    INDEX idx_tipo_documento (tipo_documento),
+    INDEX idx_activo (activo)
+);
+
+
+-- Tabla para documentos generados
+CREATE TABLE IF NOT EXISTS documentos_empresa_generados (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    tipo_documento INT NOT NULL,
+    plantilla_id INT NULL,
+    empresa INT NOT NULL,
+    titulo VARCHAR(300) NOT NULL,
+    contenido_generado LONGTEXT NOT NULL,
+    archivo_pdf VARCHAR(500) NULL,
+    usuario_creador INT NOT NULL,
+    fecha_generacion DATE NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (tipo_documento) REFERENCES tipo_documento_empresa_plantilla(id) ON DELETE CASCADE,
+    FOREIGN KEY (plantilla_id) REFERENCES plantillas_empresa(id) ON DELETE SET NULL,
+    FOREIGN KEY (empresa) REFERENCES empresa(id) ON DELETE CASCADE,
+    FOREIGN KEY (usuario_creador) REFERENCES users(id_usu) ON DELETE CASCADE,
+    INDEX idx_empresa (empresa),
+    INDEX idx_tipo_documento (tipo_documento),
+    INDEX idx_fecha_generacion (fecha_generacion),
+    INDEX idx_usuario_creador (usuario_creador)
+);
+
+
+-- Tabla para mandatarios (personas que reciben el mandato)
+CREATE TABLE IF NOT EXISTS mandatarios (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    usuario INT NOT NULL,
+    documento int NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario) REFERENCES users(id_usu) ON DELETE CASCADE,
+    FOREIGN KEY (documento) REFERENCES documentos_empresa_generados(id) ON DELETE CASCADE,
+    INDEX idx_usuario (usuario),
+    INDEX idx_documento (documento),
+    UNIQUE KEY unique_mandatario_empresa (usuario, documento)
+);
+
+-- Tabla para registrar montos de arriendo
+CREATE TABLE IF NOT EXISTS mandatos_arriendo (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    empresa INT NOT NULL,
+    monto DECIMAL(12, 2) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (empresa) REFERENCES empresa(id) ON DELETE CASCADE,
+    INDEX idx_empresa (empresa)
+);
+
+-- Tabla para conversión de números a letras (auxiliar)
+CREATE TABLE IF NOT EXISTS numeros_letras (
+    numero INT PRIMARY KEY,
+    texto VARCHAR(50) NOT NULL
+);
+
+-- ==================================================================================
+-- INSERTAR TIPOS DE DOCUMENTOS INICIALES
+-- ==================================================================================
+
+INSERT INTO tipo_documento_empresa_plantilla (codigo, nombre, categoria, descripcion) VALUES 
+('ME001', 'Mandato Especial Empresa - Modelo Básico', 'mandato_especial_empresa', 'Mandato especial para representación empresarial básica'),
+('ME002', 'Mandato Especial Empresa - Modelo Completo', 'mandato_especial_empresa', 'Mandato especial para representación empresarial con facultades amplias'),
+('MR001', 'Mandato Especial Representante Legal - Básico', 'mandato_especial_representante', 'Mandato especial otorgado por representante legal'),
+('MR002', 'Mandato Especial Representante Legal - Amplio', 'mandato_especial_representante', 'Mandato especial otorgado por representante legal con facultades extensas'),
+('CA001', 'Contrato de Arriendo Comercial', 'contrato_arriendo', 'Contrato de arriendo para uso comercial con monto'),
+('CA002', 'Contrato de Arriendo Habitacional', 'contrato_arriendo', 'Contrato de arriendo para uso habitacional con monto'),
+('CC001', 'Contrato de Comodato Básico', 'contrato_comodato', 'Contrato de comodato uso gratuito básico'),
+('CC002', 'Contrato de Comodato Completo', 'contrato_comodato', 'Contrato de comodato uso gratuito con cláusulas detalladas');
+
+-- ==================================================================================
+-- INSERTAR PLANTILLAS BASE
+-- ==================================================================================
+
+-- Plantilla Mandato Especial Empresa
+INSERT INTO plantillas_empresa (tipo_documento, nombre, contenido, version) VALUES 
+(1, 'Mandato Especial Empresa - Plantilla Base', 
+'<div style="text-align: center; margin-bottom: 30px;">
+<h2>MANDATO ESPECIAL</h2>
+<h3>{NOMBRE_EMPRESA} A {MANDATARIO_1}</h3>
+</div>
+
+<p>{NOMBRE_EMPRESA}, persona jurídica del giro de su denominación, rol único tributario número {RUT_EMPRESA}, representada según se acreditará, por {REPRESENTANTE_LEGAL}, {NACIONALIDAD_MANDATARIO_1}, {ESTADO_CIVIL_MANDATARIO_1}, {PROFESION_MANDATARIO_1}, cédula nacional de identidad número {RUT_REPRESENTANTE_LEGAL}, ambos con domicilio para estos efectos en {DIRECCION_EMPRESA}, expone: Que por este acto, en la representación que inviste, confiere mandato especial extrajudicial</p>
+
+<p><strong>PRIMERO:</strong> Mediante el presente acto el "Mandante", ya singularizado viene en conferir mandato extrajudicial, a don {MANDATARIO_1}, {NACIONALIDAD_MANDATARIO_1}, {ESTADO_CIVIL_MANDATARIO_1}, {PROFESION_MANDATARIO_1}, cédula nacional de identidad número {RUT_MANDATARIO_1}, con domicilio en [DOMICILIO MANDANTE], comuna de [COMUNA MANDANTE].</p>
+
+<p><strong>SEGUNDO:</strong> En el desempeño del Mandato, los mandatarios podrán representar de forma separada o conjunta, facultándolos para realizar presentaciones, solicitudes y defensas en general, de las cuales, a título meramente ejemplar, y sin que sean taxativas, se mencionan las siguientes: Representar a los mandantes ante toda clase de personas, naturales o jurídicas, de derecho público o privado, o ante cualquier autoridad o institución pública o privada, fiscal, semifiscal, semifiscal de administración autónoma o mixta, administrativa, municipal, servicios y reparticiones y empresas del Estado.</p>
+
+<div style="margin-top: 50px; text-align: center;">
+<table style="width: 100%; border-collapse: collapse;">
+<tr>
+<td style="text-align: center; padding: 20px;">
+<div style="border-top: 1px solid #000; width: 200px; margin: 0 auto; padding-top: 5px;">
+{NOMBRE_EMPRESA}<br>
+RUT: {RUT_EMPRESA}<br>
+Representante Legal<br>
+{REPRESENTANTE_LEGAL}<br>
+{RUT_REPRESENTANTE_LEGAL}
+</div>
+</td>
+<td style="text-align: center; padding: 20px;">
+<div style="border-top: 1px solid #000; width: 200px; margin: 0 auto; padding-top: 5px;">
+{MANDATARIO_1}<br>
+C.I. N° {RUT_MANDATARIO_1}
+</div>
+</td>
+</tr>
+</table>
+</div>
+
+<p style="text-align: center; margin-top: 30px; font-size: 12px;">
+Fecha de generación: {FECHA_GENERACION}
+</p>', '1.0'),
+
+-- Plantilla Contrato de Arriendo
+(5, 'Contrato de Arriendo Comercial - Plantilla Base',
+'<div style="text-align: center; margin-bottom: 30px;">
+<h2>CONTRATO DE ARRIENDO</h2>
+</div>
+
+<p>En [CIUDAD], a {FECHA_CELEBRACION}, comparecen, por una parte, doña [NOMBRE ARRENDADOR], [NACIONALIDAD], [ESTADO CIVIL], [PROFESION], Rut N° [RUT ARRENDADOR], domiciliado para estos efectos en [DIRECCION ARRENDADOR], en adelante denominado indistintamente como el "arrendador", y por la otra, la empresa {NOMBRE_EMPRESA}, Rut {RUT_EMPRESA}, representado por {REPRESENTANTE_LEGAL}, {NACIONALIDAD_MANDATARIO_1}, {ESTADO_CIVIL_MANDATARIO_1}, de oficio {PROFESION_MANDATARIO_1}, cédula nacional de identidad {RUT_REPRESENTANTE_LEGAL}, domiciliada para estos efectos en {DIRECCION_EMPRESA}, en adelante denominados como "El Arrendataria". Identificadas como LAS PARTES, y basándose en los mutuos pactos y acuerdos reflejados en el presente contrato, ACUERDAN lo siguiente:</p>
+
+<p><strong>PRIMERO: Propiedad</strong><br>
+El arrendador da en arrendamiento al arrendatario, quien acepta para sí, la propiedad ubicada [DIRECCION INMUEBLE], en las condiciones que expresan las cláusulas del presente contrato.</p>
+
+<p><strong>SEGUNDO: Uso del Inmueble</strong><br>
+El inmueble individualizado en la cláusula anterior sólo podrá ser usado como oficina en las condiciones descritas en la Cláusula [NUMERO] de este contrato.</p>
+
+<p><strong>TERCERO: Plazo</strong><br>
+El arrendamiento empezará a regir el {FECHA_CELEBRACION} por un plazo de un año calendario, renovable por períodos de doce meses, debiendo las partes dar aviso por escrito de término del contrato con treinta (30) días de anticipación al vencimiento de lo pactado.</p>
+
+<p><strong>CUARTO: Renta</strong><br>
+La renta de arrendamiento será de {MONTO_ARRIENDO} ({MONTO_ARRIENDO_LETRAS} pesos), el pago se realizará mediante transferencia electrónica o depósito bancario directamente en la Cuenta Rut a nombre de [NOMBRE ARRENDADOR].</p>
+
+<div style="margin-top: 50px; text-align: center;">
+<table style="width: 100%; border-collapse: collapse;">
+<tr>
+<td style="text-align: center; padding: 20px;">
+<div style="border-top: 1px solid #000; width: 200px; margin: 0 auto; padding-top: 5px;">
+[NOMBRE ARRENDADOR]<br>
+RUT: [RUT ARRENDADOR]<br>
+ARRENDADOR
+</div>
+</td>
+<td style="text-align: center; padding: 20px;">
+<div style="border-top: 1px solid #000; width: 200px; margin: 0 auto; padding-top: 5px;">
+{NOMBRE_EMPRESA}<br>
+RUT {RUT_EMPRESA}<br>
+Representante Legal<br>
+{REPRESENTANTE_LEGAL}<br>
+RUT: {RUT_REPRESENTANTE_LEGAL}
+</div>
+</td>
+</tr>
+</table>
+</div>', '1.0'),
+
+-- Plantilla Contrato de Comodato
+(7, 'Contrato de Comodato - Plantilla Base',
+'<div style="text-align: center; margin-bottom: 30px;">
+<h2>CONTRATO DE COMODATO</h2>
+</div>
+
+<p>En [CIUDAD], a {FECHA_CELEBRACION}, comparecen, por una parte, [NOMBRE COMODANTE], [NACIONALIDAD], [ESTADO CIVIL], [PROFESION], RUT [RUT COMODANTE] representado por [REPRESENTANTE COMODANTE], domiciliado para estos efectos en [DIRECCION COMODANTE], en adelante denominado indistintamente como el "comodante", y por la otra, la empresa {NOMBRE_EMPRESA}, RUT {RUT_EMPRESA}, representada por {REPRESENTANTE_LEGAL}, domiciliada para estos efectos en {DIRECCION_EMPRESA}, en adelante denominado indistintamente como el "comodatario"; los comparecientes mayores de edad, que acreditan su identidad con las cédulas antes indicadas, y exponen: Que de común acuerdo han convenido en celebrar el siguiente Contrato de comodato de un bien raíz:</p>
+
+<p><strong>PRIMERO: Inmueble</strong><br>
+El comodante es propietario del inmueble ubicado [DIRECCION INMUEBLE], comuna de [COMUNA], región [REGION]. El rol de avalúo fiscal del bien raíz es el número [ROL AVALUO].</p>
+
+<p><strong>SEGUNDO: Comodato</strong><br>
+El comodante entrega en comodato, esto es, en préstamo gratuito de uso, el bien raíz indicado en la cláusula anterior al comodatario, quien toma y acepta para sí.</p>
+
+<p><strong>TERCERO: Destino</strong><br>
+El comodatario sólo podrá destinar el inmueble a uso comercial y tributario, siendo esta circunstancia determinante para la celebración del presente contrato.</p>
+
+<p><strong>CUARTO: Duración</strong><br>
+La vigencia del presente contrato comenzará el día {FECHA_CELEBRACION} y tendrá una duración de [DURACION] meses expirando en consecuencia el día [FECHA TERMINO].</p>
+
+<p><strong>QUINTO: Entrega</strong><br>
+La entrega material del bien raíz se realiza en este acto, a entera conformidad del comodatario, quien se obliga a restituirlo al término del presente contrato.</p>
+
+<div style="margin-top: 50px; text-align: center;">
+<table style="width: 100%; border-collapse: collapse;">
+<tr>
+<td style="text-align: center; padding: 20px;">
+<div style="border-top: 1px solid #000; width: 200px; margin: 0 auto; padding-top: 5px;">
+[NOMBRE COMODANTE]<br>
+RUT: [RUT COMODANTE]<br>
+Representante Legal<br>
+[REPRESENTANTE COMODANTE]<br>
+C.I. N° [RUT REPRESENTANTE COMODANTE]
+</div>
+</td>
+<td style="text-align: center; padding: 20px;">
+<div style="border-top: 1px solid #000; width: 200px; margin: 0 auto; padding-top: 5px;">
+{NOMBRE_EMPRESA}<br>
+RUT {RUT_EMPRESA}<br>
+Representante Legal<br>
+{REPRESENTANTE_LEGAL}<br>
+C.I. N° {RUT_REPRESENTANTE_LEGAL}
+</div>
+</td>
+</tr>
+</table>
+</div>', '1.0');
+
+-- ==================================================================================
+-- INSERTAR NÚMEROS PARA CONVERSIÓN A LETRAS (MUESTRA)
+-- ==================================================================================
+
+INSERT IGNORE INTO numeros_letras VALUES 
+(0, 'cero'), (1, 'uno'), (2, 'dos'), (3, 'tres'), (4, 'cuatro'), 
+(5, 'cinco'), (6, 'seis'), (7, 'siete'), (8, 'ocho'), (9, 'nueve'),
+(10, 'diez'), (11, 'once'), (12, 'doce'), (13, 'trece'), (14, 'catorce'),
+(15, 'quince'), (16, 'dieciséis'), (17, 'diecisiete'), (18, 'dieciocho'), (19, 'diecinueve'),
+(20, 'veinte'), (21, 'veintiuno'), (22, 'veintidós'), (23, 'veintitrés'), (24, 'veinticuatro'),
+(25, 'veinticinco'), (26, 'veintiséis'), (27, 'veintisiete'), (28, 'veintiocho'), (29, 'veintinueve'),
+(30, 'treinta'), (40, 'cuarenta'), (50, 'cincuenta'), (60, 'sesenta'), (70, 'setenta'),
+(80, 'ochenta'), (90, 'noventa'), (100, 'cien'), (200, 'doscientos'), (300, 'trescientos'),
+(400, 'cuatrocientos'), (500, 'quinientos'), (600, 'seiscientos'), (700, 'setecientos'),
+(800, 'ochocientos'), (900, 'novecientos'), (1000, 'mil');

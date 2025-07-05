@@ -1,66 +1,56 @@
 <?php
+// Archivo: php/listar/usuarios.php
 require '../controller.php';
 $c = new Controller();
 session_start();
-if (!isset($_SESSION['USER_ID'])) {
-	header("Location: signin.php");
+
+if (isset($_POST['id'])) {
+    $id = $_POST['id'];
+    $usuario = $c->buscarusuario($id);
+    
+    if ($usuario != null) {
+        $region = $c->buscarregion($usuario->getRegion());
+        $comuna = $c->buscarcomuna($usuario->getComuna());
+        $nacionalidad = $c->buscarnacionalidad($usuario->getNacionalidad());
+        $estadoCivil = $c->buscarestadocivil($usuario->getEstadoCivil());
+        
+        echo "<div class='row'>";
+        echo "<div class='col-md-6'>";
+        echo "<p><strong>RUT:</strong> " . $usuario->getRut() . "</p>";
+        echo "<p><strong>Nombre:</strong> " . $usuario->getNombre() . " " . $usuario->getApellido() . "</p>";
+        echo "<p><strong>Email:</strong> " . $usuario->getCorreo() . "</p>";
+        echo "<p><strong>Teléfono:</strong> " . $usuario->getTelefono() . "</p>";
+        echo "<p><strong>Dirección:</strong> " . $usuario->getDireccion() . "</p>";
+        echo "</div>";
+        echo "<div class='col-md-6'>";
+        echo "<p><strong>Región:</strong> " . ($region ? $region->getNombre() : 'NO DEFINIDA') . "</p>";
+        echo "<p><strong>Comuna:</strong> " . ($comuna ? $comuna->getNombre() : 'NO DEFINIDA') . "</p>";
+        echo "<p><strong>Nacionalidad:</strong> " . ($nacionalidad ? $nacionalidad->getNombre() : 'NO DEFINIDA') . "</p>";
+        echo "<p><strong>Estado Civil:</strong> " . ($estadoCivil ? $estadoCivil->getNombre() : 'NO DEFINIDO') . "</p>";
+        echo "<p><strong>Profesión:</strong> " . ($usuario->getProfesion() ? $usuario->getProfesion() : 'NO DEFINIDA') . "</p>";
+        
+        $tipo = '';
+        if($usuario->getTipo() == 1) {
+            $tipo = 'Administrador';
+        } else if($usuario->getTipo() == 2) {
+            $tipo = 'Contratista';
+        } else if($usuario->getTipo() == 3) {
+            $tipo = 'Mandante';
+        }
+        echo "<p><strong>Tipo de Usuario:</strong> " . $tipo . "</p>";
+        echo "</div>";
+        echo "</div>";
+        
+        echo "<div class='row mt-3'>";
+        echo "<div class='col-md-12'>";
+        echo "<p><strong>Fecha de Registro:</strong> " . date('d-m-Y H:i:s', strtotime($usuario->getCreatedAt())) . "</p>";
+        echo "<p><strong>Última Actualización:</strong> " . date('d-m-Y H:i:s', strtotime($usuario->getUpdatedAt())) . "</p>";
+        echo "</div>";
+        echo "</div>";
+    } else {
+        echo "<p>Usuario no encontrado</p>";
+    }
 } else {
-	$valid  = $c->validarsesion($_SESSION['USER_ID'], $_SESSION['USER_TOKEN']);
-	if ($valid == false) {
-		header("Location: lockscreen.php");
-	}
+    echo "<p>ID de usuario no proporcionado</p>";
 }
-$id = $_POST['id'];
-$usuarios = $c->getuser1($id);
-if ($usuarios!=null) {
-    echo "<div class='row'>";
-    echo "<div class='col-md-6'>";
-    echo "<label>Nombre</label>";
-    echo "<input type='text' class='form-control' value='".$usuarios->getNombre()."' readonly>";
-    echo "</div>";
-    echo "<div class='col-md-6'>";
-    echo "<label>Apellido</label>";
-    echo "<input type='text' class='form-control' value='".$usuarios->getApellido()."' readonly>";
-    echo "</div>";
-    echo "</div>";
-    echo "<div class='row'>";
-    echo "<div class='col-md-6'>";
-    echo "<label>Correo</label>";
-    echo "<input type='text' class='form-control' value='".$usuarios->getCorreo()."' readonly>";
-    echo "</div>";
-    echo "<div class='col-md-6'>";
-    echo "<label>Dirección</label>";
-    echo "<input type='text' class='form-control' value=\"".$usuarios->getDireccion()."\" readonly>";
-    echo "</div>";
-    echo "</div>";
-    echo "<div class='row'>";
-    echo "<div class='col-md-6'>";
-    echo "<label>Región</label>";
-    echo "<input type='text' class='form-control' value='".$usuarios->getRegion()."' readonly>";
-    echo "</div>";
-    echo "<div class='col-md-6'>";
-    echo "<label>Comuna</label>";
-    echo "<input type='text' class='form-control' value='".$usuarios->getComuna()."' readonly>";
-    echo "</div>";
-    echo "</div>";
-    echo "<div class='row'>";
-    echo "<div class='col-md-6'>";
-    echo "<label>Teléfono</label>";
-    echo "<input type='text' class='form-control' value='".$usuarios->getTelefono()."' readonly>";
-    echo "</div>";
-    echo "<div class='col-md-6'>";
-    echo "<label>Estado</label>";
-    echo "<input type='text' class='form-control' value='".$usuarios->getEstado()."' readonly>";
-    echo "</div>";
-    echo "</div>";
-    echo "<div class='row'>";
-    echo "<div class='col-md-6'>";
-    echo "<label>Fecha de Registro</label>";
-    echo "<input type='text' class='form-control' value='".$usuarios->getRegistro()."' readonly>";
-    echo "</div>";
-    echo "<div class='col-md-6'>";
-    echo "<label>Ultima Actualización</label>";
-    echo "<input type='text' class='form-control' value='".$usuarios->getUpdate()."' readonly>";
-    echo "</div>";
-    echo "</div>";
-}
+?>

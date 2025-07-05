@@ -324,6 +324,9 @@ foreach ($permiso as $p) {
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="generarlotepersonalizado.php">Documentos Masivos</a>
 									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="documentosempresa.php">Documentos Empresa</a>
+									</li>
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->
@@ -778,6 +781,42 @@ foreach ($permiso as $p) {
 
                                             ?>
                                         </select>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6">
+                                        <label for="">Nacionalidad</label>
+                                        <select name="UserNacionalidad" autocapitalize="true" id="UserNacionalidad" class="form-control">
+                                            <?php
+                                            $lista = $c->listarnacionalidad();
+                                            foreach ($lista as $object){
+                                                if($object->getId() == 1){ // Chileno por defecto
+                                                    echo "<option value='".$object->getId()."' selected>".$object->getNombre()."</option>";
+                                                } else {
+                                                    echo "<option value='".$object->getId()."'>".$object->getNombre()."</option>";
+                                                }
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6 col-lg-6">
+                                        <label for="">Estado Civil</label>
+                                        <select name="UserEstadoCivil" autocapitalize="true" id="UserEstadoCivil" class="form-control">
+                                            <?php
+                                            $lista = $c->listarestadocivil();
+                                            foreach ($lista as $object){
+                                                if($object->getId() == 1){ // Soltero por defecto
+                                                    echo "<option value='".$object->getId()."' selected>".$object->getNombre()."</option>";
+                                                } else {
+                                                    echo "<option value='".$object->getId()."'>".$object->getNombre()."</option>";
+                                                }
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6 col-lg-6">
+                                        <label for="">Profesión (Opcional)</label>
+                                        <input type="text" autocapitalize="true" class="form-control" name="UserProfesion" id="UserProfesion" placeholder="Ingrese su profesión">
                                     </div>
                                     <div class="col-md-12 col-lg-12 text-right">
                                         <a href="usuarios.php" class="btn btn-danger"><i class="fa fa-arrow-left"></i> Volver</a>

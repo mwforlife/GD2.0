@@ -67,23 +67,23 @@ require 'Class/Movpersonal.php';
 //Class definition
 class Controller
 {
-    private $host = "localhost";
+    public $host = "localhost";
     /*Variables*/
-    private $user = "root";
-    private $pass = "";
-    private $bd = "gestordocumentos";
+    public $user = "root";
+    public $pass = "";
+    public $bd = "gestordocumentos";
 
 
     /*Variables BD Remota
-    private $user = 'iustaxcl_admin';
-    private $pass = 'Kairos2023$#';
-    private $bd = 'iustaxcl_kairos';
+    public $user = 'iustaxcl_admin';
+    public $pass = 'Kairos2023$#';
+    public $bd = 'iustaxcl_kairos';
 
     /**Variables globales */
-    private $mi;
-    private $v;
+    public $mi;
+    public $v;
     //Conexion
-    private function conexion()
+    public function conexion()
     {
         $this->mi = new mysqli($this->host, $this->user, $this->pass, $this->bd);
         if ($this->mi->connect_errno) {
@@ -92,7 +92,7 @@ class Controller
     }
 
     //Desconexion
-    private function desconectar()
+    public function desconectar()
     {
         $this->mi->close();
     }
@@ -187,7 +187,7 @@ class Controller
             $tipo = $rs['tipousuario'];
             $registro = $rs['created_at'];
             $update = $rs['updated_at'];
-            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $tipo, $registro, $update);
+            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $tipo, $registro, $update,"","","");
             $this->desconectar();
             return $user;
         }
@@ -489,11 +489,12 @@ class Controller
         return $lista;
     }
 
-    //Registrar Usuarios
-    public function registrarusuario($rut, $nombre, $apellido, $correo, $direccion, $region, $comuna, $telefono, $pass, $tipo)
+    //Registrar Usuarios - FUNCIÓN ACTUALIZADA
+    public function registrarusuario($rut, $nombre, $apellido, $correo, $direccion, $region, $comuna, $telefono, $pass, $tipo, $nacionalidad = 0, $estado_civil = 0, $profesion = null)
     {
         $this->conexion();
-        $sql = "insert into users values(null, '$rut', '$nombre', '$apellido', '$correo', '$direccion', $region, $comuna, '$telefono', sha1('$pass'), 1, sha1('$correo'),$tipo, now(), now());";
+        $profesion_value = $profesion ? "'$profesion'" : "null";
+        $sql = "insert into users values(null, '$rut', '$nombre', '$apellido', '$correo', '$direccion', $region, $comuna, '$telefono', sha1('$pass'), 1, sha1('$correo'), $tipo, $nacionalidad, $estado_civil, $profesion_value, now(), now());";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return json_encode($result);
@@ -2521,11 +2522,15 @@ class Controller
         return false;
     }
 
-    //Listar Usuarios
+    //Listar Usuarios - FUNCIÓN ACTUALIZADA
     public function listarusuarios()
     {
         $this->conexion();
-        $sql = "select * from users";
+        $sql = "select users.*, region.nombre as region_nombre, comuna.nombre as comuna_nombre, status.nombre as estado_nombre, nacionalidad.nombre as nacionalidad_nombre, estadocivil.nombre as estado_civil_nombre 
+                from users, regiones region, comunas comuna, status, nacionalidad, estadocivil 
+                where users.region = region.id and users.comuna = comuna.id 
+                and users.estado = status.id and users.nacionalidad = nacionalidad.id 
+                and users.estado_civil = estadocivil.id order by users.id_usu desc;";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -2542,9 +2547,12 @@ class Controller
             $estado = $rs['estado'];
             $token = $rs['token'];
             $tipo = $rs['tipousuario'];
+            $nacionalidad = $rs['nacionalidad'];
+            $estado_civil = $rs['estado_civil'];
+            $profesion = $rs['profesion'];
             $registro = $rs['created_at'];
             $update = $rs['updated_at'];
-            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $tipo, $registro, $update);
+            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $tipo, $registro, $update, $nacionalidad, $estado_civil, $profesion);
             $lista[] = $user;
         }
         $this->desconectar();
@@ -2582,11 +2590,16 @@ class Controller
     }
 
 
-    //Buscar Usuario
+    
+    //Buscar Usuario - FUNCIÓN ACTUALIZADA
     public function buscarusuario($id)
     {
         $this->conexion();
-        $sql = "select * from users where id_usu = $id;";
+        $sql = "select u.*, n.nombre as nacionalidad_nombre, ec.nombre as estado_civil_nombre 
+                from users u 
+                left join nacionalidad n on u.nacionalidad = n.id 
+                left join estadocivil ec on u.estado_civil = ec.id 
+                where u.id_usu = $id";
         $result = $this->mi->query($sql);
         if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id_usu'];
@@ -2602,9 +2615,12 @@ class Controller
             $estado = $rs['estado'];
             $token = $rs['token'];
             $tipo = $rs['tipousuario'];
+            $nacionalidad = $rs['nacionalidad'];
+            $estado_civil = $rs['estado_civil'];
+            $profesion = $rs['profesion'];
             $registro = $rs['created_at'];
             $update = $rs['updated_at'];
-            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $tipo, $registro, $update);
+            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $tipo, $registro, $update, $nacionalidad, $estado_civil, $profesion);
             $this->desconectar();
             return $user;
         }
@@ -2969,11 +2985,12 @@ class Controller
         return $result;
     }
 
-    //Actualizar Usuario
-    public function actualizarusuario($id, $rut, $nombre, $apellido, $correo, $direccion, $region, $comuna, $telefono, $tipo)
+    //Actualizar Usuario - FUNCIÓN ACTUALIZADA
+    public function actualizarusuario($id, $rut, $nombre, $apellido, $correo, $direccion, $region, $comuna, $telefono, $tipo, $nacionalidad = 0, $estado_civil = 0, $profesion = null)
     {
         $this->conexion();
-        $sql = "update users set rut = '$rut', nombre = '$nombre', apellidos = '$apellido', email = '$correo', direccion = '$direccion', region = $region, comuna = $comuna, telefono = '$telefono', tipousuario=$tipo, updated_at = now() where id_usu = $id";
+        $profesion_value = $profesion ? "'$profesion'" : "null";
+        $sql = "update users set rut = '$rut', nombre = '$nombre', apellidos = '$apellido', email = '$correo', direccion = '$direccion', region = $region, comuna = $comuna, telefono = '$telefono', tipousuario = $tipo, nacionalidad = $nacionalidad, estado_civil = $estado_civil, profesion = $profesion_value, updated_at = now() where id_usu = $id";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return json_encode($result);
@@ -3707,7 +3724,10 @@ class Controller
             $tipo = $rs['tipousuario'];
             $registro = $rs['created_at'];
             $update = $rs['updated_at'];
-            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $tipo, $registro, $update);
+            $nacionalidad = $rs['nacionalidad'];
+            $estado_civil = $rs['estado_civil'];
+            $profesion = $rs['profesion'];
+            $user = new Users($id, $rut, $nombre, $apellidos, $email, $direccion, $region, $comuna, $telefono, $pass, $estado, $token, $tipo, $registro, $update, $nacionalidad, $estado_civil, $profesion);
             $this->desconectar();
             return $user;
         }
@@ -11588,5 +11608,731 @@ class Controller
 
     /***************************FIN Movimiento del Personal******************************/
 
+    /**************************************************Generador de documento empresa ***************************************/
+    // Agregar estas funciones al archivo controller.php existente
 
+// ========== FUNCIONES PARA DOCUMENTOS EMPRESA ==========
+
+// Listar tipos de documento empresa
+public function listarTipoDocumentoEmpresa1()
+{
+    $this->conexion();
+    $sql = "SELECT * FROM tipo_documento_empresa_plantilla WHERE activo = 1 ORDER BY nombre";
+    $result = $this->mi->query($sql);
+    $lista = array();
+    
+    while ($rs = mysqli_fetch_array($result)) {
+        $id = $rs['id'];
+        $codigo = $rs['codigo'];
+        $nombre = $rs['nombre'];
+        $categoria = $rs['categoria'];
+        $descripcion = $rs['descripcion'];
+        
+        $tipo = new stdClass();
+        $tipo->id = $id;
+        $tipo->codigo = $codigo;
+        $tipo->nombre = $nombre;
+        $tipo->categoria = $categoria;
+        $tipo->descripcion = $descripcion;
+        
+        $lista[] = $tipo;
+    }
+    
+    $this->desconectar();
+    return $lista;
+}
+
+// Buscar tipo documento empresa por categoría
+public function buscarTipoDocumentoPorCategoria($categoria)
+{
+    $this->conexion();
+    $sql = "SELECT * FROM tipo_documento_empresa_plantilla WHERE categoria = '$categoria' AND activo = 1 LIMIT 1";
+    $result = $this->mi->query($sql);
+    
+    if ($rs = mysqli_fetch_array($result)) {
+        $tipo = new stdClass();
+        $tipo->id = $rs['id'];
+        $tipo->codigo = $rs['codigo'];
+        $tipo->nombre = $rs['nombre'];
+        $tipo->categoria = $rs['categoria'];
+        $tipo->descripcion = $rs['descripcion'];
+        
+        $this->desconectar();
+        return $tipo;
+    } else {
+        $this->desconectar();
+        return false;
+    }
+}
+
+// Registrar tipo documento empresa
+public function registrarTipoDocumentoEmpresa($codigo, $nombre, $categoria, $descripcion = '')
+{
+    $this->conexion();
+    $sql = "INSERT INTO tipo_documento_empresa_plantilla (codigo, nombre, categoria, descripcion) 
+            VALUES ('$codigo', '$nombre', '$categoria', '$descripcion')";
+    $result = $this->mi->query($sql);
+    $this->desconectar();
+    return json_encode($result);
+}
+
+// Listar plantillas empresa
+public function listarPlantillasEmpresa($empresa_id = null)
+{
+    $this->conexion();
+    $sql = "SELECT pe.*, tde.nombre as tipo_nombre, tde.categoria 
+            FROM plantillas_empresa pe
+            INNER JOIN tipo_documento_empresa_plantilla tde ON pe.tipo_documento = tde.id
+            WHERE pe.activo = 1";
+    
+    if ($empresa_id) {
+        $sql .= " AND pe.empresa = $empresa_id";
+    }
+    
+    $sql .= " ORDER BY pe.updated_at DESC";
+    
+    $result = $this->mi->query($sql);
+    $lista = array();
+    
+    while ($rs = mysqli_fetch_array($result)) {
+        $plantilla = new stdClass();
+        $plantilla->id = $rs['id'];
+        $plantilla->tipo_documento = $rs['tipo_documento'];
+        $plantilla->nombre = $rs['nombre'];
+        $plantilla->contenido = $rs['contenido'];
+        $plantilla->version = $rs['version'];
+        $plantilla->tipo_nombre = $rs['tipo_nombre'];
+        $plantilla->categoria = $rs['categoria'];
+        $plantilla->created_at = $rs['created_at'];
+        $plantilla->updated_at = $rs['updated_at'];
+        
+        $lista[] = $plantilla;
+    }
+    
+    $this->desconectar();
+    return $lista;
+}
+
+// Buscar plantilla empresa por ID
+public function buscarPlantillaEmpresa($id)
+{
+    $this->conexion();
+    $sql = "SELECT pe.*, tde.nombre as tipo_nombre, tde.categoria 
+            FROM plantillas_empresa pe
+            INNER JOIN tipo_documento_empresa_plantilla tde ON pe.tipo_documento = tde.id
+            WHERE pe.id = $id";
+    
+    $result = $this->mi->query($sql);
+    
+    if ($rs = mysqli_fetch_array($result)) {
+        $plantilla = new stdClass();
+        $plantilla->id = $rs['id'];
+        $plantilla->tipo_documento = $rs['tipo_documento'];
+        $plantilla->nombre = $rs['nombre'];
+        $plantilla->contenido = $rs['contenido'];
+        $plantilla->version = $rs['version'];
+        $plantilla->tipo_nombre = $rs['tipo_nombre'];
+        $plantilla->categoria = $rs['categoria'];
+        $plantilla->created_at = $rs['created_at'];
+        $plantilla->updated_at = $rs['updated_at'];
+        
+        $this->desconectar();
+        return $plantilla;
+    } else {
+        $this->desconectar();
+        return false;
+    }
+}
+
+// Registrar plantilla empresa
+public function registrarPlantillaEmpresa($tipo_documento, $nombre, $contenido, $version = '1.0')
+{
+    $this->conexion();
+    $contenido = mysqli_real_escape_string($this->mi, $contenido);
+    $sql = "INSERT INTO plantillas_empresa (tipo_documento, nombre, contenido, version) 
+            VALUES ($tipo_documento, '$nombre', '$contenido', '$version')";
+    $result = $this->mi->query($sql);
+    $this->desconectar();
+    return json_encode($result);
+}
+
+// Actualizar plantilla empresa
+public function actualizarPlantillaEmpresa($id, $nombre, $contenido, $version = null)
+{
+    $this->conexion();
+    $contenido = mysqli_real_escape_string($this->mi, $contenido);
+    
+    $sql = "UPDATE plantillas_empresa SET nombre = '$nombre', contenido = '$contenido'";
+    
+    if ($version) {
+        $sql .= ", version = '$version'";
+    }
+    
+    $sql .= ", updated_at = NOW() WHERE id = $id";
+    
+    $result = $this->mi->query($sql);
+    $this->desconectar();
+    return json_encode($result);
+}
+
+// Eliminar plantilla empresa (soft delete)
+public function eliminarPlantillaEmpresa($id)
+{
+    $this->conexion();
+    $sql = "UPDATE plantillas_empresa SET activo = 0, updated_at = NOW() WHERE id = $id";
+    $result = $this->mi->query($sql);
+    $this->desconectar();
+    return json_encode($result);
+}
+
+// Listar mandatarios de empresa
+public function listarMandatariosEmpresa($empresa_id)
+{
+    $this->conexion();
+    $sql = "SELECT m.*, u.rut, u.nombre, u.apellidos, n.nombre as nacionalidad, 
+                   ec.nombre as estado_civil, u.profesion
+            FROM mandatarios m
+            INNER JOIN users u ON m.usuario = u.id_usu
+            LEFT JOIN nacionalidad n ON u.nacionalidad = n.id
+            LEFT JOIN estadocivil ec ON u.estado_civil = ec.id
+            WHERE m.empresa = $empresa_id AND m.activo = 1
+            ORDER BY u.nombre, u.apellidos";
+    
+    $result = $this->mi->query($sql);
+    $lista = array();
+    
+    while ($rs = mysqli_fetch_array($result)) {
+        $mandatario = new stdClass();
+        $mandatario->id = $rs['id'];
+        $mandatario->usuario_id = $rs['usuario'];
+        $mandatario->rut = $rs['rut'];
+        $mandatario->nombre = $rs['nombre'];
+        $mandatario->apellidos = $rs['apellidos'];
+        $mandatario->nombre_completo = $rs['nombre'] . ' ' . $rs['apellidos'];
+        $mandatario->nacionalidad = $rs['nacionalidad'] ?? 'No especificada';
+        $mandatario->estado_civil = $rs['estado_civil'] ?? 'No especificado';
+        $mandatario->profesion = $rs['profesion'] ?? '';
+        
+        $lista[] = $mandatario;
+    }
+    
+    $this->desconectar();
+    return $lista;
+}
+
+// Registrar mandatario
+public function registrarMandatario($usuario_id, $empresa_id)
+{
+    $this->conexion();
+    
+    // Verificar si ya existe
+    $sql_check = "SELECT id FROM mandatarios WHERE usuario = $usuario_id AND empresa = $empresa_id";
+    $result_check = $this->mi->query($sql_check);
+    
+    if (mysqli_fetch_array($result_check)) {
+        $this->desconectar();
+        return json_encode(['error' => 'El mandatario ya existe']);
+    }
+    
+    $sql = "INSERT INTO mandatarios (usuario, empresa) VALUES ($usuario_id, $empresa_id)";
+    $result = $this->mi->query($sql);
+    $this->desconectar();
+    return json_encode($result);
+}
+
+// Eliminar mandatario (soft delete)
+public function eliminarMandatario($id)
+{
+    $this->conexion();
+    $sql = "UPDATE mandatarios SET activo = 0, updated_at = NOW() WHERE id = $id";
+    $result = $this->mi->query($sql);
+    $this->desconectar();
+    return json_encode($result);
+}
+
+// Listar documentos empresa generados
+public function listarDocumentosEmpresaGenerados($empresa_id, $filtros = [])
+{
+    $this->conexion();
+    
+    $sql = "SELECT deg.*, tde.nombre as tipo_nombre, tde.categoria, 
+                   pe.nombre as plantilla_nombre, u.nombre as usuario_nombre
+            FROM documentos_empresa_generados deg
+            INNER JOIN tipo_documento_empresa_plantilla tde ON deg.tipo_documento = tde.id
+            LEFT JOIN plantillas_empresa pe ON deg.plantilla_id = pe.id
+            LEFT JOIN users u ON deg.usuario_creador = u.id_usu
+            WHERE deg.empresa = $empresa_id";
+    
+    // Aplicar filtros
+    if (isset($filtros['tipo']) && $filtros['tipo']) {
+        $sql .= " AND tde.categoria = '" . $filtros['tipo'] . "'";
+    }
+    
+    if (isset($filtros['fecha_desde']) && $filtros['fecha_desde']) {
+        $sql .= " AND deg.fecha_generacion >= '" . $filtros['fecha_desde'] . "'";
+    }
+    
+    if (isset($filtros['fecha_hasta']) && $filtros['fecha_hasta']) {
+        $sql .= " AND deg.fecha_generacion <= '" . $filtros['fecha_hasta'] . "'";
+    }
+    
+    $sql .= " ORDER BY deg.created_at DESC";
+    
+    $result = $this->mi->query($sql);
+    $lista = array();
+    
+    while ($rs = mysqli_fetch_array($result)) {
+        $documento = new stdClass();
+        $documento->id = $rs['id'];
+        $documento->tipo_documento = $rs['tipo_documento'];
+        $documento->plantilla_id = $rs['plantilla_id'];
+        $documento->titulo = $rs['titulo'];
+        $documento->contenido_generado = $rs['contenido_generado'];
+        $documento->archivo_pdf = $rs['archivo_pdf'];
+        $documento->mandatarios_seleccionados = $rs['mandatarios_seleccionados'];
+        $documento->datos_adicionales = $rs['datos_adicionales'];
+        $documento->fecha_generacion = $rs['fecha_generacion'];
+        $documento->tipo_nombre = $rs['tipo_nombre'];
+        $documento->categoria = $rs['categoria'];
+        $documento->plantilla_nombre = $rs['plantilla_nombre'];
+        $documento->usuario_nombre = $rs['usuario_nombre'];
+        $documento->created_at = $rs['created_at'];
+        
+        $lista[] = $documento;
+    }
+    
+    $this->desconectar();
+    return $lista;
+}
+
+// Buscar documento empresa generado por ID
+public function buscarDocumentoEmpresaGenerado($id)
+{
+    $this->conexion();
+    
+    $sql = "SELECT deg.*, tde.nombre as tipo_nombre, tde.categoria, 
+                   pe.nombre as plantilla_nombre, u.nombre as usuario_nombre
+            FROM documentos_empresa_generados deg
+            INNER JOIN tipo_documento_empresa_plantilla tde ON deg.tipo_documento = tde.id
+            LEFT JOIN plantillas_empresa pe ON deg.plantilla_id = pe.id
+            LEFT JOIN users u ON deg.usuario_creador = u.id_usu
+            WHERE deg.id = $id";
+    
+    $result = $this->mi->query($sql);
+    
+    if ($rs = mysqli_fetch_array($result)) {
+        $documento = new stdClass();
+        $documento->id = $rs['id'];
+        $documento->tipo_documento = $rs['tipo_documento'];
+        $documento->plantilla_id = $rs['plantilla_id'];
+        $documento->titulo = $rs['titulo'];
+        $documento->contenido_generado = $rs['contenido_generado'];
+        $documento->archivo_pdf = $rs['archivo_pdf'];
+        $documento->mandatarios_seleccionados = $rs['mandatarios_seleccionados'];
+        $documento->datos_adicionales = $rs['datos_adicionales'];
+        $documento->fecha_generacion = $rs['fecha_generacion'];
+        $documento->tipo_nombre = $rs['tipo_nombre'];
+        $documento->categoria = $rs['categoria'];
+        $documento->plantilla_nombre = $rs['plantilla_nombre'];
+        $documento->usuario_nombre = $rs['usuario_nombre'];
+        $documento->created_at = $rs['created_at'];
+        
+        $this->desconectar();
+        return $documento;
+    } else {
+        $this->desconectar();
+        return false;
+    }
+}
+
+// Registrar documento empresa generado
+public function registrarDocumentoEmpresaGenerado($datos)
+{
+    $this->conexion();
+    
+    $tipo_documento = intval($datos['tipo_documento']);
+    $plantilla_id = isset($datos['plantilla_id']) ? intval($datos['plantilla_id']) : 'NULL';
+    $empresa = intval($datos['empresa']);
+    $titulo = mysqli_real_escape_string($this->mi, $datos['titulo']);
+    $contenido = mysqli_real_escape_string($this->mi, $datos['contenido_generado']);
+    $archivo_pdf = isset($datos['archivo_pdf']) ? "'" . mysqli_real_escape_string($this->mi, $datos['archivo_pdf']) . "'" : 'NULL';
+    $mandatarios = mysqli_real_escape_string($this->mi, $datos['mandatarios_seleccionados'] ?? '[]');
+    $datos_adicionales = mysqli_real_escape_string($this->mi, $datos['datos_adicionales'] ?? '{}');
+    $usuario_creador = intval($datos['usuario_creador']);
+    $fecha_generacion = $datos['fecha_generacion'];
+    
+    $sql = "INSERT INTO documentos_empresa_generados 
+            (tipo_documento, plantilla_id, empresa, titulo, contenido_generado, archivo_pdf,
+             mandatarios_seleccionados, datos_adicionales, usuario_creador, fecha_generacion) 
+            VALUES ($tipo_documento, $plantilla_id, $empresa, '$titulo', '$contenido', $archivo_pdf,
+                    '$mandatarios', '$datos_adicionales', $usuario_creador, '$fecha_generacion')";
+    
+    $result = $this->mi->query($sql);
+    $insert_id = $this->mi->insert_id;
+    
+    $this->desconectar();
+    
+    if ($result) {
+        return ['success' => true, 'id' => $insert_id];
+    } else {
+        return ['success' => false, 'error' => 'Error al registrar documento'];
+    }
+}
+
+// Actualizar documento empresa generado
+public function actualizarDocumentoEmpresaGenerado($id, $datos)
+{
+    $this->conexion();
+    
+    $titulo = mysqli_real_escape_string($this->mi, $datos['titulo']);
+    $contenido = mysqli_real_escape_string($this->mi, $datos['contenido_generado']);
+    $mandatarios = mysqli_real_escape_string($this->mi, $datos['mandatarios_seleccionados'] ?? '[]');
+    $datos_adicionales = mysqli_real_escape_string($this->mi, $datos['datos_adicionales'] ?? '{}');
+    
+    $sql = "UPDATE documentos_empresa_generados 
+            SET titulo = '$titulo', contenido_generado = '$contenido',
+                mandatarios_seleccionados = '$mandatarios', datos_adicionales = '$datos_adicionales',
+                updated_at = NOW()
+            WHERE id = $id";
+    
+    if (isset($datos['archivo_pdf'])) {
+        $archivo_pdf = mysqli_real_escape_string($this->mi, $datos['archivo_pdf']);
+        $sql = str_replace('updated_at = NOW()', "archivo_pdf = '$archivo_pdf', updated_at = NOW()", $sql);
+    }
+    
+    $result = $this->mi->query($sql);
+    $this->desconectar();
+    return json_encode($result);
+}
+
+// Eliminar documento empresa generado
+public function eliminarDocumentoEmpresaGenerado($id)
+{
+    $this->conexion();
+    
+    // Obtener información del archivo antes de eliminar
+    $sql_file = "SELECT archivo_pdf FROM documentos_empresa_generados WHERE id = $id";
+    $result_file = $this->mi->query($sql_file);
+    $archivo_pdf = null;
+    
+    if ($row = mysqli_fetch_array($result_file)) {
+        $archivo_pdf = $row['archivo_pdf'];
+    }
+    
+    // Eliminar registro
+    $sql = "DELETE FROM documentos_empresa_generados WHERE id = $id";
+    $result = $this->mi->query($sql);
+    
+    $this->desconectar();
+    
+    // Intentar eliminar archivo físico si existe
+    if ($result && $archivo_pdf && file_exists("../documentos_generados/" . $archivo_pdf)) {
+        unlink("../documentos_generados/" . $archivo_pdf);
+    }
+    
+    return json_encode($result);
+}
+
+// Obtener estadísticas de documentos empresa
+public function obtenerEstadisticasDocumentosEmpresa($empresa_id)
+{
+    $this->conexion();
+    
+    $estadisticas = new stdClass();
+    
+    // Total documentos generados
+    $sql_docs = "SELECT COUNT(*) as total FROM documentos_empresa_generados WHERE empresa = $empresa_id";
+    $result_docs = $this->mi->query($sql_docs);
+    $estadisticas->total_documentos = mysqli_fetch_array($result_docs)['total'];
+    
+    // Total plantillas activas
+    $sql_plantillas = "SELECT COUNT(*) as total FROM plantillas_empresa WHERE activo = 1";
+    $result_plantillas = $this->mi->query($sql_plantillas);
+    $estadisticas->total_plantillas = mysqli_fetch_array($result_plantillas)['total'];
+    
+    // Total mandatarios activos
+    $sql_mandatarios = "SELECT COUNT(*) as total FROM mandatarios WHERE empresa = $empresa_id AND activo = 1";
+    $result_mandatarios = $this->mi->query($sql_mandatarios);
+    $estadisticas->total_mandatarios = mysqli_fetch_array($result_mandatarios)['total'];
+    
+    // Documentos por tipo
+    $sql_tipos = "SELECT tde.categoria, tde.nombre, COUNT(deg.id) as cantidad
+                  FROM tipo_documento_empresa_plantilla tde
+                  LEFT JOIN documentos_empresa_generados deg ON tde.id = deg.tipo_documento AND deg.empresa = $empresa_id
+                  WHERE tde.activo = 1
+                  GROUP BY tde.id, tde.categoria, tde.nombre
+                  ORDER BY cantidad DESC";
+    
+    $result_tipos = $this->mi->query($sql_tipos);
+    $estadisticas->documentos_por_tipo = [];
+    
+    while ($row = mysqli_fetch_array($result_tipos)) {
+        $estadisticas->documentos_por_tipo[] = [
+            'categoria' => $row['categoria'],
+            'nombre' => $row['nombre'],
+            'cantidad' => intval($row['cantidad'])
+        ];
+    }
+    
+    // Documentos recientes (últimos 30 días)
+    $sql_recientes = "SELECT COUNT(*) as total FROM documentos_empresa_generados 
+                     WHERE empresa = $empresa_id AND fecha_generacion >= DATE_SUB(NOW(), INTERVAL 30 DAY)";
+    $result_recientes = $this->mi->query($sql_recientes);
+    $estadisticas->documentos_recientes = mysqli_fetch_array($result_recientes)['total'];
+    
+    $this->desconectar();
+    return $estadisticas;
+}
+
+// Listar montos de arriendo registrados
+public function listarMontosArriendo($empresa_id)
+{
+    $this->conexion();
+    $sql = "SELECT * FROM mandatos_arriendo WHERE empresa = $empresa_id ORDER BY created_at DESC";
+    $result = $this->mi->query($sql);
+    $lista = array();
+    
+    while ($rs = mysqli_fetch_array($result)) {
+        $monto = new stdClass();
+        $monto->id = $rs['id'];
+        $monto->empresa = $rs['empresa'];
+        $monto->monto = $rs['monto'];
+        $monto->created_at = $rs['created_at'];
+        
+        $lista[] = $monto;
+    }
+    
+    $this->desconectar();
+    return $lista;
+}
+
+// Registrar monto de arriendo
+public function registrarMontoArriendo($empresa_id, $monto)
+{
+    $this->conexion();
+    $sql = "INSERT INTO mandatos_arriendo (empresa, monto) VALUES ($empresa_id, $monto)";
+    $result = $this->mi->query($sql);
+    $this->desconectar();
+    return json_encode($result);
+}
+
+// Obtener último monto de arriendo
+public function obtenerUltimoMontoArriendo($empresa_id)
+{
+    $this->conexion();
+    $sql = "SELECT * FROM mandatos_arriendo WHERE empresa = $empresa_id ORDER BY created_at DESC LIMIT 1";
+    $result = $this->mi->query($sql);
+    
+    if ($rs = mysqli_fetch_array($result)) {
+        $monto = new stdClass();
+        $monto->id = $rs['id'];
+        $monto->empresa = $rs['empresa'];
+        $monto->monto = $rs['monto'];
+        $monto->created_at = $rs['created_at'];
+        
+        $this->desconectar();
+        return $monto;
+    } else {
+        $this->desconectar();
+        return false;
+    }
+}
+
+// Buscar usuarios para mandatarios
+public function buscarUsuariosMandatarios($empresa_id, $termino = '')
+{
+    $this->conexion();
+    
+    $where_termino = '';
+    if ($termino) {
+        $termino = mysqli_real_escape_string($this->mi, $termino);
+        $where_termino = " AND (u.nombre LIKE '%$termino%' OR u.apellidos LIKE '%$termino%' OR u.rut LIKE '%$termino%')";
+    }
+    
+    $sql = "SELECT u.id_usu as id, u.rut, u.nombre, u.apellidos, 
+                   n.nombre as nacionalidad, ec.nombre as estado_civil, u.profesion
+            FROM users u
+            LEFT JOIN nacionalidad n ON u.nacionalidad = n.id
+            LEFT JOIN estadocivil ec ON u.estado_civil = ec.id
+            LEFT JOIN usuarioempresa ue ON u.id_usu = ue.usuario
+            WHERE u.tipo != 3 AND ue.empresa = $empresa_id AND ue.estado = 1 $where_termino
+            ORDER BY u.nombre, u.apellidos
+            LIMIT 50";
+    
+    $result = $this->mi->query($sql);
+    $lista = array();
+    
+    while ($rs = mysqli_fetch_array($result)) {
+        $usuario = new stdClass();
+        $usuario->id = $rs['id'];
+        $usuario->rut = $rs['rut'];
+        $usuario->nombre = $rs['nombre'];
+        $usuario->apellidos = $rs['apellidos'];
+        $usuario->nombre_completo = $rs['nombre'] . ' ' . $rs['apellidos'];
+        $usuario->nacionalidad = $rs['nacionalidad'] ?? 'No especificada';
+        $usuario->estado_civil = $rs['estado_civil'] ?? 'No especificado';
+        $usuario->profesion = $rs['profesion'] ?? '';
+        
+        $lista[] = $usuario;
+    }
+    
+    $this->desconectar();
+    return $lista;
+}
+
+// Validar permisos de usuario para documentos empresa
+public function validarPermisoDocumentosEmpresa($usuario_id, $accion)
+{
+    // Verificar permisos específicos del usuario
+    $permisos = $this->listarPermisosUsuario1($usuario_id);
+    
+    switch ($accion) {
+        case 'lectura':
+            foreach ($permisos as $permiso) {
+                if ($permiso->getId() == 2) return true; // Permiso de lectura
+            }
+            break;
+            
+        case 'escritura':
+            foreach ($permisos as $permiso) {
+                if ($permiso->getId() == 3) return true; // Permiso de escritura
+            }
+            break;
+            
+        case 'actualizacion':
+            foreach ($permisos as $permiso) {
+                if ($permiso->getId() == 4) return true; // Permiso de actualización
+            }
+            break;
+            
+        case 'eliminacion':
+            foreach ($permisos as $permiso) {
+                if ($permiso->getId() == 5) return true; // Permiso de eliminación
+            }
+            break;
+            
+        case 'gestion':
+            foreach ($permisos as $permiso) {
+                if ($permiso->getId() == 1) return true; // Permiso de gestión
+            }
+            break;
+    }
+    
+    return false;
+}
+
+// Generar código único para documento
+public function generarCodigoDocumento($empresa_id, $tipo_categoria)
+{
+    $this->conexion();
+    
+    // Obtener prefijo según tipo
+    $prefijo_map = [
+        'mandato_especial_empresa' => 'MEE',
+        'mandato_especial_representante' => 'MER',
+        'contrato_arriendo' => 'CAR',
+        'contrato_comodato' => 'CCO'
+    ];
+    
+    $prefijo = $prefijo_map[$tipo_categoria] ?? 'DOC';
+    
+    // Contar documentos existentes del mismo tipo
+    $sql = "SELECT COUNT(*) as total 
+            FROM documentos_empresa_generados deg
+            INNER JOIN tipo_documento_empresa_plantilla tde ON deg.tipo_documento = tde.id
+            WHERE deg.empresa = $empresa_id AND tde.categoria = '$tipo_categoria'";
+    
+    $result = $this->mi->query($sql);
+    $total = mysqli_fetch_array($result)['total'];
+    
+    $this->desconectar();
+    
+    // Generar código: PREFIX-EMPRESA-YEAR-NUMERO
+    $anio = date('Y');
+    $numero = str_pad($total + 1, 4, '0', STR_PAD_LEFT);
+    
+    return "$prefijo-$empresa_id-$anio-$numero";
+}
+
+// Función para limpiar y validar contenido HTML del editor
+public function limpiarContenidoHTML($contenido)
+{
+    // Permitir solo etiquetas seguras
+    $tags_permitidas = '<p><br><strong><b><em><i><u><ul><ol><li><h1><h2><h3><h4><h5><h6><div><span>';
+    
+    // Limpiar HTML
+    $contenido_limpio = strip_tags($contenido, $tags_permitidas);
+    
+    // Escapar caracteres especiales para base de datos
+    return htmlspecialchars($contenido_limpio, ENT_QUOTES, 'UTF-8');
+}
+
+// Función para procesar variables en el contenido
+public function procesarVariablesDocumento($contenido, $datos_empresa, $mandatarios = [], $datos_adicionales = [])
+{
+    // Variables de empresa
+    $variables = [
+        '{RUT_EMPRESA}' => $datos_empresa['rut'] ?? '',
+        '{NOMBRE_EMPRESA}' => $datos_empresa['nombre'] ?? '',
+        '{REPRESENTANTE_LEGAL}' => $datos_empresa['representante_legal'] ?? '',
+        '{RUT_REPRESENTANTE_LEGAL}' => $datos_empresa['rut_representante'] ?? '',
+        '{DIRECCION_EMPRESA}' => $datos_empresa['direccion'] ?? '',
+        '{TELEFONO_EMPRESA}' => $datos_empresa['telefono'] ?? '',
+        '{CORREO_EMPRESA}' => $datos_empresa['email'] ?? '',
+        '{FECHA_GENERACION}' => date('d-m-Y'),
+        '{FECHA_CELEBRACION}' => date('d-m-Y')
+    ];
+    
+    // Variables de mandatarios
+    foreach ($mandatarios as $index => $mandatario) {
+        $num = $index + 1;
+        $variables["{MANDATARIO_$num}"] = $mandatario['nombre_completo'] ?? '';
+        $variables["{RUT_MANDATARIO_$num}"] = $mandatario['rut'] ?? '';
+        $variables["{NACIONALIDAD_MANDATARIO_$num}"] = $mandatario['nacionalidad'] ?? '';
+        $variables["{ESTADO_CIVIL_MANDATARIO_$num}"] = $mandatario['estado_civil'] ?? '';
+        $variables["{PROFESION_MANDATARIO_$num}"] = $mandatario['profesion'] ?? '';
+    }
+    
+    // Variables adicionales (como montos)
+    if (isset($datos_adicionales['monto_arriendo']) && $datos_adicionales['monto_arriendo'] > 0) {
+        $monto = $datos_adicionales['monto_arriendo'];
+        $variables['{MONTO_ARRIENDO}'] = number_format($monto, 0, ',', '.');
+        $variables['{MONTO_ARRIENDO_LETRAS}'] = $this->convertirNumeroALetras($monto);
+    }
+    
+    // Reemplazar variables en el contenido
+    foreach ($variables as $variable => $valor) {
+        $contenido = str_replace($variable, $valor, $contenido);
+    }
+    
+    return $contenido;
+}
+
+// Función auxiliar para conversión de números a letras
+private function convertirNumeroALetras($numero)
+{
+    if ($numero == 0) return 'cero';
+    
+    $unidades = ['', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
+    $decenas = ['', '', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
+    $centenas = ['', 'ciento', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'];
+    
+    // Implementación simplificada - para casos reales se necesitaría una función más completa
+    if ($numero < 10) {
+        return $unidades[$numero];
+    } elseif ($numero < 100) {
+        $dec = intval($numero / 10);
+        $uni = $numero % 10;
+        return $decenas[$dec] . ($uni > 0 ? ' y ' . $unidades[$uni] : '');
+    } elseif ($numero == 100) {
+        return 'cien';
+    } elseif ($numero < 1000) {
+        $cen = intval($numero / 100);
+        $resto = $numero % 100;
+        return $centenas[$cen] . ($resto > 0 ? ' ' . $this->convertirNumeroALetras($resto) : '');
+    }
+    
+    // Para números mayores, retornar representación numérica
+    return number_format($numero, 0, ',', '.');
+}
 }

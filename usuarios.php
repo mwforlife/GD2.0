@@ -547,70 +547,85 @@ foreach ($permiso as $p) {
                         <div class="card-body">
                             <div class="">
                                 <div class="table-responsive">
-                                    <table class="table w-100 text-nowrap" id="example1">
-                                        <thead class="border-top">
-                                            <tr class="text-center">
-                                                <th class="bg-transparent">RUT</th>
-                                                <th class="bg-transparent">Nombre</th>
-                                                <th class="bg-transparent">Correo</th>
-                                                <th class="bg-transparent">Telefono</th>
-                                                <th class="bg-transparent">Tipo</th>
-                                                <th class="bg-transparent">Permisos</th>
-                                                <th class="bg-transparend">Resetear Contraseña</th>
-                                                <th class="bg-transparent text-center">Accion</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                                $lista = $c->listarusuarios();
-                                                if(count($lista)>0){
-                                                    foreach($lista as $u){
-                                                        echo "<tr class='border-bottom-0'>
-                                                        <td class='text-muted fs-15 font-weight-semibold'>
-                                                            ".$u->getRut()."
-                                                        </td>
-                                                        <td class='text-muted fs-15 font-weight-semibold'>".$u->getNombre()." ".$u->getApellido()."</td>
-                                                        <td class='text-muted fs-15 font-weight-semibold'>".$u->getCorreo()."</td>
-                                                        <td class='text-muted fs-15 font-weight-semibold'>".$u->getTelefono()."</td>";
-														if($u->getTipo()==1){
-															echo "<td class='text-muted fs-15 font-weight-semibold'>Administrador</td>";
-														}else if($u->getTipo()==2){
-															echo "<td class='text-muted fs-15 font-weight-semibold'>Contratista</td>";
-														}else if($u->getTipo()==3){
-															echo "<td class='text-muted fs-15 font-weight-semibold'>Mandante</td>";
+                                    <!-- Actualizar la tabla en usuarios.php -->
+									<table class="table text-wrap w-100" id="example1">
+										<thead class="border-top text-center">
+											<tr>
+												<th class="bg-transparent">RUT</th>
+												<th class="bg-transparent">Nombre</th>
+												<th class="bg-transparent">Correo</th>
+												<th class="bg-transparent">Telefono</th>
+												<th class="bg-transparent">Nacionalidad</th>
+												<th class="bg-transparent">Estado Civil</th>
+												<th class="bg-transparent">Profesión</th>
+												<th class="bg-transparent">Tipo</th>
+												<th class="bg-transparent">Permisos</th>
+												<th class="bg-transparent">Resetear Contraseña</th>
+												<th class="bg-transparent text-center">Accion</th>
+											</tr>
+										</thead>
+										<tbody class="text-center">
+											<?php
+											$lista = $c->listarusuarios();
+											if(count($lista)>0){
+												foreach($lista as $u){
+													echo "<tr class='border-bottom-0'>
+														<td class='text-muted fs-15 font-weight-semibold'>".$u->getRut()."</td>
+														<td class='text-muted fs-15 font-weight-semibold'>".$u->getNombre()." ".$u->getApellido()."</td>
+														<td class='text-muted fs-15 font-weight-semibold'>".$u->getCorreo()."</td>
+														<td class='text-muted fs-15 font-weight-semibold'>".$u->getTelefono()."</td>";
+													
+													// Mostrar nacionalidad
+													$nacionalidad = $c->buscarnacionalidad($u->getNacionalidad());
+													echo "<td class='text-muted fs-15 font-weight-semibold'>".($nacionalidad ? $nacionalidad->getNombre() : 'NO DEFINIDO')."</td>";
+													
+													// Mostrar estado civil
+													$estadoCivil = $c->buscarestadocivil($u->getEstadoCivil());
+													echo "<td class='text-muted fs-15 font-weight-semibold'>".($estadoCivil ? $estadoCivil->getNombre() : 'NO DEFINIDO')."</td>";
+													
+													// Mostrar profesión
+													echo "<td class='text-muted fs-15 font-weight-semibold'>".($u->getProfesion() ? $u->getProfesion() : 'NO DEFINIDA')."</td>";
+													
+													// Tipo de usuario
+													if($u->getTipo()==1){
+														echo "<td class='text-muted fs-15 font-weight-semibold'>Administrador</td>";
+													}else if($u->getTipo()==2){
+														echo "<td class='text-muted fs-15 font-weight-semibold'>Contratista</td>";
+													}else if($u->getTipo()==3){
+														echo "<td class='text-muted fs-15 font-weight-semibold'>Mandante</td>";
+													}
+													
+													$permi = $c->listarPermisosUsuario($u->getId());
+													if(count($permi)>0){
+														echo "<td class='text-muted fs-10 font-weight-semibold'>";
+														foreach($permi as $p){
+															echo $p->getNombre()."<br>";
 														}
-                                                        $permi = $c->listarPermisosUsuario($u->getId());
-                                                        if(count($permi)>0){
-                                                            echo "<td class='text-muted fs-10 font-weight-semibold'>";
-                                                            foreach($permi as $p){
-                                                                echo $p->getNombre()."<br>";
-                                                            }
-                                                            echo "</td>";
-                                                        }else{
-                                                            echo "<td class='text-muted fs-15 font-weight-semibold'>Sin Permisos</td>";
-                                                        }
-                                                        echo "<td class='text-muted fs-15 font-weight-semibold text-center'><a title='Resetear Contraseña' class='btn btn-outline-info btn-sm rounded-11' onclick='cargarid(".$u->getId().")' data-toggle='modal' data-target='#modalcontra' data-original-title='Cambiar Contraseña'>
-                                                                    <i class='fa fa-key'>
-                                                                    </i>
-                                                                    </a>
-                                                                </td>";
-                                                        echo "<td class='text-center'>
-                                                            <a class='btn btn-outline-info btn-sm rounded-11' onclick='more(".$u->getId().")' data-toggle='modal' data-target='#modaluser' data-original-title='Ver Más'>
-                                                                <i class='fa fa-eye'>
-                                                                </i>
-                                                            </a>
-                                                            <a class='btn btn-outline-success btn-sm rounded-11' href='permisos.php?code=".$u->getId()."' data-toggle='tooltip' data-original-title='Permisos'><i class='fa fa-user-plus'></i></a>
-                                                            <a class='btn btn-outline-warning btn-sm rounded-11' data-toggle='tooltip' href='EditarUsuario.php?code=".$u->getId()."' data-original-title='Editar'><i class='fa fa-pen'></i></a>
-                                                            
-                                                            <a class='btn btn-outline-danger btn-sm rounded-11' data-toggle='tooltip' onclick='Eliminar(".$u->getId().")' data-original-title='Eliminar'><i class='fa fa-trash'></i></a>
-
-                                                        </td>
-                                                    </tr>";
-                                                    }
-                                                }
-                                            ?>
-                                        </tbody>
-                                    </table>
+														echo "</td>";
+													}else{
+														echo "<td class='text-muted fs-15 font-weight-semibold'>Sin Permisos</td>";
+													}
+													
+													echo "<td class='text-muted fs-15 font-weight-semibold text-center'>
+															<a title='Resetear Contraseña' class='btn btn-outline-info btn-sm rounded-11' onclick='cargarid(".$u->getId().")' data-toggle='modal' data-target='#modalcontra' data-original-title='Cambiar Contraseña'>
+																<i class='fa fa-key'></i>
+															</a>
+														</td>";
+													
+													echo "<td class='text-center'>
+														<a class='btn btn-outline-info btn-sm rounded-11' onclick='more(".$u->getId().")' data-toggle='modal' data-target='#modaluser' data-original-title='Ver Más'>
+															<i class='fa fa-eye'></i>
+														</a>
+														<a class='btn btn-outline-success btn-sm rounded-11' href='permisos.php?code=".$u->getId()."' data-toggle='tooltip' data-original-title='Permisos'><i class='fa fa-user-plus'></i></a>
+														<a class='btn btn-outline-warning btn-sm rounded-11' data-toggle='tooltip' href='EditarUsuario.php?code=".$u->getId()."' data-original-title='Editar'><i class='fa fa-pen'></i></a>
+														<a class='btn btn-outline-danger btn-sm rounded-11' data-toggle='tooltip' onclick='Eliminar(".$u->getId().")' data-original-title='Eliminar'><i class='fa fa-trash'></i></a>
+													</td>
+												</tr>";
+												}
+											}
+											?>
+										</tbody>
+									</table>
                                 </div>
                             </div>
                         </div>

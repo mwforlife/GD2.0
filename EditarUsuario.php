@@ -327,6 +327,9 @@ foreach ($permiso as $p) {
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="generarlotepersonalizado.php">Documentos Masivos</a>
 									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="documentosempresa.php">Documentos Empresa</a>
+									</li>
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->
@@ -610,6 +613,43 @@ foreach ($permiso as $p) {
 
 													?>
 												</select>
+											</div>
+											<!-- Agregar después del campo Tipo Usuario en EditarUsuario.php -->
+											<div class="col-md-6 col-lg-6">
+												<label for="">Nacionalidad</label>
+												<select name="UserNacionalidad" autocapitalize="true" id="UserNacionalidad" class="form-control">
+													<?php
+													$lista = $c->listarnacionalidad();
+													foreach ($lista as $object){
+														if($object->getId() == $usuario->getNacionalidad()){
+															echo "<option value='".$object->getId()."' selected>".$object->getNombre()."</option>";
+														} else {
+															echo "<option value='".$object->getId()."'>".$object->getNombre()."</option>";
+														}
+													}
+													?>
+												</select>
+											</div>
+
+											<div class="col-md-6 col-lg-6">
+												<label for="">Estado Civil</label>
+												<select name="UserEstadoCivil" autocapitalize="true" id="UserEstadoCivil" class="form-control">
+													<?php
+													$lista = $c->listarestadocivil();
+													foreach ($lista as $object){
+														if($object->getId() == $usuario->getEstadoCivil()){
+															echo "<option value='".$object->getId()."' selected>".$object->getNombre()."</option>";
+														} else {
+															echo "<option value='".$object->getId()."'>".$object->getNombre()."</option>";
+														}
+													}
+													?>
+												</select>
+											</div>
+
+											<div class="col-md-6 col-lg-6">
+												<label for="">Profesión (Opcional)</label>
+												<input type="text" value="<?php echo $usuario->getProfesion(); ?>" autocapitalize="true" class="form-control" name="UserProfesion" id="UserProfesion" placeholder="Ingrese su profesión">
 											</div>
 
 											<input type="hidden" value="<?php echo $id; ?>" name="UserId">

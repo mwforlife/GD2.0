@@ -337,6 +337,9 @@ if(isset($_SESSION['GESTION_PERMISO'])){
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="generarlotepersonalizado.php">Documentos Masivos</a>
 									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="documentosempresa.php">Documentos Empresa</a>
+									</li>
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->

@@ -83,7 +83,7 @@ if (isset($_GET['code']) && isset($_GET['contract'])) {
     <link rel="icon" href="assets/img/brand/favicon.ico" type="image/x-icon" />
 
     <!-- Title -->
-    <title>Gestor de Documentos | Empresas</title>
+    <title>Gestor de Documentos | Documentos Personalizados</title>
 
     <!-- Bootstrap css-->
     <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
@@ -358,6 +358,9 @@ if (isset($_GET['code']) && isset($_GET['contract'])) {
 									</li>
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="generarlotepersonalizado.php">Documentos Masivos</a>
+									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="documentosempresa.php">Documentos Empresa</a>
 									</li>
 								</ul>
 							</li>

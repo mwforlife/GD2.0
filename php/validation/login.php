@@ -15,9 +15,9 @@ if (isset($_POST['User']) && isset($_POST['Password'])) {
         $_SESSION['USER_EMAIL'] = $object->getCorreo();
         $_SESSION['USER_TELEFONO'] = $object->getTelefono();
         $_SESSION['USER_DIRECCION'] = $object->getDireccion();
-        $_SESSION['USER_REGISTRO'] = $object->getRegistro();
+        $_SESSION['USER_REGISTRO'] = $object->getCreatedAt();
         $_SESSION['USER_ESTADO'] = $object->getEstado();
-        $_SESSION['USER_UPDATE'] = $object->getUpdate();
+        $_SESSION['USER_UPDATE'] = $object->getUpdatedAt();
         $c->eliminartodolotefiniquito($object->getId());
         $c->eliminartodolotenotificacion($object->getId());
         $c->eliminartodoellote($object->getId());
