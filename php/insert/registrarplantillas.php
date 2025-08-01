@@ -14,6 +14,7 @@ if (!isset($_SESSION['USER_ID'])) {
 if(isset($_POST['id']) && isset($_POST['contenido'])){
     $id = $_POST['id'];
     $contenido = $_POST['contenido'];
+    $contenido = $c->escapeString($contenido);
     $valid = $c->buscarplantilla($id);
     if($valid==false){
         $result = $c->registrarplatilla($id,$contenido);
