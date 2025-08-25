@@ -494,7 +494,7 @@ class Controller
     {
         $this->conexion();
         $profesion_value = $profesion ? "'$profesion'" : "null";
-        $sql = "insert into users values(null, '$rut', '$nombre', '$apellido', '$correo', '$direccion', $region, $comuna, '$telefono', sha1('$pass'), 1, sha1('$correo'), $tipo, $nacionalidad, $estado_civil, $profesion_value, now(), now());";
+        $sql = "insert into users values(null, '$rut', '$nombre', '$apellido', '$correo', '$direccion', $region, $comuna, '$telefono', sha1('$pass'), 1, sha1('$correo'), $tipo, now(), now(), $nacionalidad, $estado_civil, $profesion_value);";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return json_encode($result);
