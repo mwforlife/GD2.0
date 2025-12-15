@@ -785,7 +785,25 @@ function previewDocument() {
         avaluo_fiscal: textavaluoFiscal
     };
 
-    $("#previewContent").html("<iframe src='php/documentos_empresa/vistaprevia.php?data=" + encodeURIComponent(JSON.stringify(datos)) + "' frameborder='0' style='width: 100%; height: 100vh;'></iframe>");
+    // Crear un formulario temporal para enviar datos por POST
+    var form = $('<form>', {
+        'method': 'POST',
+        'action': 'php/documentos_empresa/vistaprevia.php',
+        'target': 'previewFrame'
+    });
+
+    $('<input>').attr({
+        type: 'hidden',
+        name: 'data',
+        value: JSON.stringify(datos)
+    }).appendTo(form);
+
+    // Crear iframe con nombre específico
+    $("#previewContent").html("<iframe name='previewFrame' frameborder='0' style='width: 100%; height: 100vh;'></iframe>");
+
+    // Enviar formulario
+    form.appendTo('body').submit().remove();
+
     $('#previewModal').modal('show');
 }
 

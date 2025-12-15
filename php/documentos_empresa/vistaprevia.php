@@ -19,13 +19,20 @@ $c = new Controller();
 $usuario_id = $_SESSION['USER_ID'];
 $empresa_id = $_SESSION['CURRENT_ENTERPRISE'];
 
-if (isset($_GET['data'])) {
-    $data = json_decode($_GET['data'], true);
+// Aceptar datos por POST o GET (compatibilidad)
+$dataJson = null;
+if (isset($_POST['data'])) {
+    $dataJson = $_POST['data'];
+} elseif (isset($_GET['data'])) {
+    $dataJson = $_GET['data'];
+}
 
-    $tipodocumento = $data['tipodocumento'] ?? '';
+if ($dataJson) {
+    $data = json_decode($dataJson, true);
+
+    $tipodocumento = $data['tipo_documento'] ?? '';
     $contenido = $data['contenido'] ?? '';
     $monto_arriendo = $data['monto_arriendo'] ?? 0;
-
 
     if ($data) {
         $c = new Controller();
