@@ -122,11 +122,24 @@ if (isset($_GET['id'])) {
     $contenido = "";
 
     foreach ($clausulas as $clausula) {
-        $contenido .= $c->buscarplantilla($clausula->getTipodocumento());
+        $plantilla = $c->buscarplantilla($clausula->getTipodocumento());
+
+        // Reemplazar las variables en la plantilla
         foreach (array_keys($swap_var) as $key) {
-            $contenido = str_replace($key, $swap_var[$key], $contenido);
-            $contenido = str_replace("{CLAUSULA_A_MODIFICAR}", $clausula->getClausula(), $contenido);
+            $plantilla = str_replace($key, $swap_var[$key], $plantilla);
         }
+
+        // Reemplazar la cláusula a modificar manteniendo el formato de la plantilla
+        $plantilla = str_replace("{CLAUSULA_A_MODIFICAR}", $clausula->getClausula(), $plantilla);
+
+        // Limpiar etiquetas HTML/BODY que puedan causar saltos de página
+        $plantilla = preg_replace('/<\/?html[^>]*>/i', '', $plantilla);
+        $plantilla = preg_replace('/<\/?body[^>]*>/i', '', $plantilla);
+        $plantilla = preg_replace('/<\/?head[^>]*>/i', '', $plantilla);
+        $plantilla = preg_replace('/<meta[^>]*>/i', '', $plantilla);
+
+        // Concatenar la plantilla procesada
+        $contenido .= $plantilla;
     }
 
     $mpdf->title = 'Anexo del Trabajador';
@@ -137,8 +150,6 @@ if (isset($_GET['id'])) {
     $mpdf->keywords = 'anexo del Trabajador';
     $mpdf->SetDisplayMode('fullpage');
     $mpdf->WriteHTML($contenido);
-    //Agregar pagina
-    $mpdf->AddPage();
 
     $fecha = date('Ymdhis');
 

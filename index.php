@@ -638,38 +638,18 @@ foreach ($permiso as $p) {
 														Generados</p>
 													<h6 class="mb-1 text-success fs-18 font-weight-semibold">
 														<?php
-														if (isset($_SESSION['GESTION_PERMISO'])) {
-															if ($_SESSION['GESTION_PERMISO'] == true) {
-																echo "General";
-															} else {
-																if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-																	echo "Empresa actual";
-																}
-															}
-														} else {
+														if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
+															echo "Empresa actual";
 														}
 														?>
 													</h6>
 													<p class="mb-1 text-muted fs-16 font-weight-semibold">
 														<?php
 														$valor = 0;
-														if (isset($_SESSION['GESTION_PERMISO'])) {
-															if ($_SESSION['GESTION_PERMISO'] == true) {
-																$valor = $c->cantidadcontratosgenerados();
-															} else {
-																if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-																	$empresa = $_SESSION['CURRENT_ENTERPRISE'];
-																	if ($empresa > 0) {
-																		$valor = $c->cantidadcontratosgeneradosempresa($empresa);
-																	}
-																}
-															}
-														} else {
-															if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-																$empresa = $_SESSION['CURRENT_ENTERPRISE'];
-																if ($empresa > 0) {
-																	$valor = $c->cantidadcontratosgeneradosempresa($empresa);
-																}
+														if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
+															$empresa = $_SESSION['CURRENT_ENTERPRISE'];
+															if ($empresa > 0) {
+																$valor = $c->cantidadcontratosgeneradosempresa($empresa);
 															}
 														}
 														echo $valor;
@@ -694,38 +674,18 @@ foreach ($permiso as $p) {
 														Generados</p>
 													<h6 class="mb-1 text-success fs-18 font-weight-semibold">
 														<?php
-														if (isset($_SESSION['GESTION_PERMISO'])) {
-															if ($_SESSION['GESTION_PERMISO'] == true) {
-																echo "General";
-															} else {
-																if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-																	echo "Empresa actual";
-																}
-															}
-														} else {
+														if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
+															echo "Empresa actual";
 														}
 														?>
 													</h6>
 													<p class="mb-1 text-muted fs-16 font-weight-semibold">
 														<?php
 														$valor = 0;
-														if (isset($_SESSION['GESTION_PERMISO'])) {
-															if ($_SESSION['GESTION_PERMISO'] == true) {
-																$valor = $c->cantidadfiniquitosgenerados();
-															} else {
-																if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-																	$empresa = $_SESSION['CURRENT_ENTERPRISE'];
-																	if ($empresa > 0) {
-																		$valor = $c->cantidadfiniquitosgeneradosempresa($empresa);
-																	}
-																}
-															}
-														} else {
-															if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-																$empresa = $_SESSION['CURRENT_ENTERPRISE'];
-																if ($empresa > 0) {
-																	$valor = $c->cantidadfiniquitosgeneradosempresa($empresa);
-																}
+														if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
+															$empresa = $_SESSION['CURRENT_ENTERPRISE'];
+															if ($empresa > 0) {
+																$valor = $c->cantidadfiniquitosgeneradosempresa($empresa);
 															}
 														}
 														echo $valor;
@@ -750,38 +710,18 @@ foreach ($permiso as $p) {
 														licencia</p>
 													<h6 class="mb-1 text-success fs-18 font-weight-semibold">
 														<?php
-														if (isset($_SESSION['GESTION_PERMISO'])) {
-															if ($_SESSION['GESTION_PERMISO'] == true) {
-																echo "General";
-															} else {
-																if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-																	echo "Empresa actual";
-																}
-															}
-														} else {
+														if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
+															echo "Empresa actual";
 														}
 														?>
 													</h6>
 													<p class="mb-1 text-muted fs-16 font-weight-semibold">
 														<?php
 														$valor = 0;
-														if (isset($_SESSION['GESTION_PERMISO'])) {
-															if ($_SESSION['GESTION_PERMISO'] == true) {
-																$valor = $c->cantidadtrabajadoresconlicenciamedica();
-															} else {
-																if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-																	$empresa = $_SESSION['CURRENT_ENTERPRISE'];
-																	if ($empresa > 0) {
-																		$valor = $c->cantidadtrabajadoresconlicenciamedicaempresa($empresa);
-																	}
-																}
-															}
-														} else {
-															if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-																$empresa = $_SESSION['CURRENT_ENTERPRISE'];
-																if ($empresa > 0) {
-																	$valor = $c->cantidadtrabajadoresconlicenciamedicaempresa($empresa);
-																}
+														if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
+															$empresa = $_SESSION['CURRENT_ENTERPRISE'];
+															if ($empresa > 0) {
+																$valor = $c->cantidadtrabajadoresconlicenciamedicaempresa($empresa);
 															}
 														}
 														echo $valor;
@@ -806,38 +746,18 @@ foreach ($permiso as $p) {
 														vacaciones</p>
 													<h6 class="mb-1 text-success fs-18 font-weight-semibold">
 														<?php
-														if (isset($_SESSION['GESTION_PERMISO'])) {
-															if ($_SESSION['GESTION_PERMISO'] == true) {
-																echo "General";
-															} else {
-																if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-																	echo "Empresa actual";
-																}
-															}
-														} else {
+														if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
+															echo "Empresa actual";
 														}
 														?>
 													</h6>
 													<p class="mb-1 text-muted fs-16 font-weight-semibold">
 														<?php
 														$valor = 0;
-														if (isset($_SESSION['GESTION_PERMISO'])) {
-															if ($_SESSION['GESTION_PERMISO'] == true) {
-																$valor = $c->cantidadtrabajadoresconvacaciones();
-															} else {
-																if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-																	$empresa = $_SESSION['CURRENT_ENTERPRISE'];
-																	if ($empresa > 0) {
-																		$valor = $c->cantidadtrabajadoresconvacacionesempresa($empresa);
-																	}
-																}
-															}
-														} else {
-															if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-																$empresa = $_SESSION['CURRENT_ENTERPRISE'];
-																if ($empresa > 0) {
-																	$valor = $c->cantidadtrabajadoresconvacacionesempresa($empresa);
-																}
+														if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
+															$empresa = $_SESSION['CURRENT_ENTERPRISE'];
+															if ($empresa > 0) {
+																$valor = $c->cantidadtrabajadoresconvacacionesempresa($empresa);
 															}
 														}
 														echo $valor;
@@ -879,16 +799,10 @@ foreach ($permiso as $p) {
 												<tbody>
 													<?php
 													$lista = null;
-													if (isset($_SESSION['GESTION_PERMISO'])) {
-														if ($_SESSION['GESTION_PERMISO'] == true) {
-															$lista = $c->listarcontratosquevenceranenlosproximos90dias();
-														} else {
-															if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-																$empresa = $_SESSION['CURRENT_ENTERPRISE'];
-																if ($empresa > 0) {
-																	$lista = $c->listarcontratosquevenceranenlosproximos90diasempresa($empresa);
-																}
-															}
+													if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
+														$empresa = $_SESSION['CURRENT_ENTERPRISE'];
+														if ($empresa > 0) {
+															$lista = $c->listarcontratosquevenceranenlosproximos90diasempresa($empresa);
 														}
 													}
 													if ($lista != null) {
@@ -951,16 +865,10 @@ foreach ($permiso as $p) {
 												<tbody>
 													<?php
 													$lista = null;
-													if (isset($_SESSION['GESTION_PERMISO'])) {
-														if ($_SESSION['GESTION_PERMISO'] == true) {
-															$lista = $c->listarcargasporvenceren90dias();
-														} else {
-															if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-																$empresa = $_SESSION['CURRENT_ENTERPRISE'];
-																if ($empresa > 0) {
-																	$lista = $c->listarcargasporvenceren90diasempresa($empresa);
-																}
-															}
+													if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
+														$empresa = $_SESSION['CURRENT_ENTERPRISE'];
+														if ($empresa > 0) {
+															$lista = $c->listarcargasporvenceren90diasempresa($empresa);
 														}
 													}
 													if ($lista != null) {
@@ -1023,16 +931,10 @@ foreach ($permiso as $p) {
 												<tbody>
 													<?php
 													$lista = null;
-													if (isset($_SESSION['GESTION_PERMISO'])) {
-														if ($_SESSION['GESTION_PERMISO'] == true) {
-															$lista = $c->acumulaciondevacaciones();
-														} else {
-															if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-																$empresa = $_SESSION['CURRENT_ENTERPRISE'];
-																if ($empresa > 0) {
-																	$lista = $c->acumulaciondevacacionesempresa($empresa);
-																}
-															}
+													if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
+														$empresa = $_SESSION['CURRENT_ENTERPRISE'];
+														if ($empresa > 0) {
+															$lista = $c->acumulaciondevacacionesempresa($empresa);
 														}
 													}
 													if ($lista != null) {
@@ -1042,11 +944,11 @@ foreach ($permiso as $p) {
 															echo "<td>" . $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2() . "</td>";
 															echo "<td>" . $object->getEmpresa() . "</td>";
 															if ($cantidad > 1 && $cantidad <= 16) {
-																echo "<td><button class='btn btn-success btn-md '> " . $cantidad . " dias</button></td>";
+																echo "<td data-order='" . $cantidad . "'><button class='btn btn-success btn-md '> " . $cantidad . " dias</button></td>";
 															} else if ($cantidad > 16 && $cantidad <= 30) {
-																echo "<td><button class='btn btn-warning btn-md '> " . $cantidad . " dias</button></td>";
+																echo "<td data-order='" . $cantidad . "'><button class='btn btn-warning btn-md '> " . $cantidad . " dias</button></td>";
 															} else {
-																echo "<td><button class='btn btn-danger btn-md '> " . $cantidad . " dias</button></td>";
+																echo "<td data-order='" . $cantidad . "'><button class='btn btn-danger btn-md '> " . $cantidad . " dias</button></td>";
 															}
 															echo "</tr>";
 														}
@@ -1082,16 +984,10 @@ foreach ($permiso as $p) {
 												<tbody>
 													<?php
 													$lista = null;
-													if (isset($_SESSION['GESTION_PERMISO'])) {
-														if ($_SESSION['GESTION_PERMISO'] == true) {
-															$lista = $c->licenciamedicasdelosultimos90dias();
-														} else {
-															if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
-																$empresa = $_SESSION['CURRENT_ENTERPRISE'];
-																if ($empresa > 0) {
-																	$lista = $c->licenciamedicasdelosultimos90diasempresa($empresa);
-																}
-															}
+													if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
+														$empresa = $_SESSION['CURRENT_ENTERPRISE'];
+														if ($empresa > 0) {
+															$lista = $c->licenciamedicasdelosultimos90diasempresa($empresa);
 														}
 													}
 													if ($lista != null) {

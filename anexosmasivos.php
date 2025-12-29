@@ -829,7 +829,7 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                                 <div class="card-body p-4 pt-1">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <iframe id="vistaprevia" width="100%" height="800">
+                                            <iframe id="vistaprevia" name="vistaprevia" width="100%" height="800">
 
                                             </iframe>
                                         </div>

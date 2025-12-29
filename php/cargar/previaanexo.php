@@ -20,8 +20,9 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
         return;
     }
 
-    $clausulas = $_POST['clausulas'];
-    if (count($clausulas) == 0) {
+    // Decodificar el JSON de las clausulas
+    $clausulas = json_decode($_POST['clausulas'], true);
+    if (!$clausulas || count($clausulas) == 0) {
         echo "Debe seleccionar al menos una clausula";
         return;
     }
@@ -51,8 +52,12 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
     $region = $empresa->getRegion();
     $repre = $c->BuscarRepresentanteLegalempresa($empresa->getId());
 
-    $mpdf = new \Mpdf\Mpdf();
+    //crear instancia de mpdf con tamaño Legal
+    $mpdf = new \Mpdf\Mpdf(['format' => 'Legal']);
+    $primeraIteracion = true;
     foreach ($lista as $object) {
+        // Agregar salto de página entre trabajadores (excepto para el primero)
+
         $contrato = $object->getId();
         $contrato = $c->buscarcontratoid($contrato);
         $fechainicio = $contrato->getFechainicio();
@@ -152,34 +157,43 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
         $contenido = "";
 
         foreach($clausulas as $clausula){
-            $contenido .= $c->buscarplantilla($clausula['tipodocumentoid']);
+            $plantilla = $c->buscarplantilla($clausula['tipodocumentoid']);
+
+            // Reemplazar las variables en la plantilla
             foreach (array_keys($swap_var) as $key) {
-                $contenido = str_replace($key, $swap_var[$key], $contenido);
-                $contenido = str_replace("{CLAUSULA_A_MODIFICAR}", $clausula['clausula'], $contenido);
+                $plantilla = str_replace($key, $swap_var[$key], $plantilla);
             }
+
+            // Reemplazar la cláusula a modificar manteniendo el formato de la plantilla
+            $plantilla = str_replace("{CLAUSULA_A_MODIFICAR}", $clausula['clausula'], $plantilla);
+
+            // Limpiar etiquetas HTML/BODY que puedan causar saltos de página
+            $plantilla = preg_replace('/<\/?html[^>]*>/i', '', $plantilla);
+            $plantilla = preg_replace('/<\/?body[^>]*>/i', '', $plantilla);
+            $plantilla = preg_replace('/<\/?head[^>]*>/i', '', $plantilla);
+            $plantilla = preg_replace('/<meta[^>]*>/i', '', $plantilla);
+
+            // Concatenar la plantilla procesada DENTRO del loop
+            $contenido .= $plantilla;
         }
 
-        $mpdf->title = 'Anexo del Trabajador';
-        $mpdf->author = 'KaiserTech - Gestor de Documentos';
-        $mpdf->creator = 'WilkensTech';
-        $mpdf->subject = 'anexo del Trabajador';
+        if (!$primeraIteracion) {
+            $mpdf->AddPage();
+        }
+        $primeraIteracion = false;
+        // Configurar el PDF
+        $mpdf->title = 'Anexo de trabajo';
+        $mpdf->author = 'Kairos - Gestor de Documentos';
+        $mpdf->creator = 'kairos';
+        $mpdf->subject = 'Anexo de trabajo';
         $mpdf->SetHTMLFooter('<div style="text-align: center; font-size: 10px;">www.iustax.cl</div>');
-        $mpdf->keywords = 'anexo del Trabajador';
+        $mpdf->keywords = 'anexo de trabajo, contrato, kairos, gestor de documentos';
         $mpdf->SetDisplayMode('fullpage');
         $mpdf->WriteHTML($contenido);
-        //Agregar pagina
-        $mpdf->AddPage();
     }
 
-    $fecha = date('Ymdhis');
-
-    $nombre_documento = 'anexo' . $fecha . '.pdf';
-    //Carpeta para guardar
-    $carpeta = "../previa/";
-    //Generar archivo y guardar en carpeta
-    $mpdf->Output($carpeta . $nombre_documento, 'F');
-    echo 1;
-    echo "php/previa/" . $nombre_documento;
+    // Generar PDF y enviarlo directamente al navegador
+    $mpdf->Output('anexo_preview.pdf', 'I');
 } else {
     echo "UPPS, No LLegaron todos los datos";
 }

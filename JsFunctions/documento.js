@@ -171,7 +171,7 @@ function actualizarTablaClausulas() {
         var fila = $("<tr></tr>").html(`
                 <td>${clausula.clausula}</td>
                 <td>${clausula.tipodocumentotexto}</td>
-                <td><button class="btn btn-outline-danger" onclick="eliminarClausula(${i})"><i class="fas fa-trash-alt"></i></button></td>
+                <td><button type="button" class="btn btn-outline-danger" onclick="eliminarClausula(${i})"><i class="fas fa-trash-alt"></i></button></td>
             `);
 
         tabla.append(fila);
@@ -228,38 +228,29 @@ $(document).ready(function () {
 
         // Realizar la solicitud Ajax
         if (accion === "vista_previa") {
-            $.ajax({
-                type: "POST",
-                url: "php/cargar/previaanexo.php", //
-                data: datos,
-                success: function (data) {
+            $("#global-loader").fadeOut("slow");
 
-                    $("#global-loader").fadeOut("slow");
-                    var first = data.substring(0, 1);
-                    var url = data.substring(1);
-                    console.log(data);
-                    console.log(first);
-                    console.log(url);
-                    //Si el primer caracter es un numero
-                    if (first == 1 || first == "1") {
-                        //Sacar la URL del texto sin el primer caracter
-                        var url = data.substring(1);
-                        //Mostrar vista previa en un modal e abrir el modal
-                        $("#vistaprevia").attr("src", url);
-                        $("#modalvistaprevia").modal("show");
-                        //Mostrar vista previa en un modal e abrir el modal
-                        //Agregar la URL
-
-                    } else {
-                        ToastifyError(data);
-                    }
-                },
-                error: function () {
-                    $("#global-loader").fadeOut("slow");
-                    // Manejar errores de la solicitud aquí
-
-                }
+            // Crear un formulario temporal para enviar los datos al iframe
+            var form = $('<form>', {
+                'method': 'POST',
+                'action': 'php/cargar/previaanexo.php',
+                'target': 'vistaprevia'
             });
+
+            // Agregar los campos del formulario
+            form.append($('<input>', { 'type': 'hidden', 'name': 'empresa', 'value': datos.empresa }));
+            form.append($('<input>', { 'type': 'hidden', 'name': 'fechageneracion', 'value': datos.fechageneracion }));
+            form.append($('<input>', { 'type': 'hidden', 'name': 'base', 'value': datos.base }));
+            form.append($('<input>', { 'type': 'hidden', 'name': 'sueldo', 'value': datos.sueldo }));
+
+            // Agregar el array de clausulas como JSON
+            form.append($('<input>', { 'type': 'hidden', 'name': 'clausulas', 'value': JSON.stringify(datos.clausulas) }));
+
+            // Agregar el formulario al body, enviarlo y eliminarlo
+            form.appendTo('body').submit().remove();
+
+            // Mostrar el modal
+            $("#modalvistaprevia").modal("show");
         }
         else if (accion === "registro") {
             $.ajax({

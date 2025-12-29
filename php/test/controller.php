@@ -494,7 +494,7 @@ class Controller
     {
         $this->conexion();
         $profesion_value = $profesion ? "'$profesion'" : "null";
-        $sql = "insert into users values(null, '$rut', '$nombre', '$apellido', '$correo', '$direccion', $region, $comuna, '$telefono', sha1('$pass'), 1, sha1('$correo'), $tipo, $nacionalidad, $estado_civil, $profesion_value, now(), now());";
+        $sql = "insert into users values(null, '$rut', '$nombre', '$apellido', '$correo', '$direccion', $region, $comuna, '$telefono', sha1('$pass'), 1, sha1('$correo'), $tipo, now(), now(), $nacionalidad, $estado_civil, $profesion_value);";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return json_encode($result);
@@ -7630,44 +7630,7 @@ class Controller
     public function acumulaciondevacaciones()
     {
         $this->conexion();
-        $sql = "SELECT DISTINCT
-                    t.id,
-                    t.rut,
-                    t.dni,
-                    t.nombre,
-                    t.primerapellido,
-                    t.segundoapellido,
-                    t.fechanacimiento,
-                    t.sexo,
-                    t.estadocivil,
-                    t.nacionalidad,
-                    t.discapacidad,
-                    t.pension,
-                    e.razonsocial as empresa
-                FROM trabajadores t
-                INNER JOIN contratos c ON t.id = c.trabajador AND c.estado = 1
-                INNER JOIN empresa e ON t.empresa = e.id
-                LEFT JOIN (
-                    SELECT trabajador, fechainicio
-                    FROM afectoavacaciones
-                    WHERE estadoafectoavacaciones = 1
-                ) av ON t.id = av.trabajador
-                LEFT JOIN (
-                    SELECT trabajador, COALESCE(SUM(diashabiles), 0) as dias_tomados
-                    FROM vacaciones
-                    GROUP BY trabajador
-                ) v ON t.id = v.trabajador
-                WHERE (
-                    (TIMESTAMPDIFF(MONTH,
-                        GREATEST(
-                            c.fechainicio,
-                            COALESCE(av.fechainicio, c.fechainicio)
-                        ),
-                        CURDATE()
-                    ) * 1.25) - COALESCE(v.dias_tomados, 0)
-                ) > 30
-                ORDER BY t.id";
-
+        $sql = "select distinct trabajadores.id as id, trabajadores.rut, dni, nombre, primerapellido,segundoapellido,fechanacimiento, fechanacimiento, sexo, estadocivil, nacionalidad, discapacidad, pension, empresa.razonsocial as empresa from trabajadores,contratos,empresa where trabajadores.id=contratos.trabajador and trabajadores.empresa = empresa.id  and estado=1";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -7696,45 +7659,7 @@ class Controller
     public function acumulaciondevacacionesempresa($empresa)
     {
         $this->conexion();
-        $sql = "SELECT DISTINCT
-                    t.id,
-                    t.rut,
-                    t.dni,
-                    t.nombre,
-                    t.primerapellido,
-                    t.segundoapellido,
-                    t.fechanacimiento,
-                    t.sexo,
-                    t.estadocivil,
-                    t.nacionalidad,
-                    t.discapacidad,
-                    t.pension,
-                    e.razonsocial as empresa
-                FROM trabajadores t
-                INNER JOIN contratos c ON t.id = c.trabajador AND c.estado = 1
-                INNER JOIN empresa e ON t.empresa = e.id
-                LEFT JOIN (
-                    SELECT trabajador, fechainicio
-                    FROM afectoavacaciones
-                    WHERE estadoafectoavacaciones = 1
-                ) av ON t.id = av.trabajador
-                LEFT JOIN (
-                    SELECT trabajador, COALESCE(SUM(diashabiles), 0) as dias_tomados
-                    FROM vacaciones
-                    GROUP BY trabajador
-                ) v ON t.id = v.trabajador
-                WHERE t.empresa = $empresa
-                AND (
-                    (TIMESTAMPDIFF(MONTH,
-                        GREATEST(
-                            c.fechainicio,
-                            COALESCE(av.fechainicio, c.fechainicio)
-                        ),
-                        CURDATE()
-                    ) * 1.25) - COALESCE(v.dias_tomados, 0)
-                ) > 30
-                ORDER BY t.id";
-
+        $sql = "select distinct trabajadores.id as id, trabajadores.rut, dni, nombre, primerapellido,segundoapellido,fechanacimiento, fechanacimiento, sexo, estadocivil, nacionalidad, discapacidad, pension, empresa.razonsocial as empresa from trabajadores,contratos,empresa where trabajadores.id=contratos.trabajador and trabajadores.empresa = empresa.id and trabajadores.empresa = $empresa and estado=1";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
