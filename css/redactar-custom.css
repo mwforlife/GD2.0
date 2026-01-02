@@ -1,0 +1,169 @@
+/* Estilos personalizados para redactar documento */
+
+/* Altura completa para el layout */
+.full-height-row {
+    height: calc(100vh - 250px);
+    max-height: calc(100vh - 250px);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+/* Contenedor principal con altura fija */
+.main-content.side-content {
+    overflow-y: visible;
+}
+
+/* Evitar que el editor crezca sin control */
+.editor-container {
+    height: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Columnas con altura fija */
+.col-lg-8.col-md-8,
+.col-lg-4.col-md-4 {
+    max-height: 100%;
+    overflow: hidden;
+}
+
+/* Forzar altura máxima para summernote/tinymce */
+#summernote {
+    max-height: 100% !important;
+    overflow-y: auto !important;
+}
+
+/* Para TinyMCE específicamente */
+.tox-tinymce {
+    height: 100% !important;
+    max-height: 100% !important;
+}
+
+.tox-edit-area {
+    height: 100% !important;
+    max-height: 100% !important;
+}
+
+.tox-edit-area iframe {
+    height: 100% !important;
+    max-height: 100% !important;
+}
+
+/* Para Summernote específicamente */
+.note-editor {
+    height: 100% !important;
+    max-height: 100% !important;
+}
+
+.note-editable {
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow-y: auto !important;
+}
+
+/* Contenedor de botones con altura fija */
+.button-container {
+    flex-shrink: 0;
+    margin-top: auto;
+}
+
+/* Estilos para categorías de campos */
+.field-category {
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 10px;
+}
+
+.category-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-left: 3px solid #467fcf;
+    border-radius: 3px;
+}
+
+/* Estilos para botones de campos */
+.field-btn {
+    font-size: 0.813rem;
+    padding: 8px 12px;
+    text-align: left;
+    transition: all 0.2s ease;
+    border: 1px solid #d4dae3;
+}
+
+.field-btn:hover {
+    background-color: #467fcf !important;
+    border-color: #467fcf !important;
+    color: white !important;
+    transform: translateX(3px);
+}
+
+/* Scrollbar personalizado */
+.flex-fill::-webkit-scrollbar {
+    width: 6px;
+}
+
+.flex-fill::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.flex-fill::-webkit-scrollbar-thumb {
+    background: #467fcf;
+    border-radius: 10px;
+}
+
+.flex-fill::-webkit-scrollbar-thumb:hover {
+    background: #3d6db5;
+}
+
+/* Asegurar que el contenedor de campos tenga scroll */
+#fieldsContainer {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Cards con altura fija */
+.full-height-row .card {
+    overflow: hidden;
+}
+
+.full-height-row .card-body {
+    overflow: hidden;
+}
+
+/* Input de búsqueda */
+#searchField {
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+#searchField:focus {
+    border-color: #467fcf;
+    box-shadow: 0 0 0 0.2rem rgba(70, 127, 207, 0.25);
+}
+
+/* Card header personalizado */
+.card-header.bg-primary {
+    background-color: #467fcf !important;
+    padding: 12px 20px;
+}
+
+.card-header h6 {
+    font-weight: 600;
+    font-size: 0.938rem;
+}
+
+/* Animación para campos ocultos */
+.field-category.hidden {
+    display: none;
+}
+
+.field-btn.hidden {
+    display: none !important;
+}

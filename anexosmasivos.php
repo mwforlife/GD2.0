@@ -71,6 +71,9 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
     <!-- Bootstrap css-->
     <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 
+    <!-- Custom CSS para Anexos -->
+    <link href="css/anexos-custom.css" rel="stylesheet">
+
     <!-- Icons css-->
     <link href="assets/css/icons.css" rel="stylesheet" />
     <link href="assets/css/toastify.min.css" rel="stylesheet" />
@@ -595,12 +598,13 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-sm-12 col-md-12">
-                                            <table class="table text-wrap text-center w-100 table-striped" id="example1" >
+                                            <table class="table text-wrap text-center w-100 table-striped clausulas-table" id="example1" >
                                                 <thead class="border-top">
                                                     <tr>
                                                         <th class="bg-transparent">#</th>
                                                         <th class="bg-transparent">Contrato</th>
                                                         <th class="bg-transparent">Trabajador</th>
+                                                        <th class="bg-transparent">Tipo</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="lotes">
@@ -608,6 +612,11 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                                                     $lista = $c->buscarloteanexo($_SESSION['USER_ID'], $empresa);
                                                     $i = 1;
                                                     foreach ($lista as $object1) {
+                                                        // Obtener datos del contrato para verificar tipo
+                                                        $contratoData = $c->buscarcontratoid($object1->getId());
+                                                        $fechaTermino = $contratoData->getFechatermino();
+                                                        $esPlazoFijo = (!empty($fechaTermino) && $fechaTermino != '' && $fechaTermino != null && $fechaTermino != '0000-00-00');
+
                                                         echo "<tr class='border-bottom-0'>";
                                                         echo "<td class=' fs-15 font-weight-semibold'>".$i."</td>";
                                                         echo "<td>";
@@ -619,6 +628,13 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
                                                         echo "</td>";
                                                         echo "<td>";
                                                         echo $object1->getTrabajador();
+                                                        echo "</td>";
+                                                        echo "<td>";
+                                                        if($esPlazoFijo) {
+                                                            echo "<span class='badge contrato-badge contrato-plazo-fijo'>Plazo Fijo</span>";
+                                                        } else {
+                                                            echo "<span class='badge contrato-badge contrato-indefinido'>Indefinido</span>";
+                                                        }
                                                         echo "</td>";
 
                                                         echo "</tr>";
@@ -671,6 +687,26 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
 														</label>
                                                         <input type="number" class="form-control" disabled id="sueldo" name="sueldo" min="0" >
 
+                                                </div>
+                                                <div class="col-lg-6 mt-1">
+                                                    <label for="modificafecha" class="fecha-termino-label">
+                                                        <i class="fa fa-calendar"></i>
+                                                        ¿Modifica Fecha de Término?
+                                                        <span class="tooltip-info">
+                                                            <i class="fa fa-info-circle"></i>
+                                                            <span class="tooltiptext">Solo disponible para contratos a plazo fijo</span>
+                                                        </span>
+                                                    </label>
+                                                    <label class="custom-switch m-0 p-0">
+                                                        <input type="checkbox" name="modificafecha" id="modificafecha" class="custom-switch-input" value="0">
+                                                        <span class="custom-switch-indicator"></span>
+                                                        <span class="custom-switch-description">No.</span>
+                                                    </label>
+                                                    <input type="date" class="form-control mt-2 fecha-input-disabled" disabled id="nuevafechatermino" name="nuevafechatermino">
+                                                    <div id="warning-indefinido" class="warning-indefinido d-none mt-2">
+                                                        <i class="fa fa-exclamation-triangle"></i>
+                                                        <strong>Advertencia:</strong> La fecha de término solo se aplicará a contratos a plazo fijo.
+                                                    </div>
                                                 </div>
                                             </div>
                                             <hr>
@@ -943,6 +979,7 @@ if (isset($_SESSION['CURRENT_ENTERPRISE'])) {
         <script src="JsFunctions/lotesanexo.js"></script>
 
         <script src="JsFunctions/tipodocumento.js"></script>
+        <script src="JsFunctions/anexos-validacion.js"></script>
 
         <script>
 		$(document).ready(function(){

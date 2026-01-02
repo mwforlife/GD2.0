@@ -1,0 +1,269 @@
+/* Estilos personalizados para anexos masivos */
+
+/* Card mejorado */
+.anexos-card {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    border: none;
+    transition: transform 0.2s;
+}
+
+.anexos-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Header de sección */
+.section-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px 8px 0 0;
+    margin: -20px -20px 20px -20px;
+}
+
+.section-header h5 {
+    margin: 0;
+    font-weight: 600;
+}
+
+/* Formulario mejorado */
+.form-group label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 8px;
+}
+
+.form-control:focus {
+    border-color: #467fcf;
+    box-shadow: 0 0 0 0.2rem rgba(70, 127, 207, 0.25);
+}
+
+/* Switch personalizado */
+.fecha-termino-switch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+}
+
+.fecha-termino-switch label {
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Campo de fecha deshabilitado */
+.fecha-input-disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+/* Tabla mejorada */
+.clausulas-table {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.clausulas-table thead {
+    background: #467fcf;
+    color: white;
+}
+
+.clausulas-table thead th {
+    border: none;
+    font-weight: 600;
+    padding: 12px;
+}
+
+.clausulas-table tbody td {
+    padding: 12px;
+    vertical-align: middle;
+}
+
+.clausulas-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Badge para tipo de contrato */
+.contrato-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.813rem;
+    font-weight: 600;
+}
+
+.contrato-plazo-fijo {
+    background-color: #28a745;
+    color: white;
+}
+
+.contrato-indefinido {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Botones mejorados */
+.btn-anexo {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-anexo:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Alerta de información */
+.info-alert {
+    background: #e7f3ff;
+    border-left: 4px solid #467fcf;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.info-alert i {
+    color: #467fcf;
+    margin-right: 10px;
+}
+
+/* Warning para contratos indefinidos */
+.warning-indefinido {
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 12px;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.warning-indefinido i {
+    color: #856404;
+}
+
+/* Estilos para el campo de fecha de término */
+.fecha-termino-container {
+    position: relative;
+}
+
+.fecha-termino-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.fecha-termino-label i {
+    color: #467fcf;
+}
+
+/* Tooltip personalizado */
+.tooltip-info {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+}
+
+.tooltip-info .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.813rem;
+}
+
+.tooltip-info:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Card de resumen */
+.summary-card {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+}
+
+.summary-label {
+    font-weight: 600;
+    color: #495057;
+}
+
+.summary-value {
+    color: #467fcf;
+    font-weight: 600;
+}
+
+/* Animación para campos requeridos */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.field-required-error {
+    animation: shake 0.5s;
+    border-color: #dc3545 !important;
+}
+
+/* Loader para procesamiento */
+.processing-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.processing-content {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.processing-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #467fcf;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

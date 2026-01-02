@@ -30,6 +30,10 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
     $base = $_POST['base'];
     $sueldo = $_POST['sueldo'];
 
+    // Capturar datos de modificación de fecha de término
+    $modificafecha = isset($_POST['modificafecha']) ? $_POST['modificafecha'] : 0;
+    $nuevafechatermino = isset($_POST['nuevafechatermino']) ? $_POST['nuevafechatermino'] : '';
+
     if($base == 1){
         if($sueldo == 0){
             echo "Debe ingresar un sueldo";
@@ -39,7 +43,27 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
         $sueldo = 0;
     }
 
-    
+    // Validar fecha de término si está activada
+    if($modificafecha == 1){
+        if(empty($nuevafechatermino)){
+            echo "Debe ingresar una nueva fecha de término";
+            return;
+        }
+    }
+
+    // Verificar qué plantillas contienen {NUEVA_FECHA_TERMINO}
+    // IMPORTANTE: Esto debe verificarse SIEMPRE, no solo cuando está activada la modificación
+    // porque necesitamos filtrar estas plantillas para contratos indefinidos
+    $plantillasConFechaTermino = array();
+    foreach($clausulas as $clausula){
+        $plantillaId = $clausula['tipodocumentoid'];
+        $contenidoPlantilla = $c->buscarplantilla($plantillaId);
+        if(strpos($contenidoPlantilla, '{NUEVA_FECHA_TERMINO}') !== false){
+            $plantillasConFechaTermino[] = $plantillaId;
+        }
+    }
+
+
     $sueldo1 = $sueldo;
     $sueldo = number_format($sueldo, 0, ",", ".");
     $sueldo1 = str_replace(".", "", $sueldo1);
@@ -110,6 +134,28 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
 
 
 
+        // Verificar si alguna de las cláusulas de este contrato usa una plantilla con {NUEVA_FECHA_TERMINO}
+        $usaFechaTermino = false;
+        $fechaterminoActual = $contrato->getFechatermino();
+        $esPlazoFijo = (!empty($fechaterminoActual) && $fechaterminoActual != '' && $fechaterminoActual != null && $fechaterminoActual != '0000-00-00');
+
+        foreach($clausulas as $clausula){
+            if(in_array($clausula['tipodocumentoid'], $plantillasConFechaTermino)){
+                $usaFechaTermino = true;
+                break;
+            }
+        }
+
+        // Preparar la nueva fecha de término para la vista previa
+        // Solo usar la nueva fecha si:
+        // 1. La modificación está activada
+        // 2. Alguna plantilla usa {NUEVA_FECHA_TERMINO}
+        // 3. El contrato es a plazo fijo
+        $nuevafechaformat = $fechatermino; // Por defecto, usar la fecha actual
+        if($modificafecha == 1 && !empty($nuevafechatermino) && $usaFechaTermino && $esPlazoFijo){
+            $nuevafechaformat = date("d/m/Y", strtotime($nuevafechatermino));
+        }
+
         $swap_var = array(
             "{FECHA_GENERACION}" => date("d-m-Y", strtotime($fechageneracion)),
             "{NOMBRE_EMPRESA}" => $empresa->getRazonSocial(),
@@ -143,6 +189,7 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
             "{CARGO}" => $contrato->getCargo(),
             "{INICIO_CONTRATO}" => $fechainicio,
             "{TERMINO_CONTRATO}" => $fechatermino,
+            "{NUEVA_FECHA_TERMINO}" => $nuevafechaformat,
             "{FORMA_PAGO}" => "Transferencia Electrónica",
             "{TIPO_CUENTA}" => $tipocuenta,
             "{NUMERO_CUENTA}" => $numerocuenta,
@@ -157,7 +204,15 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
         $contenido = "";
 
         foreach($clausulas as $clausula){
-            $plantilla = $c->buscarplantilla($clausula['tipodocumentoid']);
+            $plantillaId = $clausula['tipodocumentoid'];
+
+            // Si la plantilla contiene {NUEVA_FECHA_TERMINO} y el contrato es indefinido, NO procesar esta cláusula
+            if(in_array($plantillaId, $plantillasConFechaTermino) && !$esPlazoFijo){
+                // Saltar esta cláusula para contratos indefinidos
+                continue;
+            }
+
+            $plantilla = $c->buscarplantilla($plantillaId);
 
             // Reemplazar las variables en la plantilla
             foreach (array_keys($swap_var) as $key) {

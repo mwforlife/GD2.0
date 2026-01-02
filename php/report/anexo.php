@@ -92,6 +92,14 @@ if (isset($_SESSION['USER_ID'])  && isset($_GET['id'])) {
 
 
 
+    // Obtener la nueva fecha de término del contrato (en caso de que haya sido actualizada)
+    $nuevafechatermino = $contrato->getFechatermino();
+    if ($nuevafechatermino != null && $nuevafechatermino != "" && $nuevafechatermino != "0000-00-00") {
+        $nuevafechatermino = date("d/m/Y", strtotime($nuevafechatermino));
+    } else {
+        $nuevafechatermino = "Indefinido";
+    }
+
     $swap_var = array(
         "{FECHA_GENERACION}" => date("d-m-Y", strtotime($fechageneracion)),
         "{NOMBRE_EMPRESA}" => $empresa->getRazonSocial(),
@@ -125,6 +133,7 @@ if (isset($_SESSION['USER_ID'])  && isset($_GET['id'])) {
         "{CARGO}" => $contrato->getCargo(),
         "{INICIO_CONTRATO}" => $fechainicio,
         "{TERMINO_CONTRATO}" => $fechatermino,
+        "{NUEVA_FECHA_TERMINO}" => $nuevafechatermino,
         "{FORMA_PAGO}" => "Transferencia Electrónica",
         "{TIPO_CUENTA}" => $tipocuenta,
         "{NUMERO_CUENTA}" => $numerocuenta,
@@ -136,10 +145,21 @@ if (isset($_SESSION['USER_ID'])  && isset($_GET['id'])) {
         "{FECHA_CELEBRACION}" => date("d-m-Y", strtotime($fechageneracion)),
     );
 
+    // Verificar si el contrato es a plazo fijo
+    $fechaterminoActual = $contrato->getFechatermino();
+    $esPlazoFijo = (!empty($fechaterminoActual) && $fechaterminoActual != '' && $fechaterminoActual != null && $fechaterminoActual != '0000-00-00');
+
     $contenido = "";
 
     foreach ($clausulas as $clausula) {
-        $plantilla = $c->buscarplantilla($clausula->getTipodocumento());
+        $plantillaId = $clausula->getTipodocumento();
+        $plantilla = $c->buscarplantilla($plantillaId);
+
+        // Si la plantilla contiene {NUEVA_FECHA_TERMINO} y el contrato es indefinido, NO procesar esta cláusula
+        if(strpos($plantilla, '{NUEVA_FECHA_TERMINO}') !== false && !$esPlazoFijo){
+            // Saltar esta cláusula para contratos indefinidos
+            continue;
+        }
 
         // Reemplazar las variables en la plantilla
         foreach (array_keys($swap_var) as $key) {

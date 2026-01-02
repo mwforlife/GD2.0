@@ -641,7 +641,7 @@ create table contratos(
     register_at timestamp not null default current_timestamp
 );
 
---Agregar id centro de costo a tabla contratos despues de id empresa con valor por defecto 1 a referencia centrocosto(id)
+--Agregar id centro de costo a tabla contratos despues de id empresa con valor por defecto 0 a referencia centrocosto(id)
 alter table contratos add column centrocosto int not null references centrocosto(id) default 0 after empresa;
 
 create table estadoafectoavacaciones(

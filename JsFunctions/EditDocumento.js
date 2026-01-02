@@ -6,6 +6,10 @@ function agregarcampo(valor){
 //Inicializacion del editor de documentos
 tinymce.init({
     selector: '#summernote',
+    height: '100%',
+    min_height: 300,
+    max_height: null,
+    resize: false,
     plugins: 'ai tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss',
     toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
     tinycomments_mode: 'embedded',
@@ -20,6 +24,16 @@ tinymce.init({
     },
     ],
     ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
+    setup: function(editor) {
+        editor.on('init', function() {
+            // Asegurar que el editor use el 100% de altura disponible
+            var container = editor.getContainer();
+            if (container) {
+                container.style.height = '100%';
+                container.style.maxHeight = '100%';
+            }
+        });
+    }
 });
 
 //Function to receive text from TinyMCE editor

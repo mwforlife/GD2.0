@@ -59,6 +59,7 @@ foreach ($permiso as $p) {
 	<!-- Favicon -->
 	<link rel="icon" href="assets/img/brand/favicon.ico" type="image/x-icon" />
 	<link href="assets/css/toastify.min.css" rel="stylesheet" />
+	<link href="css/redactar-custom.css" rel="stylesheet" />
 
 	<!-- Title -->
 	<title>Gestor Documento | Redactar Documento</title>
@@ -545,25 +546,317 @@ foreach ($permiso as $p) {
 					</div>
 					<!-- End Page Header -->
 
-					<!-- Row -->
-					<div class="row">
-						<div class="col-lg-12 col-md-12">
-							<div class="card">
-								<div class="card-body">
-									<div class="mb-3">
-										<button class="btn btn-primary" id="btnAgregarCampos" data-target="#modalcampo" data-toggle="modal"><i class="fa fa-plus"></i> Agregar Campos</button>
+			<!-- Row -->
+			<div class="row full-height-row">
+				<!-- Editor Section - 8 columns -->
+				<div class="col-lg-8 col-md-8 d-flex flex-column pr-2" style="height: 100%;">
+					<div class="card flex-fill d-flex flex-column mb-0" style="height: 100%; max-height: 100%;">
+						<div class="card-body d-flex flex-column p-3 editor-container" style="height: 100%;">
+							<div id="summernote" style="flex: 1; min-height: 0; overflow-y: auto;"></div>
+							<div class="row mt-3 button-container">
+								<div class="col-lg-12 text-right">
+									<a href="tipodocumento.php" class="btn btn-danger"> <i class="fa fa-arrow-left"></i> Volver</a>
+									<button class="btn btn-success" onclick="generarDocumento(<?php echo $id; ?>)"><i class="fa fa-save"></i> Registrar</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Fields Section - 4 columns -->
+				<div class="col-lg-4 col-md-4 d-flex flex-column pl-2" style="height: 100%;">
+					<div class="card flex-fill d-flex flex-column mb-0" style="height: 100%; max-height: 100%;">
+						<div class="card-header bg-primary text-white" style="flex-shrink: 0;">
+							<h6 class="mb-0">Campos Disponibles</h6>
+						</div>
+						<div class="card-body p-3 d-flex flex-column" style="height: 100%; min-height: 0;">
+							<!-- Buscador -->
+							<div class="mb-3" style="flex-shrink: 0;">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-white"><i class="fa fa-search"></i></span>
 									</div>
-									<div id="summernote"></div>
-									<div class="row">
-										<div class="col-lg-12 text-right">
-											<a href="tipodocumento.php" class="btn btn-danger"> <i class="fa fa-arrow-left"></i> Volver</a>
-											<button class="btn btn-success" onclick="generarDocumento(<?php echo $id; ?>)"><i class="fa fa-save"></i> Registrar</button>
+									<input type="text" class="form-control" id="searchField" placeholder="Buscar campos...">
+								</div>
+							</div>
+
+							<!-- Campos con scroll -->
+							<div class="flex-fill" style="overflow-y: auto; overflow-x: hidden; min-height: 0;">
+								<div id="fieldsContainer">
+									<!----------------INFORMACION CELEBRACION DE CONTRATO--------------->
+									<div class="field-category mb-3">
+										<h6 class="category-title">Celebración de Contrato</h6>
+										<div class="category-fields">
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="CATEGORIA_CONTRATO" onclick="agregarcampo('CATEGORIA_CONTRATO')">Categoría de Contrato</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="CEL_REGION" onclick="agregarcampo('CEL_REGION')">Región</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="CEL_COMUNA" onclick="agregarcampo('CEL_COMUNA')">Comuna</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="FECHA_CELEBRACION" onclick="agregarcampo('FECHA_CELEBRACION')">Fecha Celebración</button>
+										</div>
+									</div>
+
+									<!--------------INFORMACION EMPRESA------------------------------------->
+									<div class="field-category mb-3">
+										<h6 class="category-title">Información de la Empresa</h6>
+										<div class="category-fields">
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="RUT_EMPRESA" onclick="agregarcampo('RUT_EMPRESA')">RUT Empresa</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="NOMBRE_EMPRESA" onclick="agregarcampo('NOMBRE_EMPRESA')">Razón Social</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="RUT_REPRESENTANTE_LEGAL" onclick="agregarcampo('RUT_REPRESENTANTE_LEGAL')">RUT Representante Legal</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="REPRESENTANTE_LEGAL" onclick="agregarcampo('REPRESENTANTE_LEGAL')">Representante Legal</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="CORREO_EMPRESA" onclick="agregarcampo('CORREO_EMPRESA')">Correo Empresa</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="TELEFONO_EMPRESA" onclick="agregarcampo('TELEFONO_EMPRESA')">Teléfono Empresa</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="CALLE_EMPRESA" onclick="agregarcampo('CALLE_EMPRESA')">Calle Empresa</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="VILLA_EMPRESA" onclick="agregarcampo('VILLA_EMPRESA')">Villa Empresa</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="NUMERO_EMPRESA" onclick="agregarcampo('NUMERO_EMPRESA')">Número Empresa</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="REGION_EMPRESA" onclick="agregarcampo('REGION_EMPRESA')">Región Empresa</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="COMUNA_EMPRESA" onclick="agregarcampo('COMUNA_EMPRESA')">Comuna Empresa</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="CODIGO_ACTIVIDAD" onclick="agregarcampo('CODIGO_ACTIVIDAD')">Código Actividad</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="DEPT_EMPRESA" onclick="agregarcampo('DEPT_EMPRESA')">Departamento Empresa</button>
+										</div>
+									</div>
+
+									<!-----------------------INFORMACION DEL TRABAJADOR----------------------------->
+									<div class="field-category mb-3">
+										<h6 class="category-title">Información del Trabajador</h6>
+										<div class="category-fields">
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="RUT_TRABAJADOR" onclick="agregarcampo('RUT_TRABAJADOR')">RUT Trabajador</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="NOMBRE_TRABAJADOR" onclick="agregarcampo('NOMBRE_TRABAJADOR')">Nombre Trabajador</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="APELLIDO_1" onclick="agregarcampo('APELLIDO_1')">Primer Apellido</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="APELLIDO_2" onclick="agregarcampo('APELLIDO_2')">Segundo Apellido</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="FECHA_NACIMIENTO" onclick="agregarcampo('FECHA_NACIMIENTO')">Fecha Nacimiento</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="SEXO" onclick="agregarcampo('SEXO')">Sexo</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="ESTADO_CIVIL" onclick="agregarcampo('ESTADO_CIVIL')">Estado Civil</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="NACIONALIDAD" onclick="agregarcampo('NACIONALIDAD')">Nacionalidad</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="CORREO_TRABAJADOR" onclick="agregarcampo('CORREO_TRABAJADOR')">Correo Trabajador</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="TELEFONO_TRABAJADOR" onclick="agregarcampo('TELEFONO_TRABAJADOR')">Teléfono Trabajador</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="REGION_TRABAJADOR" onclick="agregarcampo('REGION_TRABAJADOR')">Región Trabajador</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="COMUNA_TRABAJADOR" onclick="agregarcampo('COMUNA_TRABAJADOR')">Comuna Trabajador</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="CALLE_TRABAJADOR" onclick="agregarcampo('CALLE_TRABAJADOR')">Calle Trabajador</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="VILLA_TRABAJADOR" onclick="agregarcampo('VILLA_TRABAJADOR')">Villa Trabajador</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="NUMERO_CASA_TRABAJADOR" onclick="agregarcampo('NUMERO_CASA_TRABAJADOR')">Número Casa Trabajador</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="DEPARTAMENTO_TRABAJADOR" onclick="agregarcampo('DEPARTAMENTO_TRABAJADOR')">Departamento Trabajador</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="DISCAPACIDAD" onclick="agregarcampo('DISCAPACIDAD')">Discapacidad</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="PENSION_INVALIDEZ" onclick="agregarcampo('PENSION_INVALIDEZ')">Pensión Invalidez</button>
+										</div>
+									</div>
+
+									<!---------------------------------NATURALEZA DE LOS SERVICIOS----------------------------------------->
+									<div class="field-category mb-3">
+										<h6 class="category-title">Naturaleza de los Servicios</h6>
+										<div class="category-fields">
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="CENTRO_DE_COSTO" onclick="agregarcampo('CENTRO_DE_COSTO')">Centro de Costo</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="CARGO" onclick="agregarcampo('CARGO')">Cargo</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="DESCRIPCION_CARGO" onclick="agregarcampo('DESCRIPCION_CARGO')">Descripción Cargo</button>
+										</div>
+									</div>
+
+									<!--------------------------------DIRECCION ESPECIFICA------------------------------------>
+									<div class="field-category mb-3">
+										<h6 class="category-title">Dirección Específica</h6>
+										<div class="category-fields">
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="REGION_ESPECIFICA" onclick="agregarcampo('REGION_ESPECIFICA')">Región Específica</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="COMUNA_ESPECIFICA" onclick="agregarcampo('COMUNA_ESPECIFICA')">Comuna Específica</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="CALLE_ESPECIFICA" onclick="agregarcampo('CALLE_ESPECIFICA')">Calle Específica</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="NUMERO_CASA_ESPECIFICA" onclick="agregarcampo('NUMERO_CASA_ESPECIFICA')">Número Específico</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="DEPARTAMENTO_ESPECIFICO" onclick="agregarcampo('DEPARTAMENTO_ESPECIFICO')">Departamento Específico</button>
+										</div>
+									</div>
+
+									<!---------------------------------ZONA GEOGRAFICA----------------------------------------->
+									<div class="field-category mb-3">
+										<h6 class="category-title">Zona Geográfica</h6>
+										<div class="category-fields">
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="ZONA_PRESTACION" onclick="agregarcampo('ZONA_PRESTACION')">Zona Prestación</button>
+										</div>
+									</div>
+
+									<!-----------------------------------SUBCONTRATACION---------------------------------------->
+									<div class="field-category mb-3">
+										<h6 class="category-title">Subcontratación</h6>
+										<div class="category-fields">
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="RUT_EMPRESA_SUBCONTRATADA" onclick="agregarcampo('RUT_EMPRESA_SUBCONTRATADA')">RUT Empresa Subcontratada</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="NOMBRE_EMPRESA_SUBCONTRATADA" onclick="agregarcampo('NOMBRE_EMPRESA_SUBCONTRATADA')">Nombre Empresa Subcontratada</button>
+										</div>
+									</div>
+
+									<!------------------------------------SERVICIO TRANSITORIOS---------------------------------------->
+									<div class="field-category mb-3">
+										<h6 class="category-title">Servicios Transitorios</h6>
+										<div class="category-fields">
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="RUT_EMPRESA_TRANSITORIA" onclick="agregarcampo('RUT_EMPRESA_TRANSITORIA')">RUT Empresa Transitoria</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="NOMBRE_EMPRESA_TRANSITORIA" onclick="agregarcampo('NOMBRE_EMPRESA_TRANSITORIA')">Nombre Empresa Transitoria</button>
+										</div>
+									</div>
+
+									<!-------------------------------------REMUNERACIONES---------------------------------------->
+									<div class="field-category mb-3">
+										<h6 class="category-title">Remuneraciones</h6>
+										<div class="category-fields">
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="SUELDO_BASE" onclick="agregarcampo('SUELDO_BASE')">Tipo Sueldo Base</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="SUELDO_MONTO" onclick="agregarcampo('SUELDO_MONTO')">Sueldo Monto</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="SUELDO_MONTO_LETRAS" onclick="agregarcampo('SUELDO_MONTO_LETRAS')">Monto Sueldo en Letras</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="ZONA_EXTREMA" onclick="agregarcampo('ZONA_EXTREMA')">Zona Extrema</button>
+										</div>
+									</div>
+
+									<!-------------------------------------HABERES IMPONIBLES TRIBUTABLES---------------------------------------->
+									<div class="field-category mb-3">
+										<h6 class="category-title">Haberes Imponibles Tributables</h6>
+										<div class="category-fields">
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="HABER_IMPO_TRIBUTABLE" onclick="agregarcampo('HABER_IMPO_TRIBUTABLE')">Haber Imponible Tributable</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="HABER_IMPO_TRIBUTABLE_MONTO" onclick="agregarcampo('HABER_IMPO_TRIBUTABLE_MONTO')">Monto</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="HABER_IMPO_TRIBUTABLE_PERIODO" onclick="agregarcampo('HABER_IMPO_TRIBUTABLE_PERIODO')">Período</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="HABER_IMPO_NO_TRIBUTABLE_DETALLE" onclick="agregarcampo('HABER_IMPO_NO_TRIBUTABLE_DETALLE')">Detalle</button>
+										</div>
+									</div>
+
+									<!-------------------------------------HABERES IMPONIBLES NO TRIBUTABLES---------------------------------------->
+									<div class="field-category mb-3">
+										<h6 class="category-title">Haberes Imponibles No Tributables</h6>
+										<div class="category-fields">
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="HABER_IMPO_NO_TRIBUTABLE" onclick="agregarcampo('HABER_IMPO_NO_TRIBUTABLE')">Haber Imponible No Tributable</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="HABER_IMPO_NO_TRIBUTABLE_MONTO" onclick="agregarcampo('HABER_IMPO_NO_TRIBUTABLE_MONTO')">Monto</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="HABER_IMPO_NO_TRIBUTABLE_PERIODO" onclick="agregarcampo('HABER_IMPO_NO_TRIBUTABLE_PERIODO')">Período</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="HABER_IMPO_NO_TRIBUTABLE_DETALLE" onclick="agregarcampo('HABER_IMPO_NO_TRIBUTABLE_DETALLE')">Detalle</button>
+										</div>
+									</div>
+
+									<!-------------------------------------HABERES NO IMPONIBLES TRIBUTABLES---------------------------------------->
+									<div class="field-category mb-3">
+										<h6 class="category-title">Haberes No Imponibles Tributables</h6>
+										<div class="category-fields">
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="HABER_NO_IMPO_TRIBUTABLE" onclick="agregarcampo('HABER_NO_IMPO_TRIBUTABLE')">Haber No Imponible Tributable</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="HABER_NO_IMPO_TRIBUTABLE_MONTO" onclick="agregarcampo('HABER_NO_IMPO_TRIBUTABLE_MONTO')">Monto</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="HABER_NO_IMPO_TRIBUTABLE_PERIODO" onclick="agregarcampo('HABER_NO_IMPO_TRIBUTABLE_PERIODO')">Período</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="HABER_NO_IMPO_TRIBUTABLE_DETALLE" onclick="agregarcampo('HABER_NO_IMPO_TRIBUTABLE_DETALLE')">Detalle</button>
+										</div>
+									</div>
+
+									<!-------------------------------------HABERES NO IMPONIBLES NO TRIBUTABLES---------------------------------------->
+									<div class="field-category mb-3">
+										<h6 class="category-title">Haberes No Imponibles No Tributables</h6>
+										<div class="category-fields">
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="HABER_NO_IMPO_NO_TRIBUTABLE" onclick="agregarcampo('HABER_NO_IMPO_NO_TRIBUTABLE')">Haber No Imponible No Tributable</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="HABER_NO_IMPO_NO_TRIBUTABLE_MONTO" onclick="agregarcampo('HABER_NO_IMPO_NO_TRIBUTABLE_MONTO')">Monto</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="HABER_NO_IMPO_NO_TRIBUTABLE_PERIODO" onclick="agregarcampo('HABER_NO_IMPO_NO_TRIBUTABLE_PERIODO')">Período</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="HABER_NO_IMPO_NO_TRIBUTABLE_DETALLE" onclick="agregarcampo('HABER_NO_IMPO_NO_TRIBUTABLE_DETALLE')">Detalle</button>
+										</div>
+									</div>
+
+									<!-------------------------------------GRATIFICACIONES---------------------------------------->
+									<div class="field-category mb-3">
+										<h6 class="category-title">Gratificaciones</h6>
+										<div class="category-fields">
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="GRATIFICACION_FORMA_PAGO" onclick="agregarcampo('GRATIFICACION_FORMA_PAGO')">Forma de Pago</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="PERIODO_GRATIFICACION" onclick="agregarcampo('PERIODO_GRATIFICACION')">Período de Pago</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="DETALLE_REMUNERACION_GRATIFICACION" onclick="agregarcampo('DETALLE_REMUNERACION_GRATIFICACION')">Detalle de Remuneración</button>
+										</div>
+									</div>
+
+									<!-------------------------------------PERIODO Y FORMA DE PAGO---------------------------------------->
+									<div class="field-category mb-3">
+										<h6 class="category-title">Período y Forma de Pago</h6>
+										<div class="category-fields">
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="PERIODO_PAGO" onclick="agregarcampo('PERIODO_PAGO')">Período de Pago</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="FECHA_PAGO" onclick="agregarcampo('FECHA_PAGO')">Fecha de Pago</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="FORMA_PAGO" onclick="agregarcampo('FORMA_PAGO')">Forma de Pago</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="BANCO" onclick="agregarcampo('BANCO')">Banco</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="TIPO_CUENTA" onclick="agregarcampo('TIPO_CUENTA')">Tipo de Cuenta</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="NUMERO_CUENTA" onclick="agregarcampo('NUMERO_CUENTA')">Número de Cuenta</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="ANTICIPO" onclick="agregarcampo('ANTICIPO')">Anticipo</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="AFP" onclick="agregarcampo('AFP')">AFP</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="SALUD" onclick="agregarcampo('SALUD')">Salud</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="OTROS_PACTOS" onclick="agregarcampo('OTROS_PACTOS')">Otros Pactos</button>
+										</div>
+									</div>
+
+									<!-------------------------------------JORNADA---------------------------------------->
+									<div class="field-category mb-3">
+										<h6 class="category-title">Jornada de Trabajo</h6>
+										<div class="category-fields">
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="JORNADA_EXCEPCIONAL" onclick="agregarcampo('JORNADA_EXCEPCIONAL')">Jornada Excepcional</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="NUMERO_RESOLUCION" onclick="agregarcampo('NUMERO_RESOLUCION')">Número de Resolución</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="FECHA_RESOLUCION" onclick="agregarcampo('FECHA_RESOLUCION')">Fecha de Resolución</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="TIPO_JORNADA" onclick="agregarcampo('TIPO_JORNADA')">Tipo de Jornada</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="DURACION_JORNADA_HORAS" onclick="agregarcampo('DURACION_JORNADA_HORAS')">Duración Jornada Diaria</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="DURACION_JORNADA_MENSUAL" onclick="agregarcampo('DURACION_JORNADA_MENSUAL')">Duración Jornada Mensual</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="HORARIOS_TURNOS" onclick="agregarcampo('HORARIOS_TURNOS')">Horarios y Turnos</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="COLACION_MINUTOS" onclick="agregarcampo('COLACION_MINUTOS')">Colación en Minutos</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="ROTACION" onclick="agregarcampo('ROTACION')">Rotación</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="COLACION_IMPUTABLES_MINUTOS" onclick="agregarcampo('COLACION_IMPUTABLES_MINUTOS')">Colación Imputables en Minutos</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="DISTRIBUCION_JORNADA" onclick="agregarcampo('DISTRIBUCION_JORNADA')">Distribución de Jornada</button>
+										</div>
+									</div>
+
+									<!-------------------------------------CONTRATO---------------------------------------->
+									<div class="field-category mb-3">
+										<h6 class="category-title">Contrato</h6>
+										<div class="category-fields">
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="TIPO_CONTRATO" onclick="agregarcampo('TIPO_CONTRATO')">Tipo de Contrato</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="INICIO_CONTRATO" onclick="agregarcampo('INICIO_CONTRATO')">Inicio de Contrato</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="TERMINO_CONTRATO" onclick="agregarcampo('TERMINO_CONTRATO')">Término de Contrato</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="ESTIPULACIONES" onclick="agregarcampo('ESTIPULACIONES')">Estipulaciones</button>
+										</div>
+									</div>
+
+									<!-------------------------------------VACACIONES---------------------------------------->
+									<div class="field-category mb-3">
+										<h6 class="category-title">Vacaciones</h6>
+										<div class="category-fields">
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="NUMERO_COMPROBANTE" onclick="agregarcampo('NUMERO_COMPROBANTE')">Número Comprobante</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="PERIODO_VACACIONES" onclick="agregarcampo('PERIODO_VACACIONES')">Período Vacaciones</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="INICIO_PERIODO_VACACIONES" onclick="agregarcampo('INICIO_PERIODO_VACACIONES')">Inicio Período Vacaciones</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="TERMINO_PERIODO_VACACIONES" onclick="agregarcampo('TERMINO_PERIODO_VACACIONES')">Término Período Vacaciones</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="FECHA_INICIO_VACACIONES" onclick="agregarcampo('FECHA_INICIO_VACACIONES')">Fecha Inicio Vacaciones</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="FECHA_TERMINO_VACACIONES" onclick="agregarcampo('FECHA_TERMINO_VACACIONES')">Fecha Término Vacaciones</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="TOTAL_DIAS_VACACIONES" onclick="agregarcampo('TOTAL_DIAS_VACACIONES')">Días Totales</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="DIAS_VACACIONES" onclick="agregarcampo('DIAS_VACACIONES')">Días Hábiles Tomados</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="DIAS_HABILES_RESTANTES" onclick="agregarcampo('DIAS_HABILES_RESTANTES')">Días Hábiles Restantes</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="FECHA_COMPROBANTE" onclick="agregarcampo('FECHA_COMPROBANTE')">Fecha Comprobante</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="OBSERVACIONES_VACACIONES" onclick="agregarcampo('OBSERVACIONES_VACACIONES')">Observaciones Vacaciones</button>
+										</div>
+									</div>
+
+									<!-------------------------------------FINIQUITO---------------------------------------->
+									<div class="field-category mb-3">
+										<h6 class="category-title">Finiquito</h6>
+										<div class="category-fields">
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="FECHA_FINIQUITO" onclick="agregarcampo('FECHA_FINIQUITO')">Fecha Finiquito</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="CAUSAL_FINIQUITO" onclick="agregarcampo('CAUSAL_FINIQUITO')">Causal Finiquito</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="DETALLE_FINIQUITO" onclick="agregarcampo('DETALLE_FINIQUITO')">Detalle Finiquito</button>
+										</div>
+									</div>
+
+									<!-------------------------------------NOTIFICACIÓN---------------------------------------->
+									<div class="field-category mb-3">
+										<h6 class="category-title">Notificación</h6>
+										<div class="category-fields">
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="FECHA_NOTIFICACION" onclick="agregarcampo('FECHA_NOTIFICACION')">Fecha Notificación</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="CAUSAL_DE_DERECHO" onclick="agregarcampo('CAUSAL_DE_DERECHO')">Causal de Derecho</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="CAUSAL_DE_HECHOS" onclick="agregarcampo('CAUSAL_DE_HECHOS')">Causal de Hechos</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="COTIZACIONES_PREVISIONALES" onclick="agregarcampo('COTIZACIONES_PREVISIONALES')">Cotizaciones Previsionales</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="FORMA_DE_COMUNICACION" onclick="agregarcampo('FORMA_DE_COMUNICACION')">Forma de Comunicación</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="DOCUMENTACION_DE_ACREDITACION" onclick="agregarcampo('DOCUMENTACION_DE_ACREDITACION')">Documentación de Acreditación</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="DISPOSICION_Y_PAGO" onclick="agregarcampo('DISPOSICION_Y_PAGO')">Disposición y Pago de Finiquito</button>
+										</div>
+									</div>
+
+									<!-------------------------------------OTROS---------------------------------------->
+									<div class="field-category mb-3">
+										<h6 class="category-title">Otros Documentos</h6>
+										<div class="category-fields">
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="FECHA_GENERACION" onclick="agregarcampo('FECHA_GENERACION')">Fecha Generación</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="CLAUSULA_A_MODIFICAR" onclick="agregarcampo('CLAUSULA_A_MODIFICAR')">Cláusula a Modificar</button>
+											<button class="btn btn-sm btn-outline-primary btn-block mb-2 field-btn" data-field="NUEVA_FECHA_TERMINO" onclick="agregarcampo('NUEVA_FECHA_TERMINO')">Nueva Fecha de Término de contrato</button>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
+				</div>
+			</div>
+			<!-- End Row -->
+
 					<!-- End Row -->
 
 					<!-- Row -->
@@ -1070,6 +1363,7 @@ foreach ($permiso as $p) {
 		<script src="JsFunctions/Comunas.js"></script>
 		<script src="JsFunctions/precargado.js"></script>
 		<script src="JsFunctions/EditDocumento.js"></script>
+		<script src="JsFunctions/redactar-search.js"></script>
 		<script>
 			//Cerrar notificaciones de TinyMCE
 			function cerrar() {
@@ -1078,7 +1372,7 @@ foreach ($permiso as $p) {
 			}
 
 			window.onload = function() {
-				cargarDocumento(<?php echo $id; ?>);	
+				cargarDocumento(<?php echo $id; ?>);
 			}
 		</script>
 </body>

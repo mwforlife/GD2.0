@@ -78,6 +78,14 @@ if (isset($_GET['id'])) {
 
 
 
+    // Obtener la nueva fecha de término del contrato (en caso de que haya sido actualizada)
+    $nuevafechatermino = $contrato->getFechatermino();
+    if ($nuevafechatermino != null && $nuevafechatermino != "" && $nuevafechatermino != "0000-00-00") {
+        $nuevafechatermino = date("d/m/Y", strtotime($nuevafechatermino));
+    } else {
+        $nuevafechatermino = "Indefinido";
+    }
+
     $swap_var = array(
         "{FECHA_GENERACION}" => date("d-m-Y", strtotime($fechageneracion)),
         "{NOMBRE_EMPRESA}" => $empresa->getRazonSocial(),
@@ -111,6 +119,7 @@ if (isset($_GET['id'])) {
         "{CARGO}" => $contrato->getCargo(),
         "{INICIO_CONTRATO}" => $fechainicio,
         "{TERMINO_CONTRATO}" => $fechatermino,
+        "{NUEVA_FECHA_TERMINO}" => $nuevafechatermino,
         "{FORMA_PAGO}" => "Transferencia Electrónica",
         "{TIPO_CUENTA}" => $tipocuenta,
         "{NUMERO_CUENTA}" => $numerocuenta,
@@ -119,27 +128,38 @@ if (isset($_GET['id'])) {
         "{SUELDO_MONTO_LETRAS}" => $sueldo1
     );
 
+    // Verificar si el contrato es a plazo fijo
+    $fechaterminoActual = $contrato->getFechatermino();
+    $esPlazoFijo = (!empty($fechaterminoActual) && $fechaterminoActual != '' && $fechaterminoActual != null && $fechaterminoActual != '0000-00-00');
+
     $contenido = "";
 
     foreach ($clausulas as $clausula) {
-        $plantilla = $c->buscarplantilla($clausula->getTipodocumento());
+        $plantillaId = $clausula->getTipodocumento();
+        $plantillaContenido = $c->buscarplantilla($plantillaId);
+
+        // Si la plantilla contiene {NUEVA_FECHA_TERMINO} y el contrato es indefinido, NO procesar esta cláusula
+        if(strpos($plantillaContenido, '{NUEVA_FECHA_TERMINO}') !== false && !$esPlazoFijo){
+            // Saltar esta cláusula para contratos indefinidos
+            continue;
+        }
 
         // Reemplazar las variables en la plantilla
         foreach (array_keys($swap_var) as $key) {
-            $plantilla = str_replace($key, $swap_var[$key], $plantilla);
+            $plantillaContenido = str_replace($key, $swap_var[$key], $plantillaContenido);
         }
 
         // Reemplazar la cláusula a modificar manteniendo el formato de la plantilla
-        $plantilla = str_replace("{CLAUSULA_A_MODIFICAR}", $clausula->getClausula(), $plantilla);
+        $plantillaContenido = str_replace("{CLAUSULA_A_MODIFICAR}", $clausula->getClausula(), $plantillaContenido);
 
         // Limpiar etiquetas HTML/BODY que puedan causar saltos de página
-        $plantilla = preg_replace('/<\/?html[^>]*>/i', '', $plantilla);
-        $plantilla = preg_replace('/<\/?body[^>]*>/i', '', $plantilla);
-        $plantilla = preg_replace('/<\/?head[^>]*>/i', '', $plantilla);
-        $plantilla = preg_replace('/<meta[^>]*>/i', '', $plantilla);
+        $plantillaContenido = preg_replace('/<\/?html[^>]*>/i', '', $plantillaContenido);
+        $plantillaContenido = preg_replace('/<\/?body[^>]*>/i', '', $plantillaContenido);
+        $plantillaContenido = preg_replace('/<\/?head[^>]*>/i', '', $plantillaContenido);
+        $plantillaContenido = preg_replace('/<meta[^>]*>/i', '', $plantillaContenido);
 
         // Concatenar la plantilla procesada
-        $contenido .= $plantilla;
+        $contenido .= $plantillaContenido;
     }
 
     $mpdf->title = 'Anexo del Trabajador';

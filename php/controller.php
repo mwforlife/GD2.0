@@ -68,13 +68,13 @@ require 'Class/Movpersonal.php';
 class Controller
 {
     public $host = "localhost";
-    /*Variables
+    /*Variables*/
     public $user = "root";
     public $pass = "";
     public $bd = "gestordocumentos";
 
 
-    /*Variables BD Remota*/
+    /*Variables BD Remota
     public $user = 'apoyoconta1_admin';
     public $pass = 'Administrad0r2023%$#@';
     public $bd = 'apoyoconta1_kairos';
@@ -5532,6 +5532,16 @@ class Controller
     {
         $this->conexion();
         $sql = "update contratos set fechatermino='$fecha', estado=2 where id=$id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return json_encode($result);
+    }
+
+    //Actualizar solo fecha termino contrato sin cambiar estado (para anexos)
+    function actualizarfechaterminocontrato($id, $fecha)
+    {
+        $this->conexion();
+        $sql = "update contratos set fechatermino='$fecha' where id=$id";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return json_encode($result);
