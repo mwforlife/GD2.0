@@ -136,7 +136,7 @@ foreach ($permiso as $p) {
 				$user = $c->buscarusuario($_SESSION['USER_ID']);
 				if ($user != null) {
 					if ($user->getTipo() != 3) {
-						?>
+				?>
 						<ul class="nav">
 							<li class="nav-header"><span class="nav-label">Dashboard</span></li>
 
@@ -145,7 +145,7 @@ foreach ($permiso as $p) {
 							if (isset($_SESSION['GESTION_PERMISO']) || isset($_SESSION['LECTURA_PERMISO']) || isset($_SESSION['ESCRITURA_PERMISO']) || isset($_SESSION['ACTUALIZACION_PERMISO']) || isset($_SESSION['ELIMINACION_PERMISO'])) {
 								if ($_SESSION['GESTION_PERMISO'] == true) {
 
-									?>
+							?>
 									<li class="nav-item">
 										<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span
 												class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
@@ -155,6 +155,15 @@ foreach ($permiso as $p) {
 											</li>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="afp.php">AFP</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="segurosocial_expectativadevida.php">Seguro Social / Expectativa de Vida</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="segurosocial_rentabilidadprotegida.php">Seguro Social / Rentabilidad Protegida</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="segurosocial_sis.php">Seguro Social / Seguro de Invalidez Y Sobrevivencia (SIS)</a>
 											</li>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="pagadoressubsidio.php">PAGADORES SUBSIDIO</a>
@@ -224,7 +233,7 @@ foreach ($permiso as $p) {
 											</li>
 										</ul>
 									</li>
-									<?php
+								<?php
 								}
 								?>
 								<li class="nav-header"><span class="nav-label">FUNCIONES</span></li>
@@ -236,11 +245,11 @@ foreach ($permiso as $p) {
 									<ul class="nav-sub">
 										<?php
 										if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
-											?>
+										?>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="empresas.php">Empresas</a>
 											</li>
-											<?php
+										<?php
 										}
 										?>
 										<li class="nav-sub-item">
@@ -255,11 +264,11 @@ foreach ($permiso as $p) {
 
 										<?php
 										if ($_SESSION['GESTION_PERMISO'] == true) {
-											?>
+										?>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="tipodocumento.php">Escritos</a>
 											</li>
-											<?php
+										<?php
 										}
 										?>
 
@@ -267,21 +276,21 @@ foreach ($permiso as $p) {
 										if (isset($_SESSION['GESTION_PERMISO'])) {
 											if ($_SESSION['GESTION_PERMISO'] == true) {
 
-												?>
+										?>
 												<li class="nav-sub-item">
 													<a class="nav-sub-link" href="usuarios.php">Usuarios</a>
 												</li>
-												<?php
+										<?php
 											}
 										}
 										?>
 									</ul>
 								</li>
-								<?php
+							<?php
 							}
 
 							if ($_SESSION['GESTION_PERMISO'] == true) {
-								?>
+							?>
 								<li class="nav-item">
 									<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span
 											class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
@@ -295,7 +304,7 @@ foreach ($permiso as $p) {
 
 									</ul>
 								</li>
-								<?php
+							<?php
 							}
 							?>
 							<!--------------------Generarion de documentos------------------>
@@ -336,7 +345,7 @@ foreach ($permiso as $p) {
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->
-					<!--------------------Remuneraciones------------------>
+							<!--------------------Remuneraciones------------------>
 							<li class="nav-item">
 								<a class="nav-link with-sub" href="#"><i class="fe fe-dollar-sign sidemenu-icon"></i><span
 										class="sidemenu-label">Remuneraciones</span><i
@@ -352,12 +361,15 @@ foreach ($permiso as $p) {
 										<a class="nav-sub-link" href="cargaasistencia.php">Cargar Asistencia</a>
 									</li>
 									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="repmovimientos.php">Movimiento de Personal</a>
+									</li>
+									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="procesar.php">Procesar Trabajadores</a>
 									</li>
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->
-					<!--------------------Carga de documentos------------------>
+							<!--------------------Carga de documentos------------------>
 							<li class="nav-item">
 								<a class="nav-link with-sub" href="#"><i class="fe fe-upload sidemenu-icon"></i><span
 										class="sidemenu-label">Carga de Documentos</span><i
@@ -388,32 +400,35 @@ foreach ($permiso as $p) {
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="liquidaciones.php">Reporte Liquidaciones</a>
 									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="librosremuneraciones.php">Libros de Remuneraciones</a>
+									</li>
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->
 
-				</ul>
-				<?php
+						</ul>
+					<?php
 					} else if ($user->getTipo() == 3) {
-						?>
-				<ul class="nav">
-					<li class="nav-header"><span class="nav-label">Reporte Mandante</span></li>
-					<!-----------------------------Mandante--------------------------------->
-					<li class="nav-item">
-						<a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span
-								class="sidemenu-label">Mandante</span><i class="angle fe fe-chevron-right"></i></a>
-						<ul class="nav-sub">
-							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="mandanteempresa.php">Documentos Empresa</a>
-							</li>
-							<li class="nav-sub-item">
-								<a class="nav-sub-link" href="mandantetrabajadores.php">Documentos Trabajadores
+					?>
+						<ul class="nav">
+							<li class="nav-header"><span class="nav-label">Reporte Mandante</span></li>
+							<!-----------------------------Mandante--------------------------------->
+							<li class="nav-item">
+								<a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span
+										class="sidemenu-label">Mandante</span><i class="angle fe fe-chevron-right"></i></a>
+								<ul class="nav-sub">
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="mandanteempresa.php">Documentos Empresa</a>
+									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="mandantetrabajadores.php">Documentos Trabajadores
 
-								</a>
+										</a>
+									</li>
+								</ul>
 							</li>
 						</ul>
-					</li>
-				</ul>
 
 				<?php
 
@@ -552,7 +567,7 @@ foreach ($permiso as $p) {
 									<div class="row">
 										<div class="col-md-3">
 											<?php
-												$empresa = $_SESSION['CURRENT_ENTERPRISE'];
+											$empresa = $_SESSION['CURRENT_ENTERPRISE'];
 											$periodo = date('Y-m');
 
 											if (isset($_SESSION['PERIODO_REPORTE'])) {
@@ -601,8 +616,8 @@ foreach ($permiso as $p) {
 											<button class="btn btn-primary mt-4" onclick="filtarmovimiento()"> <i
 													class="fe fe-filter"></i> Filtrar</button>
 											<button class="btn btn-outline-danger mt-4 <?php if (!isset($_SESSION['PERIODO_REPORTE'])) {
-												echo "d-none";
-											} ?>" onclick="limpiarfiltro()"><i class="fa fa-close"></i> Limpiar Filtro
+																							echo "d-none";
+																						} ?>" onclick="limpiarfiltro()"><i class="fa fa-close"></i> Limpiar Filtro
 											</button>
 										</div>
 
@@ -639,9 +654,9 @@ foreach ($permiso as $p) {
 												<?php
 												$periodo = $periodo . "-01";
 												$periodo_termino = $periodo_termino . "-01";
-												$movimientos = $c->listarmovimientotrabajadortext($empresa, $periodo,$periodo_termino);
-												if($centro > 0){
-													$movimientos = $c->listarmovimientotrabajadortextcentro($empresa, $periodo,$periodo_termino,$centro);
+												$movimientos = $c->listarmovimientotrabajadortext($empresa, $periodo, $periodo_termino);
+												if ($centro > 0) {
+													$movimientos = $c->listarmovimientotrabajadortextcentro($empresa, $periodo, $periodo_termino, $centro);
 												}
 												foreach ($movimientos as $m) {
 													echo "<tr>";
@@ -795,7 +810,7 @@ foreach ($permiso as $p) {
 	<script src="JsFunctions/repmovimiento.js"></script>
 
 	<script>
-		$(document).ready(function () {
+		$(document).ready(function() {
 			mostrarEmpresa();
 		});
 	</script>
@@ -808,7 +823,7 @@ foreach ($permiso as $p) {
 				data: {
 					id: id
 				},
-				success: function (data) {
+				success: function(data) {
 					window.location.href = "menuinfo.php";
 				}
 			});

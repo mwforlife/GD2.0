@@ -120,20 +120,23 @@ function listartasas(id){
 function registrartasa(){
     var id = $("#idins").val();
     var tasa = $("#tasaafp").val();
-    var tasasis = $("#tasasis").val();
+    var capitalizacion_individual = $("#capitalizacion_individual").val();
     var fecha = $("#fecha").val();
-    if(tasa == "" || tasasis == "" || fecha == ""){
+    if(tasa == "" || capitalizacion_individual == "" || fecha == ""){
         ToastifyError("Debe completar todos los campos");
         return false;
     }
     $.ajax({
         type: "POST",
         url: "php/insert/tasa.php",
-        data: {id: id, tasa: tasa, fecha: fecha, tasasis: tasasis},
+        data: {id: id, tasa: tasa, fecha: fecha, capitalizacion_individual: capitalizacion_individual},
         success: function(data){
             if(data == 1 || data == "1"){
                 ToastifySuccess("Registro insertado correctamente");
                 listartasas(id);
+                // Limpiar campos
+                $("#tasaafp").val('');
+                $("#capitalizacion_individual").val('');
             }else if(data == 0 || data == "0"){
                 ToastifyError("Error al Registrar")
             }else{

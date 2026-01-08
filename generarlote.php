@@ -657,7 +657,10 @@ foreach ($permiso as $p) {
 							<div class="card orverflow-hidden">
 								<div class="card-body">
 									<div class="d-flex justify-content-center">
+										<!-- Button de generar contratos masivos -->
 										<a href="documentosmasivos.php" class="btn btn-success">Generar Contratos <i class="fa fa-file"></i></a>
+										<!-- Button de generar contratos masivos express -->
+										<a href="documentosmasivosexpress.php" class="btn btn-primary ml-3">Generar Contratos Express <i class="fa fa-file"></i></a>
 									</div>
 								</div>
 								

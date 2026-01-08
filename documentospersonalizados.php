@@ -174,7 +174,7 @@ if (isset($_GET['code']) && isset($_GET['contract'])) {
 							if (isset($_SESSION['GESTION_PERMISO']) || isset($_SESSION['LECTURA_PERMISO']) || isset($_SESSION['ESCRITURA_PERMISO']) || isset($_SESSION['ACTUALIZACION_PERMISO']) || isset($_SESSION['ELIMINACION_PERMISO'])) {
 								if ($_SESSION['GESTION_PERMISO'] == true) {
 
-									?>
+							?>
 									<li class="nav-item">
 										<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span
 												class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
@@ -184,6 +184,15 @@ if (isset($_GET['code']) && isset($_GET['contract'])) {
 											</li>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="afp.php">AFP</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="segurosocial_expectativadevida.php">Seguro Social / Expectativa de Vida</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="segurosocial_rentabilidadprotegida.php">Seguro Social / Rentabilidad Protegida</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="segurosocial_sis.php">Seguro Social / Seguro de Invalidez Y Sobrevivencia (SIS)</a>
 											</li>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="pagadoressubsidio.php">PAGADORES SUBSIDIO</a>
@@ -253,7 +262,7 @@ if (isset($_GET['code']) && isset($_GET['contract'])) {
 											</li>
 										</ul>
 									</li>
-									<?php
+								<?php
 								}
 								?>
 								<li class="nav-header"><span class="nav-label">FUNCIONES</span></li>
@@ -265,11 +274,11 @@ if (isset($_GET['code']) && isset($_GET['contract'])) {
 									<ul class="nav-sub">
 										<?php
 										if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
-											?>
+										?>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="empresas.php">Empresas</a>
 											</li>
-											<?php
+										<?php
 										}
 										?>
 										<li class="nav-sub-item">
@@ -284,11 +293,11 @@ if (isset($_GET['code']) && isset($_GET['contract'])) {
 
 										<?php
 										if ($_SESSION['GESTION_PERMISO'] == true) {
-											?>
+										?>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="tipodocumento.php">Escritos</a>
 											</li>
-											<?php
+										<?php
 										}
 										?>
 
@@ -296,21 +305,21 @@ if (isset($_GET['code']) && isset($_GET['contract'])) {
 										if (isset($_SESSION['GESTION_PERMISO'])) {
 											if ($_SESSION['GESTION_PERMISO'] == true) {
 
-												?>
+										?>
 												<li class="nav-sub-item">
 													<a class="nav-sub-link" href="usuarios.php">Usuarios</a>
 												</li>
-												<?php
+										<?php
 											}
 										}
 										?>
 									</ul>
 								</li>
-								<?php
+							<?php
 							}
 
 							if ($_SESSION['GESTION_PERMISO'] == true) {
-								?>
+							?>
 								<li class="nav-item">
 									<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span
 											class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
@@ -324,7 +333,7 @@ if (isset($_GET['code']) && isset($_GET['contract'])) {
 
 									</ul>
 								</li>
-								<?php
+							<?php
 							}
 							?>
 							<!--------------------Generarion de documentos------------------>
@@ -374,18 +383,18 @@ if (isset($_GET['code']) && isset($_GET['contract'])) {
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="habmaster.php">Haberes y Descuentos</a>
 									</li>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="asistencia.php">Asistencia</a>
-										</li>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="cargaasistencia.php">Cargar Asistencia</a>
-										</li>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="repmovimientos.php">Movimiento de Personal</a>
-										</li>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="procesar.php">Procesar Trabajadores</a>
-										</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="asistencia.php">Asistencia</a>
+									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="cargaasistencia.php">Cargar Asistencia</a>
+									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="repmovimientos.php">Movimiento de Personal</a>
+									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="procesar.php">Procesar Trabajadores</a>
+									</li>
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->

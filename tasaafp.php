@@ -151,7 +151,7 @@ foreach ($permiso as $p) {
 							if (isset($_SESSION['GESTION_PERMISO']) || isset($_SESSION['LECTURA_PERMISO']) || isset($_SESSION['ESCRITURA_PERMISO']) || isset($_SESSION['ACTUALIZACION_PERMISO']) || isset($_SESSION['ELIMINACION_PERMISO'])) {
 								if ($_SESSION['GESTION_PERMISO'] == true) {
 
-									?>
+							?>
 									<li class="nav-item">
 										<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span
 												class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
@@ -161,6 +161,15 @@ foreach ($permiso as $p) {
 											</li>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="afp.php">AFP</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="segurosocial_expectativadevida.php">Seguro Social / Expectativa de Vida</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="segurosocial_rentabilidadprotegida.php">Seguro Social / Rentabilidad Protegida</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="segurosocial_sis.php">Seguro Social / Seguro de Invalidez Y Sobrevivencia (SIS)</a>
 											</li>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="pagadoressubsidio.php">PAGADORES SUBSIDIO</a>
@@ -230,7 +239,7 @@ foreach ($permiso as $p) {
 											</li>
 										</ul>
 									</li>
-									<?php
+								<?php
 								}
 								?>
 								<li class="nav-header"><span class="nav-label">FUNCIONES</span></li>
@@ -242,11 +251,11 @@ foreach ($permiso as $p) {
 									<ul class="nav-sub">
 										<?php
 										if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
-											?>
+										?>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="empresas.php">Empresas</a>
 											</li>
-											<?php
+										<?php
 										}
 										?>
 										<li class="nav-sub-item">
@@ -261,11 +270,11 @@ foreach ($permiso as $p) {
 
 										<?php
 										if ($_SESSION['GESTION_PERMISO'] == true) {
-											?>
+										?>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="tipodocumento.php">Escritos</a>
 											</li>
-											<?php
+										<?php
 										}
 										?>
 
@@ -273,21 +282,21 @@ foreach ($permiso as $p) {
 										if (isset($_SESSION['GESTION_PERMISO'])) {
 											if ($_SESSION['GESTION_PERMISO'] == true) {
 
-												?>
+										?>
 												<li class="nav-sub-item">
 													<a class="nav-sub-link" href="usuarios.php">Usuarios</a>
 												</li>
-												<?php
+										<?php
 											}
 										}
 										?>
 									</ul>
 								</li>
-								<?php
+							<?php
 							}
 
 							if ($_SESSION['GESTION_PERMISO'] == true) {
-								?>
+							?>
 								<li class="nav-item">
 									<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span
 											class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
@@ -301,7 +310,7 @@ foreach ($permiso as $p) {
 
 									</ul>
 								</li>
-								<?php
+							<?php
 							}
 							?>
 							<!--------------------Generarion de documentos------------------>
@@ -351,18 +360,18 @@ foreach ($permiso as $p) {
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="habmaster.php">Haberes y Descuentos</a>
 									</li>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="asistencia.php">Asistencia</a>
-										</li>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="cargaasistencia.php">Cargar Asistencia</a>
-										</li>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="repmovimientos.php">Movimiento de Personal</a>
-										</li>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="procesar.php">Procesar Trabajadores</a>
-										</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="asistencia.php">Asistencia</a>
+									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="cargaasistencia.php">Cargar Asistencia</a>
+									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="repmovimientos.php">Movimiento de Personal</a>
+									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="procesar.php">Procesar Trabajadores</a>
+									</li>
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->
@@ -564,8 +573,8 @@ foreach ($permiso as $p) {
                                             <input type="month" class="form-control" id="fecha" value="<?php echo date('Y-m');?>">
                                         </div>
                                         <div class="col-md-4">
-                                            <label>Tasa Seguro Invalidez Sobrevivencia:</label>
-                                            <input class="form-control" id="tasasis" placeholder="Ingrese la Tasa Actual">
+                                            <label>AFP/Cap. Individual:</label>
+                                            <input class="form-control" id="capitalizacion_individual" placeholder="Ingrese la Tasa Actual">
                                         </div>
                                         <div class="col-md-4">
                                             <label>Tasa AFP:</label>
@@ -595,7 +604,7 @@ foreach ($permiso as $p) {
                                                 <thead>
                                                     <tr>
                                                         <th>Periodo</th>
-														<th>Tasa Seguro Invalidez Sobrevivencia</th>
+														<th>AFP/Cap. Individual</th>
 														<th>Tasa AFP</th>
                                                     </tr>
                                                 </thead>

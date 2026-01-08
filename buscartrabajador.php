@@ -693,10 +693,18 @@ foreach ($permiso as $p) {
 															echo "</a>";
 															echo "</td>";
 															echo "<td class='text-center'>";
+															
+															//Contrato Individual Normal
 															echo "<a class='btn btn-outline-info btn-sm rounded-11' href='contratoindividual.php?code=" . $object->getId() . "' data-toggle='tooltip' data-original-title='Generar Contrato'>";
 															echo "<i class='fa fa-plus'>";
 															echo "</i>";
 															echo "</a>";
+															//Contrato Individual Express
+															echo "<a class='btn btn-outline-success btn-sm rounded-11 ml-2' href='contratoindividualexpress.php?code=" . $object->getId() . "' data-toggle='tooltip' data-original-title='Generar Contrato Express'>";
+															echo "<i class='fa fa-bolt'>";
+															echo "</i>";
+															echo "</a>";
+															
 															echo "</td>";
 															echo "</tr>";
 														}

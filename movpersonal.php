@@ -143,13 +143,23 @@ foreach ($permiso as $p) {
 
 							?>
 									<li class="nav-item">
-										<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
+										<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span
+												class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
 										<ul class="nav-sub">
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="isapres.php">Institución de Salud</a>
 											</li>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="afp.php">AFP</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="segurosocial_expectativadevida.php">Seguro Social / Expectativa de Vida</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="segurosocial_rentabilidadprotegida.php">Seguro Social / Rentabilidad Protegida</a>
+											</li>
+											<li class="nav-sub-item">
+												<a class="nav-sub-link" href="segurosocial_sis.php">Seguro Social / Seguro de Invalidez Y Sobrevivencia (SIS)</a>
 											</li>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="pagadoressubsidio.php">PAGADORES SUBSIDIO</a>
@@ -226,7 +236,8 @@ foreach ($permiso as $p) {
 
 
 								<li class="nav-item">
-									<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
+									<a class="nav-link with-sub" href="#"><i class="fe fe-message-square sidemenu-icon"></i><span
+											class="sidemenu-label">Maestros</span><i class="angle fe fe-chevron-right"></i></a>
 									<ul class="nav-sub">
 										<?php
 										if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
@@ -277,7 +288,8 @@ foreach ($permiso as $p) {
 							if ($_SESSION['GESTION_PERMISO'] == true) {
 							?>
 								<li class="nav-item">
-									<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
+									<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span
+											class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
 									<ul class="nav-sub">
 										<li class="nav-sub-item">
 											<a class="nav-sub-link" href="auditoriatrabajadores.php">Auditoria de trabajadores</a>
@@ -293,7 +305,8 @@ foreach ($permiso as $p) {
 							?>
 							<!--------------------Generarion de documentos------------------>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
+										class="sidemenu-label">Documentos</span><i class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="contratoindividual.php">Contrato Individual</a>
@@ -330,7 +343,9 @@ foreach ($permiso as $p) {
 							<!--------------------------------------------------------------->
 							<!--------------------Remuneraciones------------------>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-dollar-sign sidemenu-icon"></i><span class="sidemenu-label">Remuneraciones</span><i class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-dollar-sign sidemenu-icon"></i><span
+										class="sidemenu-label">Remuneraciones</span><i
+										class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="habmaster.php">Haberes y Descuentos</a>
@@ -342,6 +357,9 @@ foreach ($permiso as $p) {
 										<a class="nav-sub-link" href="cargaasistencia.php">Cargar Asistencia</a>
 									</li>
 									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="repmovimientos.php">Movimiento de Personal</a>
+									</li>
+									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="procesar.php">Procesar Trabajadores</a>
 									</li>
 								</ul>
@@ -349,7 +367,9 @@ foreach ($permiso as $p) {
 							<!--------------------------------------------------------------->
 							<!--------------------Carga de documentos------------------>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-upload sidemenu-icon"></i><span class="sidemenu-label">Carga de Documentos</span><i class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-upload sidemenu-icon"></i><span
+										class="sidemenu-label">Carga de Documentos</span><i
+										class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="cargatrabajador.php">Trabajadores</a>
@@ -361,7 +381,8 @@ foreach ($permiso as $p) {
 							</li>
 							<!--------------------Reportes------------------>
 							<li class="nav-item">
-								<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
+								<a class="nav-link with-sub" href="#"><i class="fe fe-layout sidemenu-icon"></i><span
+										class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
 								<ul class="nav-sub">
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="impresiondocumentos.php">Impresión Documentos</a>
@@ -374,6 +395,9 @@ foreach ($permiso as $p) {
 									</li>
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="liquidaciones.php">Reporte Liquidaciones</a>
+									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="librosremuneraciones.php">Libros de Remuneraciones</a>
 									</li>
 								</ul>
 							</li>

@@ -753,10 +753,10 @@ class Controller
     }
 
     //Registrar Tasa AFP
-    public function registrartasaafp($id, $periodo, $tasasis, $tasa)
+    public function registrartasaafp($id, $periodo, $capitalizacion_individual, $tasa)
     {
         $this->conexion();
-        $sql = "insert into tasaafp values(null, $id, '$periodo',$tasasis, $tasa)";
+        $sql = "insert into tasaafp values(null, $id, '$periodo', $capitalizacion_individual, $tasa)";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return json_encode($result);
@@ -788,7 +788,7 @@ class Controller
     public function listartasaafp($idins)
     {
         $this->conexion();
-        $sql = "select id, month(fecha) as mes, year(fecha) as ano,tasasis, tasa from tasaafp where afp = $idins order by fecha desc";
+        $sql = "select id, month(fecha) as mes, year(fecha) as ano, capitalizacion_individual, tasa from tasaafp where afp = $idins order by fecha desc";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -821,8 +821,8 @@ class Controller
             }
             $periodo = $mes . " " . $rs['ano'];
             $tasa = $rs['tasa'];
-            $tasasis = $rs['tasasis'];
-            $T = new Tasa($id, $tasasis, $periodo, $tasa);
+            $capitalizacion_individual = $rs['capitalizacion_individual'];
+            $T = new Tasa($id, $capitalizacion_individual, $periodo, $tasa);
             $lista[] = $T;
         }
         $this->desconectar();
@@ -833,11 +833,11 @@ class Controller
     public function buscartasamutual($periodo)
     {
         $this->conexion();
-        $sql = "select * from tasamutual where periodo = '$periodo' order by id desc";
+        $sql = "select * from tasamutual where fecha = '$periodo' order by id desc";
         $result = $this->mi->query($sql);
         if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
-            $periodo = $rs['periodo'];
+            $periodo = $rs['fecha'];
             $tasabasica = $rs['tasabasica'];
             $tasaleysanna = $rs['tasaleysanna'];
             $T = new Tasa($id, $periodo, $tasabasica, $tasaleysanna);
@@ -857,7 +857,7 @@ class Controller
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
-            $periodo = $rs['periodo'];
+            $periodo = $rs['fecha'];
             $tasabasica = $rs['tasabasica'];
             $tasaleysanna = $rs['tasaleysanna'];
             $T = new Tasa($id, $periodo, $tasabasica, $tasaleysanna);
@@ -1142,10 +1142,10 @@ class Controller
 
 
     //Actualizar Tasa AFP
-    public function actualizartasaafp($tasa,$tasasis, $idtasa)
+    public function actualizartasaafp($tasa, $capitalizacion_individual, $idtasa)
     {
         $this->conexion();
-        $sql = "update tasaafp set tasa = $tasa, tasasis=$tasasis where id = $idtasa";
+        $sql = "update tasaafp set tasa = $tasa, capitalizacion_individual = $capitalizacion_individual where id = $idtasa";
         $result = $this->mi->query($sql);
         $this->desconectar();
         return json_encode($result);
@@ -12420,4 +12420,74 @@ private function convertirNumeroALetras($numero)
     // Para números mayores, retornar representación numérica
     return number_format($numero, 0, ',', '.');
 }
+
+    // ==========================================
+    // FUNCIONES PARA SEGURO SOCIAL
+    // ==========================================
+
+    // Registrar tasa de seguro social
+    public function registrarsegurosocial($tabla, $codigo, $codigoPrevired, $fecha, $tasa)
+    {
+        $this->conexion();
+        $sql = "INSERT INTO $tabla (codigo, codigoprevired, fecha, tasa) VALUES ('$codigo', '$codigoPrevired', '$fecha', $tasa)";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    // Listar tasas de seguro social
+    public function listarsegurosocial($tabla)
+    {
+        require_once 'Class/SegurosocialTasa.php';
+        $this->conexion();
+        $sql = "SELECT id, codigo, codigoprevired, fecha, tasa FROM $tabla ORDER BY fecha DESC";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $id = $rs['id'];
+            $codigo = $rs['codigo'];
+            $codigoPrevired = $rs['codigoprevired'];
+            $fecha = $rs['fecha'];
+            $tasa = $rs['tasa'];
+            $lista[] = new SegurosocialTasa($id, $codigo, $codigoPrevired, $fecha, $tasa);
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    // Buscar una tasa de seguro social por ID
+    public function buscarsegurosocial($tabla, $id)
+    {
+        require_once 'Class/SegurosocialTasa.php';
+        $this->conexion();
+        $sql = "SELECT id, codigo, codigoprevired, fecha, tasa FROM $tabla WHERE id = $id";
+        $result = $this->mi->query($sql);
+        $row = mysqli_fetch_array($result);
+        $obj = null;
+        if ($row) {
+            $obj = new SegurosocialTasa($row['id'], $row['codigo'], $row['codigoprevired'], $row['fecha'], $row['tasa']);
+        }
+        $this->desconectar();
+        return $obj;
+    }
+
+    // Actualizar tasa de seguro social
+    public function actualizarsegurosocial($tabla, $id, $codigo, $codigoPrevired, $fecha, $tasa)
+    {
+        $this->conexion();
+        $sql = "UPDATE $tabla SET codigo = '$codigo', codigoprevired = '$codigoPrevired', fecha = '$fecha', tasa = $tasa WHERE id = $id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
+
+    // Eliminar tasa de seguro social
+    public function eliminarsegurosocial($tabla, $id)
+    {
+        $this->conexion();
+        $sql = "DELETE FROM $tabla WHERE id = $id";
+        $result = $this->mi->query($sql);
+        $this->desconectar();
+        return $result;
+    }
 }

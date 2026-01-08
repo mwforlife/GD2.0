@@ -349,8 +349,47 @@ create table tasaafp(
     fecha date not null,
     tasa decimal(10,2) not null
 );
+-- ALTER TABLE tasaafp CHANGE COLUMN tasasis capitalizacion_individual DECIMAL(20,2) NOT NULL DEFAULT 0;
 
-alter table tasaafp add tasasis decimal(10,2) not null default 0 after fecha;
+alter table tasaafp add capitalizacion_individual decimal(20,2) not null default 0 after fecha;
+
+
+create table segurosocial_expectativadevida(
+    id int not null auto_increment primary key,
+    codigo varchar(20),
+    codigoprevired varchar(20),
+    fecha date not null,
+    tasa decimal(20,2)
+);
+
+create table segurosocial_rentabilidadprotegida(
+    id int not null auto_increment primary key,
+    codigo varchar(20),
+    codigoprevired varchar(20),
+    fecha date not null,
+    tasa decimal(20,2)
+);
+
+create table segurosocial_sis(
+    id int not null auto_increment primary key,
+    codigo varchar(20),
+    codigoprevired varchar(20),
+    fecha date not null,
+    tasa decimal(20,2) not null
+);
+
+-- Agregar campos codigo y codigoprevired a tablas existentes (si ya fueron creadas)
+-- Ejecutar solo si las tablas ya existen sin estos campos
+-- ALTER TABLE segurosocial_expectativadevida ADD COLUMN codigo varchar(20) AFTER id;
+-- ALTER TABLE segurosocial_expectativadevida ADD COLUMN codigoprevired varchar(20) AFTER codigo;
+
+-- ALTER TABLE segurosocial_rentabilidadprotegida ADD COLUMN codigo varchar(20) AFTER id;
+-- ALTER TABLE segurosocial_rentabilidadprotegida ADD COLUMN codigoprevired varchar(20) AFTER codigo;
+
+-- ALTER TABLE segurosocial_sis ADD COLUMN codigo varchar(20) AFTER id;
+-- ALTER TABLE segurosocial_sis ADD COLUMN codigoprevired varchar(20) AFTER codigo;
+
+
 
 create table tasamutual(
     id int not null auto_increment primary key,
@@ -627,6 +666,14 @@ create table estadocontrato(
 insert into estadocontrato values(1, 'Activo');
 insert into estadocontrato values(2, 'Finiquitado');
 
+create table formato_contrato(
+    id int not null auto_increment primary key,
+    nombre varchar(200) not null
+);
+
+insert into formato_contrato values(1, 'Contrato Individual Normal');
+insert into formato_contrato values(2, 'Contrato Individual Express');
+
 create table contratos(
     id int not null auto_increment primary key,
     trabajador int not null references trabajadores(id),
@@ -640,6 +687,8 @@ create table contratos(
     estado int not null references estadocontrato(id),
     register_at timestamp not null default current_timestamp
 );
+
+alter table contratos
 
 --Agregar id centro de costo a tabla contratos despues de id empresa con valor por defecto 0 a referencia centrocosto(id)
 alter table contratos add column centrocosto int not null references centrocosto(id) default 0 after empresa;

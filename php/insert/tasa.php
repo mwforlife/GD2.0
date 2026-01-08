@@ -11,9 +11,9 @@ if (!isset($_SESSION['USER_ID'])) {
 	}
 }
 
-if(isset($_POST['id'])&& isset($_POST['tasasis']) && isset($_POST['tasa']) && isset($_POST['fecha'])){
+if(isset($_POST['id'])&& isset($_POST['capitalizacion_individual']) && isset($_POST['tasa']) && isset($_POST['fecha'])){
     $id = $_POST['id'];
-    $tasasis = $_POST['tasasis'];
+    $capitalizacion_individual = $_POST['capitalizacion_individual'];
     $tasa = $_POST['tasa'];
     $fecha = $_POST['fecha'];
 
@@ -28,7 +28,7 @@ if(isset($_POST['id'])&& isset($_POST['tasasis']) && isset($_POST['tasa']) && is
     //Validar si existe la tasa
     $tasaid = $c->validartasaafp($id, $fecha);
     if($tasaid == false){
-        $result = $c->registrartasaafp($id, $fecha,$tasasis, $tasa);
+        $result = $c->registrartasaafp($id, $fecha,$capitalizacion_individual, $tasa);
         if($result == true){
             echo 1;
             $usuario = $_SESSION['USER_ID'];
@@ -38,7 +38,7 @@ if(isset($_POST['id'])&& isset($_POST['tasasis']) && isset($_POST['tasa']) && is
             echo 0;
         }
     }else{
-        $result = $c->actualizartasaafp($tasa,$tasasis, $tasaid);
+        $result = $c->actualizartasaafp($tasa,$capitalizacion_individual, $tasaid);
         if($result==true){
             echo 1;
             $usuario = $_SESSION['USER_ID'];
