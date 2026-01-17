@@ -792,6 +792,30 @@ alter table contratos add column colacion_imputable_tiempo varchar(100) null aft
 -- Modificar columna documento para que acepte valores nulos
 alter table contratos modify column documento varchar(500) null;
 
+UPDATE contratos 
+SET formato_contrato = 1 
+WHERE formato_contrato IS NULL OR formato_contrato = 0;
+
+-- Actualizar categoria_contrato: NULL o vacío → '1'
+UPDATE contratos 
+SET categoria_contrato = '1' 
+WHERE categoria_contrato IS NULL OR categoria_contrato = '' OR categoria_contrato = '0';
+
+-- Actualizar fecha_suscripcion: NULL → fechainicio
+UPDATE contratos 
+SET fecha_suscripcion = fechainicio 
+WHERE fecha_suscripcion IS NULL;
+
+-- Actualizar fecha_celebracion: NULL → fechainicio
+UPDATE contratos 
+SET fecha_celebracion = fechainicio 
+WHERE fecha_celebracion IS NULL;
+
+-- Actualizar sueldo_base con el sueldo existente (solo si sueldo_base es NULL o 0)
+UPDATE contratos 
+SET sueldo_base = sueldo 
+WHERE sueldo_base IS NULL OR sueldo_base = 0;
+
 create table estadoafectoavacaciones(
     id int not null auto_increment primary key,
     nombre varchar(200) not null
