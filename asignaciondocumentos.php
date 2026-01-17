@@ -545,69 +545,207 @@ foreach ($permiso as $p) {
 						</div>
 					</div>
 					<!-- End Page Header -->
+					<!-- Selector de Empresa -->
 					<div class="row">
 						<div class="col-lg-12">
-							<div class="card orverflow-hidden">
+							<div class="card overflow-hidden">
 								<div class="card-body">
-									<div>
-										<h6 class="main-content-label mb-1">Registro de Tipo Documento</h6>
-										<p class="text-mutted card-sub-title"></p>
-									</div>
-										<div class="row">
-											<div class="col-lg-6">
-												<div class="form-group has-success mg-b-0">
-													<label>Seleccione una empresa</label>
-                                                    <select name="empresa" id="empresa" class="form-control select2">
-                                                        <?php
-                                                        $lista = $c->listarEmpresas();
-                                                        if (count($lista) > 0) {
-                                                            foreach ($lista as $l) {
-                                                                echo "<option value='" . $l->getId() . "'>" . $l->getRazonSocial() . "</option>";
-                                                            }
-                                                        }
-                                                        ?>
-                                                    </select>
-												</div>
+									<div class="row align-items-center">
+										<div class="col-lg-6">
+											<div class="form-group mb-0">
+												<label class="font-weight-bold text-dark">
+													<i class="fe fe-briefcase mr-2"></i>Seleccione una Empresa
+												</label>
+												<select name="empresa" id="empresa" class="form-control select2" data-empresa-sesion="<?php echo $empresa; ?>">
+													<option value="">-- Seleccionar Empresa --</option>
+													<?php
+													$lista = $c->listarEmpresas();
+													if (count($lista) > 0) {
+														foreach ($lista as $l) {
+															$selected = ($empresa == $l->getId()) ? "selected" : "";
+															echo "<option value='" . $l->getId() . "' $selected>" . $l->getRazonSocial() . "</option>";
+														}
+													}
+													?>
+												</select>
 											</div>
-											<div class="col-md-12 text-right">
-												<a href="tipodocumento.php" class="btn btn-danger waves-effect waves-light"><i class="fe fe-arrow-left"></i> Volver</a>
+										</div>
+										<div class="col-lg-6 text-right">
+											<a href="tipodocumento.php" class="btn btn-outline-danger waves-effect waves-light">
+												<i class="fe fe-arrow-left mr-1"></i> Volver
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 
-											</div>
+					<!-- Estadísticas -->
+					<div class="row mb-3" id="statsSection" style="display: none;">
+						<div class="col-lg-4">
+							<div class="card bg-primary-gradient text-white">
+								<div class="card-body p-4">
+									<div class="d-flex align-items-center">
+										<div class="mr-3">
+											<i class="fe fe-file-text" style="font-size: 2.5rem; opacity: 0.8;"></i>
 										</div>
+										<div>
+											<h6 class="mb-1 text-white-50">Total Documentos</h6>
+											<h3 class="mb-0 font-weight-bold" id="totalDocs">0</h3>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					<!-- ROW-4 opened -->
-				
-					<div class="row">
-						<div class="col-xl-12 col-lg-12 col-md-12">
-							<div class="card transcation-crypto1" id="transcation-crypto1">
-								<div class="card-header bd-b-0 d-flex justify-content-between">
-									<h4 class="card-title font-weight-semibold mb-0">Listado de Escritos</h4>
+						<div class="col-lg-4">
+							<div class="card bg-success-gradient text-white">
+								<div class="card-body p-4">
+									<div class="d-flex align-items-center">
+										<div class="mr-3">
+											<i class="fe fe-check-circle" style="font-size: 2.5rem; opacity: 0.8;"></i>
+										</div>
+										<div>
+											<h6 class="mb-1 text-white-50">Documentos Asignados</h6>
+											<h3 class="mb-0 font-weight-bold" id="totalAsignados">0</h3>
+										</div>
+									</div>
 								</div>
-								<div class="card-body">
-									<div class="">
-										<div class="table-responsive">
-											<table class="table text-wrap w-100">
-												<thead class="border-top text-center">
-													<tr>
-														<th class="bg-transparent">Codigo (DT)</th>
-														<th class="bg-transparent">Codigo (PREVIRED)</th>
-														<th class="bg-transparent">Nombre</th>
-														<th class="bg-transparent text-center">Asigar/Retirar</th>
-													</tr>
-												</thead>
-												<tbody class="text-center" id="escritos">
-												</tbody>
-											</table>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="card bg-warning-gradient text-white">
+								<div class="card-body p-4">
+									<div class="d-flex align-items-center">
+										<div class="mr-3">
+											<i class="fe fe-clock" style="font-size: 2.5rem; opacity: 0.8;"></i>
+										</div>
+										<div>
+											<h6 class="mb-1 text-white-50">Documentos Disponibles</h6>
+											<h3 class="mb-0 font-weight-bold" id="totalDisponibles">0</h3>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<!-- ROW-4 END -->
+
+					<!-- Contenedor Principal de Documentos -->
+					<div class="row" id="documentosSection" style="display: none;">
+						<!-- Documentos Asignados -->
+						<div class="col-xl-6 col-lg-12">
+							<div class="card">
+								<div class="card-header bg-success-gradient d-flex justify-content-between align-items-center">
+									<div>
+										<h4 class="card-title text-white mb-0">
+											<i class="fe fe-check-circle mr-2"></i>Documentos Asignados
+										</h4>
+										<small class="text-white-50">Documentos actualmente asignados a la empresa</small>
+									</div>
+									<button type="button" class="btn btn-sm btn-light" id="btnDesasignarTodos" title="Desasignar todos los documentos">
+										<i class="fe fe-x-circle mr-1"></i> Desasignar Todos
+									</button>
+								</div>
+								<div class="card-body p-0">
+									<!-- Buscador Asignados -->
+									<div class="p-3 border-bottom">
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text bg-white border-right-0">
+													<i class="fe fe-search text-muted"></i>
+												</span>
+											</div>
+											<input type="text" class="form-control border-left-0" id="buscarAsignados" placeholder="Buscar documento asignado...">
+										</div>
+									</div>
+									<div class="table-responsive" style="max-height: 450px; overflow-y: auto;">
+										<table class="table table-hover mb-0">
+											<thead class="bg-light sticky-top">
+												<tr>
+													<th class="border-0 text-center" style="width: 100px;">Código DT</th>
+													<th class="border-0 text-center" style="width: 120px;">Código Previred</th>
+													<th class="border-0">Nombre del Documento</th>
+													<th class="border-0 text-center" style="width: 100px;">Acción</th>
+												</tr>
+											</thead>
+											<tbody id="escritosAsignados">
+												<tr id="noAsignados">
+													<td colspan="4" class="text-center py-5 text-muted">
+														<i class="fe fe-inbox" style="font-size: 3rem; opacity: 0.3;"></i>
+														<p class="mt-3 mb-0">No hay documentos asignados</p>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Documentos Disponibles -->
+						<div class="col-xl-6 col-lg-12">
+							<div class="card">
+								<div class="card-header bg-warning-gradient d-flex justify-content-between align-items-center">
+									<div>
+										<h4 class="card-title text-white mb-0">
+											<i class="fe fe-file-plus mr-2"></i>Documentos Disponibles
+										</h4>
+										<small class="text-white-50">Documentos que pueden ser asignados</small>
+									</div>
+									<button type="button" class="btn btn-sm btn-light" id="btnAsignarTodos" title="Asignar todos los documentos">
+										<i class="fe fe-plus-circle mr-1"></i> Asignar Todos
+									</button>
+								</div>
+								<div class="card-body p-0">
+									<!-- Buscador Disponibles -->
+									<div class="p-3 border-bottom">
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text bg-white border-right-0">
+													<i class="fe fe-search text-muted"></i>
+												</span>
+											</div>
+											<input type="text" class="form-control border-left-0" id="buscarDisponibles" placeholder="Buscar documento disponible...">
+										</div>
+									</div>
+									<div class="table-responsive" style="max-height: 450px; overflow-y: auto;">
+										<table class="table table-hover mb-0">
+											<thead class="bg-light sticky-top">
+												<tr>
+													<th class="border-0 text-center" style="width: 100px;">Código DT</th>
+													<th class="border-0 text-center" style="width: 120px;">Código Previred</th>
+													<th class="border-0">Nombre del Documento</th>
+													<th class="border-0 text-center" style="width: 100px;">Acción</th>
+												</tr>
+											</thead>
+											<tbody id="escritosDisponibles">
+												<tr id="noDisponibles">
+													<td colspan="4" class="text-center py-5 text-muted">
+														<i class="fe fe-inbox" style="font-size: 3rem; opacity: 0.3;"></i>
+														<p class="mt-3 mb-0">No hay documentos disponibles</p>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Mensaje cuando no hay empresa seleccionada -->
+					<div class="row" id="noEmpresaSection">
+						<div class="col-12">
+							<div class="card">
+								<div class="card-body text-center py-5">
+									<i class="fe fe-alert-circle text-muted" style="font-size: 4rem; opacity: 0.3;"></i>
+									<h5 class="mt-4 text-muted">Seleccione una empresa</h5>
+									<p class="text-muted mb-0">Para ver y gestionar los documentos, primero debe seleccionar una empresa del listado superior.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- END -->
 
 
 				</div>
@@ -701,14 +839,356 @@ foreach ($permiso as $p) {
 	<script src="JsFunctions/Alert/toastify.js"></script>
 	<script src="JsFunctions/Alert/sweetalert2.all.min.js"></script>
 	<script src="JsFunctions/Alert/alert.js"></script>
-	<script src="JsFunctions/tipodocumento.js"></script>
 	<script src="JsFunctions/main.js"></script>
 	<script>
+		// Variables globales para almacenar los datos y permitir filtrado
+		var documentosAsignados = [];
+		var documentosDisponibles = [];
+
 		$(document).ready(function(){
 			mostrarEmpresa();
-            listartipodocumento();
+
+			// Verificar si hay empresa en sesión y cargar datos automáticamente
+			var empresaSesion = $("#empresa").data("empresa-sesion");
+			if(empresaSesion && empresaSesion > 0){
+				// Forzar el valor en select2 si está inicializado
+				setTimeout(function(){
+					$("#empresa").val(empresaSesion).trigger('change.select2');
+					$("#noEmpresaSection").hide();
+					$("#statsSection").fadeIn();
+					$("#documentosSection").fadeIn();
+					cargarDocumentos();
+				}, 100);
+			}
+
+			// Evento cambio de empresa
+			$("#empresa").on("change", function(){
+				var empresa = $(this).val();
+				if(empresa && empresa > 0){
+					$("#noEmpresaSection").hide();
+					$("#statsSection").fadeIn();
+					$("#documentosSection").fadeIn();
+					$("#buscarAsignados").val('');
+					$("#buscarDisponibles").val('');
+					cargarDocumentos();
+				} else {
+					$("#noEmpresaSection").show();
+					$("#statsSection").hide();
+					$("#documentosSection").hide();
+				}
+			});
+
+			// Buscador documentos asignados
+			$("#buscarAsignados").on("keyup", function(){
+				var filtro = $(this).val().toLowerCase();
+				filtrarTabla(documentosAsignados, filtro, 'asignados');
+			});
+
+			// Buscador documentos disponibles
+			$("#buscarDisponibles").on("keyup", function(){
+				var filtro = $(this).val().toLowerCase();
+				filtrarTabla(documentosDisponibles, filtro, 'disponibles');
+			});
+
+			// Botón Asignar Todos
+			$("#btnAsignarTodos").on("click", function(){
+				var empresa = $("#empresa").val();
+				if(!empresa || empresa <= 0){
+					ToastifyError("Debe seleccionar una empresa");
+					return;
+				}
+
+				Swal.fire({
+					title: '¿Asignar todos los documentos?',
+					text: "Se asignarán todos los documentos disponibles a la empresa seleccionada",
+					icon: 'question',
+					showCancelButton: true,
+					confirmButtonColor: '#28a745',
+					cancelButtonColor: '#6c757d',
+					confirmButtonText: '<i class="fe fe-check mr-1"></i> Sí, asignar todos',
+					cancelButtonText: 'Cancelar'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						$("#global-loader").fadeIn("slow");
+						$.ajax({
+							type: "POST",
+							url: "php/insert/escrito_masivo.php",
+							data: { empresa: empresa, accion: 'asignar_todos' },
+							dataType: 'json',
+							success: function(data){
+								$("#global-loader").fadeOut("slow");
+								if(data.success){
+									ToastifySuccess(data.message);
+									cargarDocumentos();
+								} else {
+									ToastifyError(data.message);
+								}
+							},
+							error: function(){
+								$("#global-loader").fadeOut("slow");
+								ToastifyError("Error de conexión");
+							}
+						});
+					}
+				});
+			});
+
+			// Botón Desasignar Todos
+			$("#btnDesasignarTodos").on("click", function(){
+				var empresa = $("#empresa").val();
+				if(!empresa || empresa <= 0){
+					ToastifyError("Debe seleccionar una empresa");
+					return;
+				}
+
+				Swal.fire({
+					title: '¿Desasignar todos los documentos?',
+					text: "Se retirarán todos los documentos asignados de la empresa seleccionada",
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: '#dc3545',
+					cancelButtonColor: '#6c757d',
+					confirmButtonText: '<i class="fe fe-x mr-1"></i> Sí, desasignar todos',
+					cancelButtonText: 'Cancelar'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						$("#global-loader").fadeIn("slow");
+						$.ajax({
+							type: "POST",
+							url: "php/insert/escrito_masivo.php",
+							data: { empresa: empresa, accion: 'desasignar_todos' },
+							dataType: 'json',
+							success: function(data){
+								$("#global-loader").fadeOut("slow");
+								if(data.success){
+									ToastifySuccess(data.message);
+									cargarDocumentos();
+								} else {
+									ToastifyError(data.message);
+								}
+							},
+							error: function(){
+								$("#global-loader").fadeOut("slow");
+								ToastifyError("Error de conexión");
+							}
+						});
+					}
+				});
+			});
 		});
+
+		function cargarDocumentos(){
+			var empresa = $("#empresa").val();
+			if(!empresa || empresa <= 0){
+				return;
+			}
+
+			$.ajax({
+				type: "POST",
+				url: "php/listar/escritos_empresa.php",
+				data: { empresa: empresa },
+				dataType: 'json',
+				success: function(data){
+					if(data.success){
+						// Guardar en variables globales para filtrado
+						documentosAsignados = data.asignados;
+						documentosDisponibles = data.disponibles;
+
+						renderizarAsignados(data.asignados);
+						renderizarDisponibles(data.disponibles);
+						$("#totalAsignados").text(data.totalAsignados);
+						$("#totalDisponibles").text(data.totalDisponibles);
+						$("#totalDocs").text(data.totalDocumentos);
+					} else {
+						ToastifyError(data.message || "Error al cargar documentos");
+					}
+				},
+				error: function(){
+					ToastifyError("Error de conexión");
+				}
+			});
+		}
+
+		function filtrarTabla(documentos, filtro, tipo){
+			var documentosFiltrados = documentos.filter(function(doc){
+				return doc.codigo.toLowerCase().includes(filtro) ||
+					   doc.codigoPrevired.toLowerCase().includes(filtro) ||
+					   doc.nombre.toLowerCase().includes(filtro);
+			});
+
+			if(tipo === 'asignados'){
+				renderizarAsignados(documentosFiltrados);
+			} else {
+				renderizarDisponibles(documentosFiltrados);
+			}
+		}
+
+		function renderizarAsignados(documentos){
+			var html = '';
+			if(documentos && documentos.length > 0){
+				documentos.forEach(function(doc){
+					html += '<tr class="fade-in" data-id="' + doc.id + '">' +
+						'<td class="text-center"><span class="badge badge-light">' + doc.codigo + '</span></td>' +
+						'<td class="text-center"><span class="badge badge-light">' + doc.codigoPrevired + '</span></td>' +
+						'<td>' + doc.nombre + '</td>' +
+						'<td class="text-center">' +
+							'<button type="button" class="btn btn-sm btn-outline-danger" onclick="desasignar(' + doc.id + ')" title="Desasignar documento">' +
+								'<i class="fe fe-arrow-right"></i>' +
+							'</button>' +
+						'</td>' +
+					'</tr>';
+				});
+			} else {
+				html = '<tr id="noAsignados">' +
+					'<td colspan="4" class="text-center py-5 text-muted">' +
+						'<i class="fe fe-inbox" style="font-size: 3rem; opacity: 0.3;"></i>' +
+						'<p class="mt-3 mb-0">No hay documentos asignados</p>' +
+					'</td>' +
+				'</tr>';
+			}
+			$("#escritosAsignados").html(html);
+		}
+
+		function renderizarDisponibles(documentos){
+			var html = '';
+			if(documentos && documentos.length > 0){
+				documentos.forEach(function(doc){
+					html += '<tr class="fade-in" data-id="' + doc.id + '">' +
+						'<td class="text-center"><span class="badge badge-light">' + doc.codigo + '</span></td>' +
+						'<td class="text-center"><span class="badge badge-light">' + doc.codigoPrevired + '</span></td>' +
+						'<td>' + doc.nombre + '</td>' +
+						'<td class="text-center">' +
+							'<button type="button" class="btn btn-sm btn-outline-success" onclick="asignar(' + doc.id + ')" title="Asignar documento">' +
+								'<i class="fe fe-arrow-left"></i>' +
+							'</button>' +
+						'</td>' +
+					'</tr>';
+				});
+			} else {
+				html = '<tr id="noDisponibles">' +
+					'<td colspan="4" class="text-center py-5 text-muted">' +
+						'<i class="fe fe-inbox" style="font-size: 3rem; opacity: 0.3;"></i>' +
+						'<p class="mt-3 mb-0">No hay documentos disponibles</p>' +
+					'</td>' +
+				'</tr>';
+			}
+			$("#escritosDisponibles").html(html);
+		}
+
+		function asignar(id){
+			var empresa = $("#empresa").val();
+			if(!empresa || empresa <= 0){
+				ToastifyError("Debe seleccionar una empresa");
+				return;
+			}
+
+			$.ajax({
+				type: "POST",
+				url: "php/insert/escrito.php",
+				data: { empresa: empresa, id: id },
+				dataType: 'json',
+				success: function(response){
+					if(response.success){
+						ToastifySuccess(response.message);
+						cargarDocumentos();
+					} else {
+						ToastifyError(response.message);
+						if(response.code == 2){
+							cargarDocumentos();
+						}
+					}
+				},
+				error: function(){
+					ToastifyError("Error de conexión");
+				}
+			});
+		}
+
+		function desasignar(id){
+			var empresa = $("#empresa").val();
+			if(!empresa || empresa <= 0){
+				ToastifyError("Debe seleccionar una empresa");
+				return;
+			}
+
+			$.ajax({
+				type: "POST",
+				url: "php/eliminar/escrito.php",
+				data: { empresa: empresa, id: id },
+				dataType: 'json',
+				success: function(response){
+					if(response.success){
+						ToastifySuccess(response.message);
+						cargarDocumentos();
+					} else {
+						ToastifyError(response.message);
+					}
+				},
+				error: function(){
+					ToastifyError("Error de conexión");
+				}
+			});
+		}
 	</script>
+
+	<style>
+		.bg-primary-gradient {
+			background: linear-gradient(135deg, #6259ca 0%, #4a44b1 100%);
+		}
+		.bg-success-gradient {
+			background: linear-gradient(135deg, #28a745 0%, #20863a 100%);
+		}
+		.bg-warning-gradient {
+			background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+		}
+		.card {
+			border: none;
+			box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+			border-radius: 0.5rem;
+		}
+		.card-header {
+			border-radius: 0.5rem 0.5rem 0 0 !important;
+		}
+		.table th {
+			font-weight: 600;
+			font-size: 0.85rem;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+		}
+		.table td {
+			vertical-align: middle;
+		}
+		.table tbody tr:hover {
+			background-color: rgba(0, 0, 0, 0.02);
+		}
+		.badge-light {
+			background-color: #f4f6f9;
+			color: #333;
+			font-weight: 500;
+		}
+		.btn-outline-success:hover,
+		.btn-outline-danger:hover {
+			color: #fff;
+		}
+		.fade-in {
+			animation: fadeIn 0.3s ease-in;
+		}
+		@keyframes fadeIn {
+			from { opacity: 0; transform: translateY(-5px); }
+			to { opacity: 1; transform: translateY(0); }
+		}
+		.sticky-top {
+			position: sticky;
+			top: 0;
+			z-index: 10;
+		}
+		#statsSection .card {
+			transition: transform 0.2s ease;
+		}
+		#statsSection .card:hover {
+			transform: translateY(-3px);
+		}
+	</style>
 
 
 

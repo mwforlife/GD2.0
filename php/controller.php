@@ -68,13 +68,13 @@ require 'Class/Movpersonal.php';
 class Controller
 {
     public $host = "localhost";
-    /*Variables*/
+    /*Variables
     public $user = "root";
     public $pass = "";
     public $bd = "gestordocumentos";
 
 
-    /*Variables BD Remota
+    /*Variables BD Remota*/
     public $user = 'apoyoconta1_admin';
     public $pass = 'Administrad0r2023%$#@';
     public $bd = 'apoyoconta1_kairos';
@@ -2533,6 +2533,78 @@ class Controller
         }
         $this->desconectar();
         return false;
+    }
+
+    // Listar documentos asignados a una empresa (optimizado con JOIN)
+    public function listarDocumentosAsignados($empresa)
+    {
+        $this->conexion();
+        $sql = "SELECT t.id, t.codigo, t.codigoprevired, t.nombre
+                FROM tipodocumento t
+                INNER JOIN escritoempresa e ON t.id = e.tipodocumento
+                WHERE e.empresa = $empresa
+                ORDER BY t.nombre";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $lista[] = array(
+                'id' => $rs['id'],
+                'codigo' => $rs['codigo'],
+                'codigoPrevired' => $rs['codigoprevired'],
+                'nombre' => $rs['nombre']
+            );
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    // Listar documentos disponibles (no asignados) para una empresa (optimizado con LEFT JOIN)
+    public function listarDocumentosDisponibles($empresa)
+    {
+        $this->conexion();
+        $sql = "SELECT t.id, t.codigo, t.codigoprevired, t.nombre
+                FROM tipodocumento t
+                LEFT JOIN escritoempresa e ON t.id = e.tipodocumento AND e.empresa = $empresa
+                WHERE e.id IS NULL
+                ORDER BY t.nombre";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_array($result)) {
+            $lista[] = array(
+                'id' => $rs['id'],
+                'codigo' => $rs['codigo'],
+                'codigoPrevired' => $rs['codigoprevired'],
+                'nombre' => $rs['nombre']
+            );
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    // Asignar todos los documentos disponibles a una empresa (una sola query)
+    public function asignarTodosDocumentos($empresa)
+    {
+        $this->conexion();
+        $sql = "INSERT INTO escritoempresa (tipodocumento, empresa)
+                SELECT t.id, $empresa
+                FROM tipodocumento t
+                LEFT JOIN escritoempresa e ON t.id = e.tipodocumento AND e.empresa = $empresa
+                WHERE e.id IS NULL";
+        $result = $this->mi->query($sql);
+        $afectados = $this->mi->affected_rows;
+        $this->desconectar();
+        return $afectados;
+    }
+
+    // Desasignar todos los documentos de una empresa (una sola query)
+    public function desasignarTodosDocumentos($empresa)
+    {
+        $this->conexion();
+        $sql = "DELETE FROM escritoempresa WHERE empresa = $empresa";
+        $result = $this->mi->query($sql);
+        $afectados = $this->mi->affected_rows;
+        $this->desconectar();
+        return $afectados;
     }
 
     //Listar Usuarios - FUNCIÓN ACTUALIZADA
