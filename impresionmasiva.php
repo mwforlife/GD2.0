@@ -1,8 +1,6 @@
 <?php
 require 'php/controller.php';
 $c = new Controller();
-?>
-<?php
 session_start();
 unset($_SESSION['TRABJADOR_CONTRATO']);
 $_SESSION['TRABJADOR_ID'] = 0;
@@ -137,7 +135,7 @@ foreach ($permiso as $p) {
 				$user = $c->buscarusuario($_SESSION['USER_ID']);
 				if ($user != null) {
 					if ($user->getTipo() != 3) {
-						?>
+				?>
 						<ul class="nav">
 							<li class="nav-header"><span class="nav-label">Dashboard</span></li>
 
@@ -409,11 +407,11 @@ foreach ($permiso as $p) {
 							<!--------------------------------------------------------------->
 
 						</ul>
-						<?php
-							} else if ($user->getTipo() == 3) {
-							?>
-							<ul class="nav">
-								<li class="nav-header"><span class="nav-label">Reporte Mandante</span></li>
+					<?php
+					} else if ($user->getTipo() == 3) {
+					?>
+						<ul class="nav">
+							<li class="nav-header"><span class="nav-label">Reporte Mandante</span></li>
 							<!-----------------------------Mandante--------------------------------->
 							<li class="nav-item">
 								<a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span
@@ -430,13 +428,13 @@ foreach ($permiso as $p) {
 									</li>
 								</ul>
 							</li>
-							</ul>
+						</ul>
 
-						<?php
+				<?php
 
-							}
-						}
-						?>
+					}
+				}
+				?>
 
 			</div>
 		</div>
@@ -664,9 +662,11 @@ foreach ($permiso as $p) {
 																			class="accordion">
 																			<?php
 																			$lista = $c->listarlotescontrato($_SESSION['CURRENT_ENTERPRISE']);
+																			$hayContratos = false;
 																			foreach ($lista as $object) {
 																				$lista1 = $c->listarlotestext2($object->getId());
 																				if (count($lista1) > 0) {
+																					$hayContratos = true;
 																					$lotenobre = $object->getNombre_lote();
 																					//Borrar el resto del texto despues del _
 																					$pos = strpos($lotenobre, "_");
@@ -698,8 +698,8 @@ foreach ($permiso as $p) {
 																								<div class="row mb-4">
 																									<div
 																										class="col-md-12 text-right mt-2">
-																										<a target="_blank"
-																											href="php/report/impresioncontratos.php?id=<?php echo $object->getId(); ?>"
+																										<a href="javascript:void(0);"
+																											onclick="abrirModalImpresionLote(<?php echo $object->getId(); ?>)"
 																											class="btn btn-success"><i
 																												class="fa fa-print"></i>
 																											Imprimir Todo</a>
@@ -750,24 +750,28 @@ foreach ($permiso as $p) {
 																											foreach ($lista1 as $object1) {
 																												echo "<tr class='border-bottom-0'>";
 																												echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
-																												echo $object1->getContrato();
+																												echo $object1['contrato'];
 																												echo "</td>";
 																												echo "<td class='text-muted fs-15 font-weight-semibold'>";
-																												echo $object1->getTrabajador();
+																												echo $object1['nombre'];
 																												echo "</td>";
 																												echo "<td class='text-center'>";
-																												echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='addcart(1," . $object1->getFecha_fin() . ",\"" . $object1->getContrato() . "\",\"" . $object1->getTrabajador() . "\",\"" . $object1->getFecha_inicio() . "\")' data-toggle='tooltip' data-original-title='Agregar'>";
+																												echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='addcart(1," . $object1['idcontrato'] . ",\"" . $object1['contrato'] . "\",\"" . $object1['nombre'] . "\",\"" . $object1['ruta_documento'] . "\"," . $object1['formato_contrato'] . ")' data-toggle='tooltip' data-original-title='Agregar'>";
 																												echo "<i class='fa fa-plus'>";
 																												echo "</i>";
 																												echo "</a>";
 																												echo "</td>";
-																												echo "<td class='text-center'><a class='btn btn-outline-success btn-sm rounded-11' target='_blank' href='php/report/inscripcionfaena.php?id=" . $object1->getFecha_fin() . "'><i class='fa fa-file-excel'></i></a></td>";
+																												echo "<td class='text-center'><a class='btn btn-outline-success btn-sm rounded-11' target='_blank' href='php/report/inscripcionfaena.php?id=" . $object1['idcontrato'] . "'><i class='fa fa-file-excel'></i></a></td>";
 
 																												echo "<td class='text-center'>";
-																												echo "<a class='btn btn-outline-success btn-sm rounded-11' href='uploads/Contratos/" . $object1->getFecha_inicio() . "' target='_blank' data-toggle='tooltip' data-original-title='Imprimir'>";
+																												if($object1['formato_contrato'] == 1){
+																												echo "<a class='btn btn-outline-success btn-sm rounded-11' href='uploads/Contratos/" . $object1['ruta_documento'] . "' target='_blank' data-toggle='tooltip' data-original-title='Imprimir'>";
 																												echo "<i class='fa fa-print'>";
 																												echo "</i>";
 																												echo "</a>";
+																												}else{
+																													echo "<span class='badge badge-danger'>No Aplica</span>";
+																												}
 																												echo "</td>";
 																												echo "</tr>";
 																											}
@@ -780,6 +784,19 @@ foreach ($permiso as $p) {
 																					</div>
 																					<?php
 																				}
+																			}
+																			if (!$hayContratos) {
+																			?>
+																			<div class="alert alert-info d-flex align-items-center" role="alert">
+																				<div class="alert-icon mr-3">
+																					<i class="fa fa-info-circle fa-2x"></i>
+																				</div>
+																				<div>
+																					<h5 class="alert-heading mb-1">No hay contratos activos</h5>
+																					<p class="mb-0">No se encontraron contratos disponibles para mostrar en esta sección. Puede generar nuevos contratos desde el módulo de Documentos.</p>
+																				</div>
+																			</div>
+																			<?php
 																			}
 																			?>
 																		</div>
@@ -800,9 +817,11 @@ foreach ($permiso as $p) {
 																			class="accordion">
 																			<?php
 																			$lista = $c->listarlotescontrato($_SESSION['CURRENT_ENTERPRISE']);
+																			$hayFiniquitos = false;
 																			foreach ($lista as $object) {
 																				$lista1 = $c->listarlotestext1($object->getId());
 																				if (count($lista1) > 0) {
+																					$hayFiniquitos = true;
 																					$lotenobre = $object->getNombre_lote();
 																					//Borrar el resto del texto despues del _
 																					$pos = strpos($lotenobre, "_");
@@ -922,6 +941,19 @@ foreach ($permiso as $p) {
 																					<?php
 																				}
 																			}
+																			if (!$hayFiniquitos) {
+																			?>
+																			<div class="alert alert-warning d-flex align-items-center" role="alert">
+																				<div class="alert-icon mr-3">
+																					<i class="fa fa-exclamation-triangle fa-2x"></i>
+																				</div>
+																				<div>
+																					<h5 class="alert-heading mb-1">No hay finiquitos activos</h5>
+																					<p class="mb-0">No se encontraron finiquitos disponibles para mostrar en esta sección. Puede generar nuevos finiquitos desde el módulo de Documentos.</p>
+																				</div>
+																			</div>
+																			<?php
+																			}
 																			?>
 																		</div>
 																	</div>
@@ -942,9 +974,11 @@ foreach ($permiso as $p) {
 																			class="accordion">
 																			<?php
 																			$lista = $c->listarlotescontrato($_SESSION['CURRENT_ENTERPRISE']);
+																			$hayNotificaciones = false;
 																			foreach ($lista as $object) {
 																				$lista1 = $c->listarlotestext4($object->getId());
 																				if (count($lista1) > 0) {
+																					$hayNotificaciones = true;
 																					$lotenobre = $object->getNombre_lote();
 																					//Borrar el resto del texto despues del _
 																					$pos = strpos($lotenobre, "_");
@@ -1066,6 +1100,19 @@ foreach ($permiso as $p) {
 																					<?php
 																				}
 																			}
+																			if (!$hayNotificaciones) {
+																			?>
+																			<div class="alert alert-secondary d-flex align-items-center" role="alert">
+																				<div class="alert-icon mr-3">
+																					<i class="fa fa-bell-slash fa-2x"></i>
+																				</div>
+																				<div>
+																					<h5 class="alert-heading mb-1">No hay notificaciones activas</h5>
+																					<p class="mb-0">No se encontraron notificaciones disponibles para mostrar en esta sección. Puede generar nuevas notificaciones desde el módulo de Documentos.</p>
+																				</div>
+																			</div>
+																			<?php
+																			}
 																			?>
 																		</div>
 																	</div>
@@ -1086,9 +1133,11 @@ foreach ($permiso as $p) {
 																			class="accordion">
 																			<?php
 																			$lista = $c->listarlotescontrato($_SESSION['CURRENT_ENTERPRISE']);
+																			$hayOtrosDocumentos = false;
 																			foreach ($lista as $object) {
 																				$lista1 = $c->listarlotestext5($object->getId());
 																				if (count($lista1) > 0) {
+																					$hayOtrosDocumentos = true;
 																					$lotenobre = $object->getNombre_lote();
 																					//Borrar el resto del texto despues del _
 																					$pos = strpos($lotenobre, "_");
@@ -1187,6 +1236,19 @@ foreach ($permiso as $p) {
 																					</div>
 																					<?php
 																				}
+																			}
+																			if (!$hayOtrosDocumentos) {
+																			?>
+																			<div class="alert alert-light border d-flex align-items-center" role="alert">
+																				<div class="alert-icon mr-3">
+																					<i class="fa fa-folder-open fa-2x text-muted"></i>
+																				</div>
+																				<div>
+																					<h5 class="alert-heading mb-1">No hay otros documentos</h5>
+																					<p class="mb-0">No se encontraron documentos personalizados disponibles para mostrar en esta sección. Puede generar nuevos documentos desde el módulo de Documentos.</p>
+																				</div>
+																			</div>
+																			<?php
 																			}
 																			?>
 																		</div>
@@ -1337,6 +1399,76 @@ foreach ($permiso as $p) {
 			});
 		}
 	</script>
+
+	<!-- Modal de Impresion de Contratos -->
+	<div class="modal fade" id="modalImpresionContratos" tabindex="-1" role="dialog" aria-labelledby="modalImpresionContratosLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl" role="document" style="max-width: 95%;">
+			<div class="modal-content">
+				<div class="modal-header bg-primary text-white">
+					<h5 class="modal-title" id="modalImpresionContratosLabel">
+						<i class="fa fa-print mr-2"></i>Vista Previa de Contratos
+					</h5>
+					<button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body p-0" style="height: 80vh;">
+					<div class="row h-100 m-0">
+						<!-- Panel izquierdo - Lista de trabajadores -->
+						<div class="col-md-3 border-right p-0" style="height: 100%; overflow-y: auto; background-color: #f8f9fa;">
+							<div class="p-3">
+								<h6 class="font-weight-bold text-primary mb-3">
+									<i class="fa fa-users mr-2"></i>Trabajadores
+									<span class="badge badge-primary ml-2" id="totalTrabajadoresModal">0</span>
+								</h6>
+								<div id="listaTrabajadoresModal">
+									<!-- Lista de trabajadores se carga dinámicamente -->
+								</div>
+							</div>
+						</div>
+						<!-- Panel derecho - Vista previa PDF -->
+						<div class="col-md-9 p-0" style="height: 100%;">
+							<div id="pdfPreviewContainer" style="height: 100%; display: flex; flex-direction: column;">
+								<!-- Mensaje cuando todos son express -->
+								<div id="mensajeExpressContainer" style="display: none; height: 100%;">
+									<div class="d-flex flex-column align-items-center justify-content-center h-100 p-4">
+										<div class="text-center">
+											<i class="fa fa-exclamation-triangle fa-5x text-warning mb-4"></i>
+											<h4 class="text-danger font-weight-bold">No hay documentos disponibles para imprimir</h4>
+											<p class="text-muted mb-4">Todos los contratos en este lote son <strong>Contratos Express</strong> y no generan documentos PDF.</p>
+											<div class="card bg-light" style="max-width: 500px; margin: 0 auto;">
+												<div class="card-body">
+													<h6 class="card-title text-primary"><i class="fa fa-info-circle mr-2"></i>Detalle de Contratos Express:</h6>
+													<div id="detalleContratosExpress" class="text-left">
+														<!-- Se carga dinámicamente -->
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- Vista previa del PDF -->
+								<div id="pdfViewerContainer" style="height: 100%;">
+									<iframe id="pdfViewer" src="" style="width: 100%; height: 100%; border: none;"></iframe>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="mr-auto">
+						<span class="text-muted" id="resumenContratosModal"></span>
+					</div>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">
+						<i class="fa fa-times mr-1"></i>Cerrar
+					</button>
+					<button type="button" class="btn btn-success" id="btnImprimirModal" onclick="imprimirDesdeModal()">
+						<i class="fa fa-print mr-1"></i>Imprimir
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 
 </html>

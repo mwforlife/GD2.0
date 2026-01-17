@@ -1,46 +1,117 @@
 <?php
+/**
+ * Generar Contrato Masivo - Vista Previa
+ * Este archivo genera el PDF de vista previa para múltiples trabajadores
+ * y guarda los datos en sesión para la confirmación posterior
+ */
+
 require '../controller.php';
 $c = new Controller();
 require_once '../plugins/vendor/autoload.php';
 session_start();
+
+// Validar sesión de usuario
 if (!isset($_SESSION['USER_ID'])) {
-    header("Location: ../../signin.php");
-} else {
-    $valid  = $c->validarsesion($_SESSION['USER_ID'], $_SESSION['USER_TOKEN']);
-    if ($valid == false) {
-        header("Location: ../../lockscreen.php");
-    }
+    header('Content-Type: application/json');
+    http_response_code(401);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Sesión no válida'
+    ]);
+    exit;
 }
 
-if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
-    //Informacion Trabajador
-    $empresa = $_POST['idempresa'];
-    $tipocontrato = $_POST['tipocontratoid'];
-    $emp = $c->buscarEmpresavalor($empresa);
-    $lista = $c->buscarlote($_SESSION['USER_ID']);
-    if (count($lista) == 0) {
-        echo "No hay trabajadores seleccionados";
-        return;
-    }
-    $mpdf = new \Mpdf\Mpdf();
-    $conteo = 0;
-    foreach ($lista as $tra) {
-        $dom = $c->ultimodomiciliotexto($tra->getEmpresa());
-        $villatrabajador = $dom->getVilla();
-        $con = $c->ultimocontacto($tra->getEmpresa());
-        if ($con == false) {
-            echo "El trabajador " . $tra->getNombre() . " " . $tra->getApellido1() . " " . $tra->getApellido2() . " no tiene Información de Contacto registrado";
-            return;
+$valid = $c->validarsesion($_SESSION['USER_ID'], $_SESSION['USER_TOKEN']);
+if ($valid == false) {
+    header('Content-Type: application/json');
+    http_response_code(401);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Sesión expirada'
+    ]);
+    exit;
+}
+
+if (isset($_POST['idempresa']) && isset($_POST['tipocontratoid'])) {
+    try {
+        // Información Trabajador
+        $empresa = $_POST['idempresa'];
+        $tipocontrato = $_POST['tipocontratoid'];
+        $emp = $c->buscarEmpresavalor($empresa);
+        $lista = $c->buscarlote($_SESSION['USER_ID']);
+
+        if (count($lista) == 0) {
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => false,
+                'error' => 'No hay trabajadores seleccionados'
+            ]);
+            exit;
         }
-        if ($dom == false) {
-            echo "El trabajador " . $tra->getNombre() . " " . $tra->getApellido1() . " " . $tra->getApellido2() . " no tiene Domicilio registrado";
-            return;
-        }
-        $prevision = $c->ultimaprevision($tra->getEmpresa());
-        if ($prevision == false) {
-            echo "El trabajador " . $tra->getNombre() . " " . $tra->getApellido1() . " " . $tra->getApellido2() . " no tiene Información de Previsión registrada";
-            return;
-        }
+
+        $mpdf = new \Mpdf\Mpdf();
+        $conteo = 0;
+        $trabajadoresInfo = []; // Array para guardar info de trabajadores
+        $trabajadoresIds = []; // Array para guardar IDs de trabajadores
+        $pdfsIndividuales = []; // Array para guardar PDFs individuales por trabajador
+
+        foreach ($lista as $tra) {
+            $trabajadorId = $tra->getEmpresa(); // El ID del trabajador está en getEmpresa() según el lote
+            $dom = $c->ultimodomiciliotexto($trabajadorId);
+
+            if ($dom == false) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'error' => "El trabajador " . $tra->getNombre() . " " . $tra->getApellido1() . " " . $tra->getApellido2() . " no tiene Domicilio registrado"
+                ]);
+                exit;
+            }
+
+            $villatrabajador = $dom->getVilla();
+            $con = $c->ultimocontacto($trabajadorId);
+
+            if ($con == false) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'error' => "El trabajador " . $tra->getNombre() . " " . $tra->getApellido1() . " " . $tra->getApellido2() . " no tiene Información de Contacto registrado"
+                ]);
+                exit;
+            }
+
+            $prevision = $c->ultimaprevision($trabajadorId);
+            if ($prevision == false) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'error' => "El trabajador " . $tra->getNombre() . " " . $tra->getApellido1() . " " . $tra->getApellido2() . " no tiene Información de Previsión registrada"
+                ]);
+                exit;
+            }
+
+            // Obtener información bancaria si es necesaria
+            $formapagot = $_POST['formapagot'];
+            $cuentabancaria = null;
+            if ($formapagot != 1 && $formapagot != 2 && $formapagot != 3) {
+                $cuentabancaria = $c->ultimacuentabancariaregistrada($trabajadorId);
+                if ($cuentabancaria == false) {
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'success' => false,
+                        'error' => "El trabajador " . $tra->getNombre() . " " . $tra->getApellido1() . " " . $tra->getApellido2() . " no tiene Información Bancaria Registrada"
+                    ]);
+                    exit;
+                }
+            }
+
+            // Guardar info del trabajador
+            $trabajadoresInfo[] = [
+                'id' => $trabajadorId,
+                'nombre' => $tra->getNombre() . ' ' . $tra->getApellido1() . ' ' . $tra->getApellido2(),
+                'rut' => $tra->getRut()
+            ];
+            $trabajadoresIds[] = $trabajadorId;
         $contenido = $c->buscarplantilla($tipocontrato);
         $nacionalidadid = $tra->getNacionalidad();
         $nac = $c->buscarnacionalidad($nacionalidadid);
@@ -206,7 +277,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
         $formapagot = $_POST['formapagot'];
         $fechapagot = $_POST['fechapagot'];
 
-        $cuentabancaria = $c->ultimacuentabancariaregistrada($trabajador);
+        $cuentabancaria = $c->ultimacuentabancariaregistrada($trabajadorId);
         if ($formapagot == 1 || $formapagot == 2 || $formapagot == 3) {
         } else {
             if ($cuentabancaria == false) {
@@ -453,17 +524,17 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
         //Convertir fecha en formato largo
         $fecha_inicio = date("d/m/Y", strtotime($fecha_inicio));
 
-        $typecontract = $_POST['typecontract'];
+        $tipo_contrato = $_POST['tipo_contrato'];
         $fecha_termino = $_POST['fecha_termino'];
         //Convertir fecha en formato largo
-        if ($typecontract == 1) {
-            $typecontract = "Contrato Indefinido";
+        if ($tipo_contrato == 1) {
+            $tipo_contrato = "Contrato Indefinido";
             $fecha_termino = "";
-        } else if ($typecontract == 2) {
-            $typecontract = "Contrato a Plazo Fijo";
+        } else if ($tipo_contrato == 2) {
+            $tipo_contrato = "Contrato a Plazo Fijo";
             $fecha_termino = date("d/m/Y", strtotime($fecha_termino));
         } else {
-            $typecontract = "Obra o Faena";
+            $tipo_contrato = "Obra o Faena";
             $fecha_termino = "";
         }
 
@@ -1873,7 +1944,7 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             "{ROTACION}" => $rotativo,
 
             "{DISTRIBUCION_JORNADA}" => $distribucion,
-            "{TIPO_CONTRATO}" => $typecontract,
+            "{TIPO_CONTRATO}" => $tipo_contrato,
             "{INICIO_CONTRATO}" => $fecha_inicio,
             "{TERMINO_CONTRATO}" => $fecha_termino,
             "{ESTIPULACIONES}" => $estipulaciones
@@ -1883,6 +1954,21 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
             $contenido = str_replace($key, $swap_var[$key], $contenido);
         }
 
+        // Generar PDF individual para este trabajador
+        $mpdfIndividual = new \Mpdf\Mpdf();
+        $mpdfIndividual->title = 'Contrato de Trabajo';
+        $mpdfIndividual->author = 'Wilkens Mompoint';
+        $mpdfIndividual->creator = 'Wilkens Mompoint';
+        $mpdfIndividual->subject = 'Contrato de Trabajo';
+        $mpdfIndividual->keywords = 'Contrato, Trabajo, Empleo';
+        $mpdfIndividual->SetDisplayMode('fullpage');
+        $mpdfIndividual->SetHTMLFooter('<div style="text-align: center; font-size: 10px;">www.iustax.cl</div>');
+        $mpdfIndividual->WriteHTML($contenido);
+
+        // Guardar el PDF individual en memoria
+        $pdfsIndividuales[$trabajadorId] = $mpdfIndividual->Output('', 'S');
+
+        // También agregar al PDF combinado para la vista previa
         if ($conteo == 0) {
             $mpdf->title = 'Contrato de Trabajo';
             $mpdf->author = 'Wilkens Mompoint';
@@ -1900,12 +1986,49 @@ if (isset($_POST['idempresa'])  && isset($_POST['tipocontratoid'])) {
         $conteo++;
     }
 
+    // Generar PDF en memoria (no guardar en disco todavía)
+    $pdfContent = $mpdf->Output('', 'S'); // 'S' = return as string
+    $pdfBase64 = base64_encode($pdfContent);
 
-    $fecha = date('Ymdhis');
-    //Generar nombre documento
-    $nombre_documento = 'Contrato_' . $fecha . '.pdf';
-    //Generar y guardar documento en la caperta uploads/Contratos
-    $mpdf->Output('../../uploads/previa/' . $nombre_documento, 'F');
-    //Imprimir ruta de documento
-    echo "1uploads/previa/" . $nombre_documento;
+    // Guardar datos en sesión temporal para confirmar después
+    $_SESSION['contrato_masivo_preview'] = [
+        'pdf_content' => $pdfContent,
+        'pdfs_individuales' => $pdfsIndividuales, // PDFs individuales por trabajador
+        'post_data' => $_POST,
+        'timestamp' => time(),
+        'empresa' => $empresa,
+        'tipocontrato' => $tipocontrato,
+        'trabajadores' => $trabajadoresInfo,
+        'trabajadores_ids' => $trabajadoresIds
+    ];
+
+    // Responder con JSON
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => true,
+        'pdf' => $pdfBase64,
+        'message' => 'Preview generado exitosamente',
+        'empresa' => [
+            'nombre' => $emp->getRazonSocial(),
+            'rut' => $emp->getRut()
+        ],
+        'trabajadores' => $trabajadoresInfo,
+        'total_contratos' => count($trabajadoresInfo)
+    ]);
+
+    } catch (Exception $e) {
+        header('Content-Type: application/json');
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Error al generar el preview: ' . $e->getMessage()
+        ]);
+    }
+} else {
+    header('Content-Type: application/json');
+    http_response_code(400);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Faltan datos requeridos para generar el contrato'
+    ]);
 }

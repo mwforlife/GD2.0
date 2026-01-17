@@ -688,10 +688,109 @@ create table contratos(
     register_at timestamp not null default current_timestamp
 );
 
-alter table contratos
-
 --Agregar id centro de costo a tabla contratos despues de id empresa con valor por defecto 0 a referencia centrocosto(id)
 alter table contratos add column centrocosto int not null references centrocosto(id) default 0 after empresa;
+
+-- ==================================================================================
+-- MODIFICACIONES A TABLA CONTRATOS - NUEVOS CAMPOS
+-- ==================================================================================
+
+
+-- Campos básicos del contrato
+alter table contratos add column formato_contrato int null references formato_contrato(id) after estado;
+alter table contratos add column categoria_contrato varchar(200) null after formato_contrato;
+alter table contratos add column fecha_suscripcion date null after categoria_contrato;
+alter table contratos add column region_celebracion int null after fecha_suscripcion;
+alter table contratos add column comuna_celebracion int null after region_celebracion;
+alter table contratos add column fecha_celebracion date null after comuna_celebracion;
+
+-- Información del cargo
+alter table contratos add column centro_costo int null after fecha_celebracion;
+alter table contratos add column cargo_descripcion varchar(500) null after centro_costo;
+-- Lugar específico de prestación de servicios
+alter table contratos add column region_especifica int null after cargo_descripcion;
+alter table contratos add column comuna_especifica int null after region_especifica;
+alter table contratos add column calle_especifica varchar(200) null after comuna_especifica;
+alter table contratos add column numero_especifico varchar(20) null after calle_especifica;
+alter table contratos add column dept_oficina_especifico varchar(20) null after numero_especifico;
+-- Zona geográfica de desplazamiento (se guarda si tiene zonas o no)
+alter table contratos add column territorio_zona tinyint(1) default 0 after dept_oficina_especifico;
+
+-- Subcontratación y servicios transitorios
+alter table contratos add column subcontratacion tinyint(1) default 0 after territorio_zona;
+alter table contratos add column subcontratacion_rut varchar(20) null after subcontratacion;
+alter table contratos add column subcontratacion_razon_social varchar(200) null after subcontratacion_rut;
+alter table contratos add column servicios_transitorios tinyint(1) default 0 after subcontratacion_razon_social;
+alter table contratos add column transitorios_rut varchar(20) null after servicios_transitorios;
+alter table contratos add column transitorios_razon_social varchar(200) null after transitorios_rut;
+
+-- Remuneración
+alter table contratos add column tipo_sueldo int null after transitorios_razon_social;
+alter table contratos add column sueldo_base decimal(10,2) null after tipo_sueldo;
+alter table contratos add column asignacion_zona decimal(10,2) null after sueldo_base;
+
+-- Haberes imponibles
+alter table contratos add column haber_imponible_tipo int null after asignacion_zona;
+alter table contratos add column haber_imponible_monto decimal(10,2) null after haber_imponible_tipo;
+alter table contratos add column haber_imponible_periodo varchar(50) null after haber_imponible_monto;
+alter table contratos add column haber_imponible_detalle varchar(500) null after haber_imponible_periodo;
+
+-- Haberes no imponibles
+alter table contratos add column haber_no_imponible_tipo int null after haber_imponible_detalle;
+alter table contratos add column haber_no_imponible_monto decimal(10,2) null after haber_no_imponible_tipo;
+alter table contratos add column haber_no_imponible_periodo varchar(50) null after haber_no_imponible_monto;
+alter table contratos add column haber_no_imponible_detalle varchar(500) null after haber_no_imponible_periodo;
+
+-- Haberes imponibles no tributables
+alter table contratos add column haber_imponible_notributable_tipo int null after haber_no_imponible_detalle;
+alter table contratos add column haber_imponible_notributable_monto decimal(10,2) null after haber_imponible_notributable_tipo;
+alter table contratos add column haber_imponible_notributable_periodo varchar(50) null after haber_imponible_notributable_monto;
+alter table contratos add column haber_imponible_notributable_detalle varchar(500) null after haber_imponible_notributable_periodo;
+
+-- Haberes no imponibles no tributables
+alter table contratos add column haber_no_imponible_notributable_tipo int null after haber_imponible_notributable_detalle;
+alter table contratos add column haber_no_imponible_notributable_monto decimal(10,2) null after haber_no_imponible_notributable_tipo;
+alter table contratos add column haber_no_imponible_notributable_periodo varchar(50) null after haber_no_imponible_notributable_monto;
+alter table contratos add column haber_no_imponible_notributable_detalle varchar(500) null after haber_no_imponible_notributable_periodo;
+
+-- Forma de pago
+alter table contratos add column forma_pago int null after haber_no_imponible_notributable_detalle;
+alter table contratos add column periodo_pago_gratificacion varchar(50) null after forma_pago;
+alter table contratos add column detalle_gratificacion varchar(500) null after periodo_pago_gratificacion;
+alter table contratos add column periodo_pago_trabajador varchar(50) null after detalle_gratificacion;
+alter table contratos add column fecha_pago_trabajador varchar(50) null after periodo_pago_trabajador;
+alter table contratos add column forma_pago_trabajador int null after fecha_pago_trabajador;
+alter table contratos add column banco_id int null after forma_pago_trabajador;
+alter table contratos add column tipo_cuenta_id int null after banco_id;
+alter table contratos add column numero_cuenta varchar(50) null after tipo_cuenta_id;
+alter table contratos add column anticipo varchar(50) null after numero_cuenta;
+
+-- Previsión
+alter table contratos add column afp_id int null after anticipo;
+alter table contratos add column salud_id int null after afp_id;
+
+-- Pactos adicionales
+alter table contratos add column pacto_badi tinyint(1) default 0 after salud_id;
+alter table contratos add column otros_terminos text null after pacto_badi;
+
+-- Jornada laboral
+alter table contratos add column jornada_excepcional tinyint(1) default 0 after otros_terminos;
+alter table contratos add column jornada_excluida tinyint(1) default 0 after jornada_excepcional;
+alter table contratos add column no_resolucion varchar(100) null after jornada_excluida;
+alter table contratos add column fecha_excepcion date null after no_resolucion;
+alter table contratos add column tipo_jornada int null after fecha_excepcion;
+alter table contratos add column incluye_domingos tinyint(1) default 0 after tipo_jornada;
+alter table contratos add column dias_trabajo varchar(100) null after incluye_domingos;
+alter table contratos add column duracion_jornada varchar(50) null after dias_trabajo;
+alter table contratos add column dias_trabajo_semanal varchar(100) null after duracion_jornada;
+alter table contratos add column horario_turno int null after dias_trabajo_semanal;
+alter table contratos add column colacion varchar(100) null after horario_turno;
+alter table contratos add column rotativo varchar(50) null after colacion;
+alter table contratos add column colacion_imputable varchar(100) null after rotativo;
+alter table contratos add column colacion_imputable_tiempo varchar(100) null after colacion_imputable;
+
+-- Modificar columna documento para que acepte valores nulos
+alter table contratos modify column documento varchar(500) null;
 
 create table estadoafectoavacaciones(
     id int not null auto_increment primary key,
@@ -1579,8 +1678,8 @@ C.I. N° {RUT_REPRESENTANTE_LEGAL}
 -- INSERTAR NÚMEROS PARA CONVERSIÓN A LETRAS (MUESTRA)
 -- ==================================================================================
 
-INSERT IGNORE INTO numeros_letras VALUES 
-(0, 'cero'), (1, 'uno'), (2, 'dos'), (3, 'tres'), (4, 'cuatro'), 
+INSERT IGNORE INTO numeros_letras VALUES
+(0, 'cero'), (1, 'uno'), (2, 'dos'), (3, 'tres'), (4, 'cuatro'),
 (5, 'cinco'), (6, 'seis'), (7, 'siete'), (8, 'ocho'), (9, 'nueve'),
 (10, 'diez'), (11, 'once'), (12, 'doce'), (13, 'trece'), (14, 'catorce'),
 (15, 'quince'), (16, 'dieciséis'), (17, 'diecisiete'), (18, 'dieciocho'), (19, 'diecinueve'),
@@ -1590,3 +1689,54 @@ INSERT IGNORE INTO numeros_letras VALUES
 (80, 'ochenta'), (90, 'noventa'), (100, 'cien'), (200, 'doscientos'), (300, 'trescientos'),
 (400, 'cuatrocientos'), (500, 'quinientos'), (600, 'seiscientos'), (700, 'setecientos'),
 (800, 'ochocientos'), (900, 'novecientos'), (1000, 'mil');
+
+-- ==================================================================================
+-- TABLAS ADICIONALES PARA CONTRATOS - DISTRIBUCIÓN HORARIA Y ZONAS GEOGRÁFICAS
+-- ==================================================================================
+
+-- Tabla para almacenar la distribución horaria por turno y día
+create table contrato_distribucion_horaria(
+    id int not null auto_increment primary key,
+    contrato_id int not null,
+    tipo_turno varchar(20) not null comment 'normal, matutino, tarde, noche',
+    dia_semana tinyint(1) not null comment '1=Lunes, 2=Martes, 3=Miercoles, 4=Jueves, 5=Viernes, 6=Sabado, 7=Domingo',
+    dia_seleccionado tinyint(1) default 0 comment '0=No seleccionado, 1=Seleccionado',
+    hora_inicio time null,
+    hora_termino time null,
+    register_at timestamp not null default current_timestamp,
+    foreign key (contrato_id) references contratos(id) on delete cascade,
+    unique key idx_contrato_turno_dia (contrato_id, tipo_turno, dia_semana)
+) comment='Distribución horaria detallada por turno y día de la semana';
+
+-- Tabla para almacenar las zonas geográficas de desplazamiento del contrato
+create table contrato_zona_geografica(
+    id int not null auto_increment primary key,
+    contrato_id int not null,
+    tipo_zona varchar(20) not null comment 'region, provincia, comuna',
+    zona_id int not null comment 'ID de la región, provincia o comuna según tipo_zona',
+    register_at timestamp not null default current_timestamp,
+    foreign key (contrato_id) references contratos(id) on delete cascade,
+    unique key idx_contrato_tipo_zona (contrato_id, tipo_zona, zona_id)
+) comment='Zonas geográficas donde el trabajador puede desplazarse según contrato';
+
+-- Índices para mejorar el rendimiento
+create index idx_contrato_distribucion on contrato_distribucion_horaria(contrato_id);
+create index idx_contrato_zona on contrato_zona_geografica(contrato_id);
+create index idx_tipo_turno on contrato_distribucion_horaria(tipo_turno);
+create index idx_tipo_zona on contrato_zona_geografica(tipo_zona);
+
+-- ==================================================================================
+-- TABLA PARA ESTIPULACIONES ADICIONALES DEL CONTRATO
+-- ==================================================================================
+
+create table contrato_estipulaciones(
+    id int not null auto_increment primary key,
+    contrato_id int not null,
+    numero_estipulacion tinyint not null comment 'Número de la estipulación (1-13)',
+    contenido text not null,
+    register_at timestamp not null default current_timestamp,
+    foreign key (contrato_id) references contratos(id) on delete cascade,
+    unique key idx_contrato_estipulacion (contrato_id, numero_estipulacion)
+) comment='Estipulaciones adicionales del contrato (cláusulas especiales)';
+
+create index idx_contrato_estipulaciones on contrato_estipulaciones(contrato_id);

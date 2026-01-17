@@ -994,38 +994,156 @@ function eliminarfiniquito(id) {
 }
 
 function eliminarcontrato(id) {
-    swal.fire({
-        title: "¿Desea eliminar este registro?",
-        text: "No podrá recuperar este registro",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Si, Eliminar",
-        cancelButtonText: "No, Cancelar",
-        closeOnConfirm: false,
-        closeOnCancel: false
-    }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                type: "POST",
-                url: "php/eliminar/contrato.php",
-                data: "id=" + id,
-                success: function (data) {
-                    try {
-                        var json = JSON.parse(data);
-                        if(json.status == true){
-                            ToastifySuccess("Registro eliminado");
-                            setTimeout(function () { location.reload(); }, 1000);
-                        }else{
-                            ToastifyError(json.message);
-                        }
-                    } catch (error) {
-                        ToastifyError(error);
+    // Mostrar loader mientras se cargan los detalles
+    $("#global-loader").fadeIn("slow");
+
+    // Primero obtener los detalles del contrato y registros relacionados
+    $.ajax({
+        type: "POST",
+        url: "php/obtener/detalles_contrato_eliminacion.php",
+        data: "id=" + id,
+        success: function (data) {
+            $("#global-loader").fadeOut("slow");
+            try {
+                var response = JSON.parse(data);
+
+                if(response.status === false){
+                    ToastifyError(response.message);
+                    return;
+                }
+
+                var detalles = response.data;
+
+                // Construir el mensaje HTML con los detalles
+                var htmlContent = '<div style="text-align: left; max-height: 400px; overflow-y: auto;">';
+
+                // Información del trabajador
+                htmlContent += '<div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-bottom: 15px;">';
+                htmlContent += '<h4 style="margin: 0 0 10px 0; color: #2c3e50;"><i class="fa fa-user"></i> Trabajador</h4>';
+                htmlContent += '<p style="margin: 5px 0;"><strong>Nombre:</strong> ' + detalles.trabajador.nombre + '</p>';
+                htmlContent += '<p style="margin: 5px 0;"><strong>RUT:</strong> ' + detalles.trabajador.rut + '</p>';
+                htmlContent += '</div>';
+
+                // Información del contrato
+                htmlContent += '<div style="background: #e3f2fd; padding: 10px; border-radius: 5px; margin-bottom: 15px;">';
+                htmlContent += '<h4 style="margin: 0 0 10px 0; color: #1976d2;"><i class="fa fa-file-text"></i> Contrato</h4>';
+                htmlContent += '<p style="margin: 5px 0;"><strong>Tipo:</strong> ' + detalles.contrato.tipocontrato + '</p>';
+                htmlContent += '<p style="margin: 5px 0;"><strong>Cargo:</strong> ' + detalles.contrato.cargo + '</p>';
+                htmlContent += '<p style="margin: 5px 0;"><strong>Fecha Inicio:</strong> ' + detalles.contrato.fechainicio + '</p>';
+                htmlContent += '<p style="margin: 5px 0;"><strong>Fecha Término:</strong> ' + (detalles.contrato.fechatermino || 'Indefinido') + '</p>';
+                htmlContent += '</div>';
+
+                // Registros relacionados que se eliminarán
+                if(detalles.total_registros_relacionados > 0){
+                    htmlContent += '<div style="background: #fff3e0; padding: 10px; border-radius: 5px; margin-bottom: 10px;">';
+                    htmlContent += '<h4 style="margin: 0 0 10px 0; color: #f57c00;"><i class="fa fa-exclamation-triangle"></i> Registros Relacionados a Eliminar</h4>';
+                    htmlContent += '<p style="margin: 5px 0; font-weight: bold;">Total de registros: ' + detalles.total_registros_relacionados + '</p>';
+                    htmlContent += '<ul style="margin: 10px 0; padding-left: 20px;">';
+
+                    for(var key in detalles.registros_relacionados){
+                        var registro = detalles.registros_relacionados[key];
+                        htmlContent += '<li style="margin: 5px 0;"><strong>' + registro.tabla + ':</strong> ' + registro.cantidad + ' registro(s)</li>';
                     }
-                },
-            });
-        } else {
-            ToastifySuccess("Operación Cancelada");
+
+                    htmlContent += '</ul>';
+                    htmlContent += '</div>';
+                } else {
+                    htmlContent += '<div style="background: #e8f5e9; padding: 10px; border-radius: 5px; margin-bottom: 10px;">';
+                    htmlContent += '<p style="margin: 0; color: #2e7d32;"><i class="fa fa-check-circle"></i> No hay registros relacionados.</p>';
+                    htmlContent += '</div>';
+                }
+
+                // Advertencia final
+                htmlContent += '<div style="background: #ffebee; padding: 10px; border-radius: 5px; border-left: 4px solid #f44336;">';
+                htmlContent += '<p style="margin: 0; color: #c62828; font-weight: bold;"><i class="fa fa-warning"></i> ADVERTENCIA: Esta acción no se puede deshacer.</p>';
+                htmlContent += '<p style="margin: 5px 0 0 0; color: #c62828;">Se eliminarán todos los registros relacionados y archivos físicos del servidor.</p>';
+                htmlContent += '</div>';
+
+                htmlContent += '</div>';
+
+                // Mostrar el modal de confirmación con los detalles
+                swal.fire({
+                    title: "¿Confirmar Eliminación?",
+                    html: htmlContent,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: '<i class="fa fa-trash"></i> Sí, Eliminar Todo',
+                    cancelButtonText: '<i class="fa fa-times"></i> Cancelar',
+                    width: '700px',
+                    customClass: {
+                        confirmButton: 'btn btn-danger btn-lg',
+                        cancelButton: 'btn btn-secondary btn-lg'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Usuario confirmó, proceder con la eliminación
+                        $("#global-loader").fadeIn("slow");
+
+                        $.ajax({
+                            type: "POST",
+                            url: "php/eliminar/contrato.php",
+                            data: {
+                                id: id,
+                                confirmado: 'true'
+                            },
+                            success: function (dataEliminar) {
+                                $("#global-loader").fadeOut("slow");
+                                try {
+                                    var jsonEliminar = JSON.parse(dataEliminar);
+                                    if(jsonEliminar.status === true){
+                                        swal.fire({
+                                            title: '¡Eliminado!',
+                                            text: jsonEliminar.message,
+                                            icon: 'success',
+                                            confirmButtonText: 'Aceptar'
+                                        }).then(() => {
+                                            location.reload();
+                                        });
+                                    }else{
+                                        swal.fire({
+                                            title: 'Error',
+                                            text: jsonEliminar.message,
+                                            icon: 'error',
+                                            confirmButtonText: 'Aceptar'
+                                        });
+                                        if(jsonEliminar.errores){
+                                            console.error('Errores:', jsonEliminar.errores);
+                                        }
+                                    }
+                                } catch (error) {
+                                    swal.fire({
+                                        title: 'Error',
+                                        text: 'Error al procesar la respuesta: ' + error,
+                                        icon: 'error',
+                                        confirmButtonText: 'Aceptar'
+                                    });
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                $("#global-loader").fadeOut("slow");
+                                swal.fire({
+                                    title: 'Error',
+                                    text: 'Error en la petición: ' + error,
+                                    icon: 'error',
+                                    confirmButtonText: 'Aceptar'
+                                });
+                            }
+                        });
+                    } else {
+                        ToastifySuccess("Operación Cancelada");
+                    }
+                });
+
+            } catch (error) {
+                ToastifyError("Error al cargar detalles: " + error);
+                console.error(error);
+            }
+        },
+        error: function(xhr, status, error) {
+            $("#global-loader").fadeOut("slow");
+            ToastifyError("Error al obtener detalles del contrato: " + error);
         }
     });
 }
@@ -1282,6 +1400,12 @@ function buscartrabajador(element){
                 $("#TrabajadorRegion option[value="+object.region+"]").attr("selected",true);
                 listarcomunas(); 
                 listarciudades();
+                setTimeout(function(){
+                    //Seleccionar la option del select comuna
+                    $("#TrabajadorComuna option[value="+object.comuna+"]").attr("selected",true);
+                    //Seleccionar la option del select ciudad
+                    $("#TrabajadorCiudad option[value="+object.ciudad+"]").attr("selected",true);
+                },500);
                 //Seleccionar la option del select comuna
                 $("#TrabajadorComuna option[value="+object.comuna+"]").attr("selected",true);
                 //Seleccionar la option del select ciudad

@@ -134,9 +134,9 @@ foreach ($permiso as $p) {
                 <?php
                 $user = $c->buscarusuario($_SESSION['USER_ID']);
                 if ($user != null) {
-                    if ($user->getTipo() != 3) {
-                ?>
-                        <ul class="nav">
+					if ($user->getTipo() != 3) {
+				?>
+						<ul class="nav">
 							<li class="nav-header"><span class="nav-label">Dashboard</span></li>
 
 							<?php
@@ -407,32 +407,34 @@ foreach ($permiso as $p) {
 							<!--------------------------------------------------------------->
 
 						</ul>
-                    <?php
-                    } else if ($user->getTipo() == 3) {
-                    ?>
-                        <ul class="nav">
-                            <li class="nav-header"><span class="nav-label">Reporte Mandante</span></li>
-                            <!-----------------------------Mandante--------------------------------->
-                            <li class="nav-item">
-                                <a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span class="sidemenu-label">Mandante</span><i class="angle fe fe-chevron-right"></i></a>
-                                <ul class="nav-sub">
-                                    <li class="nav-sub-item">
-                                        <a class="nav-sub-link" href="mandanteempresa.php">Documentos Empresa</a>
-                                    </li>
-                                    <li class="nav-sub-item">
-                                        <a class="nav-sub-link" href="mandantetrabajadores.php">Documentos Trabajadores
+					<?php
+					} else if ($user->getTipo() == 3) {
+					?>
+						<ul class="nav">
+							<li class="nav-header"><span class="nav-label">Reporte Mandante</span></li>
+							<!-----------------------------Mandante--------------------------------->
+							<li class="nav-item">
+								<a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span
+										class="sidemenu-label">Mandante</span><i
+										class="angle fe fe-chevron-right"></i></a>
+								<ul class="nav-sub">
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="mandanteempresa.php">Documentos Empresa</a>
+									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="mandantetrabajadores.php">Documentos Trabajadores
 
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
+										</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
 
-                <?php
+				<?php
 
-                    }
-                }
-                ?>
+					}
+				}
+				?>
 
             </div>
         </div>

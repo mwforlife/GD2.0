@@ -9,7 +9,17 @@ if (isset($_GET['id'])) {
     $lista1 = $c->listarlotestext2($_GET['id']);
     $pdffiles = array();
     foreach ($lista1 as $object) {
-        $pdffiles[] = "../../uploads/Contratos/" . $object->getFecha_inicio();
+        if(trim($object['ruta_documento']) != "" && trim($object['ruta_documento']) != null && $object['formato_contrato'] == 1 ){
+            if (file_exists("../../uploads/Contratos/" . $object['ruta_documento'])) {
+                $pdffiles[] = "../../uploads/Contratos/" . $object['ruta_documento'];
+            }
+        }
+    }
+
+    //Verificar si hay archivos para combinar
+    if (count($pdffiles) == 0) {
+        echo "No hay contratos disponibles para imprimir.";
+        exit;
     }
 
     $pdf = new Fpdi();
@@ -25,4 +35,6 @@ if (isset($_GET['id'])) {
         }
     }
     $pdf->Output("contratos.pdf", "I");
+}else{
+    echo "No se proporcionó un ID de Lote válido.";
 }

@@ -294,6 +294,9 @@ function validarform2() {
         mostrar2();
         $("#subcontratacionrazonsocial").focus();
         return false;
+      } else {
+        mostrar3();
+        return true;
       }
 
       //Validar si transitoriosval esta checkeado
@@ -310,6 +313,9 @@ function validarform2() {
         mostrar2();
         $("#transitoriosrazonsocial").focus();
         return false;
+      } else {
+        mostrar3();
+        return true;
       }
     } else {
       mostrar3();
@@ -837,48 +843,76 @@ function checkturno() {
 function todo3onclick() {
   //Validar si el elemento  esta checkeado
   if ($("#todo3").is(":checked")) {
-    //Checkear todos los elementos
-    $(".dias4").prop("checked", true);
+    //Checkear todos los elementos excepto domingo si no está habilitado
+    $(".dias4").each(function() {
+      if ($(this).is(":disabled")) {
+        $(this).prop("checked", false);
+      } else {
+        $(this).prop("checked", true);
+      }
+    });
   } else {
     //Descheckear todos los elementos
     $(".dias4").prop("checked", false);
   }
+  calcularHorasNoche();
 }
 
 //todo2onclick
 function todo2onclick() {
   //Validar si el elemento  esta checkeado
   if ($("#todo2").is(":checked")) {
-    //Checkear todos los elementos
-    $(".dias3").prop("checked", true);
+    //Checkear todos los elementos excepto domingo si no está habilitado
+    $(".dias3").each(function() {
+      if ($(this).is(":disabled")) {
+        $(this).prop("checked", false);
+      } else {
+        $(this).prop("checked", true);
+      }
+    });
   } else {
     //Descheckear todos los elementos
     $(".dias3").prop("checked", false);
   }
+  calcularHorasTarde();
 }
 
 //todo1onclick
 function todo1onclick() {
   //Validar si el elemento  esta checkeado
   if ($("#todo1").is(":checked")) {
-    //Checkear todos los elementos
-    $(".dias2").prop("checked", true);
+    //Checkear todos los elementos excepto domingo si no está habilitado
+    $(".dias2").each(function() {
+      if ($(this).is(":disabled")) {
+        $(this).prop("checked", false);
+      } else {
+        $(this).prop("checked", true);
+      }
+    });
   } else {
     //Descheckear todos los elementos
     $(".dias2").prop("checked", false);
   }
+  calcularHorasMatutino();
 }
 
 //todoonclick
 function todoonclick() {
   //Validar si el elemento  esta checkeado
   if ($("#todo").is(":checked")) {
-    //Checkear todos los elementos
-    $(".dias1").prop("checked", true);
+    //Checkear todos los elementos excepto domingo si no está habilitado
+    $(".dias1").each(function() {
+      if ($(this).is(":disabled")) {
+        $(this).prop("checked", false);
+      } else {
+        $(this).prop("checked", true);
+      }
+    });
   } else {
     //Descheckear todos los elementos
     $(".dias1").prop("checked", false);
   }
+  calcularnormal();
 }
 
 //checktodo1
@@ -905,6 +939,7 @@ function checktodo1() {
     //Descheckear el elemento todo1
     $("#todo").prop("checked", false);
   }
+  calcularnormal();
 }
 
 //checktodo2
@@ -931,6 +966,7 @@ function checktodo2() {
     //Descheckear el elemento todo2
     $("#todo1").prop("checked", false);
   }
+  calcularHorasMatutino();
 }
 
 //checktodo3
@@ -957,6 +993,7 @@ function checktodo3() {
     //Descheckear el elemento todo3
     $("#todo2").prop("checked", false);
   }
+  calcularHorasTarde();
 }
 
 //checktodo4
@@ -983,6 +1020,7 @@ function checktodo4() {
     //Descheckear el elemento todo4
     $("#todo3").prop("checked", false);
   }
+  calcularHorasNoche();
 }
 
 //function incluyedomingo
@@ -1112,778 +1150,62 @@ function eliminarcomuna(id) {
 function changetimeinit1() {
   var valu = $("#hora10").val();
   $(".hora1").val(valu);
+  calcularnormal();
 }
 
 function changetimeend1() {
   var valu = $("#horat10").val();
   $(".horat1").val(valu);
+  calcularnormal();
 }
 
 function changetimeinit2() {
   var valu = $("#hora20").val();
   $(".hora2").val(valu);
+  calcularHorasMatutino();
 }
 
 function changetimeend2() {
   var valu = $("#horat20").val();
   $(".horat2").val(valu);
+  calcularHorasMatutino();
 }
 
 function changetimeinit3() {
   var valu = $("#hora30").val();
   $(".hora3").val(valu);
+  calcularHorasTarde();
 }
 
 function changetimeend3() {
   var valu = $("#horat30").val();
   $(".horat3").val(valu);
+  calcularHorasTarde();
 }
 
 function changetimeinit4() {
   var valu = $("#hora40").val();
   $(".hora4").val(valu);
+  calcularHorasNoche();
 }
 
 function changetimeend4() {
   var valu = $("#horat40").val();
   $(".horat4").val(valu);
+  calcularHorasNoche();
 }
 
 
 
 
-//Finalizar proceso de creacion de contrato
+//Finalizar proceso de creacion de contrato - NUEVA VERSIÓN CON PREVIEW
 function finalizar() {
-  $("#global-loader").fadeIn("slow");
-  //validar si todos los formularios estan completos
-  //Capturar los datos del formulario Identificacion de las partes
-  var categoria_contrato = $("#categoria_contrato").val();
-  var regioncelebracion = $("#regioncelebracion").val();
-  var comunacelebracion = $("#comunacelebracion").val();
-  var fechacelebracion = $("#fechacelebracion").val();
-  var tipocontratoid = $("#tipocontratoid").val();
-  var nombre_razon_social = $("#nombre_razon_social").val();
-  var rut_empleador = $("#rut_empleador").val();
-  var representante_legal = $("#representante_legal").val();
-  var correo_electronico = $("#correo_electronico").val();
-  var telefono = $("#telefono").val();
-  var codigoactividadid = $("#codigoactividadid").val();
-  var domicilio = $("#domicilio").val();
-  var empresaregion = $("#empresaregion").val();
-  var empresacomuna = $("#empresacomuna").val();
-  var calle = $("#calle").val();
-  var numero = $("#numero").val();
-  var ruttrabajador = $("#ruttrabajador").val();
-  var nombretrabajador = $("#nombretrabajador").val();
-  var apellidos = $("#apellidos").val();
-  var fechanacimiento = $("#fechanacimiento").val();
-  var sexo = $("#sexo").val();
-  var nacionalidad = $("#nacionalidad").val();
-  var correotrabajador = $("#correotrabajador").val();
-  var telefonotrabajador = $("#telefonotrabajador").val();
-  var trabajadorregion = $("#trabajadorregion").val();
-  var trabajadorcomuna = $("#trabajadorcomuna").val();
-  var calletrabajador = $("#calletrabajador").val();
-  var numerotrabajador = $("#numerotrabajador").val();
-  var departamentotrabajador = $("#departamentotrabajador").val();
-
-  //Capturar los datos del formulario Functoin y lugares de prestacion de los servicios
-  var centrocosto = $("#centrocosto").val();
-  var Charge = $("#Charge").val();
-  var ChargeDescripcion = $("#ChargeDescripcion").val();
-  var regionespecifica = $("#regionespecifica").val();
-  var comunaespecifica = $("#comunaespecifica").val();
-  var calleespecifica = $("#calleespecifica").val();
-  var numeroespecifica = $("#numeroespecifica").val();
-  var subcontratacionrut = $("#subcontratacionrut").val();
-  var subcontratacionrazonsocial = $("#subcontratacionrazonsocial").val();
-  var transitoriosrut = $("#transitoriosrut").val();
-  var transitoriosrazonsocial = $("#transitoriosrazonsocial").val();
-
-  //Capturar los datos del formulario Remuneraciones
-  var tiposueldo = $("#tiposueldo").val();
-  var sueldo = $("#sueldo").val();
-  var formapago = $("#formapago").val();
-  var periodopagogra = $("#periodopagogra").val();
-  var detallerenumeraciongra = $("#detallerenumeraciongra").val();
-  var periodopagot = $("#periodopagot").val();
-  var fechapagot = $("#fechapagot").val();
-  var formapagot = $("#formapagot").val();
-  var anticipot = $("#anticipot").val();
-  //var afp = $("#afp").val();
-  //var salud = $("#salud").val();
-  var otrter = $("#otrter").val();
-
-  //Capturar datos de Banco
-  var banco = $("#banco").val();
-  var tipocuenta = $("#tipocuenta").val();
-  var numerocuenta = $("#numerocuenta").val();
-
-  //Capturar los datos del formulario Jornada de trabajo y estipulaciones
-  var noresolucion = $("#noresolucion").val();
-  var exfecha = $("#exfech").val();
-  var tipojornada = $("#tipojornada").val();
-  var horaspactadas = $("#horaspactadas").val();
-  var dias = $("#dias").val();
-  var duracionjor = $("#duracionjor").val();
-  var diasf = $("#diasf").val();
-  var horarioturno = $("#horarioturno").val();
-  var rotativo = $("#rotativo").val();
-  var Horaspactadas = $("#Horaspactadas").val();
-  var colacion = $("#colacion").val();
-  var colaimpu = $("#colaimpu").val();
-  var colacionimp = $("#colacionimp").val();
-  var fecha_inicio = $("#fecha_inicio").val();
-  var fecha_termino = $("#fecha_termino").val();
-  var estipulacion13 = $("#estipulacion13").val();
-  var juramento = $("#juramento").val();
-
-  //Capturar datos Distribucion Jornada laboral General
-  var lunes = 0;
-  var lunesinicio = 0;
-  var lunesfin = 0;
-  var martes = 0;
-  var martesinicio = 0;
-  var martesfin = 0;
-  var miercoles = 0;
-  var miercolesinicio = 0;
-  var miercolesfin = 0;
-  var jueves = 0;
-  var juevesinicio = 0;
-  var juevesfin = 0;
-  var viernes = 0;
-  var viernesinicio = 0;
-  var viernesfin = 0;
-  var sabado = 0;
-  var sabadoinicio = 0;
-  var sabadofin = 0;
-  var domingo = 0;
-  var domingoinicio = 0;
-  var domingofin = 0;
-  //validar los dias seleccionado y si el domingo esta habilitado
-  if (
-    $("#todos").is(":checked") == true &&
-    $("#dias17").prop("disabled") == false
-  ) {
-    lunes = 1;
-    lunesinicio = $("#hora11").val();
-    lunesfin = $("#horat11").val();
-    martes = 1;
-    martesinicio = $("#hora12").val();
-    martesfin = $("#horat12").val();
-    miercoles = 1;
-    miercolesinicio = $("#hora13").val();
-    miercolesfin = $("#horat13").val();
-    jueves = 1;
-    juevesinicio = $("#hora14").val();
-    juevesfin = $("#horat14").val();
-    viernes = 1;
-    viernesinicio = $("#hora15").val();
-    viernesfin = $("#horat15").val();
-    sabado = 1;
-    sabadoinicio = $("#hora16").val();
-    sabadofin = $("#horat16").val();
-    domingo = 1;
-    domingoinicio = $("#hora17").val();
-    domingofin = $("#horat17").val();
-  } else {
-    if ($("#dias11").is(":checked") == true) {
-      lunes = 1;
-      lunesinicio = $("#hora11").val();
-      lunesfin = $("#horat11").val();
-    }
-    if ($("#dias12").is(":checked") == true) {
-      martes = 1;
-      martesinicio = $("#hora12").val();
-      martesfin = $("#horat12").val();
-    }
-    if ($("#dias13").is(":checked") == true) {
-      miercoles = 1;
-      miercolesinicio = $("#hora13").val();
-      miercolesfin = $("#horat13").val();
-    }
-    if ($("#dias14").is(":checked") == true) {
-      jueves = 1;
-      juevesinicio = $("#hora14").val();
-      juevesfin = $("#horat14").val();
-    }
-    if ($("#dias15").is(":checked") == true) {
-      viernes = 1;
-      viernesinicio = $("#hora15").val();
-      viernesfin = $("#horat15").val();
-    }
-    if ($("#dias16").is(":checked") == true) {
-      sabado = 1;
-      sabadoinicio = $("#hora16").val();
-      sabadofin = $("#horat16").val();
-    }
-    if (
-      $("#dias17").is(":checked") == true &&
-      $("#dias17").prop("disabled") == false
-    ) {
-      domingo = 1;
-      domingoinicio = $("#hora17").val();
-      domingofin = $("#horat17").val();
-    }
-  }
-
-  //Capturar datos Distribucion Jornada laboral Matutina
-  var lunesm = 0;
-  var lunesiniciom = 0;
-  var lunesfinm = 0;
-  var martesm = 0;
-  var martesiniciom = 0;
-  var martesfinm = 0;
-  var miercolesm = 0;
-  var miercolesiniciom = 0;
-  var miercolesfinm = 0;
-  var juevesm = 0;
-  var juevesiniciom = 0;
-  var juevesfinm = 0;
-  var viernesm = 0;
-  var viernesiniciom = 0;
-  var viernesfinm = 0;
-  var sabadom = 0;
-  var sabadoiniciom = 0;
-  var sabadofinm = 0;
-  var domingom = 0;
-  var domingoiniciom = 0;
-  var domingofinm = 0;
-  //validar los dias seleccionado y si el domingo esta habilitado
-  if (
-    $("#todo1").is(":checked") == true &&
-    $("#dias27").prop("disabled") == false
-  ) {
-    lunesm = 1;
-    lunesiniciom = $("#hora21").val();
-    lunesfinm = $("#horat21").val();
-    martesm = 1;
-    martesiniciom = $("#hora22").val();
-    martesfinm = $("#horat22").val();
-    miercolesm = 1;
-    miercolesiniciom = $("#hora23").val();
-    miercolesfinm = $("#horat23").val();
-    juevesm = 1;
-    juevesiniciom = $("#hora24").val();
-    juevesfinm = $("#horat24").val();
-    viernesm = 1;
-    viernesiniciom = $("#hora25").val();
-    viernesfinm = $("#horat25").val();
-    sabadom = 1;
-    sabadoiniciom = $("#hora26").val();
-    sabadofinm = $("#horat26").val();
-    domingom = 1;
-    domingoiniciom = $("#hora27").val();
-    domingofinm = $("#horat27").val();
-  } else {
-    if ($("#dias21").is(":checked") == true) {
-      lunesm = 1;
-      lunesiniciom = $("#hora21").val();
-      lunesfinm = $("#horat21").val();
-    }
-    if ($("#dias22").is(":checked") == true) {
-      martesm = 1;
-      martesiniciom = $("#hora22").val();
-      martesfinm = $("#horat22").val();
-    }
-    if ($("#dias23").is(":checked") == true) {
-      miercolesm = 1;
-      miercolesiniciom = $("#hora23").val();
-      miercolesfinm = $("#horat23").val();
-    }
-    if ($("#dias24").is(":checked") == true) {
-      juevesm = 1;
-      juevesiniciom = $("#hora24").val();
-      juevesfinm = $("#horat24").val();
-    }
-    if ($("#dias25").is(":checked") == true) {
-      viernesm = 1;
-      viernesiniciom = $("#hora25").val();
-      viernesfinm = $("#horat25").val();
-    }
-    if ($("#dias26").is(":checked") == true) {
-      sabadom = 1;
-      sabadoiniciom = $("#hora26").val();
-      sabadofinm = $("#horat26").val();
-    }
-    if (
-      $("#dias27").is(":checked") == true &&
-      $("#dias27").prop("disabled") == false
-    ) {
-      domingom = 1;
-      domingoiniciom = $("#hora27").val();
-      domingofinm = $("#horat27").val();
-    }
-  }
-
-  //Capturar datos Distribucion Jornada laboral Tarde
-  var lunest = 0;
-  var lunesiniciot = 0;
-  var lunesfint = 0;
-  var martest = 0;
-  var martesiniciot = 0;
-  var martesfint = 0;
-  var miercolest = 0;
-  var miercolesiniciot = 0;
-  var miercolesfint = 0;
-  var juevest = 0;
-  var juevesiniciot = 0;
-  var juevesfint = 0;
-  var viernest = 0;
-  var viernesiniciot = 0;
-  var viernesfint = 0;
-  var sabadot = 0;
-  var sabadoiniciot = 0;
-  var sabadofint = 0;
-  var domingot = 0;
-  var domingoiniciot = 0;
-  var domingofint = 0;
-  //validar los dias seleccionado y si el domingo esta habilitado
-  if (
-    $("#todo2").is(":checked") == true &&
-    $("#dias37").prop("disabled") == false
-  ) {
-    lunest = 1;
-    lunesiniciot = $("#hora31").val();
-    lunesfint = $("#horat31").val();
-    martest = 1;
-    martesiniciot = $("#hora32").val();
-    martesfint = $("#horat32").val();
-    miercolest = 1;
-    miercolesiniciot = $("#hora33").val();
-    miercolesfint = $("#horat33").val();
-    juevest = 1;
-    juevesiniciot = $("#hora34").val();
-    juevesfint = $("#horat34").val();
-    viernest = 1;
-    viernesiniciot = $("#hora35").val();
-    viernesfint = $("#horat35").val();
-    sabadot = 1;
-    sabadoiniciot = $("#hora36").val();
-    sabadofint = $("#horat36").val();
-    domingot = 1;
-    domingoiniciot = $("#hora37").val();
-    domingofint = $("#horat37").val();
-  } else {
-    if ($("#dias31").is(":checked") == true) {
-      lunest = 1;
-      lunesiniciot = $("#hora31").val();
-      lunesfint = $("#horat31").val();
-    }
-    if ($("#dias32").is(":checked") == true) {
-      martest = 1;
-      martesiniciot = $("#hora32").val();
-      martesfint = $("#horat32").val();
-    }
-    if ($("#dias33").is(":checked") == true) {
-      miercolest = 1;
-      miercolesiniciot = $("#hora33").val();
-      miercolesfint = $("#horat33").val();
-    }
-    if ($("#dias34").is(":checked") == true) {
-      juevest = 1;
-      juevesiniciot = $("#hora34").val();
-      juevesfint = $("#horat34").val();
-    }
-    if ($("#dias35").is(":checked") == true) {
-      viernest = 1;
-      viernesiniciot = $("#hora35").val();
-      viernesfint = $("#horat35").val();
-    }
-    if ($("#dias36").is(":checked") == true) {
-      sabadot = 1;
-      sabadoiniciot = $("#hora36").val();
-      sabadofint = $("#horat36").val();
-    }
-    if (
-      $("#dias37").is(":checked") == true &&
-      $("#dias37").prop("disabled") == false
-    ) {
-      domingot = 1;
-      domingoiniciot = $("#hora37").val();
-      domingofint = $("#horat37").val();
-    }
-  }
-
-  //Capturar datos Distribucion Jornada laboral Noche
-  var lunesn = 0;
-  var lunesinicion = 0;
-  var lunesfinn = 0;
-  var martesn = 0;
-  var martesinicion = 0;
-  var martesfinn = 0;
-  var miercolesn = 0;
-  var miercolesinicion = 0;
-  var miercolesfinn = 0;
-  var juevesn = 0;
-  var juevesinicion = 0;
-  var juevesfinn = 0;
-  var viernesn = 0;
-  var viernesinicion = 0;
-  var viernesfinn = 0;
-  var sabadon = 0;
-  var sabadoinicion = 0;
-  var sabadofinn = 0;
-  var domingon = 0;
-  var domingoinicion = 0;
-  var domingofinn = 0;
-  //validar los dias seleccionado y si el domingo esta habilitado
-  if (
-    $("#todo3").is(":checked") == true &&
-    $("#dias47").prop("disabled") == false
-  ) {
-    lunesn = 1;
-    lunesinicion = $("#hora41").val();
-    lunesfinn = $("#horat41").val();
-    martesn = 1;
-    martesinicion = $("#hora42").val();
-    martesfinn = $("#horat42").val();
-    miercolesn = 1;
-    miercolesinicion = $("#hora43").val();
-    miercolesfinn = $("#horat43").val();
-    juevesn = 1;
-    juevesinicion = $("#hora44").val();
-    juevesfinn = $("#horat44").val();
-    viernesn = 1;
-    viernesinicion = $("#hora45").val();
-    viernesfinn = $("#horat45").val();
-    sabadon = 1;
-    sabadoinicion = $("#hora46").val();
-    sabadofinn = $("#horat46").val();
-    domingon = 1;
-    domingoinicion = $("#hora47").val();
-    domingofinn = $("#horat47").val();
-  } else {
-    if ($("#dias41").is(":checked") == true) {
-      lunesn = 1;
-      lunesinicion = $("#hora41").val();
-      lunesfinn = $("#horat41").val();
-    }
-    if ($("#dias42").is(":checked") == true) {
-      martesn = 1;
-      martesinicion = $("#hora42").val();
-      martesfinn = $("#horat42").val();
-    }
-    if ($("#dias43").is(":checked") == true) {
-      miercolesn = 1;
-      miercolesinicion = $("#hora43").val();
-      miercolesfinn = $("#horat43").val();
-    }
-    if ($("#dias44").is(":checked") == true) {
-      juevesn = 1;
-      juevesinicion = $("#hora44").val();
-      juevesfinn = $("#horat44").val();
-    }
-    if ($("#dias45").is(":checked") == true) {
-      viernesn = 1;
-      viernesinicion = $("#hora45").val();
-      viernesfinn = $("#horat45").val();
-    }
-    if ($("#dias46").is(":checked") == true) {
-      sabadon = 1;
-      sabadoinicion = $("#hora46").val();
-      sabadofinn = $("#horat46").val();
-    }
-    if (
-      $("#dias47").is(":checked") == true &&
-      $("#dias47").prop("disabled") == false
-    ) {
-      domingon = 1;
-      domingoinicion = $("#hora47").val();
-      domingofinn = $("#horat47").val();
-    }
-  }
-
-  var territoriozona = $("#territoriozona").val();
-
-  //Lugar, Fecha y Plazo del Contrato
-  var tipocontrato1 = 0;
-  //validar si que radio button de tipo de contrato esta Seleccionado
-  if ($("#tipocontrato1").is(":selected") == true) {
-    tipocontrato1 = 1;
-  } else if ($("#tipocontrato2").is(":selected") == true) {
-    tipocontrato1 = 2;
-  } else if ($("#tipocontrato3").is(":selected") == true) {
-    tipocontrato1 = 3;
-  }
-
-  var badi = 0;
-  //validar si que radio button de badi esta Seleccionado
-  if ($("#badi1").is(":selected") == true) {
-    badi = 1;
-  }
-  var otrter = $("#otrter").val();
-  //Estipulaciones
-  //Declarar estipulacion del 1 al 13
-  var estipulacion1 = 0;
-  var estipulacion2 = 0;
-  var estipulacion3 = 0;
-  var estipulacion4 = 0;
-  var estipulacion5 = 0;
-  var estipulacion6 = 0;
-  var estipulacion7 = 0;
-  var estipulacion8 = 0;
-  var estipulacion9 = 0;
-  var estipulacion10 = 0;
-  var estipulacion11 = 0;
-  var estipulacion12 = 0;
-  var estipulacion13 = 0;
-  //validar si que checkbox de estipulacion esta Seleccionado
-  if ($("#estipulacion1").is(":checked") == true) {
-    estipulacion1 = $("#estipulacion1").val();
-  }
-  if ($("#estipulacion2").is(":checked") == true) {
-    estipulacion2 = $("#estipulacion2").val();
-  }
-  if ($("#estipulacion3").is(":checked") == true) {
-    estipulacion3 = $("#estipulacion3").val();
-  }
-  if ($("#estipulacion4").is(":checked") == true) {
-    estipulacion4 = $("#estipulacion4").val();
-  }
-  if ($("#estipulacion5").is(":checked") == true) {
-    estipulacion5 = $("#estipulacion5").val();
-  }
-  if ($("#estipulacion6").is(":checked") == true) {
-    estipulacion6 = $("#estipulacion6").val();
-  }
-  if ($("#estipulacion7").is(":checked") == true) {
-    estipulacion7 = $("#estipulacion7").val();
-  }
-  if ($("#estipulacion8").is(":checked") == true) {
-    estipulacion8 = $("#estipulacion8").val();
-  }
-  if ($("#estipulacion9").is(":checked") == true) {
-    estipulacion9 = $("#estipulacion9").val();
-  }
-  if ($("#estipulacion10").is(":checked") == true) {
-    estipulacion10 = $("#estipulacion10").val();
-  }
-  if ($("#estipulacion11").is(":checked") == true) {
-    estipulacion11 = $("#estipulacion11").val();
-  }
-  if ($("#estipulacion12").is(":checked") == true) {
-    estipulacion12 = 1;
-    estipulacion13 = $("#estipulacion13").val();
-  }
-  var idempresa = $("#idempresa").val();
-  var idtrabajador = $("#idtrabajador").val();
-
-  var exluido = 0;
-  if ($("#exluido").is(":checked") == true) {
-    exluido = 1;
-  }
-
-
-  var typecontract = 0;
-  if ($("#tipo_contrato1").is(":checked") == true) {
-    typecontract = 1;
-  } else if ($("#tipo_contrato2").is(":checked") == true) {
-    typecontract = 2;
-  } else if ($("#tipo_contrato3").is(":checked") == true) {
-    typecontract = 3;
-  }
-
-  var jornadaesc = $("#jornadaesc").val();
-
-  //validar juramento
-  if ($("#juramento").is(":checked")) {
-    $.ajax({
-      url: "php/pdf/generarcontratoindividual.php",
-      type: "POST",
-      data: {
-        categoria_contrato: categoria_contrato,
-        regioncelebracion: regioncelebracion,
-        comunacelebracion: comunacelebracion,
-        fechacelebracion: fechacelebracion,
-        tipocontratoid: tipocontratoid,
-        idempresa: idempresa,
-        representante_legal: representante_legal,
-        codigoactividadid: codigoactividadid,
-        empresaregion: empresaregion,
-        empresacomuna: empresacomuna,
-        calle: calle,
-        numero: numero,
-        jornadaesc: jornadaesc,
-        idtrabajador: idtrabajador,
-        nacionalidad: nacionalidad,
-        correotrabajador: correotrabajador,
-        telefonotrabajador: telefonotrabajador,
-        trabajadorregion: trabajadorregion,
-        trabajadorcomuna: trabajadorcomuna,
-        calletrabajador: calletrabajador,
-        numerotrabajador: numerotrabajador,
-        departamentotrabajador: departamentotrabajador,
-        centrocosto: centrocosto,
-        Charge: Charge,
-        ChargeDescripcion: ChargeDescripcion,
-        regionespecifica: regionespecifica,
-        comunaespecifica: comunaespecifica,
-        calleespecifica: calleespecifica,
-        numeroespecifica: numeroespecifica,
-        territoriozona: territoriozona,
-        subcontratacionrut: subcontratacionrut,
-        subcontratacionrazonsocial: subcontratacionrazonsocial,
-        transitoriosrut: transitoriosrut,
-        transitoriosrazonsocial: transitoriosrazonsocial,
-        tiposueldo: tiposueldo,
-        sueldo: sueldo,
-        formapago: formapago,
-        periodopagogra: periodopagogra,
-        detallerenumeraciongra: detallerenumeraciongra,
-        periodopagot: periodopagot,
-        fechapagot: fechapagot,
-        formapagot: formapagot,
-        banco: banco,
-        tipocuenta: tipocuenta,
-        numerocuenta: numerocuenta,
-        badi: badi,
-        otrter: otrter,
-        anticipot: anticipot,
-        noresolucion: noresolucion,
-        exfecha: exfecha,
-        exluido: exluido,
-        tipojornada: tipojornada,
-        horaspactadas: horaspactadas,
-        horarioturno: horarioturno,
-        dias: dias,
-        colacion: colacion,
-        colacionimp: colacionimp,
-        fecha_inicio: fecha_inicio,
-        fecha_termino: fecha_termino,
-        estipulacion1: estipulacion1,
-        estipulacion2: estipulacion2,
-        estipulacion3: estipulacion3,
-        estipulacion4: estipulacion4,
-        estipulacion5: estipulacion5,
-        estipulacion6: estipulacion6,
-        estipulacion7: estipulacion7,
-        estipulacion8: estipulacion8,
-        estipulacion9: estipulacion9,
-        estipulacion10: estipulacion10,
-        estipulacion11: estipulacion11,
-        estipulacion12: estipulacion12,
-        estipulacion13: estipulacion13,
-        lunes: lunes,
-        lunesinicio: lunesinicio,
-        lunesfin: lunesfin,
-        territoriozona: territoriozona,
-        martes: martes,
-        martesinicio: martesinicio,
-        martesfin: martesfin,
-        miercoles: miercoles,
-        miercolesinicio: miercolesinicio,
-        miercolesfin: miercolesfin,
-        jueves: jueves,
-        juevesinicio: juevesinicio,
-        juevesfin: juevesfin,
-        viernes: viernes,
-        viernesinicio: viernesinicio,
-        viernesfin: viernesfin,
-        sabado: sabado,
-        sabadoinicio: sabadoinicio,
-        sabadofin: sabadofin,
-        domingo: domingo,
-        domingoinicio: domingoinicio,
-        domingofin: domingofin,
-        lunesm: lunesm,
-        lunesminicio: lunesiniciom,
-        lunesmfin: lunesfinm,
-        martesm: martesm,
-        martesminicio: martesiniciom,
-        martesmfin: martesfinm,
-        miercolesm: miercolesm,
-        miercolesminicio: miercolesiniciom,
-        miercolesmfin: miercolesfinm,
-        juevesm: juevesm,
-        juevesminicio: juevesiniciom,
-        juevesmfin: juevesfinm,
-        viernesm: viernesm,
-        viernesminicio: viernesiniciom,
-        viernesmfin: viernesfinm,
-        sabadom: sabadom,
-        sabadominicio: sabadoiniciom,
-        sabadomfin: sabadofinm,
-        domingom: domingom,
-        domingominicio: domingoiniciom,
-        domingomfin: domingofinm,
-        lunest: lunest,
-        lunestinicio: lunesiniciot,
-        lunestfin: lunesfint,
-        martest: martest,
-        martestinicio: martesiniciot,
-        martestfin: martesfint,
-        miercolest: miercolest,
-        miercolestinicio: miercolesiniciot,
-        miercolestfin: miercolesfint,
-        juevest: juevest,
-        juevestinicio: juevesiniciot,
-        juevestfin: juevesfint,
-        viernest: viernest,
-        viernestinicio: viernesiniciot,
-        viernestfin: viernesfint,
-        sabadot: sabadot,
-        sabadotinicio: sabadoiniciot,
-        sabadotfin: sabadofint,
-        domingot: domingot,
-        domingotinicio: domingoiniciot,
-        domingotfin: domingofint,
-        lunesn: lunesn,
-        lunesninicio: lunesinicion,
-        lunesnfin: lunesfinn,
-        martesn: martesn,
-        martesninicio: martesinicion,
-        martesnfin: martesfinn,
-        miercolesn: miercolesn,
-        miercolesninicio: miercolesinicion,
-        miercolesnfin: miercolesfinn,
-        juevesn: juevesn,
-        juevesninicio: juevesinicion,
-        juevesnfin: juevesfinn,
-        viernesn: viernesn,
-        viernesninicio: viernesinicion,
-        viernesnfin: viernesfinn,
-        sabadon: sabadon,
-        sabadoninicio: sabadoinicion,
-        sabadonfin: sabadofinn,
-        domingon: domingon,
-        domingoninicio: domingoinicion,
-        domingonfin: domingofinn,
-        typecontract: typecontract,
-        duracionjor: duracionjor,
-        diasf: diasf,
-        horarioturno: horarioturno,
-        rotativo: rotativo,
-        horaspactadas: horaspactadas,
-        colaimpu: colaimpu
-      },
-      success: function (data) {
-        $("#global-loader").fadeOut("slow");
-        //Sacar el primer caracter del texto
-        var first = data.substring(0, 1);
-        var url = data.substring(1);
-        console.log(data);
-        console.log(first);
-        console.log(url);
-        //Si el primer caracter es un numero
-        if (first == 1 || first == "1") {
-          //Sacar la URL del texto sin el primer caracter
-          var url = data.substring(1);
-          //Mostrar vista previa en un modal e abrir el modal
-          $("#vistaprevia").attr("src", url);
-          $(".edit").attr("onclick", "editarinfo('" + url + "')");
-          $(".generar").attr("onclick", "generar('" + url + "')");
-          $("#modalvistaprevia").modal("show");
-          //Mostrar vista previa en un modal e abrir el modal
-          //Agregar la URL
-
-        } else {
-          ToastifyError(data);
-        }
-      },
-    });
-  }
+  // Llama a la nueva función de preview mejorada
+  // Esta función ahora genera el PDF en memoria, lo muestra en un modal
+  // y espera confirmación del usuario antes de guardar
+  generarPreviewContrato();
 }
+
 
 function generar(valor) {
   $("#global-loader").fadeIn("slow");
@@ -2876,17 +2198,46 @@ function todaslaszonas() {
 
 function calcularnormal(){
    // Obtener los elementos de entrada de hora de inicio y hora de término para cada día
-   const horasInicio = document.querySelectorAll('.hora1');
-   const horasTermino = document.querySelectorAll('.horat1');
+   const horasInicio = [
+       document.getElementById('hora11'),
+       document.getElementById('hora12'),
+       document.getElementById('hora13'),
+       document.getElementById('hora14'),
+       document.getElementById('hora15'),
+       document.getElementById('hora16'),
+       document.getElementById('hora17')
+   ];
+   const horasTermino = [
+       document.getElementById('horat11'),
+       document.getElementById('horat12'),
+       document.getElementById('horat13'),
+       document.getElementById('horat14'),
+       document.getElementById('horat15'),
+       document.getElementById('horat16'),
+       document.getElementById('horat17')
+   ];
+   const diasCheckbox = [
+       document.getElementById('dias11'),
+       document.getElementById('dias12'),
+       document.getElementById('dias13'),
+       document.getElementById('dias14'),
+       document.getElementById('dias15'),
+       document.getElementById('dias16'),
+       document.getElementById('dias17')
+   ];
 
    let totalHoras = 0;
 
-   // Calcular la cantidad de horas para cada día
+   // Calcular la cantidad de horas solo para los días seleccionados
    for (let i = 0; i < horasInicio.length; i++) {
-       const horaInicio = new Date(`2000-01-01T${horasInicio[i].value}`);
-       const horaTermino = new Date(`2000-01-01T${horasTermino[i].value}`);
-       const diferenciaHoras = (horaTermino - horaInicio) / 3600000; // Convertir a horas
-       totalHoras += diferenciaHoras;
+       if (diasCheckbox[i] && diasCheckbox[i].checked) {
+           const horaInicio = new Date(`2000-01-01T${horasInicio[i].value}`);
+           const horaTermino = new Date(`2000-01-01T${horasTermino[i].value}`);
+           const diferenciaHoras = (horaTermino - horaInicio) / 3600000; // Convertir a horas
+           if (diferenciaHoras > 0) {
+               totalHoras += diferenciaHoras;
+           }
+       }
    }
 
    // Mostrar el resultado en el span
@@ -2894,11 +2245,553 @@ function calcularnormal(){
    resultado.textContent = totalHoras.toFixed(2); // Redondear a 2 decimales
 }
 
-// Llamar a la función inicialmente y cada vez que se realice un cambio en los input
-calcularHoras();
+function calcularHorasMatutino(){
+   // Obtener los elementos de entrada de hora de inicio y hora de término para cada día
+   const horasInicio = [
+       document.getElementById('hora21'),
+       document.getElementById('hora22'),
+       document.getElementById('hora23'),
+       document.getElementById('hora24'),
+       document.getElementById('hora25'),
+       document.getElementById('hora26'),
+       document.getElementById('hora27')
+   ];
+   const horasTermino = [
+       document.getElementById('horat21'),
+       document.getElementById('horat22'),
+       document.getElementById('horat23'),
+       document.getElementById('horat24'),
+       document.getElementById('horat25'),
+       document.getElementById('horat26'),
+       document.getElementById('horat27')
+   ];
+   const diasCheckbox = [
+       document.getElementById('dias21'),
+       document.getElementById('dias22'),
+       document.getElementById('dias23'),
+       document.getElementById('dias24'),
+       document.getElementById('dias25'),
+       document.getElementById('dias26'),
+       document.getElementById('dias27')
+   ];
 
-// Event listeners para cambios en los input
-const inputHoras = document.querySelectorAll('.hora1, .horat1');
-inputHoras.forEach(input => {
-    input.addEventListener('change', calcularHoras);
+   let totalHoras = 0;
+
+   // Calcular la cantidad de horas solo para los días seleccionados
+   for (let i = 0; i < horasInicio.length; i++) {
+       if (diasCheckbox[i] && diasCheckbox[i].checked) {
+           const horaInicio = new Date(`2000-01-01T${horasInicio[i].value}`);
+           const horaTermino = new Date(`2000-01-01T${horasTermino[i].value}`);
+           const diferenciaHoras = (horaTermino - horaInicio) / 3600000; // Convertir a horas
+           if (diferenciaHoras > 0) {
+               totalHoras += diferenciaHoras;
+           }
+       }
+   }
+
+   // Mostrar el resultado en el span
+   const resultado = document.getElementById('jornadamat');
+   resultado.textContent = totalHoras.toFixed(2); // Redondear a 2 decimales
+}
+
+function calcularHorasTarde(){
+   // Obtener los elementos de entrada de hora de inicio y hora de término para cada día
+   const horasInicio = [
+       document.getElementById('hora31'),
+       document.getElementById('hora32'),
+       document.getElementById('hora33'),
+       document.getElementById('hora34'),
+       document.getElementById('hora35'),
+       document.getElementById('hora36'),
+       document.getElementById('hora37')
+   ];
+   const horasTermino = [
+       document.getElementById('horat31'),
+       document.getElementById('horat32'),
+       document.getElementById('horat33'),
+       document.getElementById('horat34'),
+       document.getElementById('horat35'),
+       document.getElementById('horat36'),
+       document.getElementById('horat37')
+   ];
+   const diasCheckbox = [
+       document.getElementById('dias31'),
+       document.getElementById('dias32'),
+       document.getElementById('dias33'),
+       document.getElementById('dias34'),
+       document.getElementById('dias35'),
+       document.getElementById('dias36'),
+       document.getElementById('dias37')
+   ];
+
+   let totalHoras = 0;
+
+   // Calcular la cantidad de horas solo para los días seleccionados
+   for (let i = 0; i < horasInicio.length; i++) {
+       if (diasCheckbox[i] && diasCheckbox[i].checked) {
+           const horaInicio = new Date(`2000-01-01T${horasInicio[i].value}`);
+           const horaTermino = new Date(`2000-01-01T${horasTermino[i].value}`);
+           const diferenciaHoras = (horaTermino - horaInicio) / 3600000; // Convertir a horas
+           if (diferenciaHoras > 0) {
+               totalHoras += diferenciaHoras;
+           }
+       }
+   }
+
+   // Mostrar el resultado en el span
+   const resultado = document.getElementById('jornadatarde');
+   resultado.textContent = totalHoras.toFixed(2); // Redondear a 2 decimales
+}
+
+function calcularHorasNoche(){
+   // Obtener los elementos de entrada de hora de inicio y hora de término para cada día
+   const horasInicio = [
+       document.getElementById('hora41'),
+       document.getElementById('hora42'),
+       document.getElementById('hora43'),
+       document.getElementById('hora44'),
+       document.getElementById('hora45'),
+       document.getElementById('hora46'),
+       document.getElementById('hora47')
+   ];
+   const horasTermino = [
+       document.getElementById('horat41'),
+       document.getElementById('horat42'),
+       document.getElementById('horat43'),
+       document.getElementById('horat44'),
+       document.getElementById('horat45'),
+       document.getElementById('horat46'),
+       document.getElementById('horat47')
+   ];
+   const diasCheckbox = [
+       document.getElementById('dias41'),
+       document.getElementById('dias42'),
+       document.getElementById('dias43'),
+       document.getElementById('dias44'),
+       document.getElementById('dias45'),
+       document.getElementById('dias46'),
+       document.getElementById('dias47')
+   ];
+
+   let totalHoras = 0;
+
+   // Calcular la cantidad de horas solo para los días seleccionados
+   for (let i = 0; i < horasInicio.length; i++) {
+       if (diasCheckbox[i] && diasCheckbox[i].checked) {
+           const horaInicio = new Date(`2000-01-01T${horasInicio[i].value}`);
+           const horaTermino = new Date(`2000-01-01T${horasTermino[i].value}`);
+           const diferenciaHoras = (horaTermino - horaInicio) / 3600000; // Convertir a horas
+           if (diferenciaHoras > 0) {
+               totalHoras += diferenciaHoras;
+           }
+       }
+   }
+
+   // Mostrar el resultado en el span
+   const resultado = document.getElementById('jornadanoche');
+   resultado.textContent = totalHoras.toFixed(2); // Redondear a 2 decimales
+}
+
+// Event listeners para recalcular horas cuando se cambian los campos de tiempo individuales
+$(document).ready(function() {
+  // Turno Normal
+  $('.hora1, .horat1').on('change', function() {
+    calcularnormal();
+  });
+
+  // Turno Matutino
+  $('.hora2, .horat2').on('change', function() {
+    calcularHorasMatutino();
+  });
+
+  // Turno Tarde
+  $('.hora3, .horat3').on('change', function() {
+    calcularHorasTarde();
+  });
+
+  // Turno Noche
+  $('.hora4, .horat4').on('change', function() {
+    calcularHorasNoche();
+  });
+
+  // Event listeners para checkboxes de días
+  $('.dias1').on('change', function() {
+    checktodo1();
+  });
+
+  $('.dias2').on('change', function() {
+    checktodo2();
+  });
+
+  $('.dias3').on('change', function() {
+    checktodo3();
+  });
+
+  $('.dias4').on('change', function() {
+    checktodo4();
+  });
 });
+
+// ==================================================================================
+// FUNCIONES PARA PREVIEW Y CONFIRMACIÓN DE CONTRATOS
+// ==================================================================================
+
+/**
+ * Genera el preview del contrato sin guardarlo
+ */
+function generarPreviewContrato() {
+  // Validar que todos los formularios estén completos
+  if (!validarform1() || !validarform2() || !validarform3()) {
+    ToastifyError("Por favor, complete todos los campos requeridos");
+    return false;
+  }
+
+  // Mostrar loader
+  $("#global-loader").fadeIn("slow");
+
+  // Obtener datos del formulario
+  var formData = new FormData(document.getElementById('formContratoIndividual'));
+
+  // Agregar campos que no tienen atributo name en el HTML
+  formData.append('rotativo', $("#rotativo").val() || '1');
+  formData.append('horarioturno', $("#horarioturno").val() || '1');
+  formData.append('colacion', $("#colacion").val() || '0');
+  formData.append('colaimpu', $("#colaimpu").val() || '0');
+
+  // Capturar estipulaciones
+  for (var i = 1; i <= 12; i++) {
+    var estVal = 0;
+    if ($("#estipulacion" + i).is(":checked")) {
+      estVal = $("#estipulacion" + i).val();
+    }
+    formData.append('estipulacion' + i, estVal);
+  }
+  // Estipulacion13 es un campo de texto, no checkbox
+  formData.append('estipulacion13', $("#estipulacion13").val() || '');
+
+  // Capturar datos Distribucion Jornada laboral General
+  var lunes = 0, lunesinicio = 0, lunesfin = 0;
+  var martes = 0, martesinicio = 0, martesfin = 0;
+  var miercoles = 0, miercolesinicio = 0, miercolesfin = 0;
+  var jueves = 0, juevesinicio = 0, juevesfin = 0;
+  var viernes = 0, viernesinicio = 0, viernesfin = 0;
+  var sabado = 0, sabadoinicio = 0, sabadofin = 0;
+  var domingo = 0, domingoinicio = 0, domingofin = 0;
+
+  if ($("#todos").is(":checked") && !$("#dias17").prop("disabled")) {
+    lunes = 1; lunesinicio = $("#hora11").val(); lunesfin = $("#horat11").val();
+    martes = 1; martesinicio = $("#hora12").val(); martesfin = $("#horat12").val();
+    miercoles = 1; miercolesinicio = $("#hora13").val(); miercolesfin = $("#horat13").val();
+    jueves = 1; juevesinicio = $("#hora14").val(); juevesfin = $("#horat14").val();
+    viernes = 1; viernesinicio = $("#hora15").val(); viernesfin = $("#horat15").val();
+    sabado = 1; sabadoinicio = $("#hora16").val(); sabadofin = $("#horat16").val();
+    domingo = 1; domingoinicio = $("#hora17").val(); domingofin = $("#horat17").val();
+  } else {
+    if ($("#dias11").is(":checked")) { lunes = 1; lunesinicio = $("#hora11").val(); lunesfin = $("#horat11").val(); }
+    if ($("#dias12").is(":checked")) { martes = 1; martesinicio = $("#hora12").val(); martesfin = $("#horat12").val(); }
+    if ($("#dias13").is(":checked")) { miercoles = 1; miercolesinicio = $("#hora13").val(); miercolesfin = $("#horat13").val(); }
+    if ($("#dias14").is(":checked")) { jueves = 1; juevesinicio = $("#hora14").val(); juevesfin = $("#horat14").val(); }
+    if ($("#dias15").is(":checked")) { viernes = 1; viernesinicio = $("#hora15").val(); viernesfin = $("#horat15").val(); }
+    if ($("#dias16").is(":checked")) { sabado = 1; sabadoinicio = $("#hora16").val(); sabadofin = $("#horat16").val(); }
+    if ($("#dias17").is(":checked") && !$("#dias17").prop("disabled")) { domingo = 1; domingoinicio = $("#hora17").val(); domingofin = $("#horat17").val(); }
+  }
+
+  formData.append('lunes', lunes);
+  formData.append('lunesinicio', lunesinicio);
+  formData.append('lunesfin', lunesfin);
+  formData.append('martes', martes);
+  formData.append('martesinicio', martesinicio);
+  formData.append('martesfin', martesfin);
+  formData.append('miercoles', miercoles);
+  formData.append('miercolesinicio', miercolesinicio);
+  formData.append('miercolesfin', miercolesfin);
+  formData.append('jueves', jueves);
+  formData.append('juevesinicio', juevesinicio);
+  formData.append('juevesfin', juevesfin);
+  formData.append('viernes', viernes);
+  formData.append('viernesinicio', viernesinicio);
+  formData.append('viernesfin', viernesfin);
+  formData.append('sabado', sabado);
+  formData.append('sabadoinicio', sabadoinicio);
+  formData.append('sabadofin', sabadofin);
+  formData.append('domingo', domingo);
+  formData.append('domingoinicio', domingoinicio);
+  formData.append('domingofin', domingofin);
+
+  // Capturar datos Distribucion Jornada laboral Matutina
+  var lunesm = 0, lunesiniciom = 0, lunesfinm = 0;
+  var martesm = 0, martesiniciom = 0, martesfinm = 0;
+  var miercolesm = 0, miercolesiniciom = 0, miercolesfinm = 0;
+  var juevesm = 0, juevesiniciom = 0, juevesfinm = 0;
+  var viernesm = 0, viernesiniciom = 0, viernesfinm = 0;
+  var sabadom = 0, sabadoiniciom = 0, sabadofinm = 0;
+  var domingom = 0, domingoiniciom = 0, domingofinm = 0;
+
+  if ($("#todo1").is(":checked") && !$("#dias27").prop("disabled")) {
+    lunesm = 1; lunesiniciom = $("#hora21").val(); lunesfinm = $("#horat21").val();
+    martesm = 1; martesiniciom = $("#hora22").val(); martesfinm = $("#horat22").val();
+    miercolesm = 1; miercolesiniciom = $("#hora23").val(); miercolesfinm = $("#horat23").val();
+    juevesm = 1; juevesiniciom = $("#hora24").val(); juevesfinm = $("#horat24").val();
+    viernesm = 1; viernesiniciom = $("#hora25").val(); viernesfinm = $("#horat25").val();
+    sabadom = 1; sabadoiniciom = $("#hora26").val(); sabadofinm = $("#horat26").val();
+    domingom = 1; domingoiniciom = $("#hora27").val(); domingofinm = $("#horat27").val();
+  } else {
+    if ($("#dias21").is(":checked")) { lunesm = 1; lunesiniciom = $("#hora21").val(); lunesfinm = $("#horat21").val(); }
+    if ($("#dias22").is(":checked")) { martesm = 1; martesiniciom = $("#hora22").val(); martesfinm = $("#horat22").val(); }
+    if ($("#dias23").is(":checked")) { miercolesm = 1; miercolesiniciom = $("#hora23").val(); miercolesfinm = $("#horat23").val(); }
+    if ($("#dias24").is(":checked")) { juevesm = 1; juevesiniciom = $("#hora24").val(); juevesfinm = $("#horat24").val(); }
+    if ($("#dias25").is(":checked")) { viernesm = 1; viernesiniciom = $("#hora25").val(); viernesfinm = $("#horat25").val(); }
+    if ($("#dias26").is(":checked")) { sabadom = 1; sabadoiniciom = $("#hora26").val(); sabadofinm = $("#horat26").val(); }
+    if ($("#dias27").is(":checked") && !$("#dias27").prop("disabled")) { domingom = 1; domingoiniciom = $("#hora27").val(); domingofinm = $("#horat27").val(); }
+  }
+
+  formData.append('lunesm', lunesm);
+  formData.append('lunesminicio', lunesiniciom);
+  formData.append('lunesmfin', lunesfinm);
+  formData.append('martesm', martesm);
+  formData.append('martesminicio', martesiniciom);
+  formData.append('martesmfin', martesfinm);
+  formData.append('miercolesm', miercolesm);
+  formData.append('miercolesminicio', miercolesiniciom);
+  formData.append('miercolesmfin', miercolesfinm);
+  formData.append('juevesm', juevesm);
+  formData.append('juevesminicio', juevesiniciom);
+  formData.append('juevesmfin', juevesfinm);
+  formData.append('viernesm', viernesm);
+  formData.append('viernesminicio', viernesiniciom);
+  formData.append('viernesmfin', viernesfinm);
+  formData.append('sabadom', sabadom);
+  formData.append('sabadominicio', sabadoiniciom);
+  formData.append('sabadomfin', sabadofinm);
+  formData.append('domingom', domingom);
+  formData.append('domingominicio', domingoiniciom);
+  formData.append('domingomfin', domingofinm);
+
+  // Capturar datos Distribucion Jornada laboral Tarde
+  var lunest = 0, lunesiniciot = 0, lunesfint = 0;
+  var martest = 0, martesiniciot = 0, martesfint = 0;
+  var miercolest = 0, miercolesiniciot = 0, miercolesfint = 0;
+  var juevest = 0, juevesiniciot = 0, juevesfint = 0;
+  var viernest = 0, viernesiniciot = 0, viernesfint = 0;
+  var sabadot = 0, sabadoiniciot = 0, sabadofint = 0;
+  var domingot = 0, domingoiniciot = 0, domingofint = 0;
+
+  if ($("#todo2").is(":checked") && !$("#dias37").prop("disabled")) {
+    lunest = 1; lunesiniciot = $("#hora31").val(); lunesfint = $("#horat31").val();
+    martest = 1; martesiniciot = $("#hora32").val(); martesfint = $("#horat32").val();
+    miercolest = 1; miercolesiniciot = $("#hora33").val(); miercolesfint = $("#horat33").val();
+    juevest = 1; juevesiniciot = $("#hora34").val(); juevesfint = $("#horat34").val();
+    viernest = 1; viernesiniciot = $("#hora35").val(); viernesfint = $("#horat35").val();
+    sabadot = 1; sabadoiniciot = $("#hora36").val(); sabadofint = $("#horat36").val();
+    domingot = 1; domingoiniciot = $("#hora37").val(); domingofint = $("#horat37").val();
+  } else {
+    if ($("#dias31").is(":checked")) { lunest = 1; lunesiniciot = $("#hora31").val(); lunesfint = $("#horat31").val(); }
+    if ($("#dias32").is(":checked")) { martest = 1; martesiniciot = $("#hora32").val(); martesfint = $("#horat32").val(); }
+    if ($("#dias33").is(":checked")) { miercolest = 1; miercolesiniciot = $("#hora33").val(); miercolesfint = $("#horat33").val(); }
+    if ($("#dias34").is(":checked")) { juevest = 1; juevesiniciot = $("#hora34").val(); juevesfint = $("#horat34").val(); }
+    if ($("#dias35").is(":checked")) { viernest = 1; viernesiniciot = $("#hora35").val(); viernesfint = $("#horat35").val(); }
+    if ($("#dias36").is(":checked")) { sabadot = 1; sabadoiniciot = $("#hora36").val(); sabadofint = $("#horat36").val(); }
+    if ($("#dias37").is(":checked") && !$("#dias37").prop("disabled")) { domingot = 1; domingoiniciot = $("#hora37").val(); domingofint = $("#horat37").val(); }
+  }
+
+  formData.append('lunest', lunest);
+  formData.append('lunestinicio', lunesiniciot);
+  formData.append('lunestfin', lunesfint);
+  formData.append('martest', martest);
+  formData.append('martestinicio', martesiniciot);
+  formData.append('martestfin', martesfint);
+  formData.append('miercolest', miercolest);
+  formData.append('miercolestinicio', miercolesiniciot);
+  formData.append('miercolestfin', miercolesfint);
+  formData.append('juevest', juevest);
+  formData.append('juevestinicio', juevesiniciot);
+  formData.append('juevestfin', juevesfint);
+  formData.append('viernest', viernest);
+  formData.append('viernestinicio', viernesiniciot);
+  formData.append('viernestfin', viernesfint);
+  formData.append('sabadot', sabadot);
+  formData.append('sabadotinicio', sabadoiniciot);
+  formData.append('sabadotfin', sabadofint);
+  formData.append('domingot', domingot);
+  formData.append('domingotinicio', domingoiniciot);
+  formData.append('domingotfin', domingofint);
+
+  // Capturar datos Distribucion Jornada laboral Noche
+  var lunesn = 0, lunesinicion = 0, lunesfinn = 0;
+  var martesn = 0, martesinicion = 0, martesfinn = 0;
+  var miercolesn = 0, miercolesinicion = 0, miercolesfinn = 0;
+  var juevesn = 0, juevesinicion = 0, juevesfinn = 0;
+  var viernesn = 0, viernesinicion = 0, viernesfinn = 0;
+  var sabadon = 0, sabadoinicion = 0, sabadofinn = 0;
+  var domingon = 0, domingoinicion = 0, domingofinn = 0;
+
+  if ($("#todo3").is(":checked") && !$("#dias47").prop("disabled")) {
+    lunesn = 1; lunesinicion = $("#hora41").val(); lunesfinn = $("#horat41").val();
+    martesn = 1; martesinicion = $("#hora42").val(); martesfinn = $("#horat42").val();
+    miercolesn = 1; miercolesinicion = $("#hora43").val(); miercolesfinn = $("#horat43").val();
+    juevesn = 1; juevesinicion = $("#hora44").val(); juevesfinn = $("#horat44").val();
+    viernesn = 1; viernesinicion = $("#hora45").val(); viernesfinn = $("#horat45").val();
+    sabadon = 1; sabadoinicion = $("#hora46").val(); sabadofinn = $("#horat46").val();
+    domingon = 1; domingoinicion = $("#hora47").val(); domingofinn = $("#horat47").val();
+  } else {
+    if ($("#dias41").is(":checked")) { lunesn = 1; lunesinicion = $("#hora41").val(); lunesfinn = $("#horat41").val(); }
+    if ($("#dias42").is(":checked")) { martesn = 1; martesinicion = $("#hora42").val(); martesfinn = $("#horat42").val(); }
+    if ($("#dias43").is(":checked")) { miercolesn = 1; miercolesinicion = $("#hora43").val(); miercolesfinn = $("#horat43").val(); }
+    if ($("#dias44").is(":checked")) { juevesn = 1; juevesinicion = $("#hora44").val(); juevesfinn = $("#horat44").val(); }
+    if ($("#dias45").is(":checked")) { viernesn = 1; viernesinicion = $("#hora45").val(); viernesfinn = $("#horat45").val(); }
+    if ($("#dias46").is(":checked")) { sabadon = 1; sabadoinicion = $("#hora46").val(); sabadofinn = $("#horat46").val(); }
+    if ($("#dias47").is(":checked") && !$("#dias47").prop("disabled")) { domingon = 1; domingoinicion = $("#hora47").val(); domingofinn = $("#horat47").val(); }
+  }
+
+  formData.append('lunesn', lunesn);
+  formData.append('lunesninicio', lunesinicion);
+  formData.append('lunesnfin', lunesfinn);
+  formData.append('martesn', martesn);
+  formData.append('martesninicio', martesinicion);
+  formData.append('martesnfin', martesfinn);
+  formData.append('miercolesn', miercolesn);
+  formData.append('miercolesninicio', miercolesinicion);
+  formData.append('miercolesnfin', miercolesfinn);
+  formData.append('juevesn', juevesn);
+  formData.append('juevesninicio', juevesinicion);
+  formData.append('juevesnfin', juevesfinn);
+  formData.append('viernesn', viernesn);
+  formData.append('viernesninicio', viernesinicion);
+  formData.append('viernesnfin', viernesfinn);
+  formData.append('sabadon', sabadon);
+  formData.append('sabadoninicio', sabadoinicion);
+  formData.append('sabadonfin', sabadofinn);
+  formData.append('domingon', domingon);
+  formData.append('domingoninicio', domingoinicion);
+  formData.append('domingonfin', domingofinn);
+
+  // Otros campos adicionales
+  formData.append('exluido', $("#exluido").is(":checked") ? 1 : 0);
+  formData.append('territoriozona', $("#territoriozona").is(":checked") ? 1 : 0);
+  formData.append('badi', $("#badi").is(":checked") ? 1 : 0);
+  formData.append('otrter', $("#otrter").val() || '');
+  formData.append('jornadaesc', $("#jornadaesc").is(":checked") ? 1 : 0);
+  formData.append('typecontract', $("#typecontract").val() || '1');
+  formData.append('duracionjor', $("#duracionjor").val() || '');
+  formData.append('diasf', $("#diasf").val() || '');
+  formData.append('horaspactadas', $("#horaspactadas").val() || '');
+
+  // Enviar datos para generar preview
+  fetch('php/pdf/generarcontratoindividual.php', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    $("#global-loader").fadeOut("slow");
+
+    if (data.success) {
+      // Mostrar preview del PDF
+      mostrarPreviewPDF(data.pdf, data.trabajador, data.empresa);
+    } else {
+      ToastifyError(data.error || 'Error al generar el preview del contrato');
+    }
+  })
+  .catch(error => {
+    $("#global-loader").fadeOut("slow");
+    console.error('Error:', error);
+    ToastifyError('Error al generar el preview: ' + error.message);
+  });
+}
+
+/**
+ * Muestra el PDF en un modal para preview
+ */
+function mostrarPreviewPDF(pdfBase64, trabajador, empresa) {
+  // Convertir base64 a blob
+  const pdfBlob = base64ToBlob(pdfBase64, 'application/pdf');
+  const pdfUrl = URL.createObjectURL(pdfBlob);
+
+  // Actualizar información en el modal
+  $('#previewModalLabel').text('Preview del Contrato - ' + trabajador);
+  $('#previewTrabajador').text(trabajador);
+  $('#previewEmpresa').text(empresa);
+
+  // Mostrar PDF en el iframe
+  $('#previewPdfFrame').attr('src', pdfUrl);
+
+  // Mostrar el modal
+  $('#previewContratoModal').modal('show');
+
+  // Limpiar URL cuando se cierre el modal
+  $('#previewContratoModal').on('hidden.bs.modal', function () {
+    URL.revokeObjectURL(pdfUrl);
+    $('#previewPdfFrame').attr('src', '');
+  });
+}
+
+/**
+ * Confirma y guarda el contrato definitivamente
+ */
+function confirmarYGuardarContrato() {
+  // Mostrar loader
+  $("#global-loader").fadeIn("slow");
+  $('#btnConfirmarContrato').prop('disabled', true);
+
+  // Enviar confirmación
+  fetch('php/pdf/confirmarcontrato.php', {
+    method: 'POST'
+  })
+  .then(response => response.json())
+  .then(data => {
+    $("#global-loader").fadeOut("slow");
+    $('#btnConfirmarContrato').prop('disabled', false);
+
+    if (data.success) {
+      // Cerrar modal
+      $('#previewContratoModal').modal('hide');
+
+      // Mostrar mensaje de éxito
+      ToastifySuccess('Contrato registrado exitosamente');
+
+      // Esperar un momento y redirigir
+      setTimeout(function() {
+        window.location.href = 'impresiondocumentos.php';
+      }, 1500);
+    } else {
+      ToastifyError(data.error || 'Error al guardar el contrato');
+    }
+  })
+  .catch(error => {
+    $("#global-loader").fadeOut("slow");
+    $('#btnConfirmarContrato').prop('disabled', false);
+    console.error('Error:', error);
+    ToastifyError('Error al guardar el contrato: ' + error.message);
+  });
+}
+
+/**
+ * Cancela el preview y cierra el modal
+ */
+function cancelarPreview() {
+  $('#previewContratoModal').modal('hide');
+}
+
+/**
+ * Convierte base64 a Blob
+ */
+function base64ToBlob(base64, contentType) {
+  contentType = contentType || '';
+  const sliceSize = 1024;
+  const byteCharacters = atob(base64);
+  const byteArrays = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    const slice = byteCharacters.slice(offset, offset + sliceSize);
+    const byteNumbers = new Array(slice.length);
+
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+  }
+
+  return new Blob(byteArrays, { type: contentType });
+}

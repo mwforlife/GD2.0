@@ -127,13 +127,26 @@ class Controller
     }
 
     //Query return ID
+    private $lastError = '';
+
     public function query_id($sql)
     {
         $this->conexion();
         $result = $this->mi->query($sql);
+        if ($result === false) {
+            $this->lastError = $this->mi->error;
+            $this->desconectar();
+            return 0;
+        }
         $id = $this->mi->insert_id;
+        $this->lastError = '';
         $this->desconectar();
         return $id;
+    }
+
+    public function getLastError()
+    {
+        return $this->lastError;
     }
 
     //validar usuario
@@ -5295,7 +5308,7 @@ class Controller
     function listarcontratosactivosempresa($empresa)
     {
         $this->conexion();
-        $sql = "select contratos.id as id, trabajadores.rut as rut,trabajadores.nombre as nombre, centrocosto.nombre as centrocosto, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos,centrocosto, trabajadores, empresa where contratos.empresa = $empresa and trabajadores.id = contratos.trabajador and contratos.centrocosto=centrocosto.id and empresa.id = contratos.empresa and contratos.estado=1";
+        $sql = "select contratos.id as id, contratos.formato_contrato as formato_contrato, trabajadores.rut as rut,trabajadores.nombre as nombre, centrocosto.nombre as centrocosto, trabajadores.primerapellido as primerapellido, trabajadores.segundoapellido as segundoapellido, empresa.razonsocial as razonsocial, contratos.tipocontrato as tipocontrato,cargo, sueldo, fechainicio, fechatermino, documento, estado, contratos.register_at as register_at from contratos,centrocosto, trabajadores, empresa where contratos.empresa = $empresa and trabajadores.id = contratos.trabajador and contratos.centrocosto=centrocosto.id and empresa.id = contratos.empresa and contratos.estado=1";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -5313,6 +5326,7 @@ class Controller
             $estado = $rs['estado'];
             $register_at = $rs['rut'];
             $contrato = new Contrato($id, $nombre, $razonsocial, $centrocosto, $tipocontrato, $cargo, $sueldo, $fechainicio, $fechatermino, $documento, $estado, $register_at);
+            $contrato->setFormatoContrato($rs['formato_contrato']);
             $lista[] = $contrato;
         }
         $this->desconectar();
@@ -6416,10 +6430,12 @@ class Controller
         while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
             $contrato = $rs['tipocontrato'];
-            if ($contrato == "Contrato a Plazo Fijo") {
+            if ($contrato == "Contrato a Plazo Fijo" || $contrato == 2) {
                 $contrato = "Plazo Fijo";
-            } else if ($contrato == "Contrato Indefinido") {
+            } else if ($contrato == "Contrato Indefinido" || $contrato == 1) {
                 $contrato = "Indefinido";
+            } else {
+                $contrato = "Por Obra o Faena";
             }
             $lote = $rs['nombre'];
             $nombre = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
@@ -6437,24 +6453,43 @@ class Controller
     function listarlotestext2($empresa)
     {
         $this->conexion();
-        $sql = "select distinct detallelotes.contrato as idcont, detallelotes.id as id, lotes.nombre as nombre, contratos.tipocontrato as tipocontrato, fechainicio, fechatermino, trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, contratos.documento as documento, trabajadores.segundoapellido as apellido2 from detallelotes, lotes, contratos, trabajadores where detallelotes.lotes = lotes.id and detallelotes.contrato = contratos.id and contratos.trabajador = trabajadores.id and contratos.estado = 1 and lotes=$empresa order by lotes.nombre asc";
+        $sql = "select distinct detallelotes.contrato as idcont, detallelotes.id as id, lotes.nombre as nombre, contratos.tipocontrato as tipocontrato, contratos.formato_contrato as formato_contrato, fechainicio, fechatermino, trabajadores.nombre as nombretra, trabajadores.primerapellido as apellido1, contratos.documento as documento, trabajadores.segundoapellido as apellido2 from detallelotes, lotes, contratos, trabajadores where detallelotes.lotes = lotes.id and detallelotes.contrato = contratos.id and contratos.trabajador = trabajadores.id and contratos.estado = 1 and lotes=$empresa order by lotes.nombre asc";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
-            $contrato = $rs['tipocontrato'];
-            if ($contrato == "Contrato a Plazo Fijo") {
-                $contrato = "Plazo Fijo";
-            } else if ($contrato == "Contrato Indefinido") {
-                $contrato = "Indefinido";
+            $idcontrato = $rs['idcont'];
+            $fechainicio = $rs['fechainicio'];
+            $fechatermino = $rs['fechatermino'];
+            $tipocontrato = $rs['tipocontrato'];
+            $tipocontratotexto = "";
+            if ($tipocontrato == "Contrato a Plazo Fijo" || $tipocontrato == 2) {
+                $tipocontratotexto = "Plazo Fijo";
+            } else if ($tipocontrato == "Contrato Indefinido" || $tipocontrato == 1) {
+                $tipocontratotexto = "Indefinido";
+            } else {
+                $tipocontratotexto = "Por Obra o Faena";
             }
-            $contrato = $contrato . " - " . date("d-m-Y", strtotime($rs['fechainicio']));
+            $contrato = $tipocontratotexto . " - " . date("d-m-Y", strtotime($rs['fechainicio']));
             $lote = $rs['nombre'];
-            $nombre = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
-            $fechainicio = $rs['documento'];
-            $fechatermino = $rs['idcont'];
-            $l = new Lotes_contrato($id, $contrato, $nombre, $lote, $fechainicio, $fechatermino);
+            $nombre_trabajador = $rs['nombretra'] . " " . $rs['apellido1'] . " " . $rs['apellido2'];
+            $ruta_documento = $rs['documento'];
+            $formato_contrato = $rs['formato_contrato'];
+
+            $l = array("id" => $id,
+                "idcontrato" => $idcontrato,
+                "contrato" => $contrato,
+                "nombre" => $nombre_trabajador,
+                "lote" => $lote,
+                "fechainicio" => $fechainicio,
+                "fechatermino" => $fechatermino,
+                "ruta_documento" => $ruta_documento,
+                "formato_contrato" => $formato_contrato
+            );
+
             $lista[] = $l;
+            //$l = new Lotes_contrato($id, $contrato, $nombre, $lote, $fechainicio, $fechatermino);
+            //$lista[] = $l;
         }
         $this->desconectar();
         return $lista;
@@ -6513,7 +6548,7 @@ class Controller
     //Validar si el contrato tiene asistencias
     function buscarasistenciacontrato($id){
         $this->conexion();
-        $sql = "select * asistencia where contrato = $id";
+        $sql = "select * from asistencia where contrato = $id";
         $result = $this->mi->query($sql);
         if ($rs = mysqli_fetch_array($result)) {
             $this->desconectar();
@@ -12490,4 +12525,935 @@ private function convertirNumeroALetras($numero)
         $this->desconectar();
         return $result;
     }
+
+    // ==================================================================================
+    // MÉTODOS DE TRANSACCIONES - Sistema de Eliminación de Contratos
+    // ==================================================================================
+
+    /**
+     * Inicia una transacción en la base de datos
+     * NOTA: Este método NO cierra la conexión. Debe llamarse commitTransaccion() o rollbackTransaccion()
+     */
+    public function iniciarTransaccion()
+    {
+        $this->conexion();
+        $this->mi->query("SET autocommit=0");
+        $this->mi->query("START TRANSACTION");
+    }
+
+    /**
+     * Confirma (commit) la transacción actual y cierra la conexión
+     */
+    public function commitTransaccion()
+    {
+        // Reconectar si es necesario
+        if (!isset($this->mi) || $this->mi->connect_errno) {
+            $this->conexion();
+        }
+        $this->mi->query("COMMIT");
+        $this->mi->query("SET autocommit=1");
+        $this->desconectar();
+    }
+
+    /**
+     * Revierte (rollback) la transacción actual y cierra la conexión
+     */
+    public function rollbackTransaccion()
+    {
+        // Reconectar si es necesario
+        if (!isset($this->mi) || $this->mi->connect_errno) {
+            $this->conexion();
+        }
+        $this->mi->query("ROLLBACK");
+        $this->mi->query("SET autocommit=1");
+        $this->desconectar();
+    }
+
+    // ==================================================================================
+    // MÉTODOS DE LISTADO POR CONTRATO - Sistema de Eliminación de Contratos
+    // ==================================================================================
+
+    /**
+     * Lista todas las asistencias de un contrato
+     * @param int $contrato - ID del contrato
+     * @return array|null - Array de objetos Asistencia o null
+     */
+    public function listarasistenciasporcontrato($contrato)
+    {
+        $this->conexion();
+        $sql = "SELECT * FROM asistencia WHERE contrato = ?";
+        $stmt = $this->mi->prepare($sql);
+        $stmt->bind_param("i", $contrato);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $asistencias = array();
+        while ($row = $result->fetch_assoc()) {
+            $asistencia = new stdClass();
+            $asistencia->id = $row['id'];
+            $asistencia->fecha = $row['fecha'];
+            $asistencia->estado = $row['estado'];
+            $asistencia->trabajador = $row['trabajador'];
+            $asistencia->contrato = $row['contrato'];
+            $asistencias[] = $asistencia;
+        }
+
+        $stmt->close();
+        $this->desconectar();
+
+        return count($asistencias) > 0 ? $asistencias : null;
+    }
+
+    /**
+     * Lista todas las liquidaciones de un contrato
+     * @param int $contrato - ID del contrato
+     * @return array|null - Array de objetos Liquidacion o null
+     */
+    public function listarliquidacionesporcontrato($contrato)
+    {
+        $this->conexion();
+        $sql = "SELECT * FROM liquidaciones WHERE contrato = ?";
+        $stmt = $this->mi->prepare($sql);
+        $stmt->bind_param("i", $contrato);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $liquidaciones = array();
+        while ($row = $result->fetch_assoc()) {
+            $liquidacion = new Liquidacion(
+                $row['id'],
+                $row['folio'],
+                $row['contrato'],
+                $row['periodo'],
+                $row['empresa'],
+                $row['trabajador'],
+                $row['diastrabajados'],
+                $row['sueldobase'],
+                $row['horasfalladas'],
+                $row['horasextras1'],
+                $row['horasextras2'],
+                $row['horasextras3'],
+                $row['afp'],
+                $row['porafp'],
+                $row['porsis'],
+                $row['salud'],
+                $row['porsalud'],
+                $row['desafp'],
+                $row['dessis'],
+                $row['dessal'],
+                $row['gratificacion'],
+                $row['totalimponible'],
+                $row['totalnoimponible'],
+                $row['totaltributable'],
+                $row['totaldeslegales'],
+                $row['totaldesnolegales'],
+                $row['fecha_liquidacion'],
+                $row['register_at']
+            );
+            $liquidaciones[] = $liquidacion;
+        }
+
+        $stmt->close();
+        $this->desconectar();
+
+        return count($liquidaciones) > 0 ? $liquidaciones : null;
+    }
+
+    /**
+     * Lista todos los finiquitos de un contrato
+     * @param int $contrato - ID del contrato
+     * @return array|null - Array de objetos Finiquito o null
+     */
+    public function listarfiniquitosporcontrato($contrato)
+    {
+        $this->conexion();
+        $sql = "SELECT * FROM finiquito WHERE contrato = ?";
+        $stmt = $this->mi->prepare($sql);
+        $stmt->bind_param("i", $contrato);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $finiquitos = array();
+        while ($row = $result->fetch_assoc()) {
+            $finiquito = new Finiquito(
+                $row['id'],
+                $row['contrato'],
+                $row['tipodocumento'],
+                $row['fechafiniqito'],
+                $row['fechainicio'],
+                $row['fechatermino'],
+                $row['causalterminocontrato'],
+                $row['trabajador'],
+                $row['empresa'],
+                $row['register_at']
+            );
+            $finiquitos[] = $finiquito;
+        }
+
+        $stmt->close();
+        $this->desconectar();
+
+        return count($finiquitos) > 0 ? $finiquitos : null;
+    }
+
+    /**
+     * Lista todos los contratos firmados de un contrato
+     * @param int $contrato - ID del contrato
+     * @return array|null - Array de objetos o null
+     */
+    public function listarcontratosfirmadosporcontrato($contrato)
+    {
+        $this->conexion();
+        $sql = "SELECT * FROM contratosfirmados WHERE contrato = ?";
+        $stmt = $this->mi->prepare($sql);
+        $stmt->bind_param("i", $contrato);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $contratos = array();
+        while ($row = $result->fetch_assoc()) {
+            $obj = new stdClass();
+            $obj->id = $row['id'];
+            $obj->empresa = $row['empresa'];
+            $obj->centrocosto = $row['centrocosto'];
+            $obj->contrato = $row['contrato'];
+            $obj->documento = $row['documento'];
+            $contratos[] = $obj;
+        }
+
+        $stmt->close();
+        $this->desconectar();
+
+        return count($contratos) > 0 ? $contratos : null;
+    }
+
+    /**
+     * Lista todos los anexos de un contrato
+     * @param int $contrato - ID del contrato
+     * @return array|null - Array de objetos Anexo o null
+     */
+    public function listaranexosporcontrato($contrato)
+    {
+        $this->conexion();
+        $sql = "SELECT * FROM anexoscontrato WHERE contrato = ?";
+        $stmt = $this->mi->prepare($sql);
+        $stmt->bind_param("i", $contrato);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $anexos = array();
+        while ($row = $result->fetch_assoc()) {
+            $anexo = new Anexo(
+                $row['id'],
+                $row['contrato'],
+                $row['fechageneracion'],
+                $row['base'],
+                $row['sueldo_base'],
+                $row['estado'],
+                $row['register_at']
+            );
+            $anexos[] = $anexo;
+        }
+
+        $stmt->close();
+        $this->desconectar();
+
+        return count($anexos) > 0 ? $anexos : null;
+    }
+
+    /**
+     * Lista todos los documentos de un contrato
+     * @param int $contrato - ID del contrato
+     * @return array|null - Array de objetos Documento o null
+     */
+    public function listardocumentosporcontrato($contrato)
+    {
+        $this->conexion();
+        $sql = "SELECT * FROM documentos WHERE contrato = ?";
+        $stmt = $this->mi->prepare($sql);
+        $stmt->bind_param("i", $contrato);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $documentos = array();
+        while ($row = $result->fetch_assoc()) {
+            $doc = new Documento(
+                $row['id'],
+                $row['trabajador'],
+                $row['empresa'],
+                $row['tipodocumento'],
+                $row['fechageneracion'],
+                $row['documento'],
+                $row['register_at']
+            );
+            $documentos[] = $doc;
+        }
+
+        $stmt->close();
+        $this->desconectar();
+
+        return count($documentos) > 0 ? $documentos : null;
+    }
+
+    /**
+     * Lista todas las horas pactadas de un contrato
+     * @param int $contrato - ID del contrato
+     * @return array|null - Array de objetos o null
+     */
+    public function listarhoraspactadasporcontrato($contrato)
+    {
+        $this->conexion();
+        $sql = "SELECT * FROM horaspactadas WHERE contrato = ?";
+        $stmt = $this->mi->prepare($sql);
+        $stmt->bind_param("i", $contrato);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $horas = array();
+        while ($row = $result->fetch_assoc()) {
+            $obj = new stdClass();
+            $obj->id = $row['id'];
+            $obj->horas = $row['horas'];
+            $obj->contrato = $row['contrato'];
+            $horas[] = $obj;
+        }
+
+        $stmt->close();
+        $this->desconectar();
+
+        return count($horas) > 0 ? $horas : null;
+    }
+
+    /**
+     * Lista todos los detalle de lotes de un contrato
+     * @param int $contrato - ID del contrato
+     * @return array|null - Array de objetos o null
+     */
+    public function listardetallelotesporcontrato($contrato)
+    {
+        $this->conexion();
+        $sql = "SELECT * FROM detallelotes WHERE contrato = ?";
+        $stmt = $this->mi->prepare($sql);
+        $stmt->bind_param("i", $contrato);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $lotes = array();
+        while ($row = $result->fetch_assoc()) {
+            $obj = new stdClass();
+            $obj->id = $row['id'];
+            $obj->contrato = $row['contrato'];
+            $obj->lotes = $row['lotes'];
+            $lotes[] = $obj;
+        }
+
+        $stmt->close();
+        $this->desconectar();
+
+        return count($lotes) > 0 ? $lotes : null;
+    }
+
+    /**
+     * Lista todos los lote2 de un contrato
+     * @param int $contrato - ID del contrato
+     * @return array|null - Array de objetos o null
+     */
+    public function listarlote2porcontrato($contrato)
+    {
+        $this->conexion();
+        $sql = "SELECT * FROM lote2 WHERE contrato = ?";
+        $stmt = $this->mi->prepare($sql);
+        $stmt->bind_param("i", $contrato);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $lotes = array();
+        while ($row = $result->fetch_assoc()) {
+            $obj = new stdClass();
+            $obj->id = $row['id'];
+            $obj->contrato = $row['contrato'];
+            $obj->usuario = $row['usuario'];
+            $lotes[] = $obj;
+        }
+
+        $stmt->close();
+        $this->desconectar();
+
+        return count($lotes) > 0 ? $lotes : null;
+    }
+
+    /**
+     * Lista todos los lote4 de un contrato
+     * @param int $contrato - ID del contrato
+     * @return array|null - Array de objetos o null
+     */
+    public function listarlote4porcontrato($contrato)
+    {
+        $this->conexion();
+        $sql = "SELECT * FROM lote4 WHERE contrato = ?";
+        $stmt = $this->mi->prepare($sql);
+        $stmt->bind_param("i", $contrato);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $lotes = array();
+        while ($row = $result->fetch_assoc()) {
+            $obj = new stdClass();
+            $obj->id = $row['id'];
+            $obj->contrato = $row['contrato'];
+            $obj->usuario = $row['usuario'];
+            $obj->empresa = $row['empresa'];
+            $lotes[] = $obj;
+        }
+
+        $stmt->close();
+        $this->desconectar();
+
+        return count($lotes) > 0 ? $lotes : null;
+    }
+
+    // ==================================================================================
+    // MÉTODOS DE ELIMINACIÓN ADICIONALES - Sistema de Eliminación de Contratos
+    // ==================================================================================
+
+    /**
+     * Elimina el detalle de liquidación por ID de liquidación
+     * @param int $idLiquidacion - ID de la liquidación
+     * @return bool - true si se eliminó correctamente
+     */
+    public function eliminardetalleliquidacion($idLiquidacion)
+    {
+        $this->conexion();
+        $sql = "DELETE FROM detalle_liquidacion WHERE liquidacion = ?";
+        $stmt = $this->mi->prepare($sql);
+        $stmt->bind_param("i", $idLiquidacion);
+        $r = $stmt->execute();
+        $stmt->close();
+        $this->desconectar();
+        return $r;
+    }
+
+    /**
+     * Elimina el aporte empleador por ID de liquidación
+     * @param int $idLiquidacion - ID de la liquidación
+     * @return bool - true si se eliminó correctamente
+     */
+    public function eliminaraporteempleador($idLiquidacion)
+    {
+        $this->conexion();
+        $sql = "DELETE FROM aporteempleador WHERE liquidacion = ?";
+        $stmt = $this->mi->prepare($sql);
+        $stmt->bind_param("i", $idLiquidacion);
+        $r = $stmt->execute();
+        $stmt->close();
+        $this->desconectar();
+        return $r;
+    }
+
+    /**
+     * Elimina las cláusulas de un anexo
+     * @param int $idAnexo - ID del anexo
+     * @return bool - true si se eliminó correctamente
+     */
+    public function eliminarclausulasanexo($idAnexo)
+    {
+        $this->conexion();
+        $sql = "DELETE FROM clausulasanexos WHERE anexo = ?";
+        $stmt = $this->mi->prepare($sql);
+        $stmt->bind_param("i", $idAnexo);
+        $r = $stmt->execute();
+        $stmt->close();
+        $this->desconectar();
+        return $r;
+    }
+
+    /**
+     * Elimina las notificaciones de un finiquito
+     * @param int $idFiniquito - ID del finiquito
+     * @return bool - true si se eliminó correctamente
+     */
+    public function eliminarnotificacionesfiniquito($idFiniquito)
+    {
+        $this->conexion();
+        $sql = "DELETE FROM notificaciones WHERE finiquito = ?";
+        $stmt = $this->mi->prepare($sql);
+        $stmt->bind_param("i", $idFiniquito);
+        $r = $stmt->execute();
+        $stmt->close();
+        $this->desconectar();
+        return $r;
+    }
+
+    /**
+     * Elimina los finiquitos firmados de un finiquito
+     * @param int $idFiniquito - ID del finiquito
+     * @return bool - true si se eliminó correctamente
+     */
+    public function eliminarfiniquitosfirmados($idFiniquito)
+    {
+        $this->conexion();
+        $sql = "DELETE FROM finiquitosfirmados WHERE finiquito = ?";
+        $stmt = $this->mi->prepare($sql);
+        $stmt->bind_param("i", $idFiniquito);
+        $r = $stmt->execute();
+        $stmt->close();
+        $this->desconectar();
+        return $r;
+    }
+
+    /**
+     * Elimina el lote3 de un finiquito
+     * @param int $idFiniquito - ID del finiquito
+     * @return bool - true si se eliminó correctamente
+     */
+    public function eliminarlote3finiquito($idFiniquito)
+    {
+        $this->conexion();
+        $sql = "DELETE FROM lote3 WHERE finiquito = ?";
+        $stmt = $this->mi->prepare($sql);
+        $stmt->bind_param("i", $idFiniquito);
+        $r = $stmt->execute();
+        $stmt->close();
+        $this->desconectar();
+        return $r;
+    }
+
+    /**
+     * Elimina las horas pactadas por ID
+     * @param int $id - ID de horas pactadas
+     * @return bool - true si se eliminó correctamente
+     */
+    public function eliminarhoraspactadas($id)
+    {
+        $this->conexion();
+        $sql = "DELETE FROM horaspactadas WHERE id = ?";
+        $stmt = $this->mi->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $r = $stmt->execute();
+        $stmt->close();
+        $this->desconectar();
+        return $r;
+    }
+
+    /**
+     * Elimina el detalle de lote por ID
+     * @param int $id - ID del detalle lote
+     * @return bool - true si se eliminó correctamente
+     */
+    public function eliminardetallelote($id)
+    {
+        $this->conexion();
+        $sql = "DELETE FROM detallelotes WHERE id = ?";
+        $stmt = $this->mi->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $r = $stmt->execute();
+        $stmt->close();
+        $this->desconectar();
+        return $r;
+    }
+
+    /**
+     * Elimina el lote2 por ID
+     * @param int $id - ID del lote2
+     * @return bool - true si se eliminó correctamente
+     */
+    public function eliminarlote2($id)
+    {
+        $this->conexion();
+        $sql = "DELETE FROM lote2 WHERE id = ?";
+        $stmt = $this->mi->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $r = $stmt->execute();
+        $stmt->close();
+        $this->desconectar();
+        return $r;
+    }
+
+    /**
+     * Elimina el lote4 por ID
+     * @param int $id - ID del lote4
+     * @return bool - true si se eliminó correctamente
+     */
+    public function eliminarlote4($id)
+    {
+        $this->conexion();
+        $sql = "DELETE FROM lote4 WHERE id = ?";
+        $stmt = $this->mi->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $r = $stmt->execute();
+        $stmt->close();
+        $this->desconectar();
+        return $r;
+    }
+
+    // FIN MÉTODOS - Sistema de Eliminación de Contratos
+
+    // ==================================================================================
+    // MÉTODOS PARA TABLAS RELACIONADAS CON CONTRATOS (retornan arrays)
+    // ==================================================================================
+
+    // ==================================================================================
+    // DISTRIBUCIÓN HORARIA DEL CONTRATO
+    // ==================================================================================
+
+    /**
+     * Obtiene la distribución horaria de un contrato
+     * @param int $contrato_id - ID del contrato
+     * @return array - Array con los registros de distribución horaria
+     */
+    public function obtenerDistribucionHorariaContrato($contrato_id)
+    {
+        $this->conexion();
+        $contrato_id = intval($contrato_id);
+        $sql = "SELECT * FROM contrato_distribucion_horaria WHERE contrato_id = $contrato_id ORDER BY tipo_turno, dia_semana";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_assoc($result)) {
+            $lista[] = $rs;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    /**
+     * Obtiene la distribución horaria de un contrato filtrada por tipo de turno
+     * @param int $contrato_id - ID del contrato
+     * @param string $tipo_turno - Tipo de turno (normal, matutino, tarde, noche)
+     * @return array - Array con los registros de distribución horaria
+     */
+    public function obtenerDistribucionHorariaPorTurno($contrato_id, $tipo_turno)
+    {
+        $this->conexion();
+        $contrato_id = intval($contrato_id);
+        $tipo_turno = $this->mi->real_escape_string($tipo_turno);
+        $sql = "SELECT * FROM contrato_distribucion_horaria WHERE contrato_id = $contrato_id AND tipo_turno = '$tipo_turno' ORDER BY dia_semana";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_assoc($result)) {
+            $lista[] = $rs;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    /**
+     * Registra la distribución horaria de un contrato
+     * @param int $contrato_id - ID del contrato
+     * @param string $tipo_turno - Tipo de turno
+     * @param int $dia_semana - Día de la semana (1-7)
+     * @param int $dia_seleccionado - Si está seleccionado (0 o 1)
+     * @param string $hora_inicio - Hora de inicio
+     * @param string $hora_termino - Hora de término
+     * @return bool - true si se registró correctamente
+     */
+    public function registrarDistribucionHoraria($contrato_id, $tipo_turno, $dia_semana, $dia_seleccionado, $hora_inicio, $hora_termino)
+    {
+        $this->conexion();
+        $contrato_id = intval($contrato_id);
+        $tipo_turno = $this->mi->real_escape_string($tipo_turno);
+        $dia_semana = intval($dia_semana);
+        $dia_seleccionado = intval($dia_seleccionado);
+        $hora_inicio = $hora_inicio ? "'" . $this->mi->real_escape_string($hora_inicio) . "'" : "NULL";
+        $hora_termino = $hora_termino ? "'" . $this->mi->real_escape_string($hora_termino) . "'" : "NULL";
+
+        $sql = "INSERT INTO contrato_distribucion_horaria (contrato_id, tipo_turno, dia_semana, dia_seleccionado, hora_inicio, hora_termino)
+                VALUES ($contrato_id, '$tipo_turno', $dia_semana, $dia_seleccionado, $hora_inicio, $hora_termino)
+                ON DUPLICATE KEY UPDATE dia_seleccionado = $dia_seleccionado, hora_inicio = $hora_inicio, hora_termino = $hora_termino";
+        $r = $this->mi->query($sql);
+        $this->desconectar();
+        return $r;
+    }
+
+    /**
+     * Elimina toda la distribución horaria de un contrato
+     * @param int $contrato_id - ID del contrato
+     * @return bool - true si se eliminó correctamente
+     */
+    public function eliminarDistribucionHorariaContrato($contrato_id)
+    {
+        $this->conexion();
+        $contrato_id = intval($contrato_id);
+        $sql = "DELETE FROM contrato_distribucion_horaria WHERE contrato_id = $contrato_id";
+        $r = $this->mi->query($sql);
+        $this->desconectar();
+        return $r;
+    }
+
+    // ==================================================================================
+    // ZONAS GEOGRÁFICAS DEL CONTRATO
+    // ==================================================================================
+
+    /**
+     * Obtiene las zonas geográficas de un contrato
+     * @param int $contrato_id - ID del contrato
+     * @return array - Array con los registros de zonas geográficas
+     */
+    public function obtenerZonasGeograficasContrato($contrato_id)
+    {
+        $this->conexion();
+        $contrato_id = intval($contrato_id);
+        $sql = "SELECT * FROM contrato_zona_geografica WHERE contrato_id = $contrato_id ORDER BY tipo_zona, zona_id";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_assoc($result)) {
+            $lista[] = $rs;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    /**
+     * Obtiene las zonas geográficas de un contrato filtradas por tipo
+     * @param int $contrato_id - ID del contrato
+     * @param string $tipo_zona - Tipo de zona (region, provincia, comuna)
+     * @return array - Array con los registros de zonas geográficas
+     */
+    public function obtenerZonasGeograficasPorTipo($contrato_id, $tipo_zona)
+    {
+        $this->conexion();
+        $contrato_id = intval($contrato_id);
+        $tipo_zona = $this->mi->real_escape_string($tipo_zona);
+        $sql = "SELECT * FROM contrato_zona_geografica WHERE contrato_id = $contrato_id AND tipo_zona = '$tipo_zona' ORDER BY zona_id";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_assoc($result)) {
+            $lista[] = $rs;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    /**
+     * Obtiene las zonas geográficas con nombres de región/provincia/comuna
+     * @param int $contrato_id - ID del contrato
+     * @return array - Array con los registros de zonas geográficas incluyendo nombres
+     */
+    public function obtenerZonasGeograficasConNombres($contrato_id)
+    {
+        $this->conexion();
+        $contrato_id = intval($contrato_id);
+        $sql = "SELECT czg.*,
+                CASE
+                    WHEN czg.tipo_zona = 'region' THEN r.nombre
+                    WHEN czg.tipo_zona = 'provincia' THEN p.nombre
+                    WHEN czg.tipo_zona = 'comuna' THEN c.nombre
+                END as nombre_zona
+                FROM contrato_zona_geografica czg
+                LEFT JOIN regiones r ON czg.tipo_zona = 'region' AND czg.zona_id = r.id
+                LEFT JOIN provincias p ON czg.tipo_zona = 'provincia' AND czg.zona_id = p.id
+                LEFT JOIN comunas c ON czg.tipo_zona = 'comuna' AND czg.zona_id = c.id
+                WHERE czg.contrato_id = $contrato_id
+                ORDER BY czg.tipo_zona, czg.zona_id";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_assoc($result)) {
+            $lista[] = $rs;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    /**
+     * Registra una zona geográfica para un contrato
+     * @param int $contrato_id - ID del contrato
+     * @param string $tipo_zona - Tipo de zona (region, provincia, comuna)
+     * @param int $zona_id - ID de la zona
+     * @return bool - true si se registró correctamente
+     */
+    public function registrarZonaGeografica($contrato_id, $tipo_zona, $zona_id)
+    {
+        $this->conexion();
+        $contrato_id = intval($contrato_id);
+        $tipo_zona = $this->mi->real_escape_string($tipo_zona);
+        $zona_id = intval($zona_id);
+
+        $sql = "INSERT IGNORE INTO contrato_zona_geografica (contrato_id, tipo_zona, zona_id)
+                VALUES ($contrato_id, '$tipo_zona', $zona_id)";
+        $r = $this->mi->query($sql);
+        $this->desconectar();
+        return $r;
+    }
+
+    /**
+     * Elimina todas las zonas geográficas de un contrato
+     * @param int $contrato_id - ID del contrato
+     * @return bool - true si se eliminó correctamente
+     */
+    public function eliminarZonasGeograficasContrato($contrato_id)
+    {
+        $this->conexion();
+        $contrato_id = intval($contrato_id);
+        $sql = "DELETE FROM contrato_zona_geografica WHERE contrato_id = $contrato_id";
+        $r = $this->mi->query($sql);
+        $this->desconectar();
+        return $r;
+    }
+
+    /**
+     * Elimina una zona geográfica específica de un contrato
+     * @param int $id - ID del registro
+     * @return bool - true si se eliminó correctamente
+     */
+    public function eliminarZonaGeografica($id)
+    {
+        $this->conexion();
+        $id = intval($id);
+        $sql = "DELETE FROM contrato_zona_geografica WHERE id = $id";
+        $r = $this->mi->query($sql);
+        $this->desconectar();
+        return $r;
+    }
+
+    // ==================================================================================
+    // ESTIPULACIONES ADICIONALES DEL CONTRATO
+    // ==================================================================================
+
+    /**
+     * Obtiene las estipulaciones de un contrato
+     * @param int $contrato_id - ID del contrato
+     * @return array - Array con los registros de estipulaciones
+     */
+    public function obtenerEstipulacionesContrato($contrato_id)
+    {
+        $this->conexion();
+        $contrato_id = intval($contrato_id);
+        $sql = "SELECT * FROM contrato_estipulaciones WHERE contrato_id = $contrato_id ORDER BY numero_estipulacion";
+        $result = $this->mi->query($sql);
+        $lista = array();
+        while ($rs = mysqli_fetch_assoc($result)) {
+            $lista[] = $rs;
+        }
+        $this->desconectar();
+        return $lista;
+    }
+
+    /**
+     * Obtiene una estipulación específica de un contrato
+     * @param int $contrato_id - ID del contrato
+     * @param int $numero_estipulacion - Número de la estipulación (1-13)
+     * @return array|false - Array con el registro o false si no existe
+     */
+    public function obtenerEstipulacion($contrato_id, $numero_estipulacion)
+    {
+        $this->conexion();
+        $contrato_id = intval($contrato_id);
+        $numero_estipulacion = intval($numero_estipulacion);
+        $sql = "SELECT * FROM contrato_estipulaciones WHERE contrato_id = $contrato_id AND numero_estipulacion = $numero_estipulacion";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_assoc($result)) {
+            $this->desconectar();
+            return $rs;
+        }
+        $this->desconectar();
+        return false;
+    }
+
+    /**
+     * Registra o actualiza una estipulación para un contrato
+     * @param int $contrato_id - ID del contrato
+     * @param int $numero_estipulacion - Número de la estipulación (1-13)
+     * @param string $contenido - Contenido de la estipulación
+     * @return bool - true si se registró/actualizó correctamente
+     */
+    public function registrarEstipulacion($contrato_id, $numero_estipulacion, $contenido)
+    {
+        $this->conexion();
+        $contrato_id = intval($contrato_id);
+        $numero_estipulacion = intval($numero_estipulacion);
+        $contenido = $this->mi->real_escape_string($contenido);
+
+        $sql = "INSERT INTO contrato_estipulaciones (contrato_id, numero_estipulacion, contenido)
+                VALUES ($contrato_id, $numero_estipulacion, '$contenido')
+                ON DUPLICATE KEY UPDATE contenido = '$contenido'";
+        $r = $this->mi->query($sql);
+        $this->desconectar();
+        return $r;
+    }
+
+    /**
+     * Elimina todas las estipulaciones de un contrato
+     * @param int $contrato_id - ID del contrato
+     * @return bool - true si se eliminó correctamente
+     */
+    public function eliminarEstipulacionesContrato($contrato_id)
+    {
+        $this->conexion();
+        $contrato_id = intval($contrato_id);
+        $sql = "DELETE FROM contrato_estipulaciones WHERE contrato_id = $contrato_id";
+        $r = $this->mi->query($sql);
+        $this->desconectar();
+        return $r;
+    }
+
+    /**
+     * Elimina una estipulación específica de un contrato
+     * @param int $contrato_id - ID del contrato
+     * @param int $numero_estipulacion - Número de la estipulación
+     * @return bool - true si se eliminó correctamente
+     */
+    public function eliminarEstipulacion($contrato_id, $numero_estipulacion)
+    {
+        $this->conexion();
+        $contrato_id = intval($contrato_id);
+        $numero_estipulacion = intval($numero_estipulacion);
+        $sql = "DELETE FROM contrato_estipulaciones WHERE contrato_id = $contrato_id AND numero_estipulacion = $numero_estipulacion";
+        $r = $this->mi->query($sql);
+        $this->desconectar();
+        return $r;
+    }
+
+    // ==================================================================================
+    // MÉTODO PARA OBTENER CONTRATO COMPLETO CON TODAS SUS RELACIONES
+    // ==================================================================================
+
+    /**
+     * Obtiene un contrato con todos sus datos relacionados (distribución horaria, zonas, estipulaciones)
+     * @param int $contrato_id - ID del contrato
+     * @return array - Array con todos los datos del contrato y sus relaciones
+     */
+    public function obtenerContratoCompleto($contrato_id)
+    {
+        $this->conexion();
+        $contrato_id = intval($contrato_id);
+
+        // Obtener datos del contrato principal
+        $sql = "SELECT * FROM contratos WHERE id = $contrato_id";
+        $result = $this->mi->query($sql);
+        $contrato = mysqli_fetch_assoc($result);
+
+        if (!$contrato) {
+            $this->desconectar();
+            return false;
+        }
+
+        $this->desconectar();
+
+        // Agregar datos relacionados
+        $contrato['distribucion_horaria'] = $this->obtenerDistribucionHorariaContrato($contrato_id);
+        $contrato['zonas_geograficas'] = $this->obtenerZonasGeograficasConNombres($contrato_id);
+        $contrato['estipulaciones'] = $this->obtenerEstipulacionesContrato($contrato_id);
+
+        return $contrato;
+    }
+
+    /**
+     * Obtiene todos los datos de un contrato como array (sin relaciones)
+     * @param int $contrato_id - ID del contrato
+     * @return array|false - Array con los datos del contrato o false si no existe
+     */
+    public function obtenerContratoPorId($contrato_id)
+    {
+        $this->conexion();
+        $contrato_id = intval($contrato_id);
+        $sql = "SELECT * FROM contratos WHERE id = $contrato_id";
+        $result = $this->mi->query($sql);
+        if ($rs = mysqli_fetch_assoc($result)) {
+            $this->desconectar();
+            return $rs;
+        }
+        $this->desconectar();
+        return false;
+    }
+
+    // FIN MÉTODOS - Tablas relacionadas con contratos
 }

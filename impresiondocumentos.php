@@ -136,7 +136,7 @@ foreach ($permiso as $p) {
 				$user = $c->buscarusuario($_SESSION['USER_ID']);
 				if ($user != null) {
 					if ($user->getTipo() != 3) {
-						?>
+				?>
 						<ul class="nav">
 							<li class="nav-header"><span class="nav-label">Dashboard</span></li>
 
@@ -408,11 +408,11 @@ foreach ($permiso as $p) {
 							<!--------------------------------------------------------------->
 
 						</ul>
-						<?php
-							} else if ($user->getTipo() == 3) {
-							?>
-							<ul class="nav">
-								<li class="nav-header"><span class="nav-label">Reporte Mandante</span></li>
+					<?php
+					} else if ($user->getTipo() == 3) {
+					?>
+						<ul class="nav">
+							<li class="nav-header"><span class="nav-label">Reporte Mandante</span></li>
 							<!-----------------------------Mandante--------------------------------->
 							<li class="nav-item">
 								<a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span
@@ -429,13 +429,13 @@ foreach ($permiso as $p) {
 									</li>
 								</ul>
 							</li>
-							</ul>
+						</ul>
 
-						<?php
+				<?php
 
-							}
-						}
-						?>
+					}
+				}
+				?>
 
 			</div>
 		</div>
@@ -593,12 +593,26 @@ foreach ($permiso as $p) {
 																				} else {
 																					echo "<td>" . date("d-m-Y", strtotime($contrato->getFechaTermino())) . "</td>";
 																				}
-																				echo "<td>" . $contrato->getTipoContrato() . "</td>";
-																				echo "<td  class='text-center'> 
-																						<a class='btn btn-outline-success btn-sm rounded-11' target='_blank' href='uploads/Contratos/" . $contrato->getDocumento() . "'><i class='fa fa-print'></i></a>
-																					</td>";
+																				//Revisar si es numerica
+																				if (is_numeric($contrato->getTipoContrato())) {
+																					if($contrato->getTipocontrato()==1){
+																						echo "<td>Contrato Indefinido</td>";
+																					}else if($contrato->getTipocontrato()==2){
+																						echo "<td>Contrato a Plazo Fijo</td>";
+																					}else if($contrato->getTipocontrato()==3){
+																						echo "<td>Obra o Faena</td>";
+																					}
+																				} else {
+																					echo "<td>" . $contrato->getTipoContrato() . "</td>";
+																				}
+																				echo "<td  class='text-center'> ";
+																				if($contrato->getFormatoContrato() == 1){
+																					echo "<a class='btn btn-outline-success btn-sm rounded-11' target='_blank' href='uploads/Contratos/" . $contrato->getDocumento() . "'><i class='fa fa-print'></i></a>";
+																				}else{
+																					echo "<span class='badge badge-danger'>No aplica</span>";
+																				}
+																				echo "</td>";
 																				echo "<td class='text-center'><a class='btn btn-outline-success btn-sm rounded-11' target='_blank' href='php/report/inscripcionfaena.php?id=" . $contrato->getId() . "'><i class='fa fa-file-excel'></i></a></td>";
-
 																				if ($contrato->getEstado() == 1) {
 																					echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminarcontrato(" . $contrato->getId() . ")'><i class='fa fa-trash'></i></button></td>";
 																				} else {

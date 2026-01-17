@@ -232,6 +232,7 @@ function validarform2() {
                 $("#subcontratacionrazonsocial").focus();
                 return false;
             }
+            mostrar3();
 
             //Validar si transitoriosval esta checkeado
         } else if ($("#transitoriosval").is(":checked")) {
@@ -248,6 +249,7 @@ function validarform2() {
                 $("#transitoriosrazonsocial").focus();
                 return false;
             }
+            mostrar3();
         } else {
             mostrar3();
             return true;
@@ -256,72 +258,79 @@ function validarform2() {
 }
 
 function validarform3() {
-    if (validarform1() == true && validarform2() == true) {
-        var tiposueldo = $("#tiposueldo").val();
-        var sueldo = $("#sueldo").val();
-        var formapago = $("#formapago").val();
-        var periodopagogra = $("#periodopagogra").val();
-        var detallerenumeraciongra = $("#detallerenumeraciongra").val();
-        var periodopagot = $("#periodopagotra").val();
-        var fechapagot = $("#fechapagotra").val();
-        var formapagot = $("#formapagot").val();
-        var anticipot = $("#anticipot").val();
-        var afp = $("#afp").val();
-        var salud = $("#salud").val();
-        var otrter = $("#otrter").val();
-
-        if (tiposueldo <= 0) {
-            ToastifyError("Debe ingresar el tipo de sueldo");
-            mostrar3();
-            $("#tiposueldo").focus();
-            return false;
-        } else if (sueldo.trim().length == 0) {
-            ToastifyError("Debe ingresar el sueldo");
-            mostrar3();
-            $("#sueldo").focus();
-            return false;
-        } else if (formapago <= 0) {
-            ToastifyError("Debe ingresar la forma de pago");
-            mostrar3();
-            $("#formapago").focus();
-            return false;
-        } else if (periodopagogra <= 0) {
-            ToastifyError("Debe ingresar el periodo de pago");
-            mostrar3();
-            $("#periodopagogra").focus();
-            return false;
-        } else if (periodopagot <= 0) {
-            ToastifyError("Debe ingresar el periodo de pago");
-            mostrar3();
-            $("#periodopagot").focus();
-            return false;
-        } else if (fechapagot <= 0) {
-            ToastifyError("Debe Seleccionar la fecha de pago");
-            mostrar3();
-            $("#fechapagot").focus();
-            return false;
-        } else if (formapagot <= 0) {
-            ToastifyError("Debe ingresar la forma de pago");
-            mostrar3();
-            $("#formapagot").focus();
-            return false;
-        } else if (anticipot <= 0) {
-            ToastifyError("Debe ingresar el anticipo");
-            mostrar3();
-            $("#anticipot").focus();
-            return false;
-        } else if ($("#badi").is(":checked")) {
-            if (otrter.trim().length == 0) {
-                ToastifyError("Debe ingresar el otro tipo de pacto");
-                mostrar3();
-                $("#otrter").focus();
-                return false;
-            }
-        } else {
-            mostrar4();
-            return true;
-        }
+    if (validarform1() == false) {
+        mostrar(1);
+        return false;
     }
+    if (validarform2() == false) {
+        mostrar(2);
+        return false;
+    }
+
+    var tiposueldo = $("#tiposueldo").val();
+    var sueldo = $("#sueldo").val();
+    var formapago = $("#formapago").val();
+    var periodopagogra = $("#periodopagogra").val();
+    var detallerenumeraciongra = $("#detallerenumeraciongra").val();
+    var periodopagot = $("#periodopagotra").val();
+    var fechapagot = $("#fechapagotra").val();
+    var formapagot = $("#formapagot").val();
+    var anticipot = $("#anticipot").val();
+    //var afp = $("#afp").val();
+    //var salud = $("#salud").val();
+    var otrter = $("#otrter").val();
+
+    if (tiposueldo <= 0) {
+        ToastifyError("Debe ingresar el tipo de sueldo");
+        mostrar3();
+        $("#tiposueldo").focus();
+        return false;
+    } else if (sueldo.trim().length == 0) {
+        ToastifyError("Debe ingresar el sueldo");
+        mostrar3();
+        $("#sueldo").focus();
+        return false;
+    } else if (formapago <= 0) {
+        ToastifyError("Debe ingresar la forma de pago");
+        mostrar3();
+        $("#formapago").focus();
+        return false;
+    } else if (periodopagogra <= 0) {
+        ToastifyError("Debe ingresar el periodo de pago");
+        mostrar3();
+        $("#periodopagogra").focus();
+        return false;
+    } else if (periodopagot <= 0) {
+        ToastifyError("Debe ingresar el periodo de pago");
+        mostrar3();
+        $("#periodopagot").focus();
+        return false;
+    } else if (fechapagot <= 0) {
+        ToastifyError("Debe Seleccionar la fecha de pago");
+        mostrar3();
+        $("#fechapagot").focus();
+        return false;
+    } else if (formapagot <= 0) {
+        ToastifyError("Debe ingresar la forma de pago");
+        mostrar3();
+        $("#formapagot").focus();
+        return false;
+    } else if (anticipot <= 0) {
+        ToastifyError("Debe ingresar el anticipo");
+        mostrar3();
+        $("#anticipot").focus();
+        return false;
+    } else if ($("#badi").is(":checked") && otrter.trim().length == 0) {
+        ToastifyError("Debe ingresar el otro tipo de pacto");
+        mostrar3();
+        $("#otrter").focus();
+        return false;
+    }
+
+    // Si todas las validaciones pasan, mostrar la siguiente seccion
+    mostrar4();
+    return true;
+
 }
 
 function validarform4() {
@@ -448,21 +457,21 @@ function SeleccionarRepresentante(id, rut, nombre, apellido1, apellido2) {
 //Seleccionar Codigo de Actividades
 function SeleccionarCodigosii(id, codigo) {
     $.ajax({
-      type: "POST",
-      url: "php/cargar/codigoactividadcontrato.php",
-      data: "id=" + id,
-      success: function (data) {
-        if(data == 0){
-          ToastifyError("Codigo de Actividad no existe");
-          $("#codigoactividadtext").html("");
-          $("#codigoactividadid").val("");
-        }else{
-          $("#codigoactividadtext").html(codigo + " - " + data);
-          $("#codigoactividadid").val(id);
-        }
-      },
+        type: "POST",
+        url: "php/cargar/codigoactividadcontrato.php",
+        data: "id=" + id,
+        success: function (data) {
+            if (data == 0) {
+                ToastifyError("Codigo de Actividad no existe");
+                $("#codigoactividadtext").html("");
+                $("#codigoactividadid").val("");
+            } else {
+                $("#codigoactividadtext").html(codigo + " - " + data);
+                $("#codigoactividadid").val(id);
+            }
+        },
     });
-  }
+}
 
 //Funcion listar comunas Especificas
 function listarcomunasespecifica() {
@@ -763,48 +772,76 @@ function checkturno() {
 function todo3onclick() {
     //Validar si el elemento  esta checkeado
     if ($("#todo3").is(":checked")) {
-        //Checkear todos los elementos
-        $(".dias4").prop("checked", true);
+        //Checkear todos los elementos excepto domingo si no está habilitado
+        $(".dias4").each(function () {
+            if ($(this).is(":disabled")) {
+                $(this).prop("checked", false);
+            } else {
+                $(this).prop("checked", true);
+            }
+        });
     } else {
         //Descheckear todos los elementos
         $(".dias4").prop("checked", false);
     }
+    calcularHorasNoche();
 }
 
 //todo2onclick
 function todo2onclick() {
     //Validar si el elemento  esta checkeado
     if ($("#todo2").is(":checked")) {
-        //Checkear todos los elementos
-        $(".dias3").prop("checked", true);
+        //Checkear todos los elementos excepto domingo si no está habilitado
+        $(".dias3").each(function () {
+            if ($(this).is(":disabled")) {
+                $(this).prop("checked", false);
+            } else {
+                $(this).prop("checked", true);
+            }
+        });
     } else {
         //Descheckear todos los elementos
         $(".dias3").prop("checked", false);
     }
+    calcularHorasTarde();
 }
 
 //todo1onclick
 function todo1onclick() {
     //Validar si el elemento  esta checkeado
     if ($("#todo1").is(":checked")) {
-        //Checkear todos los elementos
-        $(".dias2").prop("checked", true);
+        //Checkear todos los elementos excepto domingo si no está habilitado
+        $(".dias2").each(function () {
+            if ($(this).is(":disabled")) {
+                $(this).prop("checked", false);
+            } else {
+                $(this).prop("checked", true);
+            }
+        });
     } else {
         //Descheckear todos los elementos
         $(".dias2").prop("checked", false);
     }
+    calcularHorasMatutino();
 }
 
 //todoonclick
 function todoonclick() {
     //Validar si el elemento  esta checkeado
     if ($("#todo").is(":checked")) {
-        //Checkear todos los elementos
-        $(".dias1").prop("checked", true);
+        //Checkear todos los elementos excepto domingo si no está habilitado
+        $(".dias1").each(function () {
+            if ($(this).is(":disabled")) {
+                $(this).prop("checked", false);
+            } else {
+                $(this).prop("checked", true);
+            }
+        });
     } else {
         //Descheckear todos los elementos
         $(".dias1").prop("checked", false);
     }
+    calcularnormal();
 }
 
 //checktodo1
@@ -831,6 +868,7 @@ function checktodo1() {
         //Descheckear el elemento todo1
         $("#todo").prop("checked", false);
     }
+    calcularnormal();
 }
 
 //checktodo2
@@ -857,6 +895,7 @@ function checktodo2() {
         //Descheckear el elemento todo2
         $("#todo1").prop("checked", false);
     }
+    calcularHorasMatutino();
 }
 
 //checktodo3
@@ -883,6 +922,7 @@ function checktodo3() {
         //Descheckear el elemento todo3
         $("#todo2").prop("checked", false);
     }
+    calcularHorasTarde();
 }
 
 //checktodo4
@@ -909,6 +949,7 @@ function checktodo4() {
         //Descheckear el elemento todo4
         $("#todo3").prop("checked", false);
     }
+    calcularHorasNoche();
 }
 
 //function incluyedomingo
@@ -1595,14 +1636,17 @@ function finalizar() {
         exluido = 1;
     }
 
+    // Formato del contrato (1=normal, 2=express) - viene del input hidden
+    var typecontract = $("#typecontract").val() || 1;
 
-    var typecontract = 0;
+    // Tipo de contrato (1=Indefinido, 2=Plazo Fijo, 3=Obra o Faena) - viene de los radio buttons
+    var tipo_contrato = 0;
     if ($("#tipo_contrato1").is(":checked") == true) {
-        typecontract = 1;
+        tipo_contrato = 1;
     } else if ($("#tipo_contrato2").is(":checked") == true) {
-        typecontract = 2;
+        tipo_contrato = 2;
     } else if ($("#tipo_contrato3").is(":checked") == true) {
-        typecontract = 3;
+        tipo_contrato = 3;
     }
 
     var jornadaesc = $("#jornadaesc").val();
@@ -1759,6 +1803,7 @@ function finalizar() {
                 domingoninicio: domingoinicion,
                 domingonfin: domingofinn,
                 typecontract: typecontract,
+                tipo_contrato: tipo_contrato,
                 duracionjor: duracionjor,
                 diasf: diasf,
                 horarioturno: horarioturno,
@@ -1766,31 +1811,31 @@ function finalizar() {
                 horaspactadas: horaspactadas,
                 colaimpu: colaimpu
             },
+            dataType: 'json',
             success: function (data) {
                 $("#global-loader").fadeOut("slow");
-                //Sacar el primer caracter del texto
-                var first = data.substring(0, 1);
-                var url = data.substring(1);
-                console.log(data);
-                console.log(first);
-                console.log(url);
-                //Si el primer caracter es un numero
-                    if (first == 1 || first == "1") {
-                        //Sacar la URL del texto sin el primer caracter
-                        var url = data.substring(1);
-                        //Mostrar vista previa en un modal e abrir el modal
-                        $("#vistaprevia").attr("src", url);
-                        $(".edit").attr("onclick", "editarinfo('" + url + "')");
-                        $(".generar").attr("onclick", "generar('" + url + "')");
-                        $("#modalvistaprevia").modal("show");
-                        //Mostrar vista previa en un modal e abrir el modal
-                        //Agregar la URL
-                        
-                    }else{
-                        ToastifyError(data);
-                    }
-                
+                console.log('Respuesta del servidor:', data);
+
+                if (data.success) {
+                    // Mostrar preview del PDF con el nuevo modal
+                    mostrarPreviewPDFMasivo(data.pdf, data.empresa, data.trabajadores);
+                } else {
+                    ToastifyError(data.error || 'Error al generar el preview del contrato');
+                }
             },
+            error: function (xhr, status, error) {
+                $("#global-loader").fadeOut("slow");
+                console.error('Error AJAX:', error);
+                console.error('Respuesta:', xhr.responseText);
+
+                // Intentar parsear la respuesta como JSON
+                try {
+                    var response = JSON.parse(xhr.responseText);
+                    ToastifyError(response.error || 'Error al generar el preview');
+                } catch (e) {
+                    ToastifyError('Error al generar el preview: ' + error);
+                }
+            }
         });
     }
 }
@@ -2737,13 +2782,408 @@ function cargarzonacomunas(valor) {
 }
 
 
-function todaslaszonas(){
+function todaslaszonas() {
     //Verificar si esta chequeado
-    if($("#territoriozona").is(":checked")){
+    if ($("#territoriozona").is(":checked")) {
         $("#territoriozona").val(1);
         $(".zone").addClass("d-none");
-    }else{
+    } else {
         $("#territoriozona").val(0);
         $(".zone").removeClass("d-none");
     }
+}
+
+// ==================================================================================
+// FUNCIONES PARA CALCULAR HORAS DE DISTRIBUCIÓN DE JORNADA LABORAL
+// ==================================================================================
+
+function calcularnormal() {
+    // Obtener los elementos de entrada de hora de inicio y hora de término para cada día
+    const horasInicio = [
+        document.getElementById('hora11'),
+        document.getElementById('hora12'),
+        document.getElementById('hora13'),
+        document.getElementById('hora14'),
+        document.getElementById('hora15'),
+        document.getElementById('hora16'),
+        document.getElementById('hora17')
+    ];
+    const horasTermino = [
+        document.getElementById('horat11'),
+        document.getElementById('horat12'),
+        document.getElementById('horat13'),
+        document.getElementById('horat14'),
+        document.getElementById('horat15'),
+        document.getElementById('horat16'),
+        document.getElementById('horat17')
+    ];
+    const diasCheckbox = [
+        document.getElementById('dias11'),
+        document.getElementById('dias12'),
+        document.getElementById('dias13'),
+        document.getElementById('dias14'),
+        document.getElementById('dias15'),
+        document.getElementById('dias16'),
+        document.getElementById('dias17')
+    ];
+
+    let totalHoras = 0;
+
+    // Calcular la cantidad de horas solo para los días seleccionados
+    for (let i = 0; i < horasInicio.length; i++) {
+        if (diasCheckbox[i] && diasCheckbox[i].checked) {
+            const horaInicio = new Date(`2000-01-01T${horasInicio[i].value}`);
+            const horaTermino = new Date(`2000-01-01T${horasTermino[i].value}`);
+            const diferenciaHoras = (horaTermino - horaInicio) / 3600000; // Convertir a horas
+            if (diferenciaHoras > 0) {
+                totalHoras += diferenciaHoras;
+            }
+        }
+    }
+
+    // Mostrar el resultado en el span
+    const resultado = document.getElementById('jornadanor');
+    if (resultado) {
+        resultado.textContent = totalHoras.toFixed(2); // Redondear a 2 decimales
+    }
+}
+
+function calcularHorasMatutino() {
+    // Obtener los elementos de entrada de hora de inicio y hora de término para cada día
+    const horasInicio = [
+        document.getElementById('hora21'),
+        document.getElementById('hora22'),
+        document.getElementById('hora23'),
+        document.getElementById('hora24'),
+        document.getElementById('hora25'),
+        document.getElementById('hora26'),
+        document.getElementById('hora27')
+    ];
+    const horasTermino = [
+        document.getElementById('horat21'),
+        document.getElementById('horat22'),
+        document.getElementById('horat23'),
+        document.getElementById('horat24'),
+        document.getElementById('horat25'),
+        document.getElementById('horat26'),
+        document.getElementById('horat27')
+    ];
+    const diasCheckbox = [
+        document.getElementById('dias21'),
+        document.getElementById('dias22'),
+        document.getElementById('dias23'),
+        document.getElementById('dias24'),
+        document.getElementById('dias25'),
+        document.getElementById('dias26'),
+        document.getElementById('dias27')
+    ];
+
+    let totalHoras = 0;
+
+    // Calcular la cantidad de horas solo para los días seleccionados
+    for (let i = 0; i < horasInicio.length; i++) {
+        if (diasCheckbox[i] && diasCheckbox[i].checked) {
+            const horaInicio = new Date(`2000-01-01T${horasInicio[i].value}`);
+            const horaTermino = new Date(`2000-01-01T${horasTermino[i].value}`);
+            const diferenciaHoras = (horaTermino - horaInicio) / 3600000; // Convertir a horas
+            if (diferenciaHoras > 0) {
+                totalHoras += diferenciaHoras;
+            }
+        }
+    }
+
+    // Mostrar el resultado en el span
+    const resultado = document.getElementById('jornadamat');
+    if (resultado) {
+        resultado.textContent = totalHoras.toFixed(2); // Redondear a 2 decimales
+    }
+}
+
+function calcularHorasTarde() {
+    // Obtener los elementos de entrada de hora de inicio y hora de término para cada día
+    const horasInicio = [
+        document.getElementById('hora31'),
+        document.getElementById('hora32'),
+        document.getElementById('hora33'),
+        document.getElementById('hora34'),
+        document.getElementById('hora35'),
+        document.getElementById('hora36'),
+        document.getElementById('hora37')
+    ];
+    const horasTermino = [
+        document.getElementById('horat31'),
+        document.getElementById('horat32'),
+        document.getElementById('horat33'),
+        document.getElementById('horat34'),
+        document.getElementById('horat35'),
+        document.getElementById('horat36'),
+        document.getElementById('horat37')
+    ];
+    const diasCheckbox = [
+        document.getElementById('dias31'),
+        document.getElementById('dias32'),
+        document.getElementById('dias33'),
+        document.getElementById('dias34'),
+        document.getElementById('dias35'),
+        document.getElementById('dias36'),
+        document.getElementById('dias37')
+    ];
+
+    let totalHoras = 0;
+
+    // Calcular la cantidad de horas solo para los días seleccionados
+    for (let i = 0; i < horasInicio.length; i++) {
+        if (diasCheckbox[i] && diasCheckbox[i].checked) {
+            const horaInicio = new Date(`2000-01-01T${horasInicio[i].value}`);
+            const horaTermino = new Date(`2000-01-01T${horasTermino[i].value}`);
+            const diferenciaHoras = (horaTermino - horaInicio) / 3600000; // Convertir a horas
+            if (diferenciaHoras > 0) {
+                totalHoras += diferenciaHoras;
+            }
+        }
+    }
+
+    // Mostrar el resultado en el span
+    const resultado = document.getElementById('jornadatarde');
+    if (resultado) {
+        resultado.textContent = totalHoras.toFixed(2); // Redondear a 2 decimales
+    }
+}
+
+function calcularHorasNoche() {
+    // Obtener los elementos de entrada de hora de inicio y hora de término para cada día
+    const horasInicio = [
+        document.getElementById('hora41'),
+        document.getElementById('hora42'),
+        document.getElementById('hora43'),
+        document.getElementById('hora44'),
+        document.getElementById('hora45'),
+        document.getElementById('hora46'),
+        document.getElementById('hora47')
+    ];
+    const horasTermino = [
+        document.getElementById('horat41'),
+        document.getElementById('horat42'),
+        document.getElementById('horat43'),
+        document.getElementById('horat44'),
+        document.getElementById('horat45'),
+        document.getElementById('horat46'),
+        document.getElementById('horat47')
+    ];
+    const diasCheckbox = [
+        document.getElementById('dias41'),
+        document.getElementById('dias42'),
+        document.getElementById('dias43'),
+        document.getElementById('dias44'),
+        document.getElementById('dias45'),
+        document.getElementById('dias46'),
+        document.getElementById('dias47')
+    ];
+
+    let totalHoras = 0;
+
+    // Calcular la cantidad de horas solo para los días seleccionados
+    for (let i = 0; i < horasInicio.length; i++) {
+        if (diasCheckbox[i] && diasCheckbox[i].checked) {
+            const horaInicio = new Date(`2000-01-01T${horasInicio[i].value}`);
+            const horaTermino = new Date(`2000-01-01T${horasTermino[i].value}`);
+            const diferenciaHoras = (horaTermino - horaInicio) / 3600000; // Convertir a horas
+            if (diferenciaHoras > 0) {
+                totalHoras += diferenciaHoras;
+            }
+        }
+    }
+
+    // Mostrar el resultado en el span
+    const resultado = document.getElementById('jornadanoche');
+    if (resultado) {
+        resultado.textContent = totalHoras.toFixed(2); // Redondear a 2 decimales
+    }
+}
+
+// Event listeners para recalcular horas cuando se cambian los campos de tiempo o checkboxes
+$(document).ready(function () {
+    // Turno Normal - Distribución de Jornada Laboral
+    $('.hora1, .horat1').on('change', function () {
+        calcularnormal();
+    });
+    $('.dias1').on('change', function () {
+        calcularnormal();
+    });
+    $('#todo').on('change', function () {
+        calcularnormal();
+    });
+
+    // Turno Matutino
+    $('.hora2, .horat2').on('change', function () {
+        calcularHorasMatutino();
+    });
+    $('.dias2').on('change', function () {
+        calcularHorasMatutino();
+    });
+    $('#todo1').on('change', function () {
+        calcularHorasMatutino();
+    });
+
+    // Turno Tarde
+    $('.hora3, .horat3').on('change', function () {
+        calcularHorasTarde();
+    });
+    $('.dias3').on('change', function () {
+        calcularHorasTarde();
+    });
+    $('#todo2').on('change', function () {
+        calcularHorasTarde();
+    });
+
+    // Turno Noche
+    $('.hora4, .horat4').on('change', function () {
+        calcularHorasNoche();
+    });
+    $('.dias4').on('change', function () {
+        calcularHorasNoche();
+    });
+    $('#todo3').on('change', function () {
+        calcularHorasNoche();
+    });
+});
+
+
+// ==================== NUEVAS FUNCIONES PARA VISTA PREVIA Y CONFIRMACION DE CONTRATOS MASIVOS ====================
+
+/**
+ * Muestra el PDF de contratos masivos en el modal de preview
+ * @param {string} pdfBase64 - PDF codificado en base64
+ * @param {object} empresa - Objeto con datos de la empresa
+ * @param {array} trabajadores - Array con datos de los trabajadores
+ */
+function mostrarPreviewPDFMasivo(pdfBase64, empresa, trabajadores) {
+    // Convertir base64 a blob
+    const pdfBlob = base64ToBlobMasivo(pdfBase64, 'application/pdf');
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+
+    // Actualizar información de la empresa
+    $('#previewEmpresaNombre').text(empresa.nombre);
+    $('#previewEmpresaRut').text(empresa.rut);
+
+    // Actualizar lista de trabajadores
+    $('#previewTotalTrabajadores').text(trabajadores.length);
+    $('#previewContratosTotal').text(trabajadores.length);
+
+    let listaTrabajadoresHtml = '';
+    trabajadores.forEach(function (trabajador, index) {
+        listaTrabajadoresHtml += `
+      <div class="list-group-item list-group-item-action py-2 px-3">
+        <div class="d-flex w-100 justify-content-between">
+          <small class="text-muted">#${index + 1}</small>
+        </div>
+        <p class="mb-1 font-weight-bold" style="font-size: 0.9rem;">${trabajador.nombre}</p>
+        <small class="text-muted">${trabajador.rut}</small>
+      </div>
+    `;
+    });
+    $('#previewListaTrabajadores').html(listaTrabajadoresHtml);
+
+    // Mostrar PDF en el iframe
+    $('#previewPdfFrame').attr('src', pdfUrl);
+
+    // Mostrar el modal
+    $('#previewContratoModal').modal('show');
+
+    // Limpiar URL cuando se cierre el modal
+    $('#previewContratoModal').on('hidden.bs.modal', function () {
+        URL.revokeObjectURL(pdfUrl);
+        $('#previewPdfFrame').attr('src', '');
+        $('#previewListaTrabajadores').html('');
+    });
+}
+
+/**
+ * Convierte base64 a Blob para contratos masivos
+ */
+function base64ToBlobMasivo(base64, contentType) {
+    contentType = contentType || '';
+    const sliceSize = 1024;
+    const byteCharacters = atob(base64);
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        const slice = byteCharacters.slice(offset, offset + sliceSize);
+        const byteNumbers = new Array(slice.length);
+
+        for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+    }
+
+    return new Blob(byteArrays, { type: contentType });
+}
+
+/**
+ * Cancela el preview masivo y cierra el modal
+ */
+function cancelarPreviewMasivo() {
+    $('#previewContratoModal').modal('hide');
+}
+
+/**
+ * Confirma y guarda los contratos masivos definitivamente
+ */
+function confirmarYGuardarContratosMasivos() {
+    // Mostrar loader
+    $("#global-loader").fadeIn("slow");
+    $('#btnConfirmarContratoMasivo').prop('disabled', true);
+
+    // Enviar confirmación
+    fetch('php/pdf/confirmarcontratomasivo.php', {
+        method: 'POST'
+    })
+        .then(response => response.json())
+        .then(data => {
+            $("#global-loader").fadeOut("slow");
+            $('#btnConfirmarContratoMasivo').prop('disabled', false);
+
+            if (data.success) {
+                // Cerrar modal
+                $('#previewContratoModal').modal('hide');
+
+                // Mostrar mensaje de éxito
+                if (data.partial) {
+                    ToastifyWarning('Se registraron ' + data.contratos_registrados + ' contratos con algunos errores');
+                } else {
+                    ToastifySuccess(data.contratos_registrados + ' contratos registrados exitosamente');
+                }
+
+                // Esperar un momento y redirigir
+                setTimeout(function () {
+                    window.location.href = 'impresionmasiva.php';
+                }, 2000);
+            } else {
+                ToastifyError(data.error || 'Error al guardar los contratos');
+            }
+        })
+        .catch(error => {
+            $("#global-loader").fadeOut("slow");
+            $('#btnConfirmarContratoMasivo').prop('disabled', false);
+            console.error('Error:', error);
+            ToastifyError('Error al guardar los contratos: ' + error.message);
+        });
+}
+
+/**
+ * Funcion ToastifyWarning para mensajes de advertencia
+ */
+function ToastifyWarning(mensaje) {
+    Toastify({
+        text: mensaje,
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "#ffc107",
+        stopOnFocus: true
+    }).showToast();
 }

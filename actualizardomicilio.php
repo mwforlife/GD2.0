@@ -145,7 +145,7 @@ if(isset($_GET['code'])){
 				$user = $c->buscarusuario($_SESSION['USER_ID']);
 				if ($user != null) {
 					if ($user->getTipo() != 3) {
-						?>
+				?>
 						<ul class="nav">
 							<li class="nav-header"><span class="nav-label">Dashboard</span></li>
 
@@ -417,11 +417,11 @@ if(isset($_GET['code'])){
 							<!--------------------------------------------------------------->
 
 						</ul>
-						<?php
-							} else if ($user->getTipo() == 3) {
-							?>
-							<ul class="nav">
-								<li class="nav-header"><span class="nav-label">Reporte Mandante</span></li>
+					<?php
+					} else if ($user->getTipo() == 3) {
+					?>
+						<ul class="nav">
+							<li class="nav-header"><span class="nav-label">Reporte Mandante</span></li>
 							<!-----------------------------Mandante--------------------------------->
 							<li class="nav-item">
 								<a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span
@@ -438,13 +438,13 @@ if(isset($_GET['code'])){
 									</li>
 								</ul>
 							</li>
-							</ul>
+						</ul>
 
-						<?php
+				<?php
 
-							}
-						}
-						?>
+					}
+				}
+				?>
 
 			</div>
 		</div>

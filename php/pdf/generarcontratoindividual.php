@@ -3,12 +3,34 @@ require '../controller.php';
 $c = new Controller();
 require_once '../plugins/vendor/autoload.php';
 session_start();
+
+// Función auxiliar para obtener valores POST de forma segura
+function obtenerPost($key, $default = '') {
+    return isset($_POST[$key]) && $_POST[$key] !== '' ? $_POST[$key] : $default;
+}
+
+// Función para obtener nombre de región de forma segura
+function obtenerNombreRegion($c, $regionId) {
+    if (empty($regionId) || $regionId == 0) return '';
+    $region = $c->buscarregion($regionId);
+    return $region ? $region->getNombre() : '';
+}
+
+// Función para obtener nombre de comuna de forma segura
+function obtenerNombreComuna($c, $comunaId) {
+    if (empty($comunaId) || $comunaId == 0) return '';
+    $comuna = $c->buscarcomuna($comunaId);
+    return $comuna ? $comuna->getNombre() : '';
+}
+
 if (!isset($_SESSION['USER_ID'])) {
     header("Location: ../../signin.php");
+    exit;
 } else {
     $valid  = $c->validarsesion($_SESSION['USER_ID'], $_SESSION['USER_TOKEN']);
     if ($valid == false) {
         header("Location: ../../lockscreen.php");
+        exit;
     }
 }
 
@@ -43,15 +65,25 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
     $cod = $c->BuscarCodigoActividad($codigoactividadid);
     $codigoactividadid = $cod->getCodigosii() . " - " . $cod->getNombre();
 
-    $empresaregion = $_POST['empresaregion'];
-    $empresacomuna = $_POST['empresacomuna'];
-    $empresaregion = $_POST['empresaregion'];
-    $empreg = $c->buscarregion($empresaregion);
-    $empresaregion = $empreg->getNombre();
-    $empresacomuna = $_POST['empresacomuna'];
-    $empcom = $c->buscarcomuna($empresacomuna);
-    $empresacomuna = $empcom->getNombre();
-    $calle = $_POST['calle'];
+    // Región y comuna de empresa (opcionales)
+    $empresaregion = '';
+    if (isset($_POST['empresaregion']) && !empty($_POST['empresaregion'])) {
+        $empresaregionId = $_POST['empresaregion'];
+        $empreg = $c->buscarregion($empresaregionId);
+        if ($empreg) {
+            $empresaregion = $empreg->getNombre();
+        }
+    }
+    $empresacomuna = '';
+    if (isset($_POST['empresacomuna']) && !empty($_POST['empresacomuna'])) {
+        $empresacomunaId = $_POST['empresacomuna'];
+        $empcom = $c->buscarcomuna($empresacomunaId);
+        if ($empcom) {
+            $empresacomuna = $empcom->getNombre();
+        }
+    }
+
+    $calle = isset($_POST['calle']) ? $_POST['calle'] : '';
     $numero = $_POST['numero'];
     $dept = $emp->getDepartamento();
 
@@ -258,7 +290,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
 
     //Informacion de Horario
     $noresolucion = $_POST['noresolucion'];
-    $exfecha = $_POST['exfecha'];
+    $exfecha = isset($_POST['exfecha']) ? $_POST['exfecha'] : '';
     $tipojornada = $_POST['tipojornada'];
     switch ($tipojornada) {
         case '1':
@@ -279,11 +311,11 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
     }
     //$horaspactadas = $_POST['horaspactadas'];
     $dias = $_POST['dias'];
-    $colacion = $_POST['colacion'];
-    $colacionimp = $_POST['colacionimp'];
+    $colacion = isset($_POST['colacion']) ? $_POST['colacion'] : 0;
+    $colacionimp = isset($_POST['colacionimp']) ? $_POST['colacionimp'] : 0;
     $duracionjor = $_POST['duracionjor'];
     $horaspac = 0;
-    $colaimpu = $_POST['colaimpu'];
+    $colaimpu = isset($_POST['colaimpu']) ? $_POST['colaimpu'] : 0;
     switch ($duracionjor) {
         case '1':
             $duracionjor = "45 Horas";
@@ -480,17 +512,17 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
     //Convertir fecha en formato largo
     $fecha_inicio = date("d/m/Y", strtotime($fecha_inicio));
 
-    $typecontract = $_POST['typecontract'];
+    $tipocontrato = $_POST['tipo_contrato'];
     $fecha_termino = $_POST['fecha_termino'];
     //Convertir fecha en formato largo
-    if ($typecontract == 1) {
-        $typecontract = "Contrato Indefinido";
+    if ($tipocontrato == 1) {
+        $tipocontrato = "Contrato Indefinido";
         $fecha_termino = "";
-    } else if ($typecontract == 2) {
-        $typecontract = "Contrato a Plazo Fijo";
+    } else if ($tipocontrato == 2) {
+        $tipocontrato = "Contrato a Plazo Fijo";
         $fecha_termino = date("d/m/Y", strtotime($fecha_termino));
     } else {
-        $typecontract = "Obra o Faena";
+        $tipocontrato = "Obra o Faena";
         $fecha_termino = "";
     }
 
@@ -1893,7 +1925,7 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
         "{ROTACION}" => $rotativo,
 
         "{DISTRIBUCION_JORNADA}" => $distribucion,
-        "{TIPO_CONTRATO}" => $typecontract,
+        "{TIPO_CONTRATO}" => $tipocontrato,
         "{INICIO_CONTRATO}" => $fecha_inicio,
         "{TERMINO_CONTRATO}" => $fecha_termino,
         "{ESTIPULACIONES}" => $estipulaciones
@@ -1912,11 +1944,36 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
     $mpdf->keywords = 'Contrato, Trabajo, Empleo';
     $mpdf->SetDisplayMode('fullpage');
     $mpdf->WriteHTML($contenido);
-    $fecha = date('Ymdhis');
-    //Generar nombre documento
-    $nombre_documento = 'Contrato_' . $fecha . '.pdf';
-    //Generar y guardar documento en la caperta uploads/Contratos
-    $mpdf->Output('../../uploads/previa/' . $nombre_documento, 'F');
-    //Imprimir ruta de documento
-    echo "1uploads/previa/" . $nombre_documento;
+
+    // Generar PDF en memoria (no guardar en disco todavía)
+    $pdfContent = $mpdf->Output('', 'S'); // 'S' = return as string
+    $pdfBase64 = base64_encode($pdfContent);
+
+    // Guardar datos en sesión temporal para confirmar después
+    $_SESSION['contrato_preview'] = [
+        'pdf_content' => $pdfContent,
+        'post_data' => $_POST,
+        'timestamp' => time(),
+        'trabajador' => $trabajador,
+        'empresa' => $empresa,
+        'tipocontrato' => $tipocontrato
+    ];
+
+    // Responder con JSON
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => true,
+        'pdf' => $pdfBase64,
+        'message' => 'Preview generado exitosamente',
+        'trabajador' => $tra->getNombre() . ' ' . $tra->getApellido1(),
+        'empresa' => $emp->getRazonSocial()
+    ]);
+
+} else {
+    header('Content-Type: application/json');
+    http_response_code(400);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Faltan datos requeridos para generar el contrato'
+    ]);
 }

@@ -133,13 +133,13 @@ foreach ($permiso as $p) {
 					<img src="assets/img/brand/icon.png" class="header-brand-img icon-logo theme-logo" alt="logo">
 				</a>
 			</div>
-			
+
 			<div class="main-sidebar-body">
 				<?php
 				$user = $c->buscarusuario($_SESSION['USER_ID']);
 				if ($user != null) {
 					if ($user->getTipo() != 3) {
-						?>
+				?>
 						<ul class="nav">
 							<li class="nav-header"><span class="nav-label">Dashboard</span></li>
 
@@ -148,7 +148,7 @@ foreach ($permiso as $p) {
 							if (isset($_SESSION['GESTION_PERMISO']) || isset($_SESSION['LECTURA_PERMISO']) || isset($_SESSION['ESCRITURA_PERMISO']) || isset($_SESSION['ACTUALIZACION_PERMISO']) || isset($_SESSION['ELIMINACION_PERMISO'])) {
 								if ($_SESSION['GESTION_PERMISO'] == true) {
 
-									?>
+							?>
 									<li class="nav-item">
 										<a class="nav-link with-sub" href="#"><i class="fe fe-home sidemenu-icon"></i><span
 												class="sidemenu-label">Definiciones</span><i class="angle fe fe-chevron-right"></i></a>
@@ -227,7 +227,7 @@ foreach ($permiso as $p) {
 											</li>
 										</ul>
 									</li>
-									<?php
+								<?php
 								}
 								?>
 								<li class="nav-header"><span class="nav-label">FUNCIONES</span></li>
@@ -239,11 +239,11 @@ foreach ($permiso as $p) {
 									<ul class="nav-sub">
 										<?php
 										if ($_SESSION['GESTION_PERMISO'] == true || $_SESSION['ESCRITURA_PERMISO'] == true) {
-											?>
+										?>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="empresas.php">Empresas</a>
 											</li>
-											<?php
+										<?php
 										}
 										?>
 										<li class="nav-sub-item">
@@ -258,11 +258,11 @@ foreach ($permiso as $p) {
 
 										<?php
 										if ($_SESSION['GESTION_PERMISO'] == true) {
-											?>
+										?>
 											<li class="nav-sub-item">
 												<a class="nav-sub-link" href="tipodocumento.php">Escritos</a>
 											</li>
-											<?php
+										<?php
 										}
 										?>
 
@@ -270,21 +270,21 @@ foreach ($permiso as $p) {
 										if (isset($_SESSION['GESTION_PERMISO'])) {
 											if ($_SESSION['GESTION_PERMISO'] == true) {
 
-												?>
+										?>
 												<li class="nav-sub-item">
 													<a class="nav-sub-link" href="usuarios.php">Usuarios</a>
 												</li>
-												<?php
+										<?php
 											}
 										}
 										?>
 									</ul>
 								</li>
-								<?php
+							<?php
 							}
 
 							if ($_SESSION['GESTION_PERMISO'] == true) {
-								?>
+							?>
 								<li class="nav-item">
 									<a class="nav-link with-sub" href="#"><i class="fe fe-droplet sidemenu-icon"></i><span
 											class="sidemenu-label">Auditoria</span><i class="angle fe fe-chevron-right"></i></a>
@@ -298,7 +298,7 @@ foreach ($permiso as $p) {
 
 									</ul>
 								</li>
-								<?php
+							<?php
 							}
 							?>
 							<!--------------------Generarion de documentos------------------>
@@ -348,18 +348,18 @@ foreach ($permiso as $p) {
 									<li class="nav-sub-item">
 										<a class="nav-sub-link" href="habmaster.php">Haberes y Descuentos</a>
 									</li>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="asistencia.php">Asistencia</a>
-										</li>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="cargaasistencia.php">Cargar Asistencia</a>
-										</li>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="repmovimientos.php">Movimiento de Personal</a>
-										</li>
-										<li class="nav-sub-item">
-											<a class="nav-sub-link" href="procesar.php">Procesar Trabajadores</a>
-										</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="asistencia.php">Asistencia</a>
+									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="cargaasistencia.php">Cargar Asistencia</a>
+									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="repmovimientos.php">Movimiento de Personal</a>
+									</li>
+									<li class="nav-sub-item">
+										<a class="nav-sub-link" href="procesar.php">Procesar Trabajadores</a>
+									</li>
 								</ul>
 							</li>
 							<!--------------------------------------------------------------->
@@ -402,11 +402,11 @@ foreach ($permiso as $p) {
 							<!--------------------------------------------------------------->
 
 						</ul>
-						<?php
-							} else if ($user->getTipo() == 3) {
-							?>
-							<ul class="nav">
-								<li class="nav-header"><span class="nav-label">Reporte Mandante</span></li>
+					<?php
+					} else if ($user->getTipo() == 3) {
+					?>
+						<ul class="nav">
+							<li class="nav-header"><span class="nav-label">Reporte Mandante</span></li>
 							<!-----------------------------Mandante--------------------------------->
 							<li class="nav-item">
 								<a class="nav-link with-sub" href="#"><i class="fe fe-user sidemenu-icon"></i><span
@@ -423,13 +423,13 @@ foreach ($permiso as $p) {
 									</li>
 								</ul>
 							</li>
-							</ul>
+						</ul>
 
-						<?php
+				<?php
 
-							}
-						}
-						?>
+					}
+				}
+				?>
 
 			</div>
 		</div>
@@ -573,6 +573,15 @@ foreach ($permiso as $p) {
 														<option value="1">Contrato de Trabajo Sujeta Reglas Generales</option>
 													</select>
 												</div>
+
+												<div class="col-lg-6">
+													<div class="form-group select2-lg">
+														<label for="">Tipo de Documento:</label>
+														<button class="btn btn-primary btn-sm fs-10" type="button" data-toggle="modal" data-target="#tipocontratomodal">Seleccionar</button>
+														<label class="form-control" id="tipocontratotext"></label>
+														<input type="hidden" class="form-control text-dark" id="tipocontratoid" name="tipocontratoid" required="" readonly>
+													</div>
+												</div>
 											</div>
 
 											<div class="row">
@@ -585,7 +594,11 @@ foreach ($permiso as $p) {
 															$lista = $c->listarregiones();
 															if (count($lista) > 0) {
 																foreach ($lista as $l) {
-																	echo "<option value='" . $l->getId() . "'>" . $l->getNombre() . "</option>";
+																	if ($emp->getRegion() == $l->getId()) {
+																		echo "<option value='" . $l->getId() . "' selected>" . $l->getNombre() . "</option>";
+																	} else {
+																		echo "<option value='" . $l->getId() . "'>" . $l->getNombre() . "</option>";
+																	}
 																}
 															} else {
 																echo "<option value='0'>No hay Regiones</option>";
@@ -601,22 +614,27 @@ foreach ($permiso as $p) {
 													<div class="form-group select2-lg">
 														<label for="">Comuna:</label>
 														<select id="comunacelebracion" name="comunacelebracion" required="" class="form-control text-dark comunas">
-															<option value="">Seleccione una Comuna</option>
+															<?php
+															$lista = $c->listarcomunas($emp->getRegion());
+															if (count($lista) > 0) {
+																foreach ($lista as $l) {
+																	if ($emp->getComuna() == $l->getId()) {
+																		echo "<option selected value='" . $l->getId() . "'>" . $l->getNombre() . "</option>";
+																	} else {
+																		echo "<option value='" . $l->getId() . "'>" . $l->getNombre() . "</option>";
+																	}
+																}
+															} else {
+																echo "<option value='0'>No hay Comuna</option>";
+															}
+															?>
 														</select>
 													</div>
 												</div>
 												<div class="col-lg-6">
 													<div class="form-group select2-lg">
 														<label for="">Fecha de Suscripcíon del Contrato:</label>
-														<input type="date" class="form-control text-dark" id="fechacelebracion" name="fechacelebracion" required="">
-													</div>
-												</div>
-												<div class="col-lg-6">
-													<div class="form-group select2-lg">
-														<label for="">Tipo de Documento:</label>
-														<button class="btn btn-primary btn-sm fs-10" type="button" data-toggle="modal" data-target="#tipocontratomodal">Seleccionar</button>
-														<label class="form-control" id="tipocontratotext"></label>
-														<input type="hidden" class="form-control text-dark" id="tipocontratoid" name="tipocontratoid" required="" readonly>
+														<input type="date" class="form-control text-dark" id="fechacelebracion" name="fechacelebracion" required="" value="<?php echo date("Y-m-d"); ?>">
 													</div>
 												</div>
 												<div class="col-lg-12">
@@ -648,14 +666,14 @@ foreach ($permiso as $p) {
 														<label for="">Representante Legal:</label>
 														<select name="representante_legal" id="representante_legal" class="form-control select2">
 															<?php
-																$codigoactividad = $c->listarRepresentantelegal($emp->getId());
-																if (count($codigoactividad) > 0) {
-																	foreach ($codigoactividad as $l) {
-																		echo "<option value='" . $l->getId() . "'>" . $l->getNombre() . " " . $l->getApellido1() . " " . $l->getApellido2() . "</option>";
-																	}
-																} else {
-																	echo "<option value='0'>No hay Codigo Actividad Economica</option>";
+															$codigoactividad = $c->listarRepresentantelegal($emp->getId());
+															if (count($codigoactividad) > 0) {
+																foreach ($codigoactividad as $l) {
+																	echo "<option value='" . $l->getId() . "'>" . $l->getNombre() . " " . $l->getApellido1() . " " . $l->getApellido2() . "</option>";
 																}
+															} else {
+																echo "<option value='0'>No hay Codigo Actividad Economica</option>";
+															}
 															?>
 														</select>
 													</div>
@@ -683,14 +701,14 @@ foreach ($permiso as $p) {
 														<label for="">Codigo Actividad Economica:</label>
 														<select name="codigoactividadid" id="codigoactividadid" class="form-control select2">
 															<?php
-																$codigoactividad = $c->ListarCodigoActividadEmpresa1($emp->getId());
-																if (count($codigoactividad) > 0) {
-																	foreach ($codigoactividad as $l) {
-																		echo "<option value='" . $l->getId() . "'>" . $l->getCodigoSii() . " - " . $l->getNombre() . "</option>";
-																	}
-																} else {
-																	echo "<option value='0'>No hay Codigo Actividad Economica</option>";
+															$codigoactividad = $c->ListarCodigoActividadEmpresa1($emp->getId());
+															if (count($codigoactividad) > 0) {
+																foreach ($codigoactividad as $l) {
+																	echo "<option value='" . $l->getId() . "'>" . $l->getCodigoSii() . " - " . $l->getNombre() . "</option>";
 																}
+															} else {
+																echo "<option value='0'>No hay Codigo Actividad Economica</option>";
+															}
 															?>
 														</select>
 													</div>
@@ -706,7 +724,7 @@ foreach ($permiso as $p) {
 												$direccion = $calle . " " . $numero;
 
 												?>
-												
+
 												<div class="col-lg-6">
 													<div class="form-group select2-lg">
 														<label for="">Domicilio:</label>
@@ -735,7 +753,8 @@ foreach ($permiso as $p) {
 														</select>
 													</div>
 												</div>
-												<input type="hidden" value="<?php echo $emp->getId(); ?>" id="idempresa">
+												<input type="hidden" value="<?php echo $emp->getId(); ?>" id="idempresa" name="idempresa">
+												<input type="hidden" value="1" id="typecontract" name="typecontract">
 												<!------------------------------------------->
 												<!----------------Comuna-------------------->
 												<div class="col-lg-6">
@@ -785,7 +804,7 @@ foreach ($permiso as $p) {
 											</div>
 											<div class="row">
 												<div class="col-lg-12">
-													<h3>Lote de Trabajadores</h3>
+													<h3>Antecedentes de los trabajadores</h3>
 												</div>
 											</div>
 											<hr />
@@ -793,7 +812,7 @@ foreach ($permiso as $p) {
 												<div class="col-xl-12 col-lg-12 col-md-12">
 													<div class="card transcation-crypto1" id="transcation-crypto1">
 														<div class="card-header bd-b-0">
-															<h4 class="card-title font-weight-semibold mb-0">Lote de Trabajadores</h4>
+															<h5 class="card-title font-weight-semibold mb-0">Lista de Trabajadores seleccionados</h5>
 														</div>
 														<div class="card-body p-4">
 															<div class="">
@@ -919,7 +938,11 @@ foreach ($permiso as $p) {
 														$lista = $c->listarregiones();
 														if (count($lista) > 0) {
 															foreach ($lista as $l) {
-																echo "<option value='" . $l->getId() . "'>" . $l->getNombre() . "</option>";
+																if ($emp->getRegion() == $l->getId()) {
+																	echo "<option selected value='" . $l->getId() . "'>" . $l->getNombre() . "</option>";
+																} else {
+																	echo "<option value='" . $l->getId() . "'>" . $l->getNombre() . "</option>";
+																}
 															}
 														} else {
 															echo "<option value='0'>No hay Regiones</option>";
@@ -932,26 +955,35 @@ foreach ($permiso as $p) {
 												<div class="col-lg-6">
 													<label>Comuna</label>
 													<select id="comunaespecifica" name="comunaespecifica" required="" class="form-control text-dark comunaespecifica">
-
-													</select>
+														<?php
+														$lista = $c->listarcomunas($emp->getRegion());
+														if (count($lista) > 0) {
+															foreach ($lista as $l) {
+																if ($emp->getComuna() == $l->getId()) {
+																	echo "<option selected value='" . $l->getId() . "'>" . $l->getNombre() . "</option>";
+																} else {
+																	echo "<option value='" . $l->getId() . "'>" . $l->getNombre() . "</option>";
+																}
+															}
+														} else {
+															echo "<option value='0'>No hay Comuna</option>";
+														}
+														?>
 													</select>
 												</div>
 												<div class="col-lg-6">
 													<label>Calle</label>
 													<input class="form-control" id="calleespecifica" name="calleespecifica" placeholder="Calle" required>
-													</select>
 												</div>
 
 												<div class="col-lg-6">
 													<label>Número</label>
 													<input class="form-control" id="numeroespecifica" name="numeroespecifica" placeholder="Número" required>
-													</select>
 												</div>
 
 												<div class="col-lg-6">
 													<label>Depto. / Oficina (opcional)</label>
 													<input class="form-control" id="departamentoespecifica" name="departamentoespecifica" placeholder="Departamento">
-													</select>
 												</div>
 
 											</div>
@@ -1095,7 +1127,7 @@ foreach ($permiso as $p) {
 												<div class="col-lg-6 subcontratacion d-none">
 													<div class="form-group select2-lg ">
 														<label for="">RUT :</label>
-														<input class="form-control" id="subcontratacionrut" name="subcontratacionrut" placeholder="RUT">
+														<input class="form-control" id="subcontratacionrut" name="subcontratacionrut" placeholder="RUT" onkeyup="formatRut(this)">
 													</div>
 												</div>
 												<div class="col-lg-6 subcontratacion d-none">
@@ -1120,7 +1152,7 @@ foreach ($permiso as $p) {
 												<div class="col-lg-6 transitorios d-none">
 													<div class="form-group select2-lg">
 														<label for="">RUT :</label>
-														<input class="form-control" id="transitoriosrut" name="transitoriosrut" placeholder="RUT">
+														<input class="form-control" id="transitoriosrut" name="transitoriosrut" placeholder="RUT" onkeyup="formatRut(this)">
 													</div>
 												</div>
 												<div class="col-lg-6 transitorios d-none">
@@ -1797,7 +1829,8 @@ foreach ($permiso as $p) {
 																<td class="text-center"><input type="time" min="08:00" step="1" value="08:00" class="horat1" id="horat17"></td>
 															</tr>
 															<tr>
-																<td colspan="9">Nota: Sr. Empleador, si usted marca "Todos" y se despliga una jornada superior a la maxima legar es su deber ajustarla a los topes legales respectivos.</td>
+																<td colspan="7">Nota: Sr. Empleador, si usted marca "Todos" y se despliga una jornada superior a la maxima legal es su deber ajustarla a los topes legales respectivos.</td>
+																<td colspan="2">Cantidad de Horas: <span id="jornadanor"></span></td>
 															</tr>
 
 														</tbody>
@@ -1858,7 +1891,8 @@ foreach ($permiso as $p) {
 																<td class="text-center"><input type="time" min="08:00" step="1" value="08:00" class="horat2" id="horat27"></td>
 															</tr>
 															<tr>
-																<td colspan="9">Nota: Sr. Empleador, si usted marca "Todos" y se despliga una jornada superior a la maxima legar es su deber ajustarla a los topes legales respectivos.</td>
+																<td colspan="7">Nota: Sr. Empleador, si usted marca "Todos" y se despliga una jornada superior a la maxima legal es su deber ajustarla a los topes legales respectivos.</td>
+																<td colspan="2">Cantidad de Horas: <span id="jornadamat"></span></td>
 															</tr>
 
 														</tbody>
@@ -1919,7 +1953,8 @@ foreach ($permiso as $p) {
 																<td class="text-center"><input type="time" min="08:00" step="1" value="08:00" class="horat3" id="horat37"></td>
 															</tr>
 															<tr>
-																<td colspan="9">Nota: Sr. Empleador, si usted marca "Todos" y se despliga una jornada superior a la maxima legar es su deber ajustarla a los topes legales respectivos.</td>
+																<td colspan="7">Nota: Sr. Empleador, si usted marca "Todos" y se despliga una jornada superior a la maxima legal es su deber ajustarla a los topes legales respectivos.</td>
+																<td colspan="2">Cantidad de Horas: <span id="jornadatarde"></span></td>
 															</tr>
 
 														</tbody>
@@ -1980,7 +2015,8 @@ foreach ($permiso as $p) {
 																<td class="text-center"><input type="time" min="08:00" step="1" value="08:00" class="horat4" id="horat47"></td>
 															</tr>
 															<tr>
-																<td colspan="9">Nota: Sr. Empleador, si usted marca "Todos" y se despliga una jornada superior a la maxima legar es su deber ajustarla a los topes legales respectivos.</td>
+																<td colspan="7">Nota: Sr. Empleador, si usted marca "Todos" y se despliga una jornada superior a la maxima legal es su deber ajustarla a los topes legales respectivos.</td>
+																<td colspan="2">Cantidad de Horas: <span id="jornadanoche"></span></td>
 															</tr>
 
 														</tbody>
@@ -2334,6 +2370,65 @@ foreach ($permiso as $p) {
 		</div>
 	</div>
 
+	<div class="modal fade" id="previewContratoModal" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-xl" role="document" style="max-width: 95%;">
+			<div class="modal-content">
+				<div class="modal-header bg-primary text-white">
+					<h5 class="modal-title" id="previewModalLabel">
+						<i class="fa fa-file-pdf-o"></i> Preview de Contratos Masivos
+					</h5>
+					<button type="button" class="close text-white" onclick="cancelarPreviewMasivo()" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body p-0">
+					<div class="row m-0" style="height: 75vh;">
+						<!-- Panel Izquierdo: Empresa y Lista de Trabajadores -->
+						<div class="col-md-3 p-0 border-right" style="height: 100%; overflow-y: auto; background-color: #f8f9fa;">
+							<!-- Informacion de la Empresa -->
+							<div class="p-3 bg-white border-bottom">
+								<h6 class="mb-2 text-primary">
+									<i class="fa fa-building"></i> Empresa
+								</h6>
+								<div id="previewEmpresaInfo">
+									<p class="mb-1"><strong>Razon Social:</strong> <span id="previewEmpresaNombre">-</span></p>
+									<p class="mb-1"><strong>RUT:</strong> <span id="previewEmpresaRut">-</span></p>
+								</div>
+							</div>
+							<!-- Lista de Trabajadores -->
+							<div class="p-3">
+								<h6 class="mb-2 text-success">
+									<i class="fa fa-users"></i> Trabajadores (<span id="previewTotalTrabajadores">0</span>)
+								</h6>
+								<div id="previewListaTrabajadores" class="list-group list-group-flush" style="max-height: 55vh; overflow-y: auto;">
+									<!-- Aqui se cargan dinamicamente los trabajadores -->
+								</div>
+							</div>
+						</div>
+						<!-- Panel Derecho: Vista Previa del PDF -->
+						<div class="col-md-9 p-0" style="height: 100%;">
+							<iframe id="previewPdfFrame" style="width: 100%; height: 100%; border: none;"></iframe>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="mr-auto">
+						<span class="text-muted">
+							<i class="fa fa-info-circle"></i>
+							Se generaran <strong id="previewContratosTotal">0</strong> contratos
+						</span>
+					</div>
+					<button type="button" class="btn btn-secondary" onclick="cancelarPreviewMasivo()">
+						<i class="fa fa-times"></i> Cancelar
+					</button>
+					<button type="button" id="btnConfirmarContratoMasivo" class="btn btn-success" onclick="confirmarYGuardarContratosMasivos()">
+						<i class="fa fa-check"></i> Confirmar y Guardar Contratos
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 	<!-- Back-to-top -->
 	<a href="#top" id="back-to-top"><i class="fe fe-arrow-up"></i></a>
@@ -2376,9 +2471,6 @@ foreach ($permiso as $p) {
 	<!-- Sidebar js -->
 	<script src="assets/plugins/sidebar/sidebar.js"></script>
 
-	<!-- INTERNAL INDEX js -->
-	<script src="assets/js/index.js"></script>
-
 	<!-- Sticky js -->
 	<script src="assets/js/sticky.js"></script>
 
@@ -2401,9 +2493,7 @@ foreach ($permiso as $p) {
 		echo "window.onload = function(){
 			actualizardatos($trabajador);
 		mostrarEmpresa(" . $id . ");
-		listarcomunas();
-		listarcomunasespecifica();listarcomunas();
-		listarcomunasespecifica();
+		
 		let myNumericInput = new AutoNumeric(('#sueldo'), {
 			decimalPlaces: 0,
 			digitGroupSeparator: '.',
