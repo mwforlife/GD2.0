@@ -68,13 +68,13 @@ require 'Class/Movpersonal.php';
 class Controller
 {
     public $host = "localhost";
-    /*Variables
+    /*Variables*/
     public $user = "root";
     public $pass = "";
     public $bd = "gestordocumentos";
 
 
-    /*Variables BD Remota*/
+    /*Variables BD Remota
     public $user = 'apoyoconta1_admin';
     public $pass = 'Administrad0r2023%$#@';
     public $bd = 'apoyoconta1_kairos';
@@ -885,7 +885,7 @@ class Controller
     public function buscartasaafp($afp, $mes, $ano)
     {
         $this->conexion();
-        $sql = "select id, month(fecha) as mes, year(fecha) as ano, tasasis,tasa from tasaafp where afp = $afp and month(fecha) = $mes and year(fecha) = $ano";
+        $sql = "select id, month(fecha) as mes, year(fecha) as ano, capitalizacion_individual,tasa from tasaafp where afp = $afp and month(fecha) = $mes and year(fecha) = $ano";
         $result = $this->mi->query($sql);
         if ($rs = mysqli_fetch_array($result)) {
             $id = $rs['id'];
@@ -916,9 +916,9 @@ class Controller
                 $mes = "Diciembre";
             }
             $periodo = $mes . " " . $rs['ano'];
-            $tasasis = $rs['tasasis'];
+            $capitalizacion_individual = $rs['capitalizacion_individual'];
             $tasa = $rs['tasa'];
-            $T = new Tasa($id, $tasasis, $periodo, $tasa);
+            $T = new Tasa($id, $capitalizacion_individual, $periodo, $tasa);
             $this->desconectar();
             return $T;
         }
@@ -931,7 +931,7 @@ class Controller
     public function buscarultimatasaafp($afp)
     {
         $this->conexion();
-        $sql = "select id, month(fecha) as mes, year(fecha) as ano,tasasis, tasa from tasaafp where afp = $afp order by fecha desc limit 1";
+        $sql = "select id, month(fecha) as mes, year(fecha) as ano,capitalizacion_individual, tasa from tasaafp where afp = $afp order by fecha desc limit 1";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -963,9 +963,9 @@ class Controller
                 $mes = "Diciembre";
             }
             $periodo = $mes . " " . $rs['ano'];
-            $tasasis = $rs['tasasis'];
+            $capitalizacion_individual = $rs['capitalizacion_individual'];
             $tasa = $rs['tasa'];
-            $T = new Tasa($id, $tasasis, $periodo, $tasa);
+            $T = new Tasa($id, $capitalizacion_individual, $periodo, $tasa);
             $this->desconectar();
             return $T;
         }

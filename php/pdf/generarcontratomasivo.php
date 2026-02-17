@@ -142,14 +142,25 @@ if (isset($_POST['idempresa']) && isset($_POST['tipocontratoid'])) {
         $representante_legal = $represen->getNombre() . " " . $represen->getApellido1() . " " . $represen->getApellido2();
         $rutrepresentantelegal = $represen->getRut();
         $codigoactividadid = $_POST['codigoactividadid'];
-        $empresaregion = $_POST['empresaregion'];
-        $empresacomuna = $_POST['empresacomuna'];
-        $empresaregion = $_POST['empresaregion'];
-        $empreg = $c->buscarregion($empresaregion);
-        $empresaregion = $empreg->getNombre();
-        $empresacomuna = $_POST['empresacomuna'];
-        $empcom = $c->buscarcomuna($empresacomuna);
-        $empresacomuna = $empcom->getNombre();
+        
+        // Región y comuna de empresa (opcionales)
+        $empresaregion = '';
+        $empresaidregion = $emp->getRegion();
+        $empreg = $c->buscarregion($empresaidregion);
+        if ($empreg!=null) {
+            $empresaregion = $empreg->getNombre();
+        }
+        
+        
+        
+        $empresacomuna = '';
+        $empresaidcomuna = $emp->getComuna();
+        $empcom = $c->buscarcomuna($empresaidcomuna);
+        if($empcom!=null){
+            $empresacomuna = $empcom->getNombre();
+        }
+        
+        
         $calle = $_POST['calle'];
         $numero = $_POST['numero'];
 

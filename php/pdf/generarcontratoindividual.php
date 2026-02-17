@@ -67,21 +67,21 @@ if (isset($_POST['idempresa']) && isset($_POST['idtrabajador']) && isset($_POST[
 
     // Región y comuna de empresa (opcionales)
     $empresaregion = '';
-    if (isset($_POST['empresaregion']) && !empty($_POST['empresaregion'])) {
-        $empresaregionId = $_POST['empresaregion'];
-        $empreg = $c->buscarregion($empresaregionId);
-        if ($empreg) {
-            $empresaregion = $empreg->getNombre();
-        }
+    $empresaidregion = $emp->getRegion();
+    $empreg = $c->buscarregion($empresaidregion);
+    if ($empreg!=null) {
+        $empresaregion = $empreg->getNombre();
     }
+    
+    
+    
     $empresacomuna = '';
-    if (isset($_POST['empresacomuna']) && !empty($_POST['empresacomuna'])) {
-        $empresacomunaId = $_POST['empresacomuna'];
-        $empcom = $c->buscarcomuna($empresacomunaId);
-        if ($empcom) {
-            $empresacomuna = $empcom->getNombre();
-        }
+    $empresaidcomuna = $emp->getComuna();
+    $empcom = $c->buscarcomuna($empresaidcomuna);
+    if($empcom!=null){
+        $empresacomuna = $empcom->getNombre();
     }
+    
 
     $calle = isset($_POST['calle']) ? $_POST['calle'] : '';
     $numero = $_POST['numero'];

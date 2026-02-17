@@ -553,158 +553,412 @@ foreach ($permiso as $p) {
 					<!-- Page Header -->
 					<div class="page-header">
 						<div class="page-header-1">
-							<h1 class="main-content-title tx-30">Habres y Descuentos</h1>
+							<h1 class="main-content-title tx-30">Procesamiento de Liquidaciones</h1>
 							<ol class="breadcrumb">
 								<li class="breadcrumb-item"><a href="index.php">Inicio</a></li>
+								<li class="breadcrumb-item active">Procesamiento</li>
 							</ol>
 						</div>
 					</div>
 					<!-- End Page Header -->
 
 
-					<!-- ROW- opened -->
-					<div class="row">
-						<div class="col-md-12">
-							<div class="card">
-								<div class="card-body">
-									<div class="row">
-										<div class="col-lg-3">
-											<label for="">Periodo</label>
-											<input type="month" name="periodo" id="periodo" class="form-control"
-												value="<?php echo date("Y-m"); ?>">
-										</div>
-										<div class="col-lg-4">
-											<label for="">Centro de Costo</label>
-											<select name="centrocosto" id="centrocosto" class="form-control select2">
-												<?php
-												$centrocostos = $c->listarcentrocosto($_SESSION['CURRENT_ENTERPRISE']);
-												foreach ($centrocostos as $centrocosto) {
-													if (isset($_SESSION['COST_CENTER'])) {
-														if ($centrocosto->getId() == $_SESSION['COST_CENTER']) {
-															echo "<option value='" . $centrocosto->getId() . "' selected>" . $centrocosto->getNombre() . "</option>";
-														} else {
-															echo "<option value='" . $centrocosto->getId() . "'>" . $centrocosto->getNombre() . "</option>";
-														}
-													} else {
-														echo "<option value='" . $centrocosto->getId() . "'>" . $centrocosto->getNombre() . "</option>";
-													}
-												}
-												?>
-											</select>
-										</div>
-										<div class="col-lg-3">
-											<button type="button" class="btn btn-outline-primary mt-4 mb-0 mr-2"
-												onclick="filtrartrabajadores()">FILTRAR <i
-													class="fa fa-filter"></i></button>
-											<?php
-											if (isset($_SESSION['COST_CENTER'])) { ?>
-												<button type="button" class="btn btn-outline-danger mt-4 mb-0 mr-2"
-													onclick="limpiarfiltro()">LIMPIAR FILTRAR <i
-														class="fa fa-trash"></i></button>
-												<?php
-											} ?>
-										</div>
-									</div>
-								</div>
+					<!-- Custom Styles for Dashboard -->
+					<style>
+						.kpi-card {
+							border-radius: 15px;
+							padding: 25px;
+							color: white;
+							position: relative;
+							overflow: hidden;
+							box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+							transition: transform 0.3s ease, box-shadow 0.3s ease;
+						}
+						.kpi-card:hover {
+							transform: translateY(-5px);
+							box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+						}
+						.kpi-card .kpi-icon {
+							position: absolute;
+							right: 20px;
+							top: 50%;
+							transform: translateY(-50%);
+							font-size: 4rem;
+							opacity: 0.2;
+						}
+						.kpi-card .kpi-number {
+							font-size: 2.5rem;
+							font-weight: 700;
+							margin-bottom: 5px;
+						}
+						.kpi-card .kpi-title {
+							font-size: 0.95rem;
+							font-weight: 500;
+							text-transform: uppercase;
+							letter-spacing: 1px;
+							opacity: 0.9;
+						}
+						.kpi-blue {
+							background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+						}
+						.kpi-orange {
+							background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+						}
+						.kpi-green {
+							background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+						}
+						.dashboard-panel {
+							background: #fff;
+							border-radius: 15px;
+							box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+							overflow: hidden;
+							height: 100%;
+						}
+						.panel-header {
+							padding: 18px 25px;
+							color: white;
+							font-weight: 600;
+							font-size: 1.1rem;
+							display: flex;
+							justify-content: space-between;
+							align-items: center;
+						}
+						.panel-header-left {
+							background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
+						}
+						.panel-header-right {
+							background: linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%);
+						}
+						.panel-body {
+							padding: 20px;
+						}
+						.panel-footer {
+							padding: 20px 25px;
+							background: #f8f9fa;
+							border-top: 1px solid #eee;
+						}
+						.clean-table {
+							width: 100%;
+						}
+						.clean-table thead th {
+							background: #f8f9fa;
+							color: #6c757d;
+							font-weight: 600;
+							font-size: 0.85rem;
+							text-transform: uppercase;
+							letter-spacing: 0.5px;
+							padding: 12px 15px;
+							border-bottom: 2px solid #e9ecef;
+						}
+						.clean-table tbody tr {
+							border-bottom: 1px solid #f1f1f1;
+							transition: background 0.2s ease;
+						}
+						.clean-table tbody tr:hover {
+							background: #f8f9fa;
+						}
+						.clean-table tbody td {
+							padding: 12px 15px;
+							vertical-align: middle;
+							color: #495057;
+						}
+						.btn-add-circle {
+							width: 32px;
+							height: 32px;
+							border-radius: 50%;
+							padding: 0;
+							display: inline-flex;
+							align-items: center;
+							justify-content: center;
+							font-size: 14px;
+							transition: all 0.3s ease;
+						}
+						.btn-add-circle:hover {
+							transform: scale(1.15);
+						}
+						.btn-remove-circle {
+							width: 32px;
+							height: 32px;
+							border-radius: 50%;
+							padding: 0;
+							display: inline-flex;
+							align-items: center;
+							justify-content: center;
+							font-size: 14px;
+							background: #dc3545;
+							border: none;
+							color: white;
+							transition: all 0.3s ease;
+						}
+						.btn-remove-circle:hover {
+							background: #c82333;
+							transform: scale(1.15);
+						}
+						.btn-process-main {
+							width: 100%;
+							padding: 15px;
+							font-size: 1.1rem;
+							font-weight: 600;
+							border-radius: 10px;
+							background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+							border: none;
+							color: white;
+							transition: all 0.3s ease;
+							box-shadow: 0 4px 15px rgba(17,153,142,0.3);
+						}
+						.btn-process-main:hover {
+							transform: translateY(-2px);
+							box-shadow: 0 6px 20px rgba(17,153,142,0.4);
+							color: white;
+						}
+						.btn-danger-main {
+							width: 100%;
+							padding: 12px;
+							font-size: 0.95rem;
+							font-weight: 600;
+							border-radius: 10px;
+							background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+							border: none;
+							color: white;
+							transition: all 0.3s ease;
+						}
+						.btn-danger-main:hover {
+							transform: translateY(-2px);
+							box-shadow: 0 4px 15px rgba(235,51,73,0.3);
+							color: white;
+						}
+						.filter-compact {
+							background: #fff;
+							border-radius: 10px;
+							padding: 15px 20px;
+							box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+							margin-bottom: 20px;
+						}
+						.filter-compact label {
+							font-size: 0.8rem;
+							font-weight: 600;
+							color: #6c757d;
+							text-transform: uppercase;
+							letter-spacing: 0.5px;
+							margin-bottom: 5px;
+						}
+						.filter-compact .form-control {
+							border-radius: 8px;
+							border: 1px solid #e0e0e0;
+							font-size: 0.9rem;
+						}
+						.switch-container {
+							background: #fff;
+							border-radius: 10px;
+							padding: 15px;
+							margin-bottom: 15px;
+							border: 1px solid #e9ecef;
+						}
+						.custom-switch-lg .custom-switch-indicator {
+							width: 50px;
+							height: 26px;
+						}
+						.custom-switch-lg .custom-switch-indicator::before {
+							width: 22px;
+							height: 22px;
+						}
+						.custom-switch-lg .custom-switch-input:checked ~ .custom-switch-indicator::before {
+							left: 26px;
+						}
+						.empty-state {
+							text-align: center;
+							padding: 40px 20px;
+							color: #adb5bd;
+						}
+						.empty-state i {
+							font-size: 3rem;
+							margin-bottom: 15px;
+							opacity: 0.5;
+						}
+						.badge-count {
+							background: rgba(255,255,255,0.2);
+							padding: 5px 12px;
+							border-radius: 20px;
+							font-size: 0.85rem;
+						}
+					</style>
+
+					<?php
+					// Obtener datos para KPIs
+					$lista = array();
+					if (isset($_SESSION['COST_CENTER'])) {
+						$lista = $c->listartrabajadoresactivoscenter($_SESSION['CURRENT_ENTERPRISE'], $_SESSION['COST_CENTER']);
+					} else {
+						$lista = $c->listartrabajadoresactivos($_SESSION['CURRENT_ENTERPRISE']);
+					}
+					$totalTrabajadores = count($lista);
+					?>
+
+					<!-- KPI Cards Row -->
+					<div class="row mb-4">
+						<div class="col-lg-4 col-md-4 mb-3">
+							<div class="kpi-card kpi-blue">
+								<i class="fa fa-users kpi-icon"></i>
+								<div class="kpi-number" id="kpi-total"><?php echo $totalTrabajadores; ?></div>
+								<div class="kpi-title">Total Trabajadores</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 mb-3">
+							<div class="kpi-card kpi-orange">
+								<i class="fa fa-clock kpi-icon"></i>
+								<div class="kpi-number" id="kpi-pendientes">0</div>
+								<div class="kpi-title">Pendientes</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 mb-3">
+							<div class="kpi-card kpi-green">
+								<i class="fa fa-check-circle kpi-icon"></i>
+								<div class="kpi-number" id="kpi-procesados">0</div>
+								<div class="kpi-title">Procesados</div>
 							</div>
 						</div>
 					</div>
-					<div class="row">
-						<div class="col-xl-12 col-lg-12 col-md-12">
-							<div class="card transcation-crypto1" id="transcation-crypto1">
-								<div class="card-header bd-b-0 d-flex justify-content-between">
-									<h4 class="card-title font-weight-semibold mb-0">Listado de Trabajadores</h4>
+
+					<!-- Compact Filters Row -->
+					<div class="filter-compact">
+						<div class="row align-items-end">
+							<div class="col-lg-3 col-md-4 mb-2 mb-lg-0">
+								<label for="periodo">Periodo</label>
+								<input type="month" name="periodo" id="periodo" class="form-control"
+									value="<?php echo date("Y-m"); ?>">
+							</div>
+							<div class="col-lg-4 col-md-5 mb-2 mb-lg-0">
+								<label for="centrocosto">Centro de Costo</label>
+								<select name="centrocosto" id="centrocosto" class="form-control select2">
 									<?php
-									$lista = array();
-									if (isset($_SESSION['COST_CENTER'])) {
-										$lista = $c->listartrabajadoresactivoscenter($_SESSION['CURRENT_ENTERPRISE'], $_SESSION['COST_CENTER']);
-									} else {
-										$lista = $c->listartrabajadoresactivos($_SESSION['CURRENT_ENTERPRISE']);
+									$centrocostos = $c->listarcentrocosto($_SESSION['CURRENT_ENTERPRISE']);
+									foreach ($centrocostos as $centrocosto) {
+										if (isset($_SESSION['COST_CENTER'])) {
+											if ($centrocosto->getId() == $_SESSION['COST_CENTER']) {
+												echo "<option value='" . $centrocosto->getId() . "' selected>" . $centrocosto->getNombre() . "</option>";
+											} else {
+												echo "<option value='" . $centrocosto->getId() . "'>" . $centrocosto->getNombre() . "</option>";
+											}
+										} else {
+											echo "<option value='" . $centrocosto->getId() . "'>" . $centrocosto->getNombre() . "</option>";
+										}
 									}
 									?>
-									<button onclick="allwork()" class="btn btn-success"><i class="fa fa-plus"></i>
-										Todo</button>
+								</select>
+							</div>
+							<div class="col-lg-5 col-md-3">
+								<button type="button" class="btn btn-primary mr-2" onclick="filtrartrabajadores()">
+									<i class="fa fa-filter mr-1"></i> Filtrar
+								</button>
+								<?php if (isset($_SESSION['COST_CENTER'])) { ?>
+									<button type="button" class="btn btn-outline-secondary" onclick="limpiarfiltro()">
+										<i class="fa fa-times mr-1"></i> Limpiar
+									</button>
+								<?php } ?>
+							</div>
+						</div>
+					</div>
+
+					<!-- Main Two-Column Layout -->
+					<div class="row">
+						<!-- Left Column: Banco de Trabajadores (60%) -->
+						<div class="col-xl-7 col-lg-7 col-md-12 mb-4">
+							<div class="dashboard-panel">
+								<div class="panel-header panel-header-left">
+									<span><i class="fa fa-list mr-2"></i>Listado Disponible</span>
+									<span class="badge-count"><?php echo $totalTrabajadores; ?> registros</span>
 								</div>
-								<div class="card-body p-4">
-									<div class="">
-										<div class="table-responsive">
-											<table class="table w-100 text-nowrap" id="example1">
-												<thead class="border-top">
-													<tr>
-														<th class="bg-transparent">RUT</th>
-														<th class="bg-transparent">Nombre</th>
-														<th class="bg-transparent">Centro Costo</th>
-														<th class="bg-transparent text-center">Agregar Al Lote</th>
-													</tr>
-												</thead>
-												<tbody>
-													<?php
-													foreach ($lista as $object) {
-														echo "<tr class='border-bottom-0'>";
-														echo "<td class='coin_icon d-flex fs-15 font-weight-semibold'>";
-														echo $object->getRut();
-														echo "</td>";
-														echo "<td class='text-muted fs-15 font-weight-semibold'>";
-														echo $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2();
-														echo "</td>";
-														echo "<td class='text-muted fs-15 font-weight-semibold'>";
-														echo $object->getDiscapacidad();
-														echo "</td>";
-														echo "<td class='text-center'>";
-														echo "<a class='btn btn-outline-info btn-sm rounded-11' onclick='agregartrabajador(" . $object->getId() . ",\"" . $object->getRut() . "\",\"" . $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2() . "\"," . $object->getNacionalidad() . ")'>";
-														echo "<i class='fa fa-plus'>";
-														echo "</i>";
-														echo "</a>";
-														echo "</td>";
-														echo "</tr>";
-													}
-													?>
-												</tbody>
-											</table>
-										</div>
+								<div class="panel-body">
+									<div class="d-flex justify-content-end mb-3">
+										<button onclick="allwork()" class="btn btn-success btn-sm">
+											<i class="fa fa-plus-circle mr-1"></i> Agregar Todos
+										</button>
+									</div>
+									<div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+										<table class="clean-table text-wrap w-100" id="example1">
+											<thead>
+												<tr>
+													<th>RUT</th>
+													<th>Nombre Completo</th>
+													<th>Centro Costo</th>
+													<th class="text-center">Accion</th>
+												</tr>
+											</thead>
+											<tbody>
+												<?php
+												foreach ($lista as $object) {
+													echo "<tr>";
+													echo "<td class='font-weight-semibold'>";
+													echo $object->getRut();
+													echo "</td>";
+													echo "<td>";
+													echo $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2();
+													echo "</td>";
+													echo "<td class='text-muted'>";
+													echo $object->getDiscapacidad();
+													echo "</td>";
+													echo "<td class='text-center'>";
+													echo "<button class='btn btn-info btn-add-circle' onclick='agregartrabajador(" . $object->getId() . ",\"" . $object->getRut() . "\",\"" . $object->getNombre() . " " . $object->getApellido1() . " " . $object->getApellido2() . "\"," . $object->getNacionalidad() . ")' title='Agregar'>";
+													echo "<i class='fa fa-plus'></i>";
+													echo "</button>";
+													echo "</td>";
+													echo "</tr>";
+												}
+												?>
+											</tbody>
+										</table>
 									</div>
 								</div>
 							</div>
 						</div>
 
-						<div class="col-xl-12 col-lg-12 col-md-12">
-							<div class="card transcation-crypto1" id="transcation-crypto1">
-								<div class="card-header bd-b-0 d-flex justify-content-between">
-									<h4 class="card-title font-weight-semibold mb-0">Trabajadores a Procesar</h4>
-									<div class="div d-flex align-items-center" style="gap:10px;">
-										<div class="d-flex align-items-center">
-												<label class="custom-switch">
-													<input value="1" type="checkbox"
-														id="gratificacion" name="gratificacion" class="custom-switch-input">
-													<span class="custom-switch-indicator"></span>
-													<span class="custom-switch-description">¿Aplica Gratificacion?.</span>
-												</label>
-										</div>
-										<button onclick="procesartodo()" class="btn btn-outline-success"><i
-												class="fa fa-trash"></i>
-											Procesar</button>
-										<button onclick="Eliminartodo()" class="btn btn-outline-danger"><i
-												class="fa fa-trash"></i>
-											Todo</button>
+						<!-- Right Column: Zona de Procesamiento (40%) -->
+						<div class="col-xl-5 col-lg-5 col-md-12 mb-4">
+							<div class="dashboard-panel">
+								<div class="panel-header panel-header-right">
+									<span><i class="fa fa-tasks mr-2"></i>Bandeja de Procesamiento</span>
+									<span class="badge-count" id="badge-lote">0 seleccionados</span>
+								</div>
+								<div class="panel-body" style="min-height: 350px;">
+									<div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+										<table class="clean-table text-nowrap">
+											<thead>
+												<tr>
+													<th>RUT</th>
+													<th>Nombre</th>
+													<th class="text-center">Quitar</th>
+												</tr>
+											</thead>
+											<tbody id="lotes">
+												<!-- Los trabajadores seleccionados aparecen aqui dinamicamente -->
+											</tbody>
+										</table>
+									</div>
+									<div class="empty-state" id="empty-lote">
+										<i class="fa fa-inbox"></i>
+										<p>No hay trabajadores en la bandeja</p>
+										<small>Seleccione trabajadores del listado</small>
 									</div>
 								</div>
-								<div class="card-body p-4">
-									<div class="">
-										<div class="table-responsive">
-											<table class="table text-nowrap">
-												<thead class="border-top">
-													<tr>
-														<th class="bg-transparent">RUT</th>
-														<th class="bg-transparent">Nombre</th>
-														<th class="bg-transparent text-center">Eliminar</th>
-													</tr>
-												</thead>
-												<tbody id="lotes">
-
-												</tbody>
-											</table>
-										</div>
+								<div class="panel-footer">
+									<!-- Switch de Gratificacion -->
+									<div class="switch-container">
+										<label class="custom-switch custom-switch-lg mb-0">
+											<input value="1" type="checkbox" id="gratificacion" name="gratificacion" class="custom-switch-input">
+											<span class="custom-switch-indicator"></span>
+											<span class="custom-switch-description ml-2" style="font-size: 0.95rem;">
+												<strong>Aplica Gratificacion</strong>
+											</span>
+										</label>
 									</div>
+
+									<!-- Botones de Accion -->
+									<button onclick="procesartodo()" class="btn btn-process-main mb-3">
+										<i class="fa fa-cog mr-2"></i> PROCESAR LIQUIDACIONES
+									</button>
+									<button onclick="Eliminartodo()" class="btn btn-danger-main">
+										<i class="fa fa-trash mr-2"></i> Vaciar Bandeja
+									</button>
 								</div>
 							</div>
 						</div>
@@ -734,6 +988,262 @@ foreach ($permiso as $p) {
 
 	</div>
 	<!-- End Page -->
+
+	<!-- Modal de Liquidaciones Procesadas -->
+	<div class="modal fade" id="modalLiquidaciones" tabindex="-1" role="dialog" aria-labelledby="modalLiquidacionesLabel" aria-hidden="true" data-backdrop="static">
+		<div class="modal-dialog modal-xl" role="document" style="max-width: 95%; margin: 20px auto;">
+			<div class="modal-content" style="border-radius: 15px; overflow: hidden;">
+				<!-- Header del Modal -->
+				<div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 20px 30px;">
+					<div>
+						<h4 class="modal-title mb-1" id="modalLiquidacionesLabel">
+							<i class="fa fa-file-invoice-dollar mr-2"></i>Liquidaciones Procesadas
+						</h4>
+						<small id="modal-periodo-info" style="opacity: 0.9;"></small>
+					</div>
+					<div class="d-flex align-items-center" style="gap: 15px;">
+						<span class="badge badge-light" id="modal-stats" style="font-size: 0.9rem; padding: 8px 15px;"></span>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white; opacity: 1; text-shadow: none;">
+							<span aria-hidden="true" style="font-size: 1.5rem;">&times;</span>
+						</button>
+					</div>
+				</div>
+
+				<!-- Body del Modal -->
+				<div class="modal-body p-0" style="background: #f8f9fa; height: calc(100vh - 200px); display: flex;">
+					<!-- Panel Izquierdo: Lista de Trabajadores -->
+					<div id="panel-lista-trabajadores" style="width: 320px; background: #fff; border-right: 1px solid #e9ecef; display: flex; flex-direction: column;">
+						<!-- Header del Panel -->
+						<div style="padding: 15px 20px; background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%); color: white;">
+							<div class="d-flex justify-content-between align-items-center mb-2">
+								<strong><i class="fa fa-users mr-2"></i>Trabajadores</strong>
+								<span class="badge badge-light" id="count-trabajadores">0</span>
+							</div>
+							<input type="text" id="buscar-trabajador-modal" class="form-control form-control-sm" placeholder="Buscar trabajador..." style="border-radius: 20px; border: none;">
+						</div>
+						<!-- Lista de Trabajadores -->
+						<div id="lista-trabajadores-modal" style="flex: 1; overflow-y: auto;">
+							<!-- Se llena dinamicamente -->
+						</div>
+					</div>
+
+					<!-- Panel Derecho: Detalle de Liquidacion -->
+					<div id="panel-detalle-liquidacion" style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
+						<!-- Header del Detalle -->
+						<div id="detalle-header" style="padding: 15px 25px; background: #fff; border-bottom: 1px solid #e9ecef; display: none;">
+							<div class="d-flex justify-content-between align-items-center">
+								<div>
+									<h5 class="mb-1" id="detalle-nombre-trabajador" style="color: #2c3e50;"></h5>
+									<small class="text-muted" id="detalle-rut-trabajador"></small>
+								</div>
+								<div class="d-flex" style="gap: 10px;">
+									<button class="btn btn-outline-primary btn-sm" onclick="imprimirLiquidacionActual()" title="Imprimir esta liquidacion">
+										<i class="fa fa-print mr-1"></i> Imprimir
+									</button>
+								</div>
+							</div>
+						</div>
+
+						<!-- Contenido de la Liquidacion -->
+						<div id="detalle-contenido" style="flex: 1; overflow-y: auto; padding: 25px;">
+							<!-- Estado inicial: Seleccionar trabajador -->
+							<div id="estado-inicial" class="text-center" style="padding: 80px 40px;">
+								<i class="fa fa-hand-pointer" style="font-size: 4rem; color: #dee2e6; margin-bottom: 20px;"></i>
+								<h5 style="color: #6c757d;">Seleccione un trabajador</h5>
+								<p class="text-muted">Haga clic en un trabajador de la lista para ver su liquidacion</p>
+							</div>
+
+							<!-- Contenido de la liquidacion (oculto inicialmente) -->
+							<div id="liquidacion-content" style="display: none;">
+								<!-- Se llena dinamicamente -->
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Footer del Modal -->
+				<div class="modal-footer" style="background: #fff; border-top: 1px solid #e9ecef; padding: 15px 25px;">
+					<div class="d-flex justify-content-between w-100">
+						<div>
+							<span class="text-muted" id="footer-info"></span>
+						</div>
+						<div class="d-flex" style="gap: 10px;">
+							<button type="button" class="btn btn-success" onclick="imprimirTodasLiquidaciones()">
+								<i class="fa fa-print mr-1"></i> Imprimir Todas
+							</button>
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">
+								<i class="fa fa-times mr-1"></i> Cerrar
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Estilos adicionales para el modal -->
+	<style>
+		/* Lista de trabajadores en el modal */
+		.trabajador-item {
+			padding: 12px 20px;
+			border-bottom: 1px solid #f1f1f1;
+			cursor: pointer;
+			transition: all 0.2s ease;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+		.trabajador-item:hover {
+			background: #f8f9fa;
+		}
+		.trabajador-item.active {
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			color: white;
+		}
+		.trabajador-item.active .text-muted {
+			color: rgba(255,255,255,0.8) !important;
+		}
+		.trabajador-item .trabajador-info {
+			flex: 1;
+		}
+		.trabajador-item .trabajador-nombre {
+			font-weight: 600;
+			font-size: 0.9rem;
+			margin-bottom: 2px;
+		}
+		.trabajador-item .trabajador-rut {
+			font-size: 0.8rem;
+		}
+		.trabajador-item .trabajador-liquido {
+			font-weight: 700;
+			font-size: 0.95rem;
+		}
+		.trabajador-item.ya-existe {
+			background: #fff3cd;
+		}
+		.trabajador-item.ya-existe .badge-warning-subtle {
+			background: #ffc107;
+			color: #212529;
+			font-size: 0.7rem;
+			padding: 2px 6px;
+			border-radius: 4px;
+		}
+
+		/* Liquidacion detalle */
+		.liquidacion-card {
+			background: #fff;
+			border-radius: 12px;
+			box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+			margin-bottom: 20px;
+			overflow: hidden;
+		}
+		.liquidacion-card-header {
+			background: #f8f9fa;
+			padding: 12px 20px;
+			font-weight: 600;
+			color: #495057;
+			border-bottom: 1px solid #e9ecef;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+		.liquidacion-card-body {
+			padding: 15px 20px;
+		}
+		.liquidacion-row {
+			display: flex;
+			justify-content: space-between;
+			padding: 8px 0;
+			border-bottom: 1px solid #f1f1f1;
+		}
+		.liquidacion-row:last-child {
+			border-bottom: none;
+		}
+		.liquidacion-row .codigo {
+			color: #495057;
+		}
+		.liquidacion-row .valor {
+			font-weight: 600;
+			color: #2c3e50;
+		}
+		.liquidacion-total {
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			color: white;
+			padding: 15px 20px;
+			border-radius: 10px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-top: 15px;
+		}
+		.liquidacion-total .label {
+			font-size: 1rem;
+		}
+		.liquidacion-total .amount {
+			font-size: 1.5rem;
+			font-weight: 700;
+		}
+
+		/* Info cards en detalle */
+		.info-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+			gap: 15px;
+			margin-bottom: 20px;
+		}
+		.info-item {
+			background: #f8f9fa;
+			padding: 12px 15px;
+			border-radius: 8px;
+		}
+		.info-item .label {
+			font-size: 0.75rem;
+			text-transform: uppercase;
+			color: #6c757d;
+			letter-spacing: 0.5px;
+		}
+		.info-item .value {
+			font-size: 1rem;
+			font-weight: 600;
+			color: #2c3e50;
+		}
+
+		/* Procesando overlay */
+		.processing-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0,0,0,0.7);
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			z-index: 9999;
+		}
+		.processing-overlay .spinner {
+			width: 60px;
+			height: 60px;
+			border: 4px solid rgba(255,255,255,0.3);
+			border-top-color: #fff;
+			border-radius: 50%;
+			animation: spin 1s linear infinite;
+		}
+		@keyframes spin {
+			to { transform: rotate(360deg); }
+		}
+		.processing-overlay .text {
+			color: white;
+			margin-top: 20px;
+			font-size: 1.1rem;
+		}
+		.processing-overlay .progress-text {
+			color: rgba(255,255,255,0.8);
+			margin-top: 10px;
+			font-size: 0.9rem;
+		}
+	</style>
 
 	<!-- Back-to-top -->
 	<a href="#top" id="back-to-top"><i class="fe fe-arrow-up"></i></a>
@@ -793,9 +1303,46 @@ foreach ($permiso as $p) {
 	<script>
 		$(document).ready(function () {
 			mostrarEmpresa();
+			updateDashboardUI();
 		});
 
+		// Funcion para actualizar los KPIs y el estado de la bandeja
+		function updateDashboardUI() {
+			var lotesBody = document.getElementById('lotes');
+			var emptyState = document.getElementById('empty-lote');
+			var badgeLote = document.getElementById('badge-lote');
+			var kpiPendientes = document.getElementById('kpi-pendientes');
 
+			var rowCount = lotesBody ? lotesBody.getElementsByTagName('tr').length : 0;
+
+			// Actualizar badge
+			if (badgeLote) {
+				badgeLote.textContent = rowCount + ' seleccionados';
+			}
+
+			// Actualizar KPI de pendientes
+			if (kpiPendientes) {
+				kpiPendientes.textContent = rowCount;
+			}
+
+			// Mostrar/ocultar estado vacio
+			if (emptyState) {
+				emptyState.style.display = rowCount > 0 ? 'none' : 'block';
+			}
+		}
+
+		// Observer para detectar cambios en la tabla de lotes
+		var lotesObserver = new MutationObserver(function(mutations) {
+			updateDashboardUI();
+		});
+
+		// Iniciar observador cuando el DOM este listo
+		$(document).ready(function() {
+			var lotesBody = document.getElementById('lotes');
+			if (lotesBody) {
+				lotesObserver.observe(lotesBody, { childList: true, subtree: true });
+			}
+		});
 	</script>
 	<script>
 		$(document).ready(function () {
