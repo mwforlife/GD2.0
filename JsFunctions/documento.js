@@ -209,6 +209,12 @@ $(document).ready(function () {
             }
         }
 
+        var modificafecha = 0;
+        var nuevafechatermino = $("#nuevafechatermino").val();
+        if ($("#modificafecha").is(":checked")) {
+            modificafecha = 1;
+        }
+
         //Validar si el array esta vacio
         if (clausulasArray.length == 0) {
             $("#global-loader").fadeOut("slow");
@@ -224,6 +230,8 @@ $(document).ready(function () {
             clausulas: clausulas,
             base: base,
             sueldo: sueldo,
+            modificafecha: modificafecha,
+            nuevafechatermino: nuevafechatermino
         };
 
         // Realizar la solicitud Ajax
@@ -242,6 +250,8 @@ $(document).ready(function () {
             form.append($('<input>', { 'type': 'hidden', 'name': 'fechageneracion', 'value': datos.fechageneracion }));
             form.append($('<input>', { 'type': 'hidden', 'name': 'base', 'value': datos.base }));
             form.append($('<input>', { 'type': 'hidden', 'name': 'sueldo', 'value': datos.sueldo }));
+            form.append($('<input>', { 'type': 'hidden', 'name': 'modificafecha', 'value': datos.modificafecha }));
+            form.append($('<input>', { 'type': 'hidden', 'name': 'nuevafechatermino', 'value': datos.nuevafechatermino }));
 
             // Agregar el array de clausulas como JSON
             form.append($('<input>', { 'type': 'hidden', 'name': 'clausulas', 'value': JSON.stringify(datos.clausulas) }));

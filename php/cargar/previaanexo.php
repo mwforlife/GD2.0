@@ -7,7 +7,18 @@ $empresa = $_SESSION['CURRENT_ENTERPRISE'];
 if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['clausulas']) && isset($_POST['fechageneracion']) && isset($_POST['base']) && isset($_POST['sueldo'])) {
 
     $usuario = $_SESSION['USER_ID'];
-    $lista = $c->buscarloteanexo($usuario, $empresa);
+    if (isset($_POST['contratoid_preview'])) {
+        if (!class_exists('DummyLote')) {
+            class DummyLote {
+                private $id;
+                public function __construct($id) { $this->id = $id; }
+                public function getId() { return $this->id; }
+            }
+        }
+        $lista = array(new DummyLote(intval($_POST['contratoid_preview'])));
+    } else {
+        $lista = $c->buscarloteanexo($usuario, $empresa);
+    }
     if (count($lista) == 0) {
         echo "Debe seleccionar al menos un contrato";
         return;
@@ -88,10 +99,13 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
         //Cambiar formato de fecha a dd/mm/yyyy
         $fechainicio = date("d/m/Y", strtotime($fechainicio));
         $fechatermino = $contrato->getFechatermino();
-        if($fechatermino != null && $fechatermino != "" && $fechatermino != "0000-00-00"){
-            $fechatermino = date("d/m/Y", strtotime($fechatermino));
-        }else{
-            $fechatermino = "Indefinido";
+        $esPlazoFijo = (!empty($fechatermino) && $fechatermino != '' && $fechatermino != null && $fechatermino != '0000-00-00');
+        
+        $fechatermino_format = "Indefinido";
+        if($modificafecha == 1 && !empty($nuevafechatermino) && $esPlazoFijo){
+            $fechatermino_format = date("d/m/Y", strtotime($nuevafechatermino));
+        } else if ($fechatermino != null && $fechatermino != "" && $fechatermino != "0000-00-00") {
+            $fechatermino_format = date("d/m/Y", strtotime($fechatermino));
         }
         $trabajadorid = $contrato->getFecharegistro();
         $trabajador = $c->buscartrabajador($trabajadorid);
@@ -147,12 +161,9 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
         }
 
         // Preparar la nueva fecha de término para la vista previa
-        // Solo usar la nueva fecha si:
-        // 1. La modificación está activada
-        // 2. Alguna plantilla usa {NUEVA_FECHA_TERMINO}
-        // 3. El contrato es a plazo fijo
-        $nuevafechaformat = $fechatermino; // Por defecto, usar la fecha actual
-        if($modificafecha == 1 && !empty($nuevafechatermino) && $usaFechaTermino && $esPlazoFijo){
+        // Solo usar la nueva fecha si la modificación está activada y el contrato es a plazo fijo
+        $nuevafechaformat = "(Fecha no disponible)"; 
+        if($modificafecha == 1 && !empty($nuevafechatermino) && $esPlazoFijo){
             $nuevafechaformat = date("d/m/Y", strtotime($nuevafechatermino));
         }
 
@@ -188,7 +199,7 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
             "{ESTADO_CIVIL}" => $estadocivil->getNombre(),
             "{CARGO}" => $contrato->getCargo(),
             "{INICIO_CONTRATO}" => $fechainicio,
-            "{TERMINO_CONTRATO}" => $fechatermino,
+            "{TERMINO_CONTRATO}" => $fechatermino_format,
             "{NUEVA_FECHA_TERMINO}" => $nuevafechaformat,
             "{FORMA_PAGO}" => "Transferencia Electrónica",
             "{TIPO_CUENTA}" => $tipocuenta,

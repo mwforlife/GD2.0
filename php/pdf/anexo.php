@@ -41,6 +41,9 @@ if (isset($_GET['id'])) {
     //Cambiar formato de fecha a dd/mm/yyyy
     $fechainicio = date("d/m/Y", strtotime($fechainicio));
     $fechatermino = $contrato->getFechatermino();
+    if ($anexo->getModificaFecha() == 1 && $anexo->getFechaTermino() != null && $anexo->getFechaTermino() != "" && $anexo->getFechaTermino() != "0000-00-00") {
+        $fechatermino = $anexo->getFechaTermino();
+    }
     if ($fechatermino != null && $fechatermino != "" && $fechatermino != "0000-00-00") {
         $fechatermino = date("d/m/Y", strtotime($fechatermino));
     } else {
@@ -78,12 +81,12 @@ if (isset($_GET['id'])) {
 
 
 
-    // Obtener la nueva fecha de término del contrato (en caso de que haya sido actualizada)
-    $nuevafechatermino = $contrato->getFechatermino();
-    if ($nuevafechatermino != null && $nuevafechatermino != "" && $nuevafechatermino != "0000-00-00") {
+    // Obtener la nueva fecha de término del contrato desde el anexo
+    $nuevafechatermino = $anexo->getFechaTermino();
+    if ($anexo->getModificaFecha() == 1 && $nuevafechatermino != null && $nuevafechatermino != "" && $nuevafechatermino != "0000-00-00") {
         $nuevafechatermino = date("d/m/Y", strtotime($nuevafechatermino));
     } else {
-        $nuevafechatermino = "Indefinido";
+        $nuevafechatermino = "(Fecha no disponible)";
     }
 
     $swap_var = array(

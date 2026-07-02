@@ -71,7 +71,8 @@ if (isset($_SESSION['USER_ID'])  && isset($_POST['empresa']) && isset($_POST['cl
         $fechaterminoActual = $contratoData->getFechatermino();
 
         $contrato = $object->getId();
-        $res = $c->registraraenxo($contrato,$fechageneracion,$base, $sueldo, 1);
+        $nuevafechatermino_val = ($modificafecha == 1 && !empty($nuevafechatermino)) ? $nuevafechatermino : null;
+        $res = $c->registraraenxo($contrato, $fechageneracion, $base, $sueldo, 1, $nuevafechatermino_val, $modificafecha);
 
         // Actualizar sueldo si está activado
         if($base==1){

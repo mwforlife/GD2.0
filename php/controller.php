@@ -6961,10 +6961,11 @@ class Controller
     }
 
     //Registrar Axexo
-    function registraraenxo($contrato, $fechageneracion, $base, $sueldo_base, $estado)
+    function registraraenxo($contrato, $fechageneracion, $base, $sueldo_base, $estado, $fecha_termino = null, $modifica_fecha = 0)
     {
         $this->conexion();
-        $sql = "insert into anexoscontrato values(null, $contrato, '$fechageneracion', $base, $sueldo_base, $estado, now())";
+        $fecha_termino_val = ($fecha_termino !== null && $fecha_termino !== '') ? "'$fecha_termino'" : "NULL";
+        $sql = "insert into anexoscontrato (id, contrato, fechageneracion, base, sueldo_base, estado, register_at, fecha_termino, modifica_fecha) values(null, $contrato, '$fechageneracion', $base, $sueldo_base, $estado, now(), $fecha_termino_val, $modifica_fecha)";
         $result = $this->mi->query($sql);
         $id_insert = mysqli_insert_id($this->mi);
         $this->desconectar();
@@ -6986,7 +6987,9 @@ class Controller
             $sueldo_base = $rs['sueldo_base'];
             $estado = $rs['estado'];
             $registro = $rs['register_at'];
-            $a = new Anexo($id, $contrato, $fechageneracion, $base, $sueldo_base, $estado, $registro);
+            $fecha_termino = isset($rs['fecha_termino']) ? $rs['fecha_termino'] : null;
+            $modifica_fecha = isset($rs['modifica_fecha']) ? $rs['modifica_fecha'] : 0;
+            $a = new Anexo($id, $contrato, $fechageneracion, $base, $sueldo_base, $estado, $registro, $fecha_termino, $modifica_fecha);
             $lista[] = $a;
         }
         $this->desconectar();
@@ -6996,7 +6999,7 @@ class Controller
 
     function listaranexos($empresa){
         $this->conexion();
-        $sql = "select trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, anexoscontrato.id as id, anexoscontrato.contrato as contrato, anexoscontrato.fechageneracion as fechageneracion, anexoscontrato.base as base, anexoscontrato.sueldo_base as sueldo_base, anexoscontrato.estado as estado, anexoscontrato.register_at as register_at from anexoscontrato, contratos, trabajadores where anexoscontrato.contrato = contratos.id and contratos.trabajador = trabajadores.id and contratos.empresa = $empresa and contratos.estado = 1";
+        $sql = "select trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, anexoscontrato.id as id, anexoscontrato.contrato as contrato, anexoscontrato.fechageneracion as fechageneracion, anexoscontrato.base as base, anexoscontrato.sueldo_base as sueldo_base, anexoscontrato.estado as estado, anexoscontrato.register_at as register_at, anexoscontrato.fecha_termino as fecha_termino, anexoscontrato.modifica_fecha as modifica_fecha from anexoscontrato, contratos, trabajadores where anexoscontrato.contrato = contratos.id and contratos.trabajador = trabajadores.id and contratos.empresa = $empresa and contratos.estado = 1";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -7010,7 +7013,9 @@ class Controller
             $rut = $rs['rut'];
             $nombre = $rs['nombre'];
             $apellido = $rs['apellido'];
-            $a = new Anexo($id, $nombre." ".$apellido, $fechageneracion, $rut, $sueldo_base, $estado, $registro);
+            $fecha_termino = isset($rs['fecha_termino']) ? $rs['fecha_termino'] : null;
+            $modifica_fecha = isset($rs['modifica_fecha']) ? $rs['modifica_fecha'] : 0;
+            $a = new Anexo($id, $nombre." ".$apellido, $fechageneracion, $rut, $sueldo_base, $estado, $registro, $fecha_termino, $modifica_fecha);
             $lista[] = $a;
         }
         $this->desconectar();
@@ -7019,7 +7024,7 @@ class Controller
 
     function listaranexostrabajador($trabajador){
         $this->conexion();
-        $sql = "select trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, anexoscontrato.id as id, anexoscontrato.contrato as contrato, anexoscontrato.fechageneracion as fechageneracion, anexoscontrato.base as base, anexoscontrato.sueldo_base as sueldo_base, anexoscontrato.estado as estado, anexoscontrato.register_at as register_at from anexoscontrato, contratos, trabajadores where anexoscontrato.contrato = contratos.id and contratos.trabajador = trabajadores.id and contratos.trabajador = $trabajador";
+        $sql = "select trabajadores.rut as rut, trabajadores.nombre as nombre, trabajadores.primerapellido as apellido, anexoscontrato.id as id, anexoscontrato.contrato as contrato, anexoscontrato.fechageneracion as fechageneracion, anexoscontrato.base as base, anexoscontrato.sueldo_base as sueldo_base, anexoscontrato.estado as estado, anexoscontrato.register_at as register_at, anexoscontrato.fecha_termino as fecha_termino, anexoscontrato.modifica_fecha as modifica_fecha from anexoscontrato, contratos, trabajadores where anexoscontrato.contrato = contratos.id and contratos.trabajador = trabajadores.id and contratos.trabajador = $trabajador";
         $result = $this->mi->query($sql);
         $lista = array();
         while ($rs = mysqli_fetch_array($result)) {
@@ -7033,7 +7038,9 @@ class Controller
             $rut = $rs['rut'];
             $nombre = $rs['nombre'];
             $apellido = $rs['apellido'];
-            $a = new Anexo($id, $nombre." ".$apellido, $fechageneracion, $rut, $sueldo_base, $estado, $registro);
+            $fecha_termino = isset($rs['fecha_termino']) ? $rs['fecha_termino'] : null;
+            $modifica_fecha = isset($rs['modifica_fecha']) ? $rs['modifica_fecha'] : 0;
+            $a = new Anexo($id, $nombre." ".$apellido, $fechageneracion, $rut, $sueldo_base, $estado, $registro, $fecha_termino, $modifica_fecha);
             $lista[] = $a;
         }
         $this->desconectar();
@@ -7054,7 +7061,9 @@ class Controller
             $sueldo_base = $rs['sueldo_base'];
             $estado = $rs['estado'];
             $registro = $rs['register_at'];
-            $a = new Anexo($id, $contrato, $fechageneracion, $base, $sueldo_base, $estado, $registro);
+            $fecha_termino = isset($rs['fecha_termino']) ? $rs['fecha_termino'] : null;
+            $modifica_fecha = isset($rs['modifica_fecha']) ? $rs['modifica_fecha'] : 0;
+            $a = new Anexo($id, $contrato, $fechageneracion, $base, $sueldo_base, $estado, $registro, $fecha_termino, $modifica_fecha);
             $this->desconectar();
             return $a;
         }
@@ -12822,7 +12831,9 @@ private function convertirNumeroALetras($numero)
                 $row['base'],
                 $row['sueldo_base'],
                 $row['estado'],
-                $row['register_at']
+                $row['register_at'],
+                isset($row['fecha_termino']) ? $row['fecha_termino'] : null,
+                isset($row['modifica_fecha']) ? $row['modifica_fecha'] : 0
             );
             $anexos[] = $anexo;
         }

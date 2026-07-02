@@ -757,7 +757,10 @@ foreach ($permiso as $p) {
 																			echo "<td>" . $anexo->getContrato() . "</td>";
 																			echo "<td>" . date("d-m-Y", strtotime($anexo->getFechageneracion())) . "</td>";
 																			echo "<td>Anexo de Contrato</td>";
-																			echo "<td><a href='php/report/anexo.php?id=" . $anexo->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11'><i class='fa fa-print'></i></a></td>";
+																			echo "<td>";
+																			echo "<a href='php/report/anexo.php?id=" . $anexo->getId() . "' target='_blank' class='btn btn-outline-success btn-sm rounded-11 mr-1'><i class='fa fa-print'></i></a>";
+																			echo "<a href='editaranexo.php?id=" . $anexo->getId() . "' class='btn btn-outline-primary btn-sm rounded-11'><i class='fa fa-edit'></i></a>";
+																			echo "</td>";
 																			echo "<td class='text-center'><button class='btn btn-outline-danger btn-sm rounded-11' onclick='eliminardanexo(" . $anexo->getId() . ")'><i class='fa fa-trash'></i></button></td>";
 																			echo "</tr>";
 																		}
@@ -781,7 +784,6 @@ foreach ($permiso as $p) {
 				</div>
 			</div>
 		</div>
-		<!-- End Main Content-->
 
 		<!-- Main Footer-->
 		<div class="main-footer text-center">
@@ -869,6 +871,7 @@ foreach ($permiso as $p) {
 					window.location.href = "menuinfo.php";
 				}
 			});
+		}
 		}
 	</script>
 </body>
