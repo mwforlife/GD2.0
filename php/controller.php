@@ -70,7 +70,7 @@ class Controller
     public $host = "localhost";
     /*Variables*/
     public $user = "root";
-    public $pass = "";
+    public $pass = "Penki1999@";
     public $bd = "gestordocumentos";
 
 

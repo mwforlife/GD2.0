@@ -634,6 +634,7 @@ foreach ($permiso as $p) {
 																		<td>" . $object->getNombre() . "</td>
 																		<td class='text-center'>
 																			<a href='redactardocumento.php?code=" . $object->getId() . "' class='btn btn-sm btn-outline-success'><i class='fa fa-pen'></i></a>
+																			<a href='php/pdf/previaescrito.php?code=" . $object->getId() . "' target='_blank' rel='noopener' class='btn btn-sm btn-outline-info' title='Ver plantilla guardada en PDF'><i class='fa fa-file-pdf'></i> Vista previa</a>
 																		</td>
 																		<td class='text-center'>
 																			<a href='javascript:void(0)' class='btn btn-sm btn-outline-primary m-1' data-toggle='modal' data-target='#modaledit' onclick='Editar(" . $object->getId() . ")'><i class='fa fa-edit'></i></a>";
